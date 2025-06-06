@@ -1,6 +1,5 @@
 "use client";
 
-import RaceList from "@/components/race-list";
 import { Race } from "@/models/races.model";
 import { fetchRaces, saveRace } from "@/services/races.services";
 import Form from "next/form";
