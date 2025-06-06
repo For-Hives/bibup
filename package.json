@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "6.21.0",
+    "@next/eslint-plugin-next": "^15.3.3",
     "@tanstack/eslint-plugin-query": "5.78.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-no-only-tests": "3.3.0",
