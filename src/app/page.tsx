@@ -1,10 +1,11 @@
-import AddRaceForm from "@/components/addRaceForm";
-import { fetchRaces } from "@/services/races.services";
+import RaceList from "@/components/race-list";
+import { Race } from "@/models/races.model";
+import { fetchRaces, saveRace } from "@/services/races.services";
+import Form from "next/form";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Home() {
-  const races = await fetchRaces();
-
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -30,20 +31,11 @@ export default async function Home() {
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <AddRaceForm />
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
-          <h2
-            className="text-lg font-semibold
-          text-center sm:text-left"
-          >
-            {races.map((race) => (
-              <div key={race.id} className="border-b py-2">
-                <h3 className="font-semibold">{race.name}</h3>
-              </div>
-            ))}
-          </h2>
+          <Link href="/races">
+            <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition-colors duration-200">
+              View Races
+            </button>
+          </Link>
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
