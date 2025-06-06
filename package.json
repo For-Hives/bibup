@@ -23,6 +23,7 @@
     "eslint-plugin-woke": "1.0.1",
     "espree": "10.3.0",
     "next": "15.3.3",
+    "pocketbase": "^0.26.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
