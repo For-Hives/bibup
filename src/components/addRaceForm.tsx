@@ -37,12 +37,6 @@ async function onSubmit(data: FormData) {
     // saving logic delegated to the specific service function
     const result = await saveRace(newRace);
     console.log("New race added:", result);
-
-    // update UI
-
-    // This could be done by re-fetching the races
-    const updatedRaces = await fetchRaces();
-    console.log("Updated races:", updatedRaces);
   } catch (error) {
     console.error("Error adding race:", error);
   }
