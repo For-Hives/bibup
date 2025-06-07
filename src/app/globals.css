@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Color Palette */
+  --primary-pastel: #A7D8DE; /* Pastel Blue */
+  --secondary-pastel: #F5CEC7; /* Pastel Peach/Pink */
+  --accent-sporty: #FFB347; /* Pastel Orange */
+  --background-light: #F8F8F8; /* Very Light Gray */
+  --text-dark: #333333;
+  --text-light: #F8F8F8; /* For dark backgrounds */
+  --border-color: #DDDDDD;
+  --success-bg: #D4EDDA;
+  --success-text: #155724;
+  --error-bg: #F8D7DA;
+  --error-text: #721C24;
+  --warning-bg: #FFF3CD;
+  --warning-text: #856404;
+
+  /* Original theme variables - can be adjusted or removed if not used by Geist theme */
+  --background: #ffffff; /* Overridden by --background-light for body */
+  --foreground: #171717; /* Overridden by --text-dark for body */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark mode adjustments (optional, can be refined) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --primary-pastel: #6A9AA0; /* Darker Pastel Blue */
+    --secondary-pastel: #C4A39F; /* Darker Pastel Peach/Pink */
+    --accent-sporty: #D99A3C; /* Darker Pastel Orange */
+    --background-light: #2D2D2D; /* Dark Gray background */
+    --text-dark: #E5E5E5; /* Light text for dark mode */
+    --border-color: #444444;
+    /* Ensure success/error/warning have dark mode variants if needed */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif); /* Using Geist if available */
 }
+
+/* Base Button Styles using Tailwind's @apply for reusability */
+/* These can be applied as classes e.g., class="btn btn-primary" */
+.btn {
+  @apply font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-150 ease-in-out;
+}
+
+.btn-primary {
+  @apply bg-accent-sporty text-white;
+}
+.btn-primary:hover {
+  @apply bg-opacity-90; /* Direct opacity, or a darker var(--accent-sporty-darker) if defined */
+}
+
+.btn-secondary {
+  @apply bg-secondary-pastel text-text-dark;
+}
+.btn-secondary:hover {
+  @apply bg-opacity-80; /* Direct opacity, or a darker var(--secondary-pastel-darker) */
+}
+
+.btn-withdraw {
+  @apply bg-red-400 text-white; /* Example: distinct color for withdraw */
+}
+.btn-withdraw:hover {
+  @apply bg-red-500;
+}
+
+.btn-waitlist {
+   @apply bg-yellow-400 text-text-dark; /* Example: Waitlist button */
+}
+.btn-waitlist:hover {
+    @apply bg-yellow-500;
+}
+
+
+/* Generic Bento Box Styling */
+.bento-box {
+  @apply bg-white p-6 rounded-xl shadow-lg border;
+  border-color: var(--border-color); /* Using CSS var for border */
+}
+/* Dark mode for bento-box if needed */
+@media (prefers-color-scheme: dark) {
+  .bento-box {
+    @apply bg-neutral-800; /* Example dark mode bento box background */
+    border-color: var(--border-color);
+  }
+}
+
+/* Status Badge Base */
+.status-badge {
+  @apply px-3 py-1 rounded-full text-xs font-semibold leading-tight;
+}
+
+/* Specific Statuses - Example, can be expanded */
+.status-pending {
+  @apply bg-yellow-200 text-yellow-800;
+}
+.status-approved, .status-listed-public {
+  @apply bg-green-200 text-green-800;
+}
+.status-rejected, .status-validation-failed {
+  @apply bg-red-200 text-red-800;
+}
+.status-sold {
+  @apply bg-blue-200 text-blue-800;
+}
+.status-withdrawn, .status-expired {
+  @apply bg-gray-200 text-gray-800;
+}
+
+/* Ensure Tailwind directives are at the top */
+/* @import "tailwindcss"; was removed as per standard setup with @tailwind directives */
+
+/* @theme inline - this was specific to a certain setup, might not be needed with standard Tailwind */
+/* Ensure --font-geist-sans and --font-geist-mono are defined if used, or fallback */
