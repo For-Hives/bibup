@@ -83,15 +83,24 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
     // Adjust the field name 'status' and value 'approved' if they differ in your PocketBase collection
     const records = await pb.collection("events").getFullList<Event>({
       filter: "status = 'approved'",
-      // You might want to add sorting, e.g., by date: sort: 'date'
+      sort: "date", // Sort by event date, upcoming first
     });
 
     // PocketBase SDK should correctly type records if <Event> is used with getFullList
     return records;
   } catch (error) {
     console.error("Error fetching approved public events:", error);
-    // Consider how to handle errors in your application. Throwing might be okay for server components.
-    throw error;
+    // Check if it's a 404 error (no records found matching the filter)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No approved public events found, return empty array
+    }
+    // Return empty array on other errors for safety and consistency with other functions
+    return [];
   }
 }
 
@@ -142,9 +151,17 @@ export async function fetchEventsByOrganizer(
       `Error fetching events for organizer ID "${organizerId}":`,
       error
     );
-    // Depending on error handling strategy, you might throw the error or return an empty array
-    // For instance, if the collection 'events' doesn't exist or there's a connection issue.
-    // Returning an empty array might be safer for display purposes on the frontend.
+    // Check if it's a 404 error (no records found for this organizer)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No events found for this organizer, return empty array
+    }
+    // For other errors (connection issues, collection doesn't exist, etc.)
+    // Return empty array for safety to prevent UI crashes
     return [];
   }
 }
@@ -162,6 +179,16 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
     return records;
   } catch (error) {
     console.error("Error fetching partnered and approved events:", error);
-    return []; // Return empty array on error for safety
+    // Check if it's a 404 error (no records found matching the filter)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No partnered approved events found, return empty array
+    }
+    // For other errors, return empty array for safety
+    return [];
   }
 }
