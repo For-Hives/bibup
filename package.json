@@ -9,7 +9,7 @@
 		"lint": "next lint",
 		"prettier": "prettier --write ."
 	},
-	"packageManager": "pnpm@9.8.0",
+	"packageManager": "pnpm@10.11.01",
 	"dependencies": {
 		"@clerk/nextjs": "6.21.0",
 		"@formatjs/intl-localematcher": "0.6.1",
