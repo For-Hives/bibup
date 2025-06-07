@@ -66,7 +66,7 @@ export async function createEvent(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error.response as any)?.data,
         );
       }
     }

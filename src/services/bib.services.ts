@@ -134,7 +134,7 @@ export async function createBib(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error.response as any)?.data,
         );
       }
     }
@@ -309,9 +309,9 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 
 import type { Transaction } from "@/models/transaction.model";
 
-import { fetchUserByClerkId, updateUserBalance } from "./user.services";
 // Import Transaction services and User services for processBibSale
 import { createTransaction } from "./transaction.services";
+import { updateUserBalance } from "./user.services";
 
 /**
  * Fetches all publicly listed bibs for a specific event.
@@ -435,10 +435,6 @@ export async function processBibSale(
       buyerUserId: buyerUserId,
       status: "sold",
     });
-
-    console.log(
-      `Bib ${bibId} sold to ${buyerUserId}. Transaction ${transaction.id} completed. Seller ${bib.sellerUserId} received ${amountToSeller}.`,
-    );
 
     // 7. Initiate Organizer Notification (Conceptual)
     if (updatedBib) {
@@ -571,9 +567,7 @@ export async function updateBibStatusByAdmin(
     const updatedRecord = await pb
       .collection("bibs")
       .update<Bib>(bibId, dataToUpdate);
-    console.log(
-      `ADMIN ACTION: Bib ${bibId} status changed to ${newStatus}. Notes: ${adminNotes || "N/A"}`,
-    );
+
     return updatedRecord;
   } catch (error) {
     console.error(`Error updating bib ${bibId} status by admin:`, error);
@@ -603,9 +597,6 @@ async function initiateOrganizerNotification(
   // 2. Construct notification payload (bib details, new runner details).
   // 3. Send notification (e.g., via email service, webhook).
 
-  console.log(
-    `INFO: Bib transfer notification process initiated for Bib ID: ${bibId}, New Runner (Buyer ID): ${newRunnerUserId}, Event ID: ${eventId || "N/A"}. This would typically trigger an email or API call to the event organizer to update their participant list.`,
-  );
   // This is a good place to integrate with external notification services or internal task queues.
   return Promise.resolve(); // Indicate async completion
 }

@@ -40,7 +40,7 @@ export async function createUser(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error?.response as any)?.data,
         );
       }
     }
@@ -124,9 +124,6 @@ export async function updateUserBalance(
       bibUpBalance: newBalance,
     });
 
-    console.log(
-      `User ${clerkUserId} balance updated from ${currentBalance} to ${newBalance}.`,
-    );
     return updatedRecord;
   } catch (error) {
     console.error(`Error updating balance for user ${clerkUserId}:`, error);

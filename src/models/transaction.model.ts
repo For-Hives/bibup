@@ -1,6 +1,3 @@
-import { User } from "./user.model";
-import { Bib } from "./bib.model";
-
 export interface Transaction {
   amount: number; // Total amount paid by buyer
   bibId: string;
