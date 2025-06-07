@@ -1,17 +1,11 @@
 import type { Metadata } from 'next'
 
-import {
-	ClerkProvider,
-	SignedIn,
-	SignedOut,
-	SignInButton,
-	SignUpButton,
-	UserButton,
-} from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { ClerkProvider } from '@clerk/nextjs'
 import { getLocale } from '@/lib/getLocale'
 
 import Footer from '@/components/global/footer'
+import Navbar from '@/components/global/Navbar'
 
 import './globals.css'
 
@@ -43,15 +37,7 @@ export default async function RootLayout({
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
-					<header className="flex h-16 items-center justify-end gap-4 p-4">
-						<SignedOut>
-							<SignInButton />
-							<SignUpButton />
-						</SignedOut>
-						<SignedIn>
-							<UserButton />
-						</SignedIn>
-					</header>
+					<Navbar />
 					{children}
 					<Footer />
 				</body>

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+
 import { getDictionary } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 import { auth } from '@clerk/nextjs/server'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
 	title: 'Dashboard | BibUp',
@@ -28,8 +29,8 @@ export default async function DashboardPage() {
 			{userId && (
 				<nav className="grid grid-cols-1 gap-6 md:grid-cols-3">
 					<Link
-						href="/dashboard/organizer"
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
+						href="/dashboard/organizer"
 					>
 						<h2 className="mb-2 text-2xl font-semibold">
 							{dictionary.dashboard.organizer.title}
@@ -39,8 +40,8 @@ export default async function DashboardPage() {
 						</p>
 					</Link>
 					<Link
-						href="/dashboard/buyer"
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
+						href="/dashboard/buyer"
 					>
 						<h2 className="mb-2 text-2xl font-semibold">
 							{dictionary.dashboard.buyer.title}
@@ -50,8 +51,8 @@ export default async function DashboardPage() {
 						</p>
 					</Link>
 					<Link
-						href="/dashboard/seller"
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
+						href="/dashboard/seller"
 					>
 						<h2 className="mb-2 text-2xl font-semibold">
 							{dictionary.dashboard.seller.title}

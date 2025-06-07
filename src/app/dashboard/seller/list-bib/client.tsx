@@ -138,7 +138,7 @@ export default function ListNewBibClientPage({
 
 			{errorMessage && (
 				<p style={styles.error}>
-					{dictionary.dashboard.seller?.errorMessage} {errorMessage}
+					{dictionary.dashboard.seller?.noBibsListed} {errorMessage}
 				</p>
 			)}
 			{/* {successMessage && <p style={styles.success}>{successMessage}</p>} */}
