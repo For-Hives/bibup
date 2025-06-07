@@ -363,7 +363,7 @@ export default function ListNewBibClientPage({
 // It's defined here for clarity but could be in a separate actions.ts file.
 async function handleListBibServerAction(
   formData: FormData,
-  sellerUserIdFromAuth: null | string
+  sellerUserIdFromAuth: null | string,
 ) {
   "use server"; // This directive ensures this function runs on the server.
 
@@ -408,7 +408,7 @@ async function handleListBibServerAction(
     bibData.unlistedEventName = formData.get("unlistedEventName") as string;
     bibData.unlistedEventDate = formData.get("unlistedEventDate") as string;
     bibData.unlistedEventLocation = formData.get(
-      "unlistedEventLocation"
+      "unlistedEventLocation",
     ) as string;
     bibData.eventId = ""; // Ensure eventId is empty for unlisted
     if (
@@ -417,14 +417,14 @@ async function handleListBibServerAction(
       !bibData.unlistedEventLocation
     ) {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("For unlisted events, event name, date, and location are required.")}`
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("For unlisted events, event name, date, and location are required.")}`,
       );
       return;
     }
   } else {
     if (!bibData.eventId) {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`,
       );
       return;
     }
@@ -436,7 +436,7 @@ async function handleListBibServerAction(
     bibData.price <= 0
   ) {
     redirect(
-      `/dashboard/seller/list-bib?error=${encodeURIComponent("Registration Number and a valid Price are required.")}`
+      `/dashboard/seller/list-bib?error=${encodeURIComponent("Registration Number and a valid Price are required.")}`,
     );
     return;
   }
@@ -448,7 +448,7 @@ async function handleListBibServerAction(
       redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`);
     } else {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Failed to list bib. Please check details and try again.")}`
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("Failed to list bib. Please check details and try again.")}`,
       );
     }
   } catch (error) {
