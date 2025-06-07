@@ -45,7 +45,7 @@ export default async function EditBibPage({
   const { userId: sellerUserId } = await auth();
   const { bibId } = params;
 
-  if (!sellerUserId || sellerUserId === "") {
+  if (sellerUserId == null || sellerUserId === "") {
     redirect(`/sign-in?redirect_url=/dashboard/seller/edit-bib/${bibId}`);
   }
 
@@ -72,11 +72,11 @@ export default async function EditBibPage({
     `Event ID: ${bibWithEvent.eventId ?? "N/A"}`;
 
   const successMessage =
-    searchParams?.success && typeof searchParams.success === "string"
+    searchParams && typeof searchParams.success === "string"
       ? decodeURIComponent(searchParams.success)
       : "";
   const errorMessage =
-    searchParams?.error && typeof searchParams.error === "string"
+    searchParams && typeof searchParams.error === "string"
       ? decodeURIComponent(searchParams.error)
       : "";
 
@@ -84,7 +84,7 @@ export default async function EditBibPage({
   async function handleUpdateBibDetails(formData: FormData) {
     "use server";
 
-    if (!sellerUserId || sellerUserId === "") {
+    if (sellerUserId == null || sellerUserId === "") {
       redirect(
         `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
       );
@@ -141,7 +141,7 @@ export default async function EditBibPage({
   async function handleWithdrawBib() {
     "use server";
 
-    if (!sellerUserId || sellerUserId === "") {
+    if (sellerUserId == null || sellerUserId === "") {
       redirect(
         `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
       );
@@ -177,7 +177,7 @@ export default async function EditBibPage({
   ) {
     "use server";
 
-    if (!sellerUserId || sellerUserId === "") {
+    if (sellerUserId == null || sellerUserId === "") {
       redirect(
         `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
       );
