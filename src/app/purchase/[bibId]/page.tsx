@@ -76,12 +76,12 @@ export default async function BibPurchasePage({
     );
   }
 
-  const eventName = bib.expand?.eventId?.name || `Event ID: ${bib.eventId}`;
+  const eventName = bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`;
   const eventDate = bib.expand?.eventId
     ? new Date(bib.expand.eventId.date).toLocaleDateString()
     : "N/A";
 
-  async function handleConfirmPurchase(formData: FormData) {
+  async function handleConfirmPurchase() {
     "use server";
     const locale = await getLocale();
     const dictionary = await getDictionary(locale);
@@ -101,7 +101,7 @@ export default async function BibPurchasePage({
         );
       } else {
         redirect(
-          `/purchase/${bibId}?error=${encodeURIComponent(result.error || dictionary.purchase.errors.purchaseFailed)}`,
+          `/purchase/${bibId}?error=${encodeURIComponent(result.error ?? dictionary.purchase.errors.purchaseFailed)}`,
         );
       }
     } catch (error) {
@@ -198,7 +198,7 @@ export async function generateMetadata({
     return { title: dictionary.purchase.metadata.notFoundTitle };
   }
   const eventName =
-    (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ||
+    (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ??
     "Event";
   return {
     description: dictionary.purchase.metadata.descriptionTemplate

@@ -99,7 +99,7 @@ export async function updateUserBalance(
     console.error("Clerk User ID is required to update balance.");
     return null;
   }
-  if (typeof amountToAdd !== "number" || isNaN(amountToAdd)) {
+  if (typeof amountToAdd !== "number" ?? isNaN(amountToAdd)) {
     console.error("Invalid amount specified for balance update.");
     return null;
   }
@@ -115,7 +115,7 @@ export async function updateUserBalance(
     }
 
     // 2. Calculate the new balance.
-    const currentBalance = user.bibUpBalance || 0;
+    const currentBalance = user.bibUpBalance ?? 0;
     const newBalance = currentBalance + amountToAdd;
 
     // 3. Update the user's record with the new balance.

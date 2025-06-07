@@ -48,7 +48,7 @@ export default async function SellerDashboardPage({
   const { userId: clerkUserId } = await auth();
   const clerkUser = await currentUser();
 
-  if (!clerkUserId || !clerkUser) {
+  if (!clerkUserId ?? !clerkUser) {
     return (
       <div className="p-4 md:p-8 max-w-4xl mx-auto">
         {dictionary.dashboard.seller.pleaseSignIn}
@@ -58,7 +58,8 @@ export default async function SellerDashboardPage({
 
   const sellerName =
     clerkUser.firstName ??
-    (clerkUser.emailAddresses[0]?.emailAddress || "Seller");
+    clerkUser.emailAddresses[0]?.emailAddress ??
+    "Seller";
 
   let bibUpUser: null | User = null;
   let listedBibs: (Bib & { expand?: { eventId: Event } })[] = [];
@@ -143,8 +144,8 @@ export default async function SellerDashboardPage({
                     {" "}
                     {/* Using primary-pastel for bib name, adjust if needed */}
                     {dictionary.dashboard.seller.bibFor}{" "}
-                    {bib.expand?.eventId?.name ||
-                      `Event ID: ${bib.eventId || "N/A"}`}
+                    {bib.expand?.eventId?.name ??
+                      `Event ID: ${bib.eventId ?? "N/A"}`}
                   </div>
                   <p className="text-sm text-[var(--text-dark)]">
                     {dictionary.dashboard.seller.regNumber}{" "}
@@ -177,10 +178,10 @@ export default async function SellerDashboardPage({
                       {bib.status.replace(/_/g, " ").toUpperCase()}
                     </span>
                   </p>
-                  {(bib.status === "pending_validation" ||
-                    bib.status === "listed_public" ||
-                    bib.status === "listed_private" ||
-                    bib.status === "withdrawn" ||
+                  {(bib.status === "pending_validation" ??
+                    bib.status === "listed_public" ??
+                    bib.status === "listed_private" ??
+                    bib.status === "withdrawn" ??
                     bib.status === "validation_failed") && (
                     <Link
                       className="btn btn-secondary text-xs py-1 px-3 mt-2 inline-block"

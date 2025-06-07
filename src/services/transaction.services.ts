@@ -13,11 +13,11 @@ export async function createTransaction(
   transactionData: Omit<Transaction, "id" | "transactionDate">,
 ): Promise<null | Transaction> {
   if (
-    !transactionData.bibId ||
-    !transactionData.buyerUserId ||
-    !transactionData.sellerUserId ||
-    transactionData.amount === undefined ||
-    transactionData.platformFee === undefined ||
+    !transactionData.bibId ??
+    !transactionData.buyerUserId ??
+    !transactionData.sellerUserId ??
+    transactionData.amount === undefined ??
+    transactionData.platformFee === undefined ??
     !transactionData.status
   ) {
     console.error(

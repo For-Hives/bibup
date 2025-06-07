@@ -164,6 +164,6 @@ export async function generateMetadata({
   const event = await fetchEventById(id);
   return {
     title: event ? `${event.name} | Event Details` : "Event Not Found",
-    description: event?.description || "Details for the event.",
+    description: event?.description ?? "Details for the event.",
   };
 }

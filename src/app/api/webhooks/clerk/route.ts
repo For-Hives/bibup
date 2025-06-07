@@ -1,4 +1,4 @@
-import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
+import { WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
@@ -18,13 +18,13 @@ export async function POST(req: Request) {
   }
 
   // Get the headers
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
   // If there are no headers, error out
-  if (!svix_id || !svix_timestamp || !svix_signature) {
+  if (!svix_id ?? !svix_timestamp ?? !svix_signature) {
     return NextResponse.json(
       { error: "Error occured -- no svix headers" },
       { status: 400 },
@@ -56,13 +56,12 @@ export async function POST(req: Request) {
   }
 
   // Get the ID and type
-  const { id } = evt.data;
   const eventType = evt.type;
 
   if (eventType === "user.created") {
     const {
       email_addresses,
-      public_metadata,
+
       id: clerkId,
       first_name,
       last_name,
@@ -89,8 +88,8 @@ export async function POST(req: Request) {
     }
 
     const userData: CreateUserDTO = {
-      firstName: first_name || "",
-      lastName: last_name || "",
+      firstName: first_name ?? "",
+      lastName: last_name ?? "",
       email: primaryEmail,
       clerkId,
     };
@@ -111,11 +110,11 @@ export async function POST(req: Request) {
       // Update Clerk user metadata with default role
       // Note: public_metadata from the event might not be up-to-date if it was just created.
       // We explicitly set the roles we want as the default.
-      await clerkClient.users.updateUserMetadata(clerkId, {
-        publicMetadata: {
-          roles: ["buyer"], // Default role
-        },
-      });
+      // await clerkClient.users.updateUserMetadata(clerkId, {
+      //   publicMetadata: {
+      //     roles: ["buyer"], // Default role
+      //   },
+      // });
 
       return NextResponse.json(
         { message: "User created and metadata updated successfully" },

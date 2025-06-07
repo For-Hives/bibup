@@ -70,14 +70,14 @@ export default async function BuyerDashboardPage({
   const { userId: clerkUserId } = await auth();
   const clerkUser = await currentUser();
 
-  if (!clerkUserId || !clerkUser) {
+  if (!clerkUserId ?? !clerkUser) {
     return (
       <p style={styles.container}>{dictionary.dashboard.buyer.pleaseSignIn}</p>
     );
   }
 
   const buyerName =
-    clerkUser.firstName || clerkUser.emailAddresses[0]?.emailAddress || "Buyer";
+    clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? "Buyer";
 
   let purchasedBibs: (Bib & { expand?: { eventId: Event } })[] = [];
   let userWaitlists: (Waitlist & { expand?: { eventId: Event } })[] = [];
@@ -120,7 +120,7 @@ export default async function BuyerDashboardPage({
               <li key={bib.id} style={styles.listItem}>
                 <div style={styles.itemName}>
                   {dictionary.dashboard.buyer.bibForLabel}{" "}
-                  {bib.expand?.eventId?.name || `Event ID: ${bib.eventId}`}
+                  {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
                 </div>
                 <p style={styles.itemDetail}>
                   {dictionary.dashboard.buyer.dateOfEvent}{" "}
@@ -164,7 +164,7 @@ export default async function BuyerDashboardPage({
                     href={`/events/${waitlistEntry.eventId}`}
                     style={styles.link}
                   >
-                    {waitlistEntry.expand?.eventId?.name ||
+                    {waitlistEntry.expand?.eventId?.name ??
                       `Event ID: ${waitlistEntry.eventId}`}
                   </Link>
                 </div>

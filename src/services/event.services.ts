@@ -33,16 +33,16 @@ export async function createEvent(
     console.error("Organizer ID is required to create an event.");
     return null;
   }
-  if (!eventData.name || !eventData.date || !eventData.location) {
+  if (!eventData.name ?? !eventData.date ?? !eventData.location) {
     console.error("Event name, date, and location are required.");
     return null;
   }
 
   try {
     const dataToCreate: Omit<Event, "id"> = {
-      participantCount: eventData.participantCount || 0, // Default participantCount
-      isPartnered: eventData.isPartnered || false, // Default isPartnered
-      description: eventData.description || "",
+      participantCount: eventData.participantCount ?? 0, // Default participantCount
+      isPartnered: eventData.isPartnered ?? false, // Default isPartnered
+      description: eventData.description ?? "",
       date: new Date(eventData.date), // Ensure date is a Date object
       location: eventData.location,
       status: "pending_approval", // Default status

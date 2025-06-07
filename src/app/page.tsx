@@ -2,7 +2,6 @@ import type { Event } from "@/models/event.model";
 
 import { getDictionary } from "@/lib/getDictionary";
 import { getLocale } from "@/lib/getLocale";
-import Image from "next/image";
 import Link from "next/link";
 
 import { fetchApprovedPublicEvents } from "@/services/event.services";
@@ -19,7 +18,7 @@ export default async function Home() {
     const events: Event[] = await fetchApprovedPublicEvents();
     totalEvents = events.length;
     totalBibsSold = events.reduce(
-      (sum, event) => sum + (event.bibsSold || 0),
+      (sum, event) => sum + (event.bibsSold ?? 0),
       0,
     );
   } catch (error) {

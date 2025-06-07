@@ -108,7 +108,9 @@ export default function ListNewBibClientPage({
   const formActionWrapper = (formData: FormData) => {
     setErrorMessage(null); // Clear previous errors on new submission
     // initialAuthUserId is passed from the server component wrapper.
-    handleListBibServerAction(formData, initialAuthUserId);
+    handleListBibServerAction(formData, initialAuthUserId).catch((error) => {
+      console.error("Error in form action:", error);
+    });
   };
 
   if (!initialAuthUserId) {
@@ -402,8 +404,8 @@ async function handleListBibServerAction(
     ) as string;
     bibData.eventId = ""; // Ensure eventId is empty for unlisted
     if (
-      !bibData.unlistedEventName ||
-      !bibData.unlistedEventDate ||
+      !bibData.unlistedEventName ??
+      !bibData.unlistedEventDate ??
       !bibData.unlistedEventLocation
     ) {
       redirect(
@@ -421,8 +423,8 @@ async function handleListBibServerAction(
   }
 
   if (
-    !bibData.registrationNumber ||
-    isNaN(bibData.price) ||
+    !bibData.registrationNumber ??
+    isNaN(bibData.price) ??
     bibData.price <= 0
   ) {
     redirect(

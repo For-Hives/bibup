@@ -17,7 +17,7 @@ export async function addToWaitlist(
   eventId: string,
   userId: string,
 ): Promise<null | (Waitlist & { error?: string })> {
-  if (!eventId || !userId) {
+  if (!eventId ?? !userId) {
     console.error("Event ID and User ID are required to join a waitlist.");
     return null;
   }
