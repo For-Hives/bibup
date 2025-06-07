@@ -9,27 +9,8 @@ import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path
  * @param eventData Partial data for the new event. Fields like name, date, location, description are expected.
  * @param organizerId The ID of the user (organizer) creating the event.
  */
-export async function createEvent(
-	eventData: Partial<
-		Omit<
-			Event,
-			| 'bibsSold'
-			| 'id'
-			| 'isPartnered'
-			| 'organizerId'
-			| 'participantCount'
-			| 'status'
-		>
-	> & {
-		date: Date
-		isPartnered?: boolean
-		location: string
-		name: string
-		participantCount?: number
-	},
-	organizerId: string
-): Promise<Event | null> {
-	if (!organizerId) {
+export async function saveEvent(eventData: Event): Promise<Event | null> {
+	if (!eventData.organizerId) {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
@@ -50,7 +31,7 @@ export async function createEvent(
 			date: new Date(eventData.date), // Ensure date is a Date object
 			location: eventData.location,
 			status: 'pending_approval', // Default status
-			organizerId: organizerId,
+			organizerId: eventData.organizerId,
 			name: eventData.name,
 			bibsSold: 0, // Default bibsSold
 			// Ensure any other required fields from the Event model are present with defaults if necessary
@@ -60,20 +41,7 @@ export async function createEvent(
 		return record
 	} catch (error: unknown) {
 		console.error('Error creating event:', error)
-		if (error !== null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-			if (
-				'response' in error &&
-				error.response !== null &&
-				typeof error.response === 'object' &&
-				'data' in error.response
-			) {
-				console.error(
-					'PocketBase response data:',
-					(error.response as { data: unknown }).data
-				)
-			}
-		}
+
 		return null
 	}
 }
@@ -94,15 +62,6 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 		return records
 	} catch (error: unknown) {
 		console.error('Error fetching approved public events:', error)
-		// Check if it's a 404 error (no records found matching the filter)
-		if (
-			error !== null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No approved public events found, return empty array
-		}
 		// Return empty array on other errors for safety and consistency with other functions
 		return []
 	}
@@ -118,17 +77,8 @@ export async function fetchEventById(id: string): Promise<Event | null> {
 		return record
 	} catch (error: unknown) {
 		console.error(`Error fetching event with ID "${id}":`, error)
-		// For getOne, if the record is not found, PocketBase throws an error.
-		// You might want to return null or a more specific error type.
-		if (
-			error !== null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return null // Event not found
-		}
-		throw error // Re-throw other errors
+
+		return null // Return null if the event is not found or an error occurs
 	}
 }
 
@@ -143,10 +93,9 @@ export async function fetchEventsByOrganizer(
 		console.error('Organizer ID is required to fetch their events.')
 		return [] // Return empty array if no organizerId is provided
 	}
-
 	try {
 		const records = await pb.collection('events').getFullList<Event>({
-			filter: `organizerId = "${organizerId}"`, // Filter by organizerId
+			filter: `organizerId = "${organizerId}"`, // TODO: check if it is not possible to inject code here
 			sort: '-created', // Sort by creation date, newest first. Or use '-date' for event date.
 		})
 		return records
@@ -155,15 +104,6 @@ export async function fetchEventsByOrganizer(
 			`Error fetching events for organizer ID "${organizerId}":`,
 			error
 		)
-		// Check if it's a 404 error (no records found for this organizer)
-		if (
-			error !== null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No events found for this organizer, return empty array
-		}
 		// For other errors (connection issues, collection doesn't exist, etc.)
 		// Return empty array for safety to prevent UI crashes
 		return []
@@ -183,15 +123,7 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 		return records
 	} catch (error: unknown) {
 		console.error('Error fetching partnered and approved events:', error)
-		// Check if it's a 404 error (no records found matching the filter)
-		if (
-			error !== null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No partnered approved events found, return empty array
-		}
+
 		// For other errors, return empty array for safety
 		return []
 	}

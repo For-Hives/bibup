@@ -37,16 +37,13 @@ export type UpdateBibData = Partial<
  * @param bibData Data for the new bib, including potential unlisted event details.
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
-export async function createBib(
-	bibData: CreateBibData,
-	sellerUserId: string
-): Promise<Bib | null> {
-	if (!sellerUserId) {
+export async function createBib(bibData: Bib): Promise<Bib | null> {
+	if (!bibData.sellerUserId) {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
 	}
 	if (
-		!bibData.registrationNumber ||
+		bibData.registrationNumber == '' ||
 		bibData.price === undefined ||
 		bibData.price < 0
 	) {
@@ -55,59 +52,14 @@ export async function createBib(
 	}
 
 	let status: Bib['status'] = 'pending_validation'
-	let finalEventId: string | undefined = bibData.eventId
-
-	if (bibData.isNotListedEvent === true) {
-		if (
-			bibData.unlistedEventName == null ||
-			(bibData.unlistedEventDate?.trim() ?? '') === '' ||
-			(bibData.unlistedEventLocation?.trim() ?? '') === ''
-		) {
-			console.error(
-				'For unlisted events, event name, date, and location are required.'
-			)
-			return null
-		}
-		// For unlisted events, eventId might be null or a placeholder.
-		// The actual event creation/linking would be an admin task.
-		finalEventId = undefined // Or link to a generic "unverified event" record ID if one exists
-		status = 'pending_validation' // Special status for these submissions
-		// Add the unlisted event details to the bib record itself, or a related "unverified_events" table.
-		// For simplicity here, we might add them as new fields to the Bib model if not too complex,
-		// or store them in a generic 'notes' field or a structured JSON field if PocketBase supports it.
-		// For this implementation, we'll assume these fields are added to the Bib model/collection for now.
-	} else {
-		if ((bibData.eventId?.trim() ?? '') === '') {
-			console.error('Event ID is required for partnered event bib listings.')
-			return null
-		}
-	}
+	let finalEventId: string = bibData.eventId
 
 	try {
-		const dataToCreate: Omit<Bib, 'eventId' | 'id'> & {
-			eventId?: string // Make eventId optional for unlisted events
-			unlistedEventDate?: string // Consider storing as ISO string if PocketBase field is Date
-			unlistedEventLocation?: string
-			unlistedEventName?: string
-		} = {
-			unlistedEventLocation:
-				bibData.isNotListedEvent === true
-					? bibData.unlistedEventLocation
-					: undefined,
-			// Store unlisted event details directly if the Bib model is extended
-			// This is a simplification; a separate table for unverified events might be better.
-			unlistedEventName:
-				bibData.isNotListedEvent === true
-					? bibData.unlistedEventName
-					: undefined,
-			unlistedEventDate:
-				bibData.isNotListedEvent === true
-					? bibData.unlistedEventDate
-					: undefined, // Ensure correct date format if model expects Date
+		const dataToCreate: Omit<Bib, 'id'> = {
 			registrationNumber: bibData.registrationNumber,
 			originalPrice: bibData.originalPrice,
 			privateListingToken: undefined,
-			sellerUserId: sellerUserId,
+			sellerUserId: bibData.sellerUserId,
 			gender: bibData.gender,
 			buyerUserId: undefined,
 			eventId: finalEventId, // This will be undefined for unlisted events
@@ -116,32 +68,11 @@ export async function createBib(
 			status: status,
 		}
 
-		// Remove undefined unlisted fields if not applicable, to avoid sending empty strings or nulls
-		// if PocketBase schema doesn't like them for non-applicable cases.
-		if (bibData.isNotListedEvent !== true) {
-			delete dataToCreate.unlistedEventName
-			delete dataToCreate.unlistedEventDate
-			delete dataToCreate.unlistedEventLocation
-		}
-
 		const record = await pb.collection('bibs').create<Bib>(dataToCreate)
 		return record
 	} catch (error) {
 		console.error('Error creating bib listing:', error)
-		if (error != null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-			if (
-				'response' in error &&
-				error.response != null &&
-				typeof error.response === 'object' &&
-				'data' in error.response
-			) {
-				console.error(
-					'PocketBase response data:',
-					(error.response as { data: unknown }).data
-				)
-			}
-		}
+
 		return null
 	}
 }

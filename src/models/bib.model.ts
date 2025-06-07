@@ -1,5 +1,7 @@
+import { User } from './user.model'
+
 export interface Bib {
-	buyerUserId?: string // Optional, filled when sold
+	buyerUserId?: User['id'] // Optional, filled when sold
 	eventId: string
 	gender?: 'female' | 'male' | 'unisex'
 	id: string
@@ -7,7 +9,7 @@ export interface Bib {
 	price: number // Selling price
 	privateListingToken?: string // Optional, for private sale links
 	registrationNumber: string
-	sellerUserId: string
+	sellerUserId: User['id']
 	size?: string
 	status:
 		| 'expired'
