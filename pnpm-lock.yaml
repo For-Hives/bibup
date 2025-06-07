@@ -11,7 +11,7 @@ importers:
         specifier: 6.21.0
         version: 6.21.0(next@15.3.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@formatjs/intl-localematcher':
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1
       '@next/eslint-plugin-next':
         specifier: 15.3.3
@@ -40,32 +40,29 @@ importers:
       eslint-plugin-react-hooks:
         specifier: 5.2.0
         version: 5.2.0(eslint@9.28.0(jiti@2.4.2))
-      eslint-plugin-woke:
-        specifier: 1.0.1
-        version: 1.0.1(eslint@9.28.0(jiti@2.4.2))
       espree:
         specifier: 10.3.0
         version: 10.3.0
       negotiator:
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0
       next:
         specifier: 15.3.3
-        version: 15.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.3.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       pocketbase:
-        specifier: ^0.26.0
+        specifier: 0.26.0
         version: 0.26.0
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.12
+        specifier: 0.6.12
         version: 0.6.12(prettier@3.5.3)
       react:
-        specifier: 19.1.0
-        version: 19.1.0
+        specifier: 19.0.0
+        version: 19.0.0
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       svix:
-        specifier: ^1.67.0
+        specifier: 1.67.0
         version: 1.67.0
     devDependencies:
       '@eslint/eslintrc':
@@ -75,8 +72,8 @@ importers:
         specifier: '4'
         version: 4.1.8
       '@types/node':
-        specifier: '20'
-        version: 20.19.0
+        specifier: 22.15.30
+        version: 22.15.30
       '@types/react':
         specifier: '19'
         version: 19.1.6
@@ -84,10 +81,10 @@ importers:
         specifier: '19'
         version: 19.1.6(@types/react@19.1.6)
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.33.1
+        specifier: 8.33.1
         version: 8.33.1(@typescript-eslint/parser@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/parser':
-        specifier: ^8.33.1
+        specifier: 8.33.1
         version: 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       eslint:
         specifier: '9'
@@ -828,12 +825,6 @@ packages:
     resolution:
       {
         integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==,
-      }
-
-  '@types/node@20.19.0':
-    resolution:
-      {
-        integrity: sha512-hfrc+1tud1xcdVTABC2JiomZJEklMcXYNTVtZLAeqTVWD+qL5jkHKT+1lOtqDdGxt+mB53DTtiz673vfjU8D1Q==,
       }
 
   '@types/node@22.15.30':
@@ -1685,15 +1676,6 @@ packages:
     engines: { node: '>=4' }
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
-
-  eslint-plugin-woke@1.0.1:
-    resolution:
-      {
-        integrity: sha512-cDRyZMNJkrbycju6OKhGnF29j0kbzV9AnLk3IPz6Kn0vWrSf8RyUdS5at97o/CJ8SEN2e6furQch1o/0LIrfMg==,
-      }
-    engines: { node: '>=10.0.0' }
-    peerDependencies:
-      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
   eslint-scope@8.3.0:
     resolution:
@@ -2890,7 +2872,7 @@ packages:
         integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==,
       }
     peerDependencies:
-      react: ^19.1.0
+      react: ^19.0.0
 
   react-is@16.13.1:
     resolution:
@@ -2918,13 +2900,6 @@ packages:
         integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==,
       }
     engines: { node: '>= 0.4' }
-
-  requireindex@1.1.0:
-    resolution:
-      {
-        integrity: sha512-LBnkqsDE7BZKvqylbmn7lTIVdpx4K/QCduRATpO5R+wtPmky/a8pN1bO2D6wXppn1497AJF9mNjqAXr6bdl9jg==,
-      }
-    engines: { node: '>=0.10.5' }
 
   requires-port@1.0.0:
     resolution:
@@ -3526,10 +3501,10 @@ snapshots:
       glob-to-regexp: 0.4.1
       js-cookie: 3.0.5
       std-env: 3.9.0
-      swr: 2.3.3(react@19.1.0)
+      swr: 2.3.3(react@19.0.0)
     optionalDependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@clerk/types@4.60.0':
     dependencies:
@@ -3869,10 +3844,6 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
-
-  '@types/node@20.19.0':
-    dependencies:
-      undici-types: 6.21.0
 
   '@types/node@22.15.30':
     dependencies:
@@ -4430,7 +4401,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.28.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.31.0)(eslint@9.28.0(jiti@2.4.2)))(eslint@9.28.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -4452,7 +4423,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.28.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.28.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.31.0)(eslint@9.28.0(jiti@2.4.2)))(eslint@9.28.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -4540,11 +4511,6 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
-
-  eslint-plugin-woke@1.0.1(eslint@9.28.0(jiti@2.4.2)):
-    dependencies:
-      eslint: 9.28.0(jiti@2.4.2)
-      requireindex: 1.1.0
 
   eslint-scope@8.3.0:
     dependencies:
@@ -5057,9 +5023,9 @@ snapshots:
       busboy: 1.6.0
       caniuse-lite: 1.0.30001721
       postcss: 8.4.31
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      styled-jsx: 5.1.6(react@19.1.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      styled-jsx: 5.1.6(react@19.0.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.3.3
       '@next/swc-darwin-x64': 15.3.3
@@ -5204,14 +5170,14 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.1.0(react@19.1.0):
+  react-dom@19.0.0(react@19.0.0):
     dependencies:
-      react: 19.1.0
-      scheduler: 0.26.0
+      react: 19.0.0
+      scheduler: 0.25.0
 
   react-is@16.13.1: {}
 
-  react@19.1.0: {}
+  react@19.0.0: {}
 
   reflect.getprototypeof@1.0.10:
     dependencies:
@@ -5232,8 +5198,6 @@ snapshots:
       get-proto: 1.0.1
       gopd: 1.2.0
       set-function-name: 2.0.2
-
-  requireindex@1.1.0: {}
 
   requires-port@1.0.0: {}
 
@@ -5278,7 +5242,7 @@ snapshots:
       es-errors: 1.3.0
       is-regex: 1.2.1
 
-  scheduler@0.26.0: {}
+  scheduler@0.25.0: {}
 
   semver@6.3.1: {}
 
@@ -5454,10 +5418,10 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.6(react@19.1.0):
+  styled-jsx@5.1.6(react@19.0.0):
     dependencies:
       client-only: 0.0.1
-      react: 19.1.0
+      react: 19.0.0
 
   supports-color@7.2.0:
     dependencies:
@@ -5486,8 +5450,8 @@ snapshots:
   swr@2.3.3(react@19.0.0):
     dependencies:
       dequal: 2.0.3
-      react: 19.1.0
-      use-sync-external-store: 1.5.0(react@19.1.0)
+      react: 19.0.0
+      use-sync-external-store: 1.5.0(react@19.0.0)
 
   synckit@0.11.8:
     dependencies:
@@ -5613,7 +5577,7 @@ snapshots:
 
   use-sync-external-store@1.5.0(react@19.0.0):
     dependencies:
-      react: 19.1.0
+      react: 19.0.0
 
   webidl-conversions@3.0.1: {}
 
