@@ -57,11 +57,11 @@ export async function createBib(
   let status: Bib["status"] = "pending_validation";
   let finalEventId: string | undefined = bibData.eventId;
 
-  if (bibData.isNotListedEvent) {
+  if (bibData.isNotListedEvent === true) {
     if (
       bibData.unlistedEventName == null ||
-      !bibData.unlistedEventDate ||
-      !bibData.unlistedEventLocation
+      (bibData.unlistedEventDate?.trim() ?? "") === "" ||
+      (bibData.unlistedEventLocation?.trim() ?? "") === ""
     ) {
       console.error(
         "For unlisted events, event name, date, and location are required.",
@@ -77,7 +77,7 @@ export async function createBib(
     // or store them in a generic 'notes' field or a structured JSON field if PocketBase supports it.
     // For this implementation, we'll assume these fields are added to the Bib model/collection for now.
   } else {
-    if (!bibData.eventId) {
+    if ((bibData.eventId?.trim() ?? "") === "") {
       console.error("Event ID is required for partnered event bib listings.");
       return null;
     }
@@ -90,17 +90,20 @@ export async function createBib(
       unlistedEventLocation?: string;
       unlistedEventName?: string;
     } = {
-      unlistedEventLocation: bibData.isNotListedEvent
-        ? bibData.unlistedEventLocation
-        : undefined,
+      unlistedEventLocation:
+        bibData.isNotListedEvent === true
+          ? bibData.unlistedEventLocation
+          : undefined,
       // Store unlisted event details directly if the Bib model is extended
       // This is a simplification; a separate table for unverified events might be better.
-      unlistedEventName: bibData.isNotListedEvent
-        ? bibData.unlistedEventName
-        : undefined,
-      unlistedEventDate: bibData.isNotListedEvent
-        ? bibData.unlistedEventDate
-        : undefined, // Ensure correct date format if model expects Date
+      unlistedEventName:
+        bibData.isNotListedEvent === true
+          ? bibData.unlistedEventName
+          : undefined,
+      unlistedEventDate:
+        bibData.isNotListedEvent === true
+          ? bibData.unlistedEventDate
+          : undefined, // Ensure correct date format if model expects Date
       registrationNumber: bibData.registrationNumber,
       originalPrice: bibData.originalPrice,
       privateListingToken: undefined,
@@ -115,7 +118,7 @@ export async function createBib(
 
     // Remove undefined unlisted fields if not applicable, to avoid sending empty strings or nulls
     // if PocketBase schema doesn't like them for non-applicable cases.
-    if (!bibData.isNotListedEvent) {
+    if (bibData.isNotListedEvent !== true) {
       delete dataToCreate.unlistedEventName;
       delete dataToCreate.unlistedEventDate;
       delete dataToCreate.unlistedEventLocation;
@@ -125,17 +128,17 @@ export async function createBib(
     return record;
   } catch (error) {
     console.error("Error creating bib listing:", error);
-    if (error && typeof error === "object" && "message" in error) {
+    if (error != null && typeof error === "object" && "message" in error) {
       console.error("PocketBase error details:", error.message);
       if (
         "response" in error &&
-        error.response &&
+        error.response != null &&
         typeof error.response === "object" &&
         "data" in error.response
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any)?.data,
+          (error.response as { data: unknown }).data,
         );
       }
     }
@@ -165,7 +168,7 @@ export async function fetchBibById(
   } catch (error) {
     console.error(`Error fetching bib with ID "${bibId}":`, error);
     if (
-      error &&
+      error != null &&
       typeof error === "object" &&
       "status" in error &&
       error.status === 404
@@ -209,7 +212,7 @@ export async function fetchBibByIdForSeller(
       error,
     );
     if (
-      error &&
+      error != null &&
       typeof error === "object" &&
       "status" in error &&
       error.status === 404
@@ -246,7 +249,7 @@ export async function fetchBibsByBuyer(
     console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error);
     // Check if it's a 404 error (no records found for this buyer)
     if (
-      error &&
+      error != null &&
       typeof error === "object" &&
       "status" in error &&
       error.status === 404
@@ -296,7 +299,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
     );
     // Check if it's a 404 error (no records found for this seller)
     if (
-      error &&
+      error != null &&
       typeof error === "object" &&
       "status" in error &&
       error.status === 404
@@ -340,7 +343,7 @@ export async function fetchPubliclyListedBibsForEvent(
     );
     // Check if it's a 404 error (no records found for this event)
     if (
-      error &&
+      error != null &&
       typeof error === "object" &&
       "status" in error &&
       error.status === 404
@@ -369,7 +372,7 @@ export async function processBibSale(
   try {
     // 1. Fetch the Bib. Ensure it's available for sale.
     const bib = await pb.collection("bibs").getOne<Bib>(bibId);
-    if (!bib) {
+    if (bib == null) {
       return { error: `Bib with ID ${bibId} not found.`, success: false };
     }
     if (bib.status !== "listed_public") {
@@ -404,7 +407,7 @@ export async function processBibSale(
       // paymentIntentId would be set here if using a real payment gateway
     });
 
-    if (!transaction) {
+    if (transaction == null) {
       return { error: "Failed to create transaction record.", success: false };
     }
 
@@ -413,7 +416,7 @@ export async function processBibSale(
       bib.sellerUserId,
       amountToSeller,
     );
-    if (!sellerBalanceUpdated) {
+    if (sellerBalanceUpdated == null) {
       // Attempt to mark transaction as failed or requiring attention if seller balance update fails.
       // This is a critical error that needs monitoring/manual intervention.
       await pb.collection("transactions").update(transaction.id, {
@@ -438,7 +441,7 @@ export async function processBibSale(
     });
 
     // 7. Initiate Organizer Notification (Conceptual)
-    if (updatedBib) {
+    if (updatedBib != null) {
       // Ensure bib was successfully marked as sold
       // await initiateOrganizerNotification(
       //   updatedBib.id,
@@ -456,7 +459,7 @@ export async function processBibSale(
       errorMessage = error.message;
     } else if (
       typeof error === "object" &&
-      error &&
+      error != null &&
       "message" in error &&
       typeof error.message === "string"
     ) {
@@ -530,7 +533,7 @@ export async function updateBibBySeller(
     return updatedRecord;
   } catch (error) {
     console.error(`Error updating bib ${bibId}:`, error);
-    if (error && typeof error === "object" && "message" in error) {
+    if (error != null && typeof error === "object" && "message" in error) {
       console.error("PocketBase error details:", error.message);
     }
     return null;
@@ -558,7 +561,7 @@ export async function updateBibStatusByAdmin(
     const dataToUpdate: Partial<Bib> & { adminNotes?: string } = {
       status: newStatus,
     };
-    if (adminNotes) {
+    if ((adminNotes?.trim() ?? "") !== "") {
       // Assuming 'adminNotes' is a field in your Bib model/collection.
       // If not, this part needs to be adjusted (e.g., add to a generic 'notes' field).
       dataToUpdate.adminNotes = adminNotes;
@@ -572,7 +575,7 @@ export async function updateBibStatusByAdmin(
     return updatedRecord;
   } catch (error) {
     console.error(`Error updating bib ${bibId} status by admin:`, error);
-    if (error && typeof error === "object" && "message" in error) {
+    if (error != null && typeof error === "object" && "message" in error) {
       console.error("PocketBase error details:", error.message);
     }
     return null;

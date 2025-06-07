@@ -9,7 +9,11 @@ import { createUser, CreateUserDTO } from "@/services/user.services"; // Adjust 
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
-  if (!WEBHOOK_SECRET) {
+  if (
+    WEBHOOK_SECRET === undefined ||
+    WEBHOOK_SECRET === null ||
+    WEBHOOK_SECRET.trim() === ""
+  ) {
     console.error("CLERK_WEBHOOK_SECRET is not set");
     return NextResponse.json(
       { error: "Internal Server Error: Webhook secret not configured" },
@@ -32,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   // Get the body
-  const payload = await req.json();
+  const payload: unknown = await req.json();
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your secret.
@@ -79,7 +83,11 @@ export async function POST(req: Request) {
       (email) => email.id === evt.data.primary_email_address_id,
     )?.email_address;
 
-    if (!primaryEmail) {
+    if (
+      primaryEmail === undefined ||
+      primaryEmail === null ||
+      primaryEmail.trim() === ""
+    ) {
       console.error(`User ${clerkId} has no primary email address.`);
       return NextResponse.json(
         { error: "Primary email address missing" },
