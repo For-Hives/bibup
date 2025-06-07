@@ -58,19 +58,19 @@ export async function createEvent(
 
 		const record = await pb.collection('events').create<Event>(dataToCreate)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error creating event:', error)
-		if (error && typeof error === 'object' && 'message' in error) {
+		if (error !== null && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', error.message)
 			if (
 				'response' in error &&
-				error.response &&
+				error.response !== null &&
 				typeof error.response === 'object' &&
 				'data' in error.response
 			) {
 				console.error(
 					'PocketBase response data:',
-					(error.response as any)?.data
+					(error.response as { data: unknown }).data
 				)
 			}
 		}
@@ -92,11 +92,11 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 
 		// PocketBase SDK should correctly type records if <Event> is used with getFullList
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error fetching approved public events:', error)
 		// Check if it's a 404 error (no records found matching the filter)
 		if (
-			error &&
+			error !== null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			error.status === 404
@@ -116,12 +116,12 @@ export async function fetchEventById(id: string): Promise<Event | null> {
 	try {
 		const record = await pb.collection('events').getOne<Event>(id)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching event with ID "${id}":`, error)
 		// For getOne, if the record is not found, PocketBase throws an error.
 		// You might want to return null or a more specific error type.
 		if (
-			error &&
+			error !== null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			error.status === 404
@@ -150,14 +150,14 @@ export async function fetchEventsByOrganizer(
 			sort: '-created', // Sort by creation date, newest first. Or use '-date' for event date.
 		})
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(
 			`Error fetching events for organizer ID "${organizerId}":`,
 			error
 		)
 		// Check if it's a 404 error (no records found for this organizer)
 		if (
-			error &&
+			error !== null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			error.status === 404
@@ -181,11 +181,11 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 			sort: 'date', // Sort by event date, upcoming first
 		})
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error fetching partnered and approved events:', error)
 		// Check if it's a 404 error (no records found matching the filter)
 		if (
-			error &&
+			error !== null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			error.status === 404
