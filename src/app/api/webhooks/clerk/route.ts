@@ -59,8 +59,6 @@ export async function POST(req: Request) {
   const { id } = evt.data;
   const eventType = evt.type;
 
-  console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
-
   if (eventType === "user.created") {
     const {
       email_addresses,
@@ -109,9 +107,6 @@ export async function POST(req: Request) {
           { status: 500 },
         );
       }
-      console.log(
-        `User ${newUserInDb.id} (Clerk ID: ${clerkId}) created successfully in PocketBase.`,
-      );
 
       // Update Clerk user metadata with default role
       // Note: public_metadata from the event might not be up-to-date if it was just created.
@@ -121,9 +116,6 @@ export async function POST(req: Request) {
           roles: ["buyer"], // Default role
         },
       });
-      console.log(
-        `Set publicMetadata.roles=['buyer'] for Clerk user ${clerkId}`,
-      );
 
       return NextResponse.json(
         { message: "User created and metadata updated successfully" },
@@ -142,7 +134,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
   } else {
-    console.log(`Received unhandled event type: ${eventType}`);
     return NextResponse.json(
       { message: `Webhook received: ${eventType}, but no handler configured.` },
       { status: 200 },

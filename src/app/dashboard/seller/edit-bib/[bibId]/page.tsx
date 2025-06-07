@@ -231,7 +231,7 @@ export default async function EditBibPage({
             </label>
             <input
               className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm dark:bg-neutral-700 dark:border-neutral-600"
-              defaultValue={bibWithEvent.originalPrice || ""}
+              defaultValue={bibWithEvent.originalPrice ?? ""}
               id="originalPrice"
               min="0.00"
               name="originalPrice"
@@ -245,7 +245,7 @@ export default async function EditBibPage({
             </label>
             <input
               className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm dark:bg-neutral-700 dark:border-neutral-600"
-              defaultValue={bibWithEvent.size || ""}
+              defaultValue={bibWithEvent.size ?? ""}
               id="size"
               name="size"
               type="text"
@@ -257,7 +257,7 @@ export default async function EditBibPage({
             </label>
             <select
               className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm dark:bg-neutral-700 dark:border-neutral-600"
-              defaultValue={bibWithEvent.gender || ""}
+              defaultValue={bibWithEvent.gender ?? ""}
               id="gender"
               name="gender"
             >

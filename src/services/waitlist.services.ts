@@ -31,15 +31,12 @@ export async function addToWaitlist(
           `userId = "${userId}" && eventId = "${eventId}"`,
         );
       if (existingEntry) {
-        console.log(
-          `User ${userId} is already on the waitlist for event ${eventId}.`,
-        );
         return { ...existingEntry, error: "already_on_waitlist" };
       }
     } catch (error: any) {
       // PocketBase throws 404 if getFirstListItem finds no record, which is expected if not on waitlist.
       // We only care about other errors here.
-      if (error.status !== 404) {
+      if (error?.status !== 404) {
         throw error; // Re-throw unexpected errors
       }
     }
@@ -73,7 +70,7 @@ export async function addToWaitlist(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error?.response as any)?.data,
         );
       }
     }

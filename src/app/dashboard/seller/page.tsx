@@ -57,9 +57,8 @@ export default async function SellerDashboardPage({
   }
 
   const sellerName =
-    clerkUser.firstName ||
-    clerkUser.emailAddresses[0]?.emailAddress ||
-    "Seller";
+    clerkUser.firstName ??
+    (clerkUser.emailAddresses[0]?.emailAddress || "Seller");
 
   let bibUpUser: null | User = null;
   let listedBibs: (Bib & { expand?: { eventId: Event } })[] = [];

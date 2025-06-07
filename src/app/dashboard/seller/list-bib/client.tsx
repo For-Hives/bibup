@@ -121,6 +121,17 @@ export default function ListNewBibClientPage({
     );
   }
 
+  if (!dictionary) {
+    // If dictionary is not available, we can't render the page properly.
+    // This should ideally not happen if the server component is set up correctly.
+    return (
+      <p style={styles.container}>
+        {dictionary?.seller?.listBib?.errors?.dictionaryNotFound ??
+          "Dictionary data not found."}
+      </p>
+    );
+  }
+
   return (
     <div style={styles.container}>
       <header style={styles.header}>
@@ -129,7 +140,7 @@ export default function ListNewBibClientPage({
 
       {errorMessage && (
         <p style={styles.error}>
-          {dictionary.seller.errorMessage} {errorMessage}
+          {dictionary.seller?.errorMessage} {errorMessage}
         </p>
       )}
       {/* {successMessage && <p style={styles.success}>{successMessage}</p>} */}
@@ -145,14 +156,14 @@ export default function ListNewBibClientPage({
               style={styles.checkbox}
               type="checkbox"
             />
-            {dictionary.seller.listBib.form.notListedEvent}
+            {dictionary.seller?.listBib.form.notListedEvent}
           </label>
         </div>
 
         {!isNotListedEvent ? (
           <div>
             <label htmlFor="eventId" style={styles.label}>
-              {dictionary.seller.listBib.form.eventSelect}:
+              {dictionary.seller?.listBib?.form?.eventSelect}:
             </label>
             <select
               disabled={isNotListedEvent}
@@ -162,7 +173,7 @@ export default function ListNewBibClientPage({
               style={styles.select}
             >
               <option value="">
-                {dictionary.seller.listBib.form.eventSelectPlaceholder}
+                {dictionary.seller?.listBib?.form?.eventSelectPlaceholder}
               </option>
               {partneredEvents.map((event) => (
                 <option key={event.id} value={event.id}>
@@ -185,13 +196,13 @@ export default function ListNewBibClientPage({
             </p>
             <div>
               <label htmlFor="unlistedEventName" style={styles.label}>
-                {dictionary.seller.listBib.form.unlistedEventName}:
+                {dictionary.seller?.listBib?.form?.unlistedEventName}:
               </label>
               <input
                 id="unlistedEventName"
                 name="unlistedEventName"
                 placeholder={
-                  dictionary.seller.listBib.form.unlistedEventNamePlaceholder
+                  dictionary.seller?.listBib?.form?.unlistedEventNamePlaceholder
                 }
                 required={isNotListedEvent}
                 style={styles.input}
@@ -227,13 +238,13 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="registrationNumber" style={styles.label}>
-            {dictionary.seller.listBib.form.registrationNumber}:
+            {dictionary.seller?.listBib?.form?.registrationNumber}:
           </label>
           <input
             id="registrationNumber"
             name="registrationNumber"
             placeholder={
-              dictionary.seller.listBib.form.registrationNumberPlaceholder
+              dictionary.seller?.listBib?.form?.registrationNumberPlaceholder
             }
             required
             style={styles.input}
@@ -243,13 +254,13 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="price" style={styles.label}>
-            {dictionary.seller.listBib.form.price}:
+            {dictionary.seller?.listBib?.form?.price}:
           </label>
           <input
             id="price"
             min="0.01"
             name="price"
-            placeholder={dictionary.seller.listBib.form.pricePlaceholder}
+            placeholder={dictionary.seller?.listBib?.form?.pricePlaceholder}
             required
             step="0.01"
             style={styles.input}
@@ -273,12 +284,12 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="size" style={styles.label}>
-            {dictionary.seller.listBib.form.size}:
+            {dictionary.seller?.listBib?.form?.size}:
           </label>
           <input
             id="size"
             name="size"
-            placeholder={dictionary.seller.listBib.form.sizePlaceholder}
+            placeholder={dictionary.seller?.listBib?.form?.sizePlaceholder}
             style={styles.input}
             type="text"
           />
@@ -286,11 +297,11 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="gender" style={styles.label}>
-            {dictionary.seller.listBib.form.gender}:
+            {dictionary.seller?.listBib?.form?.gender}:
           </label>
           <select id="gender" name="gender" style={styles.select}>
             <option value="">
-              {dictionary.seller.listBib.form.genderPlaceholder}
+              {dictionary.seller?.listBib?.form?.genderPlaceholder}
             </option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -300,12 +311,12 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="notes" style={styles.label}>
-            {dictionary.seller.listBib.form.notes}:
+            {dictionary.seller?.listBib?.form?.notes}:
           </label>
           <textarea
             id="notes"
             name="notes"
-            placeholder={dictionary.seller.listBib.form.notesPlaceholder}
+            placeholder={dictionary.seller?.listBib?.form?.notesPlaceholder}
             rows={3}
             style={styles.input}
           />
@@ -327,11 +338,11 @@ export default function ListNewBibClientPage({
           style={styles.button}
           type="submit"
         >
-          {dictionary.seller.listBib.form.submit}
+          {dictionary.seller?.listBib?.form?.submit}
         </button>
       </form>
       <Link href="/dashboard/seller" style={styles.link}>
-        {dictionary.seller.listBib.backToDashboard}
+        {dictionary.seller?.listBib?.backToDashboard}
       </Link>
     </div>
   );

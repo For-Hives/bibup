@@ -5,7 +5,7 @@ export async function getLocale() {
   try {
     // Get the Accept-Language header from the request
     const headersList = await headers();
-    const acceptLanguage = headersList.get("accept-language") || "";
+    const acceptLanguage = headersList.get("accept-language") ?? "";
 
     // Parse the accept-language header to find the preferred language
     const languages = acceptLanguage

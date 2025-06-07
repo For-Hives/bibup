@@ -1,6 +1,3 @@
-import { Event } from "./event.model";
-import { User } from "./user.model";
-
 export interface Waitlist {
   addedAt: Date; // Should be DateTime
   eventId: string;

@@ -4,8 +4,6 @@ import type { Transaction } from "@/models/transaction.model";
 
 import { pb } from "@/lib/pocketbaseClient";
 
-const PLATFORM_FEE_PERCENTAGE = 0.1; // 10%
-
 /**
  * Creates a new transaction record.
  * @param transactionData Data for the new transaction.
@@ -51,7 +49,7 @@ export async function createTransaction(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error.response as any)?.data,
         );
       }
     }
