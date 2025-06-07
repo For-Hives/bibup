@@ -1,7 +1,8 @@
 // src/app/faq/page.tsx
 import type { Metadata } from "next";
-import { getLocale } from "@/lib/getLocale";
+
 import { getDictionary } from "@/lib/getDictionary";
+import { getLocale } from "@/lib/getLocale";
 
 export const metadata: Metadata = {
   description:

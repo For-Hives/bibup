@@ -1,10 +1,10 @@
 import type { Event } from "@/models/event.model"; // Adjust path as necessary
 
+import { getDictionary } from "@/lib/getDictionary";
+import { getLocale } from "@/lib/getLocale";
 import Link from "next/link";
 
 import { fetchApprovedPublicEvents } from "@/services/event.services"; // Adjust path as necessary
-import { getLocale } from "@/lib/getLocale";
-import { getDictionary } from "@/lib/getDictionary";
 
 interface GroupedEvents {
   [yearMonth: string]: Event[];

@@ -12,7 +12,7 @@ const PLATFORM_FEE_PERCENTAGE = 0.1; // 10%
  *   Expects: bibId, buyerUserId, sellerUserId, amount (selling price of bib), platformFee, status.
  */
 export async function createTransaction(
-  transactionData: Omit<Transaction, "id" | "transactionDate">
+  transactionData: Omit<Transaction, "id" | "transactionDate">,
 ): Promise<null | Transaction> {
   if (
     !transactionData.bibId ||
@@ -24,7 +24,7 @@ export async function createTransaction(
   ) {
     console.error(
       "Missing required fields for transaction creation:",
-      transactionData
+      transactionData,
     );
     return null;
   }
@@ -51,7 +51,7 @@ export async function createTransaction(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data
+          (error.response as any).data,
         );
       }
     }

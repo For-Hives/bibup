@@ -1,6 +1,3 @@
-import { Event } from "./event.model";
-import { User } from "./user.model";
-
 export interface Bib {
   buyerUserId?: string; // Optional, filled when sold
   eventId: string;

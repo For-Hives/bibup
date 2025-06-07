@@ -1,11 +1,11 @@
 import type { Event } from "@/models/event.model";
 
+import { getDictionary } from "@/lib/getDictionary";
+import { getLocale } from "@/lib/getLocale";
 import Image from "next/image";
 import Link from "next/link";
 
 import { fetchApprovedPublicEvents } from "@/services/event.services";
-import { getLocale } from "@/lib/getLocale";
-import { getDictionary } from "@/lib/getDictionary";
 
 export default async function Home() {
   let totalEvents = 0;
@@ -20,7 +20,7 @@ export default async function Home() {
     totalEvents = events.length;
     totalBibsSold = events.reduce(
       (sum, event) => sum + (event.bibsSold || 0),
-      0
+      0,
     );
   } catch (error) {
     console.error("Failed to fetch event data for KPIs:", error);

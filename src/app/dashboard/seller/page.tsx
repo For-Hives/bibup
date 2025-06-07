@@ -4,12 +4,12 @@ import type { Bib } from "@/models/bib.model";
 import type { Metadata } from "next";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { getDictionary } from "@/lib/getDictionary";
+import { getLocale } from "@/lib/getLocale";
 import Link from "next/link";
 
-import { fetchBibsBySeller } from "@/services/bib.services";
 import { fetchUserByClerkId } from "@/services/user.services";
-import { getLocale } from "@/lib/getLocale";
-import { getDictionary } from "@/lib/getDictionary";
+import { fetchBibsBySeller } from "@/services/bib.services";
 
 export const metadata: Metadata = {
   title: "Seller Dashboard | BibUp",

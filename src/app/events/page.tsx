@@ -1,8 +1,9 @@
 import type { Event } from "@/models/event.model"; // Import Event type
 
-import { fetchApprovedPublicEvents } from "@/services/event.services"; // Updated service import
-import { getLocale } from "@/lib/getLocale";
 import { getDictionary } from "@/lib/getDictionary";
+import { getLocale } from "@/lib/getLocale";
+
+import { fetchApprovedPublicEvents } from "@/services/event.services"; // Updated service import
 // import EventListClient from "./EventListClient"; // Will address this if client component is complex
 
 export default async function EventsPage() {
@@ -19,7 +20,7 @@ export default async function EventsPage() {
         >
           {dictionary.events.title}
         </h1>
-        <p style={{ textAlign: "center", marginBottom: "30px", color: "#666" }}>
+        <p style={{ marginBottom: "30px", textAlign: "center", color: "#666" }}>
           {dictionary.events.description}
         </p>
         {events.length > 0 ? (
