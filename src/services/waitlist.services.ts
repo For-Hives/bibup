@@ -30,13 +30,17 @@ export async function addToWaitlist(
 				.getFirstListItem<Waitlist>(
 					`userId = "${userId}" && eventId = "${eventId}"`
 				)
-			if (existingEntry) {
-				return { ...existingEntry, error: 'already_on_waitlist' }
-			}
-		} catch (error: any) {
+			// existingEntry will always be truthy if no error is thrown
+			return { ...existingEntry, error: 'already_on_waitlist' }
+		} catch (error: unknown) {
 			// PocketBase throws 404 if getFirstListItem finds no record, which is expected if not on waitlist.
 			// We only care about other errors here.
-			if (error?.status !== 404) {
+			if (
+				error !== null &&
+				typeof error === 'object' &&
+				'status' in error &&
+				error.status !== 404
+			) {
 				throw error // Re-throw unexpected errors
 			}
 		}
@@ -55,22 +59,22 @@ export async function addToWaitlist(
 			.collection('waitlists')
 			.create<Waitlist>(dataToCreate)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(
 			`Error adding user ${userId} to waitlist for event ${eventId}:`,
 			error
 		)
-		if (error && typeof error === 'object' && 'message' in error) {
+		if (error !== null && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', error.message)
 			if (
 				'response' in error &&
-				error.response &&
+				error.response !== null &&
 				typeof error.response === 'object' &&
 				'data' in error.response
 			) {
 				console.error(
 					'PocketBase response data:',
-					(error?.response as any)?.data
+					(error.response as { data: unknown }).data
 				)
 			}
 		}
