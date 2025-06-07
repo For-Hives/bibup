@@ -14,8 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const dictionary = await getDictionary(locale);
 
   return {
-    description: dictionary.seller?.listBib?.metadata?.description,
-    title: dictionary.seller?.listBib?.metadata?.title,
+    description: dictionary.dashboard.seller?.listBib?.metadata?.description,
+    title: dictionary.dashboard.seller?.listBib?.metadata?.title,
   };
 }
 

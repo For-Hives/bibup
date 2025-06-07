@@ -47,7 +47,7 @@ export default async function BibPurchasePage({
         <p className="p-4 mb-6 bg-[var(--error-bg)] text-[var(--error-text)] rounded-lg border border-red-300">
           {dictionary.purchase.errors.bibNotAvailable.replace(
             "{status}",
-            bib.status,
+            bib.status
           )}
         </p>
         <Link
@@ -88,7 +88,7 @@ export default async function BibPurchasePage({
 
     if (!currentUserId) {
       redirect(
-        `/purchase/${bibId}?error=${encodeURIComponent(dictionary.purchase.errors.authFailed)}`,
+        `/purchase/${bibId}?error=${encodeURIComponent(dictionary.purchase.errors.authFailed)}`
       );
       return;
     }
@@ -97,11 +97,11 @@ export default async function BibPurchasePage({
       const result = await processBibSale(bibId, currentUserId);
       if (result.success && result.transaction) {
         redirect(
-          `/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`,
+          `/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`
         );
       } else {
         redirect(
-          `/purchase/${bibId}?error=${encodeURIComponent(result.error ?? dictionary.purchase.errors.purchaseFailed)}`,
+          `/purchase/${bibId}?error=${encodeURIComponent(result.error ?? dictionary.purchase.errors.purchaseFailed)}`
         );
       }
     } catch (error) {
@@ -206,7 +206,7 @@ export async function generateMetadata({
       .replace("{price}", bib.price.toFixed(2)),
     title: dictionary.purchase.metadata.titleTemplate.replace(
       "{eventName}",
-      eventName,
+      eventName
     ),
   };
 }

@@ -384,9 +384,9 @@ export async function processBibSale(
     }
 
     // 2. Fetch the Seller (User) - though not strictly needed if just updating balance by ID.
-    // const sellerUser = await fetchUserByClerkId(bib.sellerUserId);
+    // const sellerUser = await fetchUserByClerkId(bib.dashboard.sellerUserId);
     // if (!sellerUser) {
-    //   return { success: false, error: `Seller with ID ${bib.sellerUserId} not found.` };
+    //   return { success: false, error: `Seller with ID ${bib.dashboard.sellerUserId} not found.` };
     // }
 
     // 3. Calculate platform fee and seller amount.
