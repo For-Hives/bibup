@@ -1,0 +1,59 @@
+{
+  "home": {
+    "hero": {
+      "title": "Welcome to BibUp!",
+      "subtitle": "Your marketplace for buying and selling race bibs.",
+      "browseEventsButton": "Browse Events"
+    },
+    "impact": {
+      "title": "Our Impact",
+      "activeEvents": "Active Events Hosted",
+      "bibsExchanged": "Bibs Exchanged"
+    },
+    "callToAction": {
+      "title": "Easy & Secure",
+      "description": "Whether you're looking to sell a bib you can't use or find a last-minute entry to your dream race, BibUp makes it simple.",
+      "learnMoreButton": "Learn More (FAQ)"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions (FAQ)",
+    "sections": {
+      "general": {
+        "title": "General",
+        "questions": [
+          {
+            "question": "What is BibUp?",
+            "answer": "BibUp is a marketplace platform that connects race participants, allowing them to buy and sell race bibs (race numbers) for running events, cycling races, triathlons, and other sporting events."
+          },
+          {
+            "question": "How does BibUp work?",
+            "answer": "Runners who can't participate in a race can list their bib for sale. Other runners looking for a last-minute entry can purchase these bibs. Event organizers can also list available spots on our platform."
+          }
+        ]
+      },
+      "sellers": {
+        "title": "For Sellers",
+        "questions": [
+          {
+            "question": "How can I sell my bib?",
+            "answer": "To sell your bib, you must first create an account on BibUp. Once logged in, go to the 'Sell a Bib' section, fill in the race information (name, date, location), bib type, and set your price. Make sure bib transfer is allowed by the race organizer."
+          },
+          {
+            "question": "What are the fees for selling a bib?",
+            "answer": "BibUp takes a commission of X% on the final sale price of your bib. This commission helps us maintain the platform and provide quality customer support."
+          }
+        ]
+      },
+      "buyers": {
+        "title": "For Buyers",
+        "questions": [
+          {
+            "question": "How can I buy a bib?",
+            "answer": "Browse available bibs on our platform, select the race you're interested in, and complete the purchase through our secure payment system. Once payment is confirmed, you'll receive the bib transfer details."
+          }
+        ]
+      }
+    }
+  }
+}
