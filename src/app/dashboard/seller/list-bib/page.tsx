@@ -22,13 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
 // This is the Server Component that wraps the Client Component.
 // It fetches data and passes it to the client component.
 export default async function ListNewBibServerWrapper({
-  searchParams,
+  searchParams: searchParamsPromise,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { userId } = await auth(); // Get the authenticated user's ID (Clerk ID)
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
+  const searchParams = await searchParamsPromise;
 
   // Fetch partnered events that can be selected in the dropdown
   const partneredEvents = await fetchPartneredApprovedEvents();

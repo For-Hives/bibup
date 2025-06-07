@@ -10,19 +10,21 @@ import Link from "next/link";
 
 import { fetchBibById } from "@/services/bib.services";
 
-type BibPurchasePageProps = {
-  params: { bibId: string };
-  searchParams?: { [key: string]: string | string[] | undefined }; // For error display
+export type BibPurchasePageProps = {
+  params: Promise<{ bibId: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function BibPurchasePage({
-  searchParams,
-  params,
+  searchParams: searchParamsPromise,
+  params: paramsPromise,
 }: BibPurchasePageProps) {
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
 
   const { userId: currentUserId } = await auth();
+  const params = await paramsPromise;
+  const searchParams = await searchParamsPromise;
   const { bibId } = params;
 
   if (!currentUserId) {
@@ -188,11 +190,12 @@ export default async function BibPurchasePage({
 }
 
 export async function generateMetadata({
-  params,
+  params: paramsPromise,
 }: BibPurchasePageProps): Promise<Metadata> {
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
 
+  const params = await paramsPromise;
   const bib = await fetchBibById(params.bibId);
   if (!bib) {
     return { title: dictionary.purchase.metadata.notFoundTitle };
