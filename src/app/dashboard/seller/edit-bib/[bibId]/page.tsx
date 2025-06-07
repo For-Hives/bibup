@@ -13,7 +13,7 @@ import {
 
 type EditBibPageProps = {
   params: { bibId: string };
-  searchParams?: { [key: string]: string | string[] | undefined }; // For reading query params
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 // Helper to get status class string from globals.css
@@ -43,10 +43,9 @@ export default async function EditBibPage({
   params,
 }: EditBibPageProps) {
   const { userId: sellerUserId } = await auth();
-
   const { bibId } = params;
 
-  if (!sellerUserId) {
+  if (!sellerUserId || sellerUserId === "") {
     redirect(`/sign-in?redirect_url=/dashboard/seller/edit-bib/${bibId}`);
   }
 
@@ -70,112 +69,180 @@ export default async function EditBibPage({
 
   const eventName =
     bibWithEvent.expand?.eventId?.name ??
-    bibWithEvent.unlistedEventName ??
     `Event ID: ${bibWithEvent.eventId ?? "N/A"}`;
 
-  const successMessage = searchParams?.success
-    ? decodeURIComponent(searchParams.success as string)
-    : null;
-  const errorMessage = searchParams?.error
-    ? decodeURIComponent(searchParams.error as string)
-    : null;
+  const successMessage =
+    searchParams?.success && typeof searchParams.success === "string"
+      ? decodeURIComponent(searchParams.success)
+      : "";
+  const errorMessage =
+    searchParams?.error && typeof searchParams.error === "string"
+      ? decodeURIComponent(searchParams.error)
+      : "";
 
+  // Server action to update bib details
   async function handleUpdateBibDetails(formData: FormData) {
     "use server";
-    const dataToUpdate: UpdateBibData = {
-      originalPrice: formData.get("originalPrice")
-        ? parseFloat(formData.get("originalPrice") as string)
-        : undefined,
-      gender: formData.get("gender") as Bib["gender"] | undefined,
-      price: parseFloat(formData.get("price") as string),
-      size: formData.get("size") as string | undefined,
-    };
 
-    if (isNaN(dataToUpdate.price!) ?? dataToUpdate.price! <= 0) {
+    if (!sellerUserId || sellerUserId === "") {
+      redirect(
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
+      );
+      return;
+    }
+
+    const priceValue = formData.get("price") as string;
+    const originalPriceValue = formData.get("originalPrice") as string;
+    const genderValue = formData.get("gender") as string;
+    const sizeValue = formData.get("size") as string;
+
+    const price = parseFloat(priceValue);
+
+    if (isNaN(price) || price <= 0) {
       redirect(
         `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Valid price is required.")}`,
       );
       return;
     }
 
-    const updatedBib = await updateBibBySeller(
-      bibId,
-      dataToUpdate,
-      sellerUserId,
-    );
-    if (updatedBib) {
-      redirect(
-        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent("Bib details updated successfully!")}`,
+    const dataToUpdate: UpdateBibData = {
+      originalPrice: originalPriceValue
+        ? parseFloat(originalPriceValue)
+        : undefined,
+      gender: genderValue ? (genderValue as Bib["gender"]) : undefined,
+      size: sizeValue || undefined,
+      price,
+    };
+
+    try {
+      const updatedBib = await updateBibBySeller(
+        bibId,
+        dataToUpdate,
+        sellerUserId,
       );
-    } else {
+
+      if (updatedBib) {
+        redirect(
+          `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent("Bib details updated successfully!")}`,
+        );
+      } else {
+        redirect(
+          `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to update bib details.")}`,
+        );
+      }
+    } catch {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to update bib details.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("An error occurred while updating the bib.")}`,
       );
     }
   }
 
+  // Server action to withdraw bib
   async function handleWithdrawBib() {
     "use server";
-    const updatedBib = await updateBibBySeller(
-      bibId,
-      { status: "withdrawn" },
-      sellerUserId,
-    );
-    if (updatedBib) {
+
+    if (!sellerUserId || sellerUserId === "") {
       redirect(
-        `/dashboard/seller?success=${encodeURIComponent("Bib listing withdrawn.")}&bibStatus=withdrawn`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
       );
-    } else {
+      return;
+    }
+
+    try {
+      const updatedBib = await updateBibBySeller(
+        bibId,
+        { status: "withdrawn" },
+        sellerUserId,
+      );
+
+      if (updatedBib) {
+        redirect(
+          `/dashboard/seller?success=${encodeURIComponent("Bib listing withdrawn.")}&bibStatus=withdrawn`,
+        );
+      } else {
+        redirect(
+          `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to withdraw bib.")}`,
+        );
+      }
+    } catch {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to withdraw bib.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("An error occurred while withdrawing the bib.")}`,
       );
     }
   }
 
+  // Server action to toggle listing status
   async function handleToggleListingStatus(
     newStatus: "listed_private" | "listed_public",
   ) {
     "use server";
-    if (
-      bibWithEvent?.status === "pending_validation" &&
-      newStatus === "listed_public"
-    ) {
-      // Allow this. Future: check if admin approved.
-    } else if (
-      bibWithEvent?.status === "pending_event_verification" &&
-      newStatus === "listed_public"
-    ) {
+
+    if (!sellerUserId || sellerUserId === "") {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot make public until event details are verified by admin.`)}`,
-      );
-      return;
-    } else if (
-      bibWithEvent?.status !== "listed_public" &&
-      bibWithEvent?.status !== "listed_private" &&
-      bibWithEvent?.status !== "withdrawn" &&
-      bibWithEvent?.status !== "pending_validation"
-    ) {
-      redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent?.status}.`)}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Authentication required.")}`,
       );
       return;
     }
 
-    const updatedBib = await updateBibBySeller(
-      bibId,
-      { status: newStatus },
-      sellerUserId,
-    );
-    if (updatedBib) {
+    if (!bibWithEvent) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace("_", " ")}.`)}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Bib not found.")}`,
       );
-    } else {
+      return;
+    }
+
+    // Validation for status transitions
+    if (
+      bibWithEvent.status === "validation_failed" &&
+      newStatus === "listed_public"
+    ) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to change bib status.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Cannot make public until event details are verified by admin.")}`,
+      );
+      return;
+    }
+
+    if (bibWithEvent.status === "sold" || bibWithEvent.status === "expired") {
+      redirect(
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent.status}.`)}`,
+      );
+      return;
+    }
+
+    try {
+      const updatedBib = await updateBibBySeller(
+        bibId,
+        { status: newStatus },
+        sellerUserId,
+      );
+
+      if (updatedBib) {
+        redirect(
+          `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace("_", " ")}.`)}`,
+        );
+      } else {
+        redirect(
+          `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to change bib status.")}`,
+        );
+      }
+    } catch {
+      redirect(
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("An error occurred while changing the bib status.")}`,
       );
     }
   }
+
+  const canMakePublic = [
+    "listed_private",
+    "pending_validation",
+    "withdrawn",
+  ].includes(bibWithEvent.status);
+
+  const canMakePrivate = bibWithEvent.status === "listed_public";
+
+  const canWithdraw = !["expired", "sold", "withdrawn"].includes(
+    bibWithEvent.status,
+  );
 
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto text-[var(--text-dark)]">
@@ -189,20 +256,20 @@ export default async function EditBibPage({
         </p>
       </header>
 
-      {successMessage && (
+      {successMessage.length > 0 && (
         <div className="p-3 mb-4 bg-[var(--success-bg)] text-[var(--success-text)] rounded-md border border-green-300 text-center text-sm">
           {successMessage}
         </div>
       )}
-      {errorMessage && (
+
+      {errorMessage.length > 0 && (
         <div className="p-3 mb-4 bg-[var(--error-bg)] text-[var(--error-text)] rounded-md border border-red-300 text-center text-sm">
           Error: {errorMessage}
         </div>
       )}
 
+      {/* Bib Details Form */}
       <div className="bento-box mb-8">
-        {" "}
-        {/* Using bento-box for the form container */}
         <form action={handleUpdateBibDetails} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1" htmlFor="price">
@@ -219,6 +286,7 @@ export default async function EditBibPage({
               type="number"
             />
           </div>
+
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -236,6 +304,7 @@ export default async function EditBibPage({
               type="number"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-1" htmlFor="size">
               Size (Optional):
@@ -248,6 +317,7 @@ export default async function EditBibPage({
               type="text"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-1" htmlFor="gender">
               Gender (Optional):
@@ -264,52 +334,48 @@ export default async function EditBibPage({
               <option value="unisex">Unisex</option>
             </select>
           </div>
+
           <button className="btn btn-primary w-full" type="submit">
             Save Changes
           </button>
         </form>
       </div>
 
+      {/* Listing Status Management */}
       <div className="bento-box">
         <h2 className="text-lg font-semibold mb-3">Manage Listing Status</h2>
         <p className="text-sm mb-3">
           Current Status:
           <span
-            className={`status-badge ${getBibStatusClass(bibWithEvent.status)} ml-2`}
+            className={`status-badge ${getBibStatusClass(
+              bibWithEvent.status,
+            )} ml-2`}
           >
             {bibWithEvent.status.replace(/_/g, " ").toUpperCase()}
           </span>
         </p>
+
         <div className="flex flex-wrap gap-3">
-          <form action={handleWithdrawBib}>
-            <button
-              className="btn btn-withdraw"
-              disabled={
-                bibWithEvent.status === "sold" ??
-                bibWithEvent.status === "withdrawn" ??
-                bibWithEvent.status === "expired"
-              }
-              type="submit"
-            >
-              Withdraw Listing
-            </button>
-          </form>
+          {canWithdraw && (
+            <form action={handleWithdrawBib}>
+              <button className="btn btn-withdraw" type="submit">
+                Withdraw Listing
+              </button>
+            </form>
+          )}
 
-          {(bibWithEvent.status === "listed_private" ??
-            bibWithEvent.status === "pending_validation" ??
-            bibWithEvent.status === "withdrawn") &&
-            bibWithEvent.status !== "pending_event_verification" && (
-              <form action={() => handleToggleListingStatus("listed_public")}>
-                <button
-                  className="btn btn-secondary bg-green-500 hover:bg-green-600 text-white"
-                  type="submit"
-                >
-                  Make Public
-                </button>
-              </form>
-            )}
+          {canMakePublic && (
+            <form action={() => handleToggleListingStatus("listed_public")}>
+              <button
+                className="btn btn-secondary bg-green-500 hover:bg-green-600 text-white"
+                type="submit"
+              >
+                Make Public
+              </button>
+            </form>
+          )}
 
-          {bibWithEvent.status === "listed_public" && (
+          {canMakePrivate && (
             <form action={() => handleToggleListingStatus("listed_private")}>
               <button
                 className="btn btn-secondary bg-purple-500 hover:bg-purple-600 text-white"
@@ -320,7 +386,8 @@ export default async function EditBibPage({
             </form>
           )}
         </div>
-        {bibWithEvent.status === "pending_event_verification" && (
+
+        {bibWithEvent.status === "validation_failed" && (
           <p className="text-xs text-orange-600 mt-2">
             This bib cannot be made public until event details are verified by
             an admin.

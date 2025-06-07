@@ -11,7 +11,7 @@ export interface CreateUserDTO {
 }
 
 export async function createUser(
-  userData: CreateUserDTO
+  userData: CreateUserDTO,
 ): Promise<null | User> {
   try {
     const newUserRecord = {
@@ -40,7 +40,7 @@ export async function createUser(
       ) {
         console.error(
           "PocketBase response data:",
-          (error?.response as any)?.data
+          (error?.response as any)?.data,
         );
       }
     }
@@ -56,7 +56,7 @@ export async function createUser(
  * @param clerkId The Clerk User ID.
  */
 export async function fetchUserByClerkId(
-  clerkId: string
+  clerkId: string,
 ): Promise<null | User> {
   if (!clerkId) {
     console.error("Clerk ID is required to fetch user data.");
@@ -93,7 +93,7 @@ export async function fetchUserByClerkId(
  */
 export async function updateUserBalance(
   clerkUserId: string,
-  amountToAdd: number
+  amountToAdd: number,
 ): Promise<null | User> {
   if (!clerkUserId) {
     console.error("Clerk User ID is required to update balance.");
@@ -109,7 +109,7 @@ export async function updateUserBalance(
     const user = await fetchUserByClerkId(clerkUserId);
     if (!user) {
       console.error(
-        `User with Clerk ID ${clerkUserId} not found. Cannot update balance.`
+        `User with Clerk ID ${clerkUserId} not found. Cannot update balance.`,
       );
       return null;
     }
