@@ -39,7 +39,7 @@ export type UpdateBibData = Partial<
  */
 export async function createBib(
   bibData: CreateBibData,
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<Bib | null> {
   if (!sellerUserId) {
     console.error("Seller ID is required to create a bib listing.");
@@ -64,7 +64,7 @@ export async function createBib(
       !bibData.unlistedEventLocation
     ) {
       console.error(
-        "For unlisted events, event name, date, and location are required.",
+        "For unlisted events, event name, date, and location are required."
       );
       return null;
     }
@@ -134,7 +134,7 @@ export async function createBib(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any).data,
+          (error.response as any).data
         );
       }
     }
@@ -147,7 +147,7 @@ export async function createBib(
  * @param bibId The ID of the bib to fetch.
  */
 export async function fetchBibById(
-  bibId: string,
+  bibId: string
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
   if (!bibId) {
     console.error("Bib ID is required.");
@@ -183,7 +183,7 @@ export async function fetchBibById(
  */
 export async function fetchBibByIdForSeller(
   bibId: string,
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
   if (!bibId || !sellerUserId) {
     console.error("Bib ID and Seller ID are required.");
@@ -197,7 +197,7 @@ export async function fetchBibByIdForSeller(
       });
     if (record.sellerUserId !== sellerUserId) {
       console.warn(
-        `Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`,
+        `Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`
       );
       return null; // Not the owner
     }
@@ -205,7 +205,7 @@ export async function fetchBibByIdForSeller(
   } catch (error) {
     console.error(
       `Error fetching bib ${bibId} for seller ${sellerUserId}:`,
-      error,
+      error
     );
     if (
       error &&
@@ -225,7 +225,7 @@ export async function fetchBibByIdForSeller(
  * @param buyerUserId The ID of the buyer whose purchased bibs are to be fetched.
  */
 export async function fetchBibsByBuyer(
-  buyerUserId: string,
+  buyerUserId: string
 ): Promise<(Bib & { expand?: { eventId: Event } })[]> {
   if (!buyerUserId) {
     console.error("Buyer User ID is required to fetch their purchased bibs.");
@@ -281,7 +281,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
   } catch (error) {
     console.error(
       `Error fetching bibs for seller ID "${sellerUserId}":`,
-      error,
+      error
     );
     return [];
   }
@@ -290,10 +290,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 import type { Transaction } from "@/models/transaction.model";
 
 // Import Transaction services and User services for processBibSale
-import {
-  createTransaction,
-  PLATFORM_FEE_PERCENTAGE,
-} from "./transaction.services";
+import { createTransaction } from "./transaction.services";
 import { fetchUserByClerkId, updateUserBalance } from "./user.services";
 
 /**
@@ -301,7 +298,7 @@ import { fetchUserByClerkId, updateUserBalance } from "./user.services";
  * @param eventId The ID of the event.
  */
 export async function fetchPubliclyListedBibsForEvent(
-  eventId: string,
+  eventId: string
 ): Promise<Bib[]> {
   if (!eventId) {
     console.error("Event ID is required to fetch publicly listed bibs.");
@@ -318,7 +315,7 @@ export async function fetchPubliclyListedBibsForEvent(
   } catch (error) {
     console.error(
       `Error fetching publicly listed bibs for event ${eventId}:`,
-      error,
+      error
     );
     return [];
   }
@@ -332,7 +329,7 @@ export async function fetchPubliclyListedBibsForEvent(
  */
 export async function processBibSale(
   bibId: string,
-  buyerUserId: string,
+  buyerUserId: string
 ): Promise<{ error?: string; success: boolean; transaction?: Transaction }> {
   if (!bibId || !buyerUserId) {
     return { error: "Bib ID and Buyer User ID are required.", success: false };
@@ -362,7 +359,7 @@ export async function processBibSale(
     // }
 
     // 3. Calculate platform fee and seller amount.
-    const platformFeeAmount = bib.price * PLATFORM_FEE_PERCENTAGE;
+    const platformFeeAmount = bib.price * 0.1;
     const amountToSeller = bib.price - platformFeeAmount;
 
     // 4. Create the transaction record.
@@ -383,7 +380,7 @@ export async function processBibSale(
     // 5. Update seller's balance.
     const sellerBalanceUpdated = await updateUserBalance(
       bib.sellerUserId,
-      amountToSeller,
+      amountToSeller
     );
     if (!sellerBalanceUpdated) {
       // Attempt to mark transaction as failed or requiring attention if seller balance update fails.
@@ -393,7 +390,7 @@ export async function processBibSale(
         status: "failed",
       });
       console.error(
-        `CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`,
+        `CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`
       );
       return {
         error:
@@ -410,7 +407,7 @@ export async function processBibSale(
     });
 
     console.log(
-      `Bib ${bibId} sold to ${buyerUserId}. Transaction ${transaction.id} completed. Seller ${bib.sellerUserId} received ${amountToSeller}.`,
+      `Bib ${bibId} sold to ${buyerUserId}. Transaction ${transaction.id} completed. Seller ${bib.sellerUserId} received ${amountToSeller}.`
     );
 
     // 7. Initiate Organizer Notification (Conceptual)
@@ -419,7 +416,7 @@ export async function processBibSale(
       await initiateOrganizerNotification(
         updatedBib.id,
         updatedBib.buyerUserId!,
-        updatedBib.eventId,
+        updatedBib.eventId
       );
     }
 
@@ -451,7 +448,7 @@ export async function processBibSale(
 export async function updateBibBySeller(
   bibId: string,
   dataToUpdate: UpdateBibData | { status: Bib["status"] }, // Allow specific status updates or general data updates
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<Bib | null> {
   if (!bibId || !sellerUserId) {
     console.error("Bib ID and Seller ID are required for update.");
@@ -463,7 +460,7 @@ export async function updateBibBySeller(
     const currentBib = await pb.collection("bibs").getOne<Bib>(bibId);
     if (currentBib.sellerUserId !== sellerUserId) {
       console.warn(
-        `Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`,
+        `Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`
       );
       return null;
     }
@@ -472,7 +469,7 @@ export async function updateBibBySeller(
     // Certain status transitions might also be restricted here or by app logic (e.g., can't change sold bib)
     if (currentBib.status === "sold" || currentBib.status === "expired") {
       console.warn(
-        `Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`,
+        `Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`
       );
       // return null; // Or throw an error
     }
@@ -493,7 +490,7 @@ export async function updateBibBySeller(
 
       if (!allowedStatusChanges[currentBib.status]?.includes(newStatus)) {
         console.warn(
-          `Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`,
+          `Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`
         );
         // return null; // Or throw an error indicating invalid transition
       }
@@ -523,7 +520,7 @@ export async function updateBibBySeller(
 export async function updateBibStatusByAdmin(
   bibId: string,
   newStatus: Bib["status"],
-  adminNotes?: string,
+  adminNotes?: string
 ): Promise<Bib | null> {
   if (!bibId || !newStatus) {
     console.error("Bib ID and new status are required for admin update.");
@@ -545,7 +542,7 @@ export async function updateBibStatusByAdmin(
       .collection("bibs")
       .update<Bib>(bibId, dataToUpdate);
     console.log(
-      `ADMIN ACTION: Bib ${bibId} status changed to ${newStatus}. Notes: ${adminNotes || "N/A"}`,
+      `ADMIN ACTION: Bib ${bibId} status changed to ${newStatus}. Notes: ${adminNotes || "N/A"}`
     );
     return updatedRecord;
   } catch (error) {
@@ -567,7 +564,7 @@ export async function updateBibStatusByAdmin(
 async function initiateOrganizerNotification(
   bibId: string,
   newRunnerUserId: string,
-  eventId?: string,
+  eventId?: string
 ) {
   // TODO: In a real application:
   // 1. Fetch event details, especially organizer contact info or API endpoint.
@@ -577,7 +574,7 @@ async function initiateOrganizerNotification(
   // 3. Send notification (e.g., via email service, webhook).
 
   console.log(
-    `INFO: Bib transfer notification process initiated for Bib ID: ${bibId}, New Runner (Buyer ID): ${newRunnerUserId}, Event ID: ${eventId || "N/A"}. This would typically trigger an email or API call to the event organizer to update their participant list.`,
+    `INFO: Bib transfer notification process initiated for Bib ID: ${bibId}, New Runner (Buyer ID): ${newRunnerUserId}, Event ID: ${eventId || "N/A"}. This would typically trigger an email or API call to the event organizer to update their participant list.`
   );
   // This is a good place to integrate with external notification services or internal task queues.
   return Promise.resolve(); // Indicate async completion
