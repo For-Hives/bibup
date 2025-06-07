@@ -20,7 +20,7 @@ export async function getLocale() {
       .sort((a, b) => b.quality - a.quality);
 
     // Supported locales
-    const supportedLocales = ["en", "fr"];
+    const supportedLocales = ["en", "fr", "ko"];
 
     // Find the first supported language
     for (const lang of languages) {

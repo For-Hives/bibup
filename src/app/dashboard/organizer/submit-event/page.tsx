@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link"; // Import Link
 
 import { createEvent } from "@/services/event.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 export const metadata: Metadata = {
   title: "Submit New Event | Organizer Dashboard | BibUp",
@@ -19,10 +21,12 @@ export default async function SubmitEventPage({
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
   async function handleSubmitEvent(formData: FormData) {
     "use server";
 
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       throw new Error("You must be logged in to submit an event.");
     }
@@ -35,7 +39,7 @@ export default async function SubmitEventPage({
     // Basic server-side validation
     if (!name || !dateString || !location) {
       redirect(
-        `/dashboard/organizer/submit-event?error=${encodeURIComponent("Event Name, Date, and Location are required.")}`,
+        `/dashboard/organizer/submit-event?error=${encodeURIComponent("Event Name, Date, and Location are required.")}`
       );
       return;
     }
@@ -57,7 +61,7 @@ export default async function SubmitEventPage({
         redirect("/dashboard/organizer?success=true");
       } else {
         redirect(
-          `/dashboard/organizer/submit-event?error=${encodeURIComponent("Failed to create event. Please check details.")}`,
+          `/dashboard/organizer/submit-event?error=${encodeURIComponent("Failed to create event. Please check details.")}`
         );
       }
     } catch (error) {
@@ -65,7 +69,7 @@ export default async function SubmitEventPage({
       const message =
         error instanceof Error ? error.message : "An unknown error occurred.";
       redirect(
-        `/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`,
+        `/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`
       );
     }
   }
@@ -78,12 +82,15 @@ export default async function SubmitEventPage({
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto text-[var(--text-dark)]">
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-bold">Submit New Event</h1>
+        <h1 className="text-3xl font-bold">
+          {dictionary.dashboard.organizer.submitEvent.title}
+        </h1>
       </header>
 
       {errorMessage && (
         <div className="p-4 mb-6 bg-[var(--error-bg)] text-[var(--error-text)] rounded-lg border border-red-300 text-center">
-          Error: {errorMessage}
+          {dictionary.dashboard.organizer.submitEvent.errorPrefix}{" "}
+          {errorMessage}
         </div>
       )}
 
@@ -93,7 +100,7 @@ export default async function SubmitEventPage({
       >
         <div>
           <label className="block text-sm font-medium mb-1" htmlFor="eventName">
-            Event Name:
+            {dictionary.dashboard.organizer.submitEvent.eventNameLabel}
           </label>
           <input
             className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm focus:ring-[var(--accent-sporty)] focus:border-[var(--accent-sporty)] dark:bg-neutral-700 dark:border-neutral-600"
@@ -105,7 +112,7 @@ export default async function SubmitEventPage({
         </div>
         <div>
           <label className="block text-sm font-medium mb-1" htmlFor="eventDate">
-            Date:
+            {dictionary.dashboard.organizer.submitEvent.eventDateLabel}
           </label>
           <input
             className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm focus:ring-[var(--accent-sporty)] focus:border-[var(--accent-sporty)] dark:bg-neutral-700 dark:border-neutral-600"
@@ -120,7 +127,7 @@ export default async function SubmitEventPage({
             className="block text-sm font-medium mb-1"
             htmlFor="eventLocation"
           >
-            Location:
+            {dictionary.dashboard.organizer.submitEvent.eventLocation}
           </label>
           <input
             className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm focus:ring-[var(--accent-sporty)] focus:border-[var(--accent-sporty)] dark:bg-neutral-700 dark:border-neutral-600"
@@ -135,7 +142,7 @@ export default async function SubmitEventPage({
             className="block text-sm font-medium mb-1"
             htmlFor="eventDescription"
           >
-            Description:
+            {dictionary.dashboard.organizer.submitEvent.eventDescription}
           </label>
           <textarea
             className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm focus:ring-[var(--accent-sporty)] focus:border-[var(--accent-sporty)] dark:bg-neutral-700 dark:border-neutral-600"
@@ -149,7 +156,7 @@ export default async function SubmitEventPage({
             className="block text-sm font-medium mb-1"
             htmlFor="eventParticipantCount"
           >
-            Estimated Participant Count:
+            {dictionary.dashboard.organizer.submitEvent.participantCount}
           </label>
           <input
             className="w-full p-2 border border-[var(--border-color)] rounded-md shadow-sm focus:ring-[var(--accent-sporty)] focus:border-[var(--accent-sporty)] dark:bg-neutral-700 dark:border-neutral-600"
@@ -160,14 +167,14 @@ export default async function SubmitEventPage({
           />
         </div>
         <button className="btn btn-primary w-full" type="submit">
-          Submit for Approval
+          {dictionary.dashboard.organizer.submitEvent.submit}
         </button>
       </form>
       <Link
         className="block text-center mt-6 text-[var(--accent-sporty)] hover:underline"
         href="/dashboard/organizer"
       >
-        Back to Organizer Dashboard
+        {dictionary.dashboard.organizer.submitEvent.backToDashboard}
       </Link>
     </div>
   );

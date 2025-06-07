@@ -6,8 +6,10 @@ import type { Metadata } from "next";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-import { fetchBibsBySeller } from "@/services/bib.services.ts";
+import { fetchBibsBySeller } from "@/services/bib.services";
 import { fetchUserByClerkId } from "@/services/user.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 export const metadata: Metadata = {
   title: "Seller Dashboard | BibUp",
@@ -22,8 +24,6 @@ const getBibStatusClass = (status: Bib["status"]): string => {
       return "status-approved"; // Using approved for listed_private but could be different
     case "listed_public":
       return "status-approved"; // Using approved for listed_public
-    case "pending_event_verification":
-      return "status-pending"; // Also use pending style
     case "pending_validation":
       return "status-pending";
     case "sold":
@@ -42,13 +42,16 @@ export default async function SellerDashboardPage({
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const { userId: clerkUserId } = auth();
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
+  const { userId: clerkUserId } = await auth();
   const clerkUser = await currentUser();
 
   if (!clerkUserId || !clerkUser) {
     return (
       <div className="p-4 md:p-8 max-w-4xl mx-auto">
-        Please sign in to view your seller dashboard.
+        {dictionary.dashboard.seller.pleaseSignIn}
       </div>
     );
   }
@@ -83,12 +86,12 @@ export default async function SellerDashboardPage({
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold text-[var(--text-dark)]">
-          Seller Dashboard
+          {dictionary.dashboard.seller.title}
         </h1>
       </header>
 
       <p className="text-xl text-center text-[var(--text-dark)]">
-        Welcome, {sellerName}!
+        {dictionary.dashboard.seller.welcomeMessage}, {sellerName}!
       </p>
 
       {/* Messages */}
@@ -108,7 +111,7 @@ export default async function SellerDashboardPage({
         {/* Balance Box */}
         <div className="md:col-span-1 bento-box flex flex-col items-center justify-center">
           <h2 className="text-xl font-semibold text-[var(--text-dark)] mb-2">
-            Your BibUp Balance
+            {dictionary.dashboard.seller.yourBibUpBalance}
           </h2>
           <p className="text-3xl font-bold text-[var(--accent-sporty)]">
             ${bibUpBalance.toFixed(2)}
@@ -118,17 +121,17 @@ export default async function SellerDashboardPage({
         {/* Manage Bib Listings Box (takes more space) */}
         <div className="md:col-span-2 bento-box">
           <h2 className="text-xl font-semibold text-[var(--text-dark)] mb-4">
-            Manage Your Bib Listings
+            {dictionary.dashboard.seller.manageBibListings}
           </h2>
           <Link
             className="btn btn-primary w-full md:w-auto mb-6"
             href="/dashboard/seller/list-bib"
           >
-            List a New Bib
+            {dictionary.dashboard.seller.listNewBib}
           </Link>
 
           <h3 className="text-lg font-semibold text-[var(--text-dark)] mt-6 mb-3">
-            Your Listed Bibs:
+            {dictionary.dashboard.seller.yourListedBibs}
           </h3>
           {listedBibs.length > 0 ? (
             <ul className="space-y-4">
@@ -140,32 +143,35 @@ export default async function SellerDashboardPage({
                   <div className="font-semibold text-[var(--primary-pastel)]">
                     {" "}
                     {/* Using primary-pastel for bib name, adjust if needed */}
-                    Bib for:{" "}
+                    {dictionary.dashboard.seller.bibFor}{" "}
                     {bib.expand?.eventId?.name ||
-                      bib.unlistedEventName ||
                       `Event ID: ${bib.eventId || "N/A"}`}
                   </div>
                   <p className="text-sm text-[var(--text-dark)]">
-                    Reg #: {bib.registrationNumber}
+                    {dictionary.dashboard.seller.regNumber}{" "}
+                    {bib.registrationNumber}
                   </p>
                   <p className="text-sm text-[var(--text-dark)]">
-                    Price: ${bib.price.toFixed(2)}
+                    {dictionary.dashboard.seller.price} ${bib.price.toFixed(2)}
                   </p>
                   {bib.originalPrice && (
                     <p className="text-xs text-gray-500">
-                      Original: ${bib.originalPrice.toFixed(2)}
+                      {dictionary.dashboard.seller.original} $
+                      {bib.originalPrice.toFixed(2)}
                     </p>
                   )}
                   {bib.size && (
-                    <p className="text-xs text-gray-500">Size: {bib.size}</p>
+                    <p className="text-xs text-gray-500">
+                      {dictionary.dashboard.seller.size} {bib.size}
+                    </p>
                   )}
                   {bib.gender && (
                     <p className="text-xs text-gray-500">
-                      Gender: {bib.gender}
+                      {dictionary.dashboard.seller.gender} {bib.gender}
                     </p>
                   )}
                   <p className="text-sm mt-1">
-                    Status:{" "}
+                    {dictionary.dashboard.seller.statusLabel}{" "}
                     <span
                       className={`status-badge ${getBibStatusClass(bib.status)}`}
                     >
@@ -173,7 +179,6 @@ export default async function SellerDashboardPage({
                     </span>
                   </p>
                   {(bib.status === "pending_validation" ||
-                    bib.status === "pending_event_verification" ||
                     bib.status === "listed_public" ||
                     bib.status === "listed_private" ||
                     bib.status === "withdrawn" ||
@@ -182,7 +187,7 @@ export default async function SellerDashboardPage({
                       className="btn btn-secondary text-xs py-1 px-3 mt-2 inline-block"
                       href={`/dashboard/seller/edit-bib/${bib.id}`}
                     >
-                      Edit / Manage
+                      {dictionary.dashboard.seller.editManage}
                     </Link>
                   )}
                 </li>
@@ -190,7 +195,7 @@ export default async function SellerDashboardPage({
             </ul>
           ) : (
             <p className="text-[var(--text-dark)]">
-              You haven't listed any bibs yet.
+              {dictionary.dashboard.seller.noBibsListed}
             </p>
           )}
         </div>

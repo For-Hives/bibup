@@ -3,12 +3,17 @@ import type { Event } from "@/models/event.model"; // Adjust path as necessary
 import Link from "next/link";
 
 import { fetchApprovedPublicEvents } from "@/services/event.services"; // Adjust path as necessary
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 interface GroupedEvents {
   [yearMonth: string]: Event[];
 }
 
 export default async function CalendarPage() {
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
   const events: Event[] = await fetchApprovedPublicEvents();
 
   const groupedEvents = events.reduce((acc, event) => {
@@ -34,7 +39,8 @@ export default async function CalendarPage() {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
       <header style={{ marginBottom: "30px", textAlign: "center" }}>
-        <h1>Events Calendar</h1>
+        <h1>{dictionary.calendar.title}</h1>
+        <p>{dictionary.calendar.description}</p>
       </header>
 
       <main style={{ maxWidth: "900px", margin: "0 auto" }}>
@@ -100,7 +106,7 @@ export default async function CalendarPage() {
           ))
         ) : (
           <p style={{ textAlign: "center", fontSize: "1.2em" }}>
-            No upcoming events found.
+            {dictionary.calendar.noEvents}
           </p>
         )}
       </main>
