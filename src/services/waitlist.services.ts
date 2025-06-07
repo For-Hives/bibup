@@ -1,8 +1,9 @@
 "use server";
 
-import { pb } from "@/lib/pocketbaseClient";
 import type { Waitlist } from "@/models/waitlist.model";
 import type { Event } from "@/models/event.model"; // For expanding event details
+
+import { pb } from "@/lib/pocketbaseClient";
 
 /**
  * Adds a user to the waitlist for a specific event.
@@ -14,8 +15,8 @@ import type { Event } from "@/models/event.model"; // For expanding event detail
  */
 export async function addToWaitlist(
   eventId: string,
-  userId: string
-): Promise<(Waitlist & { error?: string }) | null> {
+  userId: string,
+): Promise<null | (Waitlist & { error?: string })> {
   if (!eventId || !userId) {
     console.error("Event ID and User ID are required to join a waitlist.");
     return null;
@@ -24,12 +25,16 @@ export async function addToWaitlist(
   try {
     // Check for existing waitlist entry
     try {
-      const existingEntry = await pb.collection('waitlists').getFirstListItem<Waitlist>(
-        `userId = "${userId}" && eventId = "${eventId}"`
-      );
+      const existingEntry = await pb
+        .collection("waitlists")
+        .getFirstListItem<Waitlist>(
+          `userId = "${userId}" && eventId = "${eventId}"`,
+        );
       if (existingEntry) {
-        console.log(`User ${userId} is already on the waitlist for event ${eventId}.`);
-        return { ...existingEntry, error: 'already_on_waitlist' };
+        console.log(
+          `User ${userId} is already on the waitlist for event ${eventId}.`,
+        );
+        return { ...existingEntry, error: "already_on_waitlist" };
       }
     } catch (error: any) {
       // PocketBase throws 404 if getFirstListItem finds no record, which is expected if not on waitlist.
@@ -40,23 +45,37 @@ export async function addToWaitlist(
     }
 
     // Create new waitlist entry
-    const dataToCreate: Omit<Waitlist, 'id' | 'addedAt' | 'notifiedAt'> & { addedAt: Date } = {
+    const dataToCreate: Omit<Waitlist, "addedAt" | "id" | "notifiedAt"> & {
+      addedAt: Date;
+    } = {
+      addedAt: new Date(),
       eventId: eventId,
       userId: userId,
-      addedAt: new Date(),
       // requestedBibSize, requestedBibGender can be added later if needed
     };
 
-    const record = await pb.collection("waitlists").create<Waitlist>(dataToCreate);
+    const record = await pb
+      .collection("waitlists")
+      .create<Waitlist>(dataToCreate);
     return record;
-
   } catch (error) {
-    console.error(`Error adding user ${userId} to waitlist for event ${eventId}:`, error);
-    if (error && typeof error === 'object' && 'message' in error) {
-        console.error('PocketBase error details:', error.message);
-        if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
-            console.error('PocketBase response data:', (error.response as any).data);
-        }
+    console.error(
+      `Error adding user ${userId} to waitlist for event ${eventId}:`,
+      error,
+    );
+    if (error && typeof error === "object" && "message" in error) {
+      console.error("PocketBase error details:", error.message);
+      if (
+        "response" in error &&
+        error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response
+      ) {
+        console.error(
+          "PocketBase response data:",
+          (error.response as any).data,
+        );
+      }
     }
     return null;
   }
@@ -66,18 +85,22 @@ export async function addToWaitlist(
  * Fetches all waitlist entries for a specific user.
  * @param userId The ID of the user whose waitlist entries are to be fetched.
  */
-export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { expand?: { eventId: Event } })[]> {
+export async function fetchUserWaitlists(
+  userId: string,
+): Promise<(Waitlist & { expand?: { eventId: Event } })[]> {
   if (!userId) {
     console.error("User ID is required to fetch their waitlists.");
     return [];
   }
 
   try {
-    const records = await pb.collection("waitlists").getFullList<Waitlist & { expand?: { eventId: Event } }>({
-      filter: `userId = "${userId}"`,
-      sort: '-addedAt', // Sort by when they were added, newest first
-      expand: 'eventId', // Expand related event details
-    });
+    const records = await pb
+      .collection("waitlists")
+      .getFullList<Waitlist & { expand?: { eventId: Event } }>({
+        filter: `userId = "${userId}"`,
+        expand: "eventId", // Expand related event details
+        sort: "-addedAt", // Sort by when they were added, newest first
+      });
     return records;
   } catch (error) {
     console.error(`Error fetching waitlists for user ID "${userId}":`, error);

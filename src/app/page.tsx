@@ -1,7 +1,9 @@
+import type { Event } from "@/models/event.model";
+
 import Image from "next/image";
 import Link from "next/link";
+
 import { fetchApprovedPublicEvents } from "@/services/event.services";
-import type { Event } from "@/models/event.model";
 
 export default async function Home() {
   let totalEvents = 0;
@@ -10,7 +12,10 @@ export default async function Home() {
   try {
     const events: Event[] = await fetchApprovedPublicEvents();
     totalEvents = events.length;
-    totalBibsSold = events.reduce((sum, event) => sum + (event.bibsSold || 0), 0);
+    totalBibsSold = events.reduce(
+      (sum, event) => sum + (event.bibsSold || 0),
+      0,
+    );
   } catch (error) {
     console.error("Failed to fetch event data for KPIs:", error);
   }
@@ -19,24 +24,32 @@ export default async function Home() {
     <div className="font-[family-name:var(--font-geist-sans)] text-[var(--text-dark)]">
       {/* Hero Section */}
       <section className="text-center py-16 px-4 md:py-24 bg-[var(--primary-pastel)]">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Welcome to BibUp!</h1>
-        <p className="text-lg md:text-xl mb-8 text-white/90">Your marketplace for buying and selling race bibs.</p>
-        <Link href="/events" className="btn btn-primary text-lg px-8 py-3">
-            Browse Events
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+          Welcome to BibUp!
+        </h1>
+        <p className="text-lg md:text-xl mb-8 text-white/90">
+          Your marketplace for buying and selling race bibs.
+        </p>
+        <Link className="btn btn-primary text-lg px-8 py-3" href="/events">
+          Browse Events
         </Link>
       </section>
 
       {/* KPIs Section - Bento Box Style */}
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8 text-[var(--text-dark)]">Our Impact</h2>
+          <h2 className="text-3xl font-bold mb-8 text-[var(--text-dark)]">
+            Our Impact
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Bento Box for Active Events */}
             <div className="bento-box flex flex-col items-center justify-center text-center">
               <h3 className="text-4xl font-bold text-[var(--accent-sporty)] mb-2">
                 {totalEvents}
               </h3>
-              <p className="text-xl text-[var(--text-dark)]">Active Events Hosted</p>
+              <p className="text-xl text-[var(--text-dark)]">
+                Active Events Hosted
+              </p>
             </div>
             {/* Bento Box for Bibs Exchanged */}
             <div className="bento-box flex flex-col items-center justify-center text-center">
@@ -52,12 +65,15 @@ export default async function Home() {
       {/* Call to Action / How it works (Simplified) */}
       <section className="py-12 px-4 bg-[var(--secondary-pastel)]/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 text-[var(--text-dark)]">Easy & Secure</h2>
+          <h2 className="text-3xl font-bold mb-4 text-[var(--text-dark)]">
+            Easy & Secure
+          </h2>
           <p className="text-lg mb-8 text-[var(--text-dark)]/80">
-            Whether you're looking to sell a bib you can't use or find a last-minute entry to your dream race, BibUp makes it simple.
+            Whether you're looking to sell a bib you can't use or find a
+            last-minute entry to your dream race, BibUp makes it simple.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <Link href="/faq" className="btn btn-secondary">
+            <Link className="btn btn-secondary" href="/faq">
               Learn More (FAQ)
             </Link>
             {/* Future: Link to Sign Up or specific user roles */}

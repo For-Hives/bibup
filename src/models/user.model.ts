@@ -1,10 +1,10 @@
 export interface User {
-  id: string;
+  bibUpBalance: number; // Default to 0
   clerkId: string; // For linking to Clerk user
   email: string;
   firstName: string;
+  id: string;
   lastName: string;
-  bibUpBalance: number; // Default to 0
-  roles: Array<'seller' | 'buyer' | 'organizer' | 'admin'>;
+  roles: Array<"admin" | "buyer" | "organizer" | "seller">;
   // Add other relevant user profile information here
 }

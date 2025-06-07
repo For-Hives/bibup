@@ -1,6 +1,7 @@
 "use client";
 
 import type { Event } from "@/models/event.model"; // Updated model import
+
 import { useState } from "react";
 
 // This client component now primarily just displays the events passed to it.
@@ -27,14 +28,19 @@ export default function EventListClient({
       <ul>
         {events.map((event) => (
           <li
-            key={event.id}
             className="text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)] font-semibold mb-2"
+            key={event.id}
           >
             {/* Linking to the event detail page */}
-            <a href={`/events/${event.id}`} className="underline cursor-pointer hover:text-blue-600">
+            <a
+              className="underline cursor-pointer hover:text-blue-600"
+              href={`/events/${event.id}`}
+            >
               {event.name}
             </a>
-            <p className="text-xs text-gray-600">{event.location} - {new Date(event.date).toLocaleDateString()}</p>
+            <p className="text-xs text-gray-600">
+              {event.location} - {new Date(event.date).toLocaleDateString()}
+            </p>
           </li>
         ))}
       </ul>
