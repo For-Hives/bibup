@@ -243,6 +243,16 @@ export async function fetchBibsByBuyer(
     return records;
   } catch (error) {
     console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error);
+    // Check if it's a 404 error (no records found for this buyer)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No bibs found for this buyer, return empty array
+    }
+    // For other errors, return empty array for safety
     return [];
   }
 }
@@ -283,6 +293,16 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
       `Error fetching bibs for seller ID "${sellerUserId}":`,
       error
     );
+    // Check if it's a 404 error (no records found for this seller)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No bibs found for this seller, return empty array
+    }
+    // For other errors, return empty array for safety
     return [];
   }
 }
@@ -317,6 +337,16 @@ export async function fetchPubliclyListedBibsForEvent(
       `Error fetching publicly listed bibs for event ${eventId}:`,
       error
     );
+    // Check if it's a 404 error (no records found for this event)
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      error.status === 404
+    ) {
+      return []; // No bibs found for this event, return empty array
+    }
+    // For other errors, return empty array for safety
     return [];
   }
 }

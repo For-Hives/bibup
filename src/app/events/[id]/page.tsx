@@ -6,23 +6,24 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-import { fetchPubliclyListedBibsForEvent } from "@/services/bib.services.ts";
-import { addToWaitlist } from "@/services/waitlist.services.ts";
+import { fetchPubliclyListedBibsForEvent } from "@/services/bib.services";
+import { addToWaitlist } from "@/services/waitlist.services";
 import { fetchEventById } from "@/services/event.services";
 
 type EventDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function EventDetailPage({
   searchParams,
   params,
 }: EventDetailPageProps) {
-  const eventId = params.id;
-  const { userId } = auth();
+  const { id: eventId } = await params;
+  const resolvedSearchParams = await searchParams;
+  const { userId } = await auth();
 
   const event: Event | null = await fetchEventById(eventId);
 
@@ -52,8 +53,8 @@ export default async function EventDetailPage({
     }
   }
 
-  const waitlistSuccess = searchParams?.waitlist_success === "true";
-  const waitlistError = searchParams?.waitlist_error;
+  const waitlistSuccess = resolvedSearchParams?.waitlist_success === "true";
+  const waitlistError = resolvedSearchParams?.waitlist_error;
 
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto text-[var(--text-dark)]">
@@ -159,7 +160,8 @@ export default async function EventDetailPage({
 export async function generateMetadata({
   params,
 }: EventDetailPageProps): Promise<Metadata> {
-  const event = await fetchEventById(params.id);
+  const { id } = await params;
+  const event = await fetchEventById(id);
   return {
     title: event ? `${event.name} | Event Details` : "Event Not Found",
     description: event?.description || "Details for the event.",
