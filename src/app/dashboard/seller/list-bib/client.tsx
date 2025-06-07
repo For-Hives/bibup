@@ -76,13 +76,15 @@ const styles = {
   checkbox: { height: "16px", width: "16px" },
 };
 
+import { Dictionary } from "@/lib/getDictionary";
+
 export default function ListNewBibClientPage({
   initialAuthUserId,
   partneredEvents,
   searchParams,
   dictionary,
 }: {
-  dictionary: any;
+  dictionary: Dictionary;
   initialAuthUserId: null | string;
   partneredEvents: Event[];
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -404,8 +406,8 @@ async function handleListBibServerAction(
     ) as string;
     bibData.eventId = ""; // Ensure eventId is empty for unlisted
     if (
-      !bibData.unlistedEventName ??
-      !bibData.unlistedEventDate ??
+      !bibData.unlistedEventName ||
+      !bibData.unlistedEventDate ||
       !bibData.unlistedEventLocation
     ) {
       redirect(
@@ -423,8 +425,8 @@ async function handleListBibServerAction(
   }
 
   if (
-    !bibData.registrationNumber ??
-    isNaN(bibData.price) ??
+    !bibData.registrationNumber ||
+    isNaN(bibData.price) ||
     bibData.price <= 0
   ) {
     redirect(
