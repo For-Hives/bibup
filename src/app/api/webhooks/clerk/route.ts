@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   const svix_signature = headerPayload.get("svix-signature");
 
   // If there are no headers, error out
-  if (!svix_id ?? !svix_timestamp ?? !svix_signature) {
+  if (svix_id == null || svix_timestamp == null || svix_signature == null) {
     return NextResponse.json(
       { error: "Error occured -- no svix headers" },
       { status: 400 },

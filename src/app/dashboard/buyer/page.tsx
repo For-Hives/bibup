@@ -70,7 +70,7 @@ export default async function BuyerDashboardPage({
   const { userId: clerkUserId } = await auth();
   const clerkUser = await currentUser();
 
-  if (!clerkUserId ?? !clerkUser) {
+  if (clerkUserId == null || !clerkUser) {
     return (
       <p style={styles.container}>{dictionary.dashboard.buyer.pleaseSignIn}</p>
     );
