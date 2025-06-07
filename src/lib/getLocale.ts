@@ -2,6 +2,11 @@
 import { headers } from 'next/headers'
 
 export async function getLocale() {
+	// During build time, return default locale to avoid dynamic server usage
+	if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+		return 'en'
+	}
+
 	try {
 		// Get the Accept-Language header from the request
 		const headersList = await headers()
@@ -30,11 +35,9 @@ export async function getLocale() {
 		}
 
 		return 'en'
-	} catch (error) {
+	} catch {
 		// During static generation, headers() might not be available
 		// Return default locale
-
-		console.error('Error getting locale:', error)
 		return 'en'
 	}
 }
