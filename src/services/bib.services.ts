@@ -39,15 +39,15 @@ export type UpdateBibData = Partial<
  */
 export async function createBib(
   bibData: CreateBibData,
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<Bib | null> {
   if (!sellerUserId) {
     console.error("Seller ID is required to create a bib listing.");
     return null;
   }
   if (
-    !bibData.registrationNumber ??
-    bibData.price === undefined ??
+    !bibData.registrationNumber ||
+    bibData.price === undefined ||
     bibData.price < 0
   ) {
     console.error("Registration Number and a valid Price are required.");
@@ -59,19 +59,19 @@ export async function createBib(
 
   if (bibData.isNotListedEvent) {
     if (
-      !bibData.unlistedEventName ??
-      !bibData.unlistedEventDate ??
+      bibData.unlistedEventName == null ||
+      !bibData.unlistedEventDate ||
       !bibData.unlistedEventLocation
     ) {
       console.error(
-        "For unlisted events, event name, date, and location are required.",
+        "For unlisted events, event name, date, and location are required."
       );
       return null;
     }
     // For unlisted events, eventId might be null or a placeholder.
     // The actual event creation/linking would be an admin task.
     finalEventId = undefined; // Or link to a generic "unverified event" record ID if one exists
-    status = "pending_event_verification"; // Special status for these submissions
+    status = "pending_validation"; // Special status for these submissions
     // Add the unlisted event details to the bib record itself, or a related "unverified_events" table.
     // For simplicity here, we might add them as new fields to the Bib model if not too complex,
     // or store them in a generic 'notes' field or a structured JSON field if PocketBase supports it.
@@ -84,7 +84,8 @@ export async function createBib(
   }
 
   try {
-    const dataToCreate: Omit<Bib, "id"> & {
+    const dataToCreate: Omit<Bib, "eventId" | "id"> & {
+      eventId?: string; // Make eventId optional for unlisted events
       unlistedEventDate?: string; // Consider storing as ISO string if PocketBase field is Date
       unlistedEventLocation?: string;
       unlistedEventName?: string;
@@ -134,7 +135,7 @@ export async function createBib(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any)?.data,
+          (error.response as any)?.data
         );
       }
     }
@@ -147,7 +148,7 @@ export async function createBib(
  * @param bibId The ID of the bib to fetch.
  */
 export async function fetchBibById(
-  bibId: string,
+  bibId: string
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
   if (!bibId) {
     console.error("Bib ID is required.");
@@ -183,9 +184,9 @@ export async function fetchBibById(
  */
 export async function fetchBibByIdForSeller(
   bibId: string,
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
-  if (!bibId ?? !sellerUserId) {
+  if (!bibId || !sellerUserId) {
     console.error("Bib ID and Seller ID are required.");
     return null;
   }
@@ -197,7 +198,7 @@ export async function fetchBibByIdForSeller(
       });
     if (record.sellerUserId !== sellerUserId) {
       console.warn(
-        `Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`,
+        `Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`
       );
       return null; // Not the owner
     }
@@ -205,7 +206,7 @@ export async function fetchBibByIdForSeller(
   } catch (error) {
     console.error(
       `Error fetching bib ${bibId} for seller ${sellerUserId}:`,
-      error,
+      error
     );
     if (
       error &&
@@ -225,7 +226,7 @@ export async function fetchBibByIdForSeller(
  * @param buyerUserId The ID of the buyer whose purchased bibs are to be fetched.
  */
 export async function fetchBibsByBuyer(
-  buyerUserId: string,
+  buyerUserId: string
 ): Promise<(Bib & { expand?: { eventId: Event } })[]> {
   if (!buyerUserId) {
     console.error("Buyer User ID is required to fetch their purchased bibs.");
@@ -291,7 +292,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
   } catch (error) {
     console.error(
       `Error fetching bibs for seller ID "${sellerUserId}":`,
-      error,
+      error
     );
     // Check if it's a 404 error (no records found for this seller)
     if (
@@ -318,7 +319,7 @@ import { updateUserBalance } from "./user.services";
  * @param eventId The ID of the event.
  */
 export async function fetchPubliclyListedBibsForEvent(
-  eventId: string,
+  eventId: string
 ): Promise<Bib[]> {
   if (!eventId) {
     console.error("Event ID is required to fetch publicly listed bibs.");
@@ -335,7 +336,7 @@ export async function fetchPubliclyListedBibsForEvent(
   } catch (error) {
     console.error(
       `Error fetching publicly listed bibs for event ${eventId}:`,
-      error,
+      error
     );
     // Check if it's a 404 error (no records found for this event)
     if (
@@ -359,9 +360,9 @@ export async function fetchPubliclyListedBibsForEvent(
  */
 export async function processBibSale(
   bibId: string,
-  buyerUserId: string,
+  buyerUserId: string
 ): Promise<{ error?: string; success: boolean; transaction?: Transaction }> {
-  if (!bibId ?? !buyerUserId) {
+  if (!bibId || !buyerUserId) {
     return { error: "Bib ID and Buyer User ID are required.", success: false };
   }
 
@@ -410,7 +411,7 @@ export async function processBibSale(
     // 5. Update seller's balance.
     const sellerBalanceUpdated = await updateUserBalance(
       bib.sellerUserId,
-      amountToSeller,
+      amountToSeller
     );
     if (!sellerBalanceUpdated) {
       // Attempt to mark transaction as failed or requiring attention if seller balance update fails.
@@ -420,7 +421,7 @@ export async function processBibSale(
         status: "failed",
       });
       console.error(
-        `CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`,
+        `CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`
       );
       return {
         error:
@@ -474,9 +475,9 @@ export async function processBibSale(
 export async function updateBibBySeller(
   bibId: string,
   dataToUpdate: UpdateBibData | { status: Bib["status"] }, // Allow specific status updates or general data updates
-  sellerUserId: string,
+  sellerUserId: string
 ): Promise<Bib | null> {
-  if (!bibId ?? !sellerUserId) {
+  if (!bibId || !sellerUserId) {
     console.error("Bib ID and Seller ID are required for update.");
     return null;
   }
@@ -486,16 +487,16 @@ export async function updateBibBySeller(
     const currentBib = await pb.collection("bibs").getOne<Bib>(bibId);
     if (currentBib.sellerUserId !== sellerUserId) {
       console.warn(
-        `Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`,
+        `Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`
       );
       return null;
     }
 
     // Prevent changing eventId or sellerUserId directly with this function
     // Certain status transitions might also be restricted here or by app logic (e.g., can't change sold bib)
-    if (currentBib.status === "sold" ?? currentBib.status === "expired") {
+    if (currentBib.status === "sold" || currentBib.status === "expired") {
       console.warn(
-        `Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`,
+        `Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`
       );
       // return null; // Or throw an error
     }
@@ -516,7 +517,7 @@ export async function updateBibBySeller(
 
       if (!allowedStatusChanges[currentBib.status]?.includes(newStatus)) {
         console.warn(
-          `Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`,
+          `Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`
         );
         // return null; // Or throw an error indicating invalid transition
       }
@@ -546,9 +547,9 @@ export async function updateBibBySeller(
 export async function updateBibStatusByAdmin(
   bibId: string,
   newStatus: Bib["status"],
-  adminNotes?: string,
+  adminNotes?: string
 ): Promise<Bib | null> {
-  if (!bibId ?? !newStatus) {
+  if (!bibId || !newStatus) {
     console.error("Bib ID and new status are required for admin update.");
     return null;
   }

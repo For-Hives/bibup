@@ -27,13 +27,17 @@ export async function createEvent(
     name: string;
     participantCount?: number;
   },
-  organizerId: string,
+  organizerId: string
 ): Promise<Event | null> {
   if (!organizerId) {
     console.error("Organizer ID is required to create an event.");
     return null;
   }
-  if (!eventData.name ?? !eventData.date ?? !eventData.location) {
+  if (
+    !eventData.name ||
+    isNaN(eventData.date.getTime()) ||
+    !eventData.location
+  ) {
     console.error("Event name, date, and location are required.");
     return null;
   }
@@ -66,7 +70,7 @@ export async function createEvent(
       ) {
         console.error(
           "PocketBase response data:",
-          (error.response as any)?.data,
+          (error.response as any)?.data
         );
       }
     }
@@ -133,7 +137,7 @@ export async function fetchEventById(id: string): Promise<Event | null> {
  * @param organizerId The ID of the organizer whose events are to be fetched.
  */
 export async function fetchEventsByOrganizer(
-  organizerId: string,
+  organizerId: string
 ): Promise<Event[]> {
   if (!organizerId) {
     console.error("Organizer ID is required to fetch their events.");
@@ -149,7 +153,7 @@ export async function fetchEventsByOrganizer(
   } catch (error) {
     console.error(
       `Error fetching events for organizer ID "${organizerId}":`,
-      error,
+      error
     );
     // Check if it's a 404 error (no records found for this organizer)
     if (

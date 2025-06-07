@@ -15,9 +15,9 @@ import { pb } from "@/lib/pocketbaseClient";
  */
 export async function addToWaitlist(
   eventId: string,
-  userId: string,
+  userId: string
 ): Promise<null | (Waitlist & { error?: string })> {
-  if (!eventId ?? !userId) {
+  if (!eventId || !userId) {
     console.error("Event ID and User ID are required to join a waitlist.");
     return null;
   }
@@ -28,7 +28,7 @@ export async function addToWaitlist(
       const existingEntry = await pb
         .collection("waitlists")
         .getFirstListItem<Waitlist>(
-          `userId = "${userId}" && eventId = "${eventId}"`,
+          `userId = "${userId}" && eventId = "${eventId}"`
         );
       if (existingEntry) {
         return { ...existingEntry, error: "already_on_waitlist" };
@@ -58,7 +58,7 @@ export async function addToWaitlist(
   } catch (error) {
     console.error(
       `Error adding user ${userId} to waitlist for event ${eventId}:`,
-      error,
+      error
     );
     if (error && typeof error === "object" && "message" in error) {
       console.error("PocketBase error details:", error.message);
@@ -70,7 +70,7 @@ export async function addToWaitlist(
       ) {
         console.error(
           "PocketBase response data:",
-          (error?.response as any)?.data,
+          (error?.response as any)?.data
         );
       }
     }
@@ -83,7 +83,7 @@ export async function addToWaitlist(
  * @param userId The ID of the user whose waitlist entries are to be fetched.
  */
 export async function fetchUserWaitlists(
-  userId: string,
+  userId: string
 ): Promise<(Waitlist & { expand?: { eventId: Event } })[]> {
   if (!userId) {
     console.error("User ID is required to fetch their waitlists.");

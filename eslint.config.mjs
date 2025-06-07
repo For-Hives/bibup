@@ -4,13 +4,13 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import noOnlyTestsPlugin from "eslint-plugin-no-only-tests";
 import queryPlugin from "@tanstack/eslint-plugin-query";
 import perfectionist from "eslint-plugin-perfectionist";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import nextPlugin from "@next/eslint-plugin-next";
 import promisePlugin from "eslint-plugin-promise";
-import wokePlugin from "eslint-plugin-woke";
 import tsParser from "@typescript-eslint/parser";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
+import wokePlugin from "eslint-plugin-woke";
 import * as espree from "espree";
-import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 
 // Configuration commune des règles
 const baseRules = {
@@ -21,10 +21,10 @@ const baseRules = {
   "prettier/prettier": "error",
   ...nextPlugin.configs.recommended.rules,
   ...nextPlugin.configs["core-web-vitals"].rules,
-  "promise/always-return": "off",
-  "woke/all": "warn",
-  "jsx-a11y/alt-text": "off",
   "jsx-a11y/anchor-has-content": "off",
+  "promise/always-return": "off",
+  "jsx-a11y/alt-text": "off",
+  "woke/all": "warn",
 };
 
 // Configuration commune des règles perfectionist
@@ -87,9 +87,9 @@ const perfectionistRules = {
 const basePlugins = {
   "no-only-tests": noOnlyTestsPlugin,
   "react-hooks": reactHooksPlugin,
+  "jsx-a11y": jsxA11yPlugin,
   "@next/next": nextPlugin,
   woke: wokePlugin,
-  "jsx-a11y": jsxA11yPlugin,
 };
 
 // Options communes du parser
@@ -107,47 +107,47 @@ export default [
 
   // Configuration pour JavaScript
   {
-    files: ["**/*.{js,jsx,mjs,cjs}"],
     languageOptions: {
-      parser: espree,
       parserOptions: baseParserOptions,
+      parser: espree,
     },
-    plugins: basePlugins,
     rules: {
       ...baseRules,
       ...perfectionistRules,
     },
+    files: ["**/*.{js,jsx,mjs,cjs}"],
+    plugins: basePlugins,
   },
 
   // Configuration pour TypeScript
   {
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ...baseParserOptions,
-        project: "./tsconfig.json",
-      },
-    },
-    plugins: {
-      "@typescript-eslint": tsPlugin,
-      ...basePlugins,
-    },
     rules: {
       ...baseRules,
       ...perfectionistRules,
       // Règles TypeScript spécifiques
       ...tsPlugin.configs.recommended.rules,
       ...tsPlugin.configs["recommended-type-checked"].rules,
-      "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/strict-boolean-expressions": "warn",
       "@typescript-eslint/prefer-nullish-coalescing": "error",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
       "@typescript-eslint/prefer-optional-chain": "error",
-      "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/no-unsafe-assignment": "warn",
       "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
+    languageOptions: {
+      parserOptions: {
+        ...baseParserOptions,
+        project: "./tsconfig.json",
+      },
+      parser: tsParser,
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+      ...basePlugins,
+    },
+    files: ["**/*.{ts,tsx}"],
   },
 ];
