@@ -55,5 +55,191 @@
         ]
       }
     }
+  },
+  "calendar": {
+    "title": "Calendrier des Événements",
+    "description": "Parcourez les courses et événements à venir",
+    "noEvents": "Aucun événement trouvé pour la période sélectionnée",
+    "loading": "Chargement des événements..."
+  },
+  "events": {
+    "title": "Parcourir les Événements",
+    "description": "Trouvez et achetez des dossards pour les événements à venir",
+    "searchPlaceholder": "Rechercher des événements...",
+    "noEvents": "Aucun événement disponible",
+    "loading": "Chargement des événements...",
+    "filters": {
+      "all": "Tous les Événements",
+      "location": "Lieu",
+      "date": "Date",
+      "category": "Catégorie"
+    },
+    "eventCard": {
+      "viewDetails": "Voir les Détails",
+      "bibsAvailable": "dossards disponibles",
+      "soldOut": "Complet"
+    }
+  },
+  "dashboard": {
+    "buyer": {
+      "title": "Tableau de Bord Acheteur",
+      "welcome": "Bienvenue sur votre tableau de bord acheteur",
+      "pleaseSignIn": "Veuillez vous connecter pour voir votre tableau de bord acheteur.",
+      "myPurchases": "Mes Achats",
+      "noPurchases": "Vous n'avez encore effectué aucun achat",
+      "browseEvents": "Parcourir les Événements",
+      "purchaseSuccess": "Félicitations ! Vous avez acheté avec succès le dossard pour",
+      "purchaseSuccessDetails": "Les détails de votre nouveau dossard sont listés ci-dessous.",
+      "waitlistEntries": "Vos Entrées de Liste d'Attente",
+      "noWaitlistEntries": "Vous n'êtes actuellement sur aucune liste d'attente.",
+      "browseEventsWaitlist": "Parcourir les événements",
+      "waitlistJoinText": "pour rejoindre une liste d'attente si aucun dossard n'est disponible.",
+      "eventLabel": "Événement :",
+      "bibForLabel": "Dossard pour :",
+      "dateOfEvent": "Date de l'Événement :",
+      "pricePaid": "Prix Payé :",
+      "registrationNumber": "Numéro d'Inscription :",
+      "keepRecords": "(Conservez ceci pour vos dossiers)",
+      "dateAddedToWaitlist": "Date d'Ajout à la Liste d'Attente :",
+      "status": "Statut :",
+      "notifiedOn": "Notifié le",
+      "waitingForNotification": "En attente de notification"
+    },
+    "seller": {
+      "title": "Tableau de Bord Vendeur",
+      "welcome": "Bienvenue sur votre tableau de bord vendeur",
+      "pleaseSignIn": "Veuillez vous connecter pour voir votre tableau de bord vendeur.",
+      "welcomeMessage": "Bienvenue",
+      "yourBibUpBalance": "Votre Solde BibUp",
+      "manageBibListings": "Gérer Vos Annonces de Dossards",
+      "listNewBib": "Mettre en Vente un Nouveau Dossard",
+      "yourListedBibs": "Vos Dossards en Vente :",
+      "myBibs": "Mes Dossards en Vente",
+      "noBibs": "Vous n'avez encore mis aucun dossard en vente",
+      "noBibsListed": "Vous n'avez encore mis aucun dossard en vente.",
+      "editBib": "Modifier le Dossard",
+      "editManage": "Modifier / Gérer",
+      "deleteBib": "Supprimer le Dossard",
+      "bibFor": "Dossard pour :",
+      "regNumber": "N° d'Inscr. :",
+      "price": "Prix :",
+      "original": "Original :",
+      "size": "Taille :",
+      "gender": "Genre :",
+      "statusLabel": "Statut :",
+      "successMessage": "Dossard mis en vente avec succès ! Statut actuel :",
+      "errorMessage": "Erreur :",
+      "listBib": {
+        "title": "Mettre en Vente un Nouveau Dossard",
+        "backToDashboard": "← Retour au Tableau de Bord Vendeur",
+        "form": {
+          "eventSelect": "Sélectionner un Événement",
+          "eventSelectPlaceholder": "Choisissez un événement dans la liste",
+          "notListedEvent": "Mon événement n'est pas listé",
+          "unlistedEventName": "Nom de l'Événement (si non listé)",
+          "unlistedEventNamePlaceholder": "Entrez le nom de l'événement",
+          "price": "Prix ($)",
+          "pricePlaceholder": "ex : 50,00",
+          "registrationNumber": "Numéro d'Inscription",
+          "registrationNumberPlaceholder": "ex : 12345",
+          "size": "Taille (Optionnel)",
+          "sizePlaceholder": "ex : M, L, XL",
+          "gender": "Genre (Optionnel)",
+          "genderPlaceholder": "ex : Homme, Femme, Unisexe",
+          "notes": "Notes Supplémentaires (Optionnel)",
+          "notesPlaceholder": "Toute information supplémentaire sur le dossard",
+          "submit": "Mettre Mon Dossard en Vente",
+          "submitting": "Mise en vente..."
+        },
+        "errors": {
+          "loginRequired": "Vous devez être connecté pour mettre un dossard en vente.",
+          "eventRequired": "Veuillez sélectionner un événement ou entrer un nom d'événement.",
+          "priceRequired": "Veuillez entrer un prix valide.",
+          "registrationRequired": "Veuillez entrer un numéro d'inscription.",
+          "listingFailed": "Échec de la mise en vente du dossard. Veuillez réessayer."
+        },
+        "metadata": {
+          "title": "Mettre en Vente un Nouveau Dossard | Tableau de Bord Vendeur | BibUp",
+          "description": "Mettez votre dossard de course en vente sur BibUp. Spécifiez les détails de l'événement, le prix et d'autres informations sur le dossard."
+        }
+      }
+    },
+    "organizer": {
+      "title": "Tableau de Bord Organisateur",
+      "welcome": "Bienvenue sur votre tableau de bord organisateur",
+      "pleaseSignIn": "Veuillez vous connecter pour voir votre tableau de bord.",
+      "welcomeMessage": "Bienvenue",
+      "manageEvents": "Gérer Vos Événements",
+      "manageEventsDescription": "Soumettez de nouveaux événements ou consultez vos soumissions d'événements existantes ci-dessous.",
+      "submitNewEvent": "Soumettre un Nouvel Événement",
+      "yourSubmittedEvents": "Vos Événements Soumis :",
+      "noEventsSubmitted": "Vous n'avez encore soumis aucun événement.",
+      "eventDate": "Date :",
+      "location": "Lieu :",
+      "status": "Statut :",
+      "viewPublicPage": "Voir la Page Publique",
+      "partnershipSupport": "Partenariat et Support",
+      "partnershipDescription": "Intéressé à devenir un événement partenaire ou besoin d'assistance ?",
+      "scheduleMeeting": "Planifier une Réunion / S'enquérir",
+      "contactSupport": "Alternativement, contactez",
+      "supportEmail": "support@bibup.com",
+      "eventSubmittedSuccess": "Événement soumis avec succès et en attente d'approbation !",
+      "myEvents": "Mes Événements",
+      "noEvents": "Vous n'avez encore créé aucun événement",
+      "createEvent": "Créer un Événement",
+      "submitEvent": {
+        "title": "Soumettre un Nouvel Événement",
+        "eventName": "Nom de l'Événement",
+        "eventNameLabel": "Nom de l'Événement :",
+        "eventDate": "Date de l'Événement",
+        "eventDateLabel": "Date de l'Événement :",
+        "location": "Lieu",
+        "eventLocation": "Lieu de l'Événement :",
+        "participantCount": "Nombre de Participants Attendus :",
+        "description": "Description",
+        "eventDescription": "Description de l'Événement (Optionnel) :",
+        "submit": "Soumettre l'Événement",
+        "cancel": "Annuler",
+        "backToDashboard": "← Retour au Tableau de Bord Organisateur",
+        "required": "(requis)",
+        "optional": "(optionnel)",
+        "errorPrefix": "Erreur :",
+        "validationError": "Le nom de l'événement, la date et le lieu sont requis.",
+        "createError": "Échec de la création de l'événement. Veuillez vérifier les détails.",
+        "loginRequired": "Vous devez être connecté pour soumettre un événement.",
+        "unknownError": "Une erreur inconnue s'est produite."
+      }
+    }
+  },
+  "purchase": {
+    "title": "Confirmer Votre Achat de Dossard",
+    "errors": {
+      "bibNotAvailable": "Ce dossard n'est plus disponible à l'achat (Statut : {status}).",
+      "cannotPurchaseOwnBib": "Vous ne pouvez pas acheter votre propre annonce de dossard.",
+      "authFailed": "L'authentification utilisateur a échoué. Veuillez vous reconnecter.",
+      "purchaseFailed": "L'achat a échoué. Veuillez réessayer.",
+      "unexpectedError": "Une erreur inattendue s'est produite lors de l'achat.",
+      "errorPrefix": "Erreur :"
+    },
+    "details": {
+      "title": "Réviser les Détails du Dossard :",
+      "event": "Événement",
+      "eventDate": "Date de l'Événement",
+      "registrationNumber": "Numéro d'Inscription",
+      "registrationNumberNote": "(Fourni après l'achat)",
+      "size": "Taille",
+      "gender": "Genre",
+      "price": "Prix"
+    },
+    "confirmButton": "Confirmer et Procéder au Paiement (Simulé)",
+    "agreementText": "En cliquant sur \"Confirmer et Procéder\", vous acceptez d'acheter ce dossard. Le traitement du paiement sera simulé dans cette version.",
+    "cancelLink": "Annuler et retourner à la page de l'événement",
+    "browseOtherEvents": "Parcourir d'autres événements",
+    "backToEventPage": "Retour à la page de l'événement",
+    "metadata": {
+      "notFoundTitle": "Dossard Introuvable | BibUp",
+      "titleTemplate": "Acheter un Dossard pour {eventName} | BibUp",
+      "descriptionTemplate": "Confirmez votre achat d'un dossard pour {eventName} au prix de {price}$."
+    }
   }
 }

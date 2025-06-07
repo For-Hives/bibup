@@ -10,7 +10,9 @@ import {
   fetchBibByIdForSeller,
   updateBibBySeller,
   UpdateBibData,
-} from "@/services/bib.services.ts";
+} from "@/services/bib.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 type EditBibPageProps = {
   params: { bibId: string };
@@ -26,8 +28,6 @@ const getBibStatusClass = (status: Bib["status"]): string => {
       return "status-approved";
     case "listed_public":
       return "status-approved";
-    case "pending_event_verification":
-      return "status-pending";
     case "pending_validation":
       return "status-pending";
     case "sold":
@@ -45,7 +45,9 @@ export default async function EditBibPage({
   searchParams,
   params,
 }: EditBibPageProps) {
-  const { userId: sellerUserId } = auth();
+  const { userId: sellerUserId } = await auth();
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
   const { bibId } = params;
 
   if (!sellerUserId) {
@@ -94,7 +96,7 @@ export default async function EditBibPage({
 
     if (isNaN(dataToUpdate.price!) || dataToUpdate.price! <= 0) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Valid price is required.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Valid price is required.")}`
       );
       return;
     }
@@ -102,15 +104,15 @@ export default async function EditBibPage({
     const updatedBib = await updateBibBySeller(
       bibId,
       dataToUpdate,
-      sellerUserId,
+      sellerUserId
     );
     if (updatedBib) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent("Bib details updated successfully!")}`,
+        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent("Bib details updated successfully!")}`
       );
     } else {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to update bib details.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to update bib details.")}`
       );
     }
   }
@@ -120,21 +122,21 @@ export default async function EditBibPage({
     const updatedBib = await updateBibBySeller(
       bibId,
       { status: "withdrawn" },
-      sellerUserId,
+      sellerUserId
     );
     if (updatedBib) {
       redirect(
-        `/dashboard/seller?success=${encodeURIComponent("Bib listing withdrawn.")}&bibStatus=withdrawn`,
+        `/dashboard/seller?success=${encodeURIComponent("Bib listing withdrawn.")}&bibStatus=withdrawn`
       );
     } else {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to withdraw bib.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to withdraw bib.")}`
       );
     }
   }
 
   async function handleToggleListingStatus(
-    newStatus: "listed_private" | "listed_public",
+    newStatus: "listed_private" | "listed_public"
   ) {
     "use server";
     if (
@@ -147,7 +149,7 @@ export default async function EditBibPage({
       newStatus === "listed_public"
     ) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot make public until event details are verified by admin.`)}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot make public until event details are verified by admin.`)}`
       );
       return;
     } else if (
@@ -157,7 +159,7 @@ export default async function EditBibPage({
       bibWithEvent?.status !== "pending_validation"
     ) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent?.status}.`)}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent?.status}.`)}`
       );
       return;
     }
@@ -165,15 +167,15 @@ export default async function EditBibPage({
     const updatedBib = await updateBibBySeller(
       bibId,
       { status: newStatus },
-      sellerUserId,
+      sellerUserId
     );
     if (updatedBib) {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace("_", " ")}.`)}`,
+        `/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace("_", " ")}.`)}`
       );
     } else {
       redirect(
-        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to change bib status.")}`,
+        `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Failed to change bib status.")}`
       );
     }
   }

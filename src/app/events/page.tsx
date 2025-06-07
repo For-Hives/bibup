@@ -1,9 +1,14 @@
 import type { Event } from "@/models/event.model"; // Import Event type
 
 import { fetchApprovedPublicEvents } from "@/services/event.services"; // Updated service import
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 // import EventListClient from "./EventListClient"; // Will address this if client component is complex
 
 export default async function EventsPage() {
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
   const events: Event[] = await fetchApprovedPublicEvents();
 
   return (
@@ -12,8 +17,11 @@ export default async function EventsPage() {
         <h1
           style={{ marginBottom: "20px", textAlign: "center", fontSize: "2em" }}
         >
-          Upcoming Events
+          {dictionary.events.title}
         </h1>
+        <p style={{ textAlign: "center", marginBottom: "30px", color: "#666" }}>
+          {dictionary.events.description}
+        </p>
         {events.length > 0 ? (
           <ul style={{ listStyle: "none", padding: 0 }}>
             {events.map((event) => (
@@ -48,7 +56,7 @@ export default async function EventsPage() {
             ))}
           </ul>
         ) : (
-          <p style={{ textAlign: "center" }}>No upcoming events found.</p>
+          <p style={{ textAlign: "center" }}>{dictionary.events.noEvents}</p>
         )}
         {/*
           If EventListClient is needed for interactions, its usage would be here.

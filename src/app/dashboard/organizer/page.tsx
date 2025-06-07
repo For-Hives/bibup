@@ -5,6 +5,8 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 import { fetchEventsByOrganizer } from "@/services/event.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 export const metadata: Metadata = {
   title: "Organizer Dashboard | BibUp",
@@ -33,13 +35,16 @@ export default async function OrganizerDashboardPage({
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const { userId } = auth();
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
+  const { userId } = await auth();
   const user = await currentUser();
 
   if (!userId || !user) {
     return (
       <div className="p-4 md:p-8 max-w-4xl mx-auto text-[var(--text-dark)]">
-        Please sign in to view your dashboard.
+        {dictionary.dashboard.organizer.pleaseSignIn}
       </div>
     );
   }
@@ -54,16 +59,20 @@ export default async function OrganizerDashboardPage({
 
   const successMessage =
     searchParams?.success === "true"
-      ? "Event submitted successfully and is pending approval!"
+      ? dictionary.dashboard.organizer.eventSubmittedSuccess
       : null;
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8 text-[var(--text-dark)]">
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-bold">Organizer Dashboard</h1>
+        <h1 className="text-3xl font-bold">
+          {dictionary.dashboard.organizer.title}
+        </h1>
       </header>
 
-      <p className="text-xl text-center">Welcome, {organizerName}!</p>
+      <p className="text-xl text-center">
+        {dictionary.dashboard.organizer.welcomeMessage}, {organizerName}!
+      </p>
 
       {successMessage && (
         <div className="p-4 mb-6 bg-[var(--success-bg)] text-[var(--success-text)] rounded-lg border border-green-300 text-center">
@@ -77,18 +86,20 @@ export default async function OrganizerDashboardPage({
         <section className="bento-box md:col-span-2">
           {" "}
           {/* Spans two columns on medium screens */}
-          <h2 className="text-xl font-semibold mb-4">Manage Your Events</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {dictionary.dashboard.organizer.manageEvents}
+          </h2>
           <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Submit new events or view your existing event submissions below.
+            {dictionary.dashboard.organizer.manageEventsDescription}
           </p>
           <Link
             className="btn btn-primary mb-6"
             href="/dashboard/organizer/submit-event"
           >
-            Submit New Event
+            {dictionary.dashboard.organizer.submitNewEvent}
           </Link>
           <h3 className="text-lg font-semibold mt-6 mb-3">
-            Your Submitted Events:
+            {dictionary.dashboard.organizer.yourSubmittedEvents}
           </h3>
           {submittedEvents.length > 0 ? (
             <ul className="space-y-4">
@@ -101,11 +112,14 @@ export default async function OrganizerDashboardPage({
                     {event.name}
                   </div>
                   <p className="text-sm">
-                    Date: {new Date(event.date).toLocaleDateString()}
+                    {dictionary.dashboard.organizer.eventDate}{" "}
+                    {new Date(event.date).toLocaleDateString()}
                   </p>
-                  <p className="text-sm">Location: {event.location}</p>
+                  <p className="text-sm">
+                    {dictionary.dashboard.organizer.location} {event.location}
+                  </p>
                   <p className="text-sm mt-1">
-                    Status:{" "}
+                    {dictionary.dashboard.organizer.status}{" "}
                     <span
                       className={`status-badge ${getEventStatusClass(event.status)}`}
                     >
@@ -118,37 +132,39 @@ export default async function OrganizerDashboardPage({
                       className="text-xs text-[var(--accent-sporty)] hover:underline mt-1 inline-block"
                       href={`/events/${event.id}`}
                     >
-                      View Public Page
+                      {dictionary.dashboard.organizer.viewPublicPage}
                     </Link>
                   )}
                 </li>
               ))}
             </ul>
           ) : (
-            <p>You haven't submitted any events yet.</p>
+            <p>{dictionary.dashboard.organizer.noEventsSubmitted}</p>
           )}
         </section>
 
         {/* Section 2: Partnership & Support */}
         <section className="bento-box">
-          <h2 className="text-xl font-semibold mb-4">Partnership & Support</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {dictionary.dashboard.organizer.partnershipSupport}
+          </h2>
           <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Interested in becoming a partnered event or need assistance?
+            {dictionary.dashboard.organizer.partnershipDescription}
           </p>
           <a
             className="btn btn-secondary w-full"
             href="mailto:partners@bibup.com?subject=Partnership Inquiry"
             // style={{backgroundColor: 'var(--secondary-pastel)', color: 'var(--text-dark)'}} // Using btn-secondary now
           >
-            Schedule a Meeting / Inquire
+            {dictionary.dashboard.organizer.scheduleMeeting}
           </a>
           <p className="mt-4 text-xs text-center">
-            Alternatively, reach out to{" "}
+            {dictionary.dashboard.organizer.contactSupport}{" "}
             <a
               className="text-[var(--accent-sporty)] hover:underline"
               href="mailto:support@bibup.com"
             >
-              support@bibup.com
+              {dictionary.dashboard.organizer.supportEmail}
             </a>
             .
           </p>

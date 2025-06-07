@@ -55,5 +55,197 @@
         ]
       }
     }
+  },
+  "calendar": {
+    "title": "Event Calendar",
+    "description": "Browse upcoming races and events",
+    "noEvents": "No events found for the selected period",
+    "loading": "Loading events..."
+  },
+  "events": {
+    "title": "Browse Events",
+    "description": "Find and purchase race bibs for upcoming events",
+    "searchPlaceholder": "Search events...",
+    "noEvents": "No events available",
+    "loading": "Loading events...",
+    "filters": {
+      "all": "All Events",
+      "location": "Location",
+      "date": "Date",
+      "category": "Category"
+    },
+    "eventCard": {
+      "viewDetails": "View Details",
+      "bibsAvailable": "bibs available",
+      "soldOut": "Sold Out"
+    }
+  },
+  "dashboard": {
+    "buyer": {
+      "title": "Buyer Dashboard",
+      "welcome": "Welcome to your buyer dashboard",
+      "pleaseSignIn": "Please sign in to view your buyer dashboard.",
+      "myPurchases": "My Purchases",
+      "noPurchases": "You haven't made any purchases yet",
+      "browseEvents": "Browse Events",
+      "purchaseSuccess": "Congratulations! You have successfully purchased the bib for",
+      "purchaseSuccessDetails": "Your new bib details are listed below.",
+      "waitlistEntries": "Your Waitlist Entries",
+      "noWaitlistEntries": "You are not currently on any waitlists.",
+      "browseEventsWaitlist": "Browse events",
+      "waitlistJoinText": "to join a waitlist if no bibs are available.",
+      "eventLabel": "Event:",
+      "bibForLabel": "Bib for:",
+      "dateOfEvent": "Date of Event:",
+      "pricePaid": "Price Paid:",
+      "registrationNumber": "Registration Number:",
+      "keepRecords": "(Keep this for your records)",
+      "dateAddedToWaitlist": "Date Added to Waitlist:",
+      "status": "Status:",
+      "notifiedOn": "Notified on",
+      "waitingForNotification": "Waiting for notification"
+    },
+    "seller": {
+      "title": "Seller Dashboard",
+      "welcome": "Welcome to your seller dashboard",
+      "pleaseSignIn": "Please sign in to view your seller dashboard.",
+      "welcomeMessage": "Welcome",
+      "yourBibUpBalance": "Your BibUp Balance",
+      "manageBibListings": "Manage Your Bib Listings",
+      "listNewBib": "List a New Bib",
+      "yourListedBibs": "Your Listed Bibs:",
+      "myBibs": "My Listed Bibs",
+      "noBibs": "You haven't listed any bibs yet",
+      "noBibsListed": "You haven't listed any bibs yet.",
+      "listBib": "List a Bib",
+      "editBib": "Edit Bib",
+      "editManage": "Edit / Manage",
+      "deleteBib": "Delete Bib",
+      "bibFor": "Bib for:",
+      "regNumber": "Reg #:",
+      "price": "Price:",
+      "original": "Original:",
+      "size": "Size:",
+      "gender": "Gender:",
+      "statusLabel": "Status:",
+      "successMessage": "Bib listed successfully! Current status:",
+      "errorMessage": "Error:",
+      "status": {
+        "active": "Active",
+        "sold": "Sold",
+        "pending": "Pending"
+      },
+      "listBib": {
+        "title": "List a New Bib",
+        "backToDashboard": "← Back to Seller Dashboard",
+        "form": {
+          "eventSelect": "Select Event",
+          "eventSelectPlaceholder": "Choose an event from the list",
+          "notListedEvent": "My event is not listed",
+          "unlistedEventName": "Event Name (if not listed)",
+          "unlistedEventNamePlaceholder": "Enter the event name",
+          "price": "Price ($)",
+          "pricePlaceholder": "e.g., 50.00",
+          "registrationNumber": "Registration Number",
+          "registrationNumberPlaceholder": "e.g., 12345",
+          "size": "Size (Optional)",
+          "sizePlaceholder": "e.g., M, L, XL",
+          "gender": "Gender (Optional)",
+          "genderPlaceholder": "e.g., Male, Female, Unisex",
+          "notes": "Additional Notes (Optional)",
+          "notesPlaceholder": "Any additional information about the bib",
+          "submit": "List My Bib",
+          "submitting": "Listing..."
+        },
+        "errors": {
+          "loginRequired": "You must be logged in to list a bib.",
+          "eventRequired": "Please select an event or enter an event name.",
+          "priceRequired": "Please enter a valid price.",
+          "registrationRequired": "Please enter a registration number.",
+          "listingFailed": "Failed to list bib. Please try again."
+        },
+        "metadata": {
+          "title": "List a New Bib | Seller Dashboard | BibUp",
+          "description": "List your race bib for sale on BibUp. Specify event details, price, and other bib information."
+        }
+      }
+    },
+    "organizer": {
+      "title": "Organizer Dashboard",
+      "welcome": "Welcome to your organizer dashboard",
+      "pleaseSignIn": "Please sign in to view your dashboard.",
+      "welcomeMessage": "Welcome",
+      "manageEvents": "Manage Your Events",
+      "manageEventsDescription": "Submit new events or view your existing event submissions below.",
+      "submitNewEvent": "Submit New Event",
+      "yourSubmittedEvents": "Your Submitted Events:",
+      "noEventsSubmitted": "You haven't submitted any events yet.",
+      "eventDate": "Date:",
+      "location": "Location:",
+      "status": "Status:",
+      "viewPublicPage": "View Public Page",
+      "partnershipSupport": "Partnership & Support",
+      "partnershipDescription": "Interested in becoming a partnered event or need assistance?",
+      "scheduleMeeting": "Schedule a Meeting / Inquire",
+      "contactSupport": "Alternatively, reach out to",
+      "supportEmail": "support@bibup.com",
+      "eventSubmittedSuccess": "Event submitted successfully and is pending approval!",
+      "myEvents": "My Events",
+      "noEvents": "You haven't created any events yet",
+      "createEvent": "Create Event",
+      "submitEvent": {
+        "title": "Submit New Event",
+        "eventName": "Event Name",
+        "eventNameLabel": "Event Name:",
+        "eventDate": "Event Date",
+        "eventDateLabel": "Event Date:",
+        "location": "Location",
+        "eventLocation": "Event Location:",
+        "participantCount": "Expected Participant Count:",
+        "description": "Description",
+        "eventDescription": "Event Description (Optional):",
+        "submit": "Submit Event",
+        "cancel": "Cancel",
+        "backToDashboard": "← Back to Organizer Dashboard",
+        "required": "(required)",
+        "optional": "(optional)",
+        "errorPrefix": "Error:",
+        "validationError": "Event Name, Date, and Location are required.",
+        "createError": "Failed to create event. Please check details.",
+        "loginRequired": "You must be logged in to submit an event.",
+        "unknownError": "An unknown error occurred."
+      }
+    }
+  },
+  "purchase": {
+    "title": "Confirm Your Bib Purchase",
+    "errors": {
+      "bibNotAvailable": "This bib is no longer available for purchase (Status: {status}).",
+      "cannotPurchaseOwnBib": "You cannot purchase your own bib listing.",
+      "authFailed": "User authentication failed. Please sign in again.",
+      "purchaseFailed": "Purchase failed. Please try again.",
+      "unexpectedError": "An unexpected error occurred during purchase.",
+      "errorPrefix": "Error:"
+    },
+    "details": {
+      "title": "Review Bib Details:",
+      "event": "Event",
+      "eventDate": "Event Date",
+      "registrationNumber": "Registration Number",
+      "registrationNumberNote": "(Provided after purchase)",
+      "size": "Size",
+      "gender": "Gender",
+      "price": "Price"
+    },
+    "confirmButton": "Confirm & Proceed to Payment (Simulated)",
+    "agreementText": "By clicking \"Confirm & Proceed\", you agree to purchase this bib. Further payment processing will be simulated in this version.",
+    "cancelLink": "Cancel and return to event page",
+    "browseOtherEvents": "Browse other events",
+    "backToEventPage": "Back to event page",
+    "metadata": {
+      "notFoundTitle": "Bib Not Found | BibUp",
+      "titleTemplate": "Purchase Bib for {eventName} | BibUp",
+      "descriptionTemplate": "Confirm your purchase for a bib for {eventName} priced at ${price}."
+    }
   }
 }

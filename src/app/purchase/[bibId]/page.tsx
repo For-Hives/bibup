@@ -6,7 +6,9 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-import { fetchBibById } from "@/services/bib.services.ts";
+import { fetchBibById } from "@/services/bib.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 type BibPurchasePageProps = {
   params: { bibId: string };
@@ -17,7 +19,10 @@ export default async function BibPurchasePage({
   searchParams,
   params,
 }: BibPurchasePageProps) {
-  const { userId: currentUserId } = auth();
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
+  const { userId: currentUserId } = await auth();
   const { bibId } = params;
 
   if (!currentUserId) {
@@ -40,13 +45,16 @@ export default async function BibPurchasePage({
     return (
       <div className="p-4 md:p-8 max-w-lg mx-auto text-center text-[var(--text-dark)]">
         <p className="p-4 mb-6 bg-[var(--error-bg)] text-[var(--error-text)] rounded-lg border border-red-300">
-          This bib is no longer available for purchase (Status: {bib.status}).
+          {dictionary.purchase.errors.bibNotAvailable.replace(
+            "{status}",
+            bib.status
+          )}
         </p>
         <Link
           className="text-[var(--accent-sporty)] hover:underline"
           href="/events"
         >
-          Browse other events
+          {dictionary.purchase.browseOtherEvents}
         </Link>
       </div>
     );
@@ -56,13 +64,13 @@ export default async function BibPurchasePage({
     return (
       <div className="p-4 md:p-8 max-w-lg mx-auto text-center text-[var(--text-dark)]">
         <p className="p-4 mb-6 bg-[var(--error-bg)] text-[var(--error-text)] rounded-lg border border-red-300">
-          You cannot purchase your own bib listing.
+          {dictionary.purchase.errors.cannotPurchaseOwnBib}
         </p>
         <Link
           className="text-[var(--accent-sporty)] hover:underline"
           href={`/events/${bib.eventId}`}
         >
-          Back to event page
+          {dictionary.purchase.backToEventPage}
         </Link>
       </div>
     );
@@ -75,27 +83,30 @@ export default async function BibPurchasePage({
 
   async function handleConfirmPurchase(formData: FormData) {
     "use server";
+    const locale = await getLocale();
+    const dictionary = await getDictionary(locale);
+
     if (!currentUserId) {
       redirect(
-        `/purchase/${bibId}?error=${encodeURIComponent("User authentication failed. Please sign in again.")}`,
+        `/purchase/${bibId}?error=${encodeURIComponent(dictionary.purchase.errors.authFailed)}`
       );
       return;
     }
-    const { processBibSale } = await import("@/services/bib.services.ts");
+    const { processBibSale } = await import("@/services/bib.services");
     try {
       const result = await processBibSale(bibId, currentUserId);
       if (result.success && result.transaction) {
         redirect(
-          `/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`,
+          `/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`
         );
       } else {
         redirect(
-          `/purchase/${bibId}?error=${encodeURIComponent(result.error || "Purchase failed. Please try again.")}`,
+          `/purchase/${bibId}?error=${encodeURIComponent(result.error || dictionary.purchase.errors.purchaseFailed)}`
         );
       }
     } catch (error) {
       console.error("Error in handleConfirmPurchase Server Action:", error);
-      let message = "An unexpected error occurred during purchase.";
+      let message = dictionary.purchase.errors.unexpectedError;
       if (error instanceof Error) message = error.message;
       redirect(`/purchase/${bibId}?error=${encodeURIComponent(message)}`);
     }
@@ -104,60 +115,73 @@ export default async function BibPurchasePage({
   return (
     <div className="p-4 md:p-8 max-w-lg mx-auto text-[var(--text-dark)]">
       <header className="text-center mb-8">
-        <h1 className="text-3xl font-bold">Confirm Your Bib Purchase</h1>
+        <h1 className="text-3xl font-bold">{dictionary.purchase.title}</h1>
       </header>
 
       {errorMessage && (
         <div className="p-3 mb-6 bg-[var(--error-bg)] text-[var(--error-text)] rounded-md border border-red-300 text-center text-sm">
-          Error: {errorMessage}
+          {dictionary.purchase.errors.errorPrefix} {errorMessage}
         </div>
       )}
 
       <div className="bento-box space-y-4">
         <h2 className="text-xl font-semibold border-b border-[var(--border-color)] pb-3 mb-4">
-          Review Bib Details:
+          {dictionary.purchase.details.title}
         </h2>
         <p>
-          <span className="font-semibold">Event:</span> {eventName}
+          <span className="font-semibold">
+            {dictionary.purchase.details.event}:
+          </span>{" "}
+          {eventName}
         </p>
         <p>
-          <span className="font-semibold">Event Date:</span> {eventDate}
+          <span className="font-semibold">
+            {dictionary.purchase.details.eventDate}:
+          </span>{" "}
+          {eventDate}
         </p>
         <p>
-          <span className="font-semibold">Registration Number:</span> (Provided
-          after purchase)
+          <span className="font-semibold">
+            {dictionary.purchase.details.registrationNumber}:
+          </span>{" "}
+          {dictionary.purchase.details.registrationNumberNote}
         </p>
         {bib.size && (
           <p>
-            <span className="font-semibold">Size:</span> {bib.size}
+            <span className="font-semibold">
+              {dictionary.purchase.details.size}:
+            </span>{" "}
+            {bib.size}
           </p>
         )}
         {bib.gender && (
           <p>
-            <span className="font-semibold">Gender:</span> {bib.gender}
+            <span className="font-semibold">
+              {dictionary.purchase.details.gender}:
+            </span>{" "}
+            {bib.gender}
           </p>
         )}
 
         <div className="text-2xl font-bold text-[var(--accent-sporty)] my-4 text-center">
-          Price: ${bib.price.toFixed(2)}
+          {dictionary.purchase.details.price}: ${bib.price.toFixed(2)}
         </div>
       </div>
 
       <form action={handleConfirmPurchase} className="mt-6">
         <button className="btn btn-primary w-full text-lg py-3" type="submit">
-          Confirm & Proceed to Payment (Simulated)
+          {dictionary.purchase.confirmButton}
         </button>
       </form>
 
       <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center">
-        By clicking "Confirm & Proceed", you agree to purchase this bib. Further
-        payment processing will be simulated in this version.
+        {dictionary.purchase.agreementText}
       </p>
       <Link
         className="block text-center mt-6 text-[var(--accent-sporty)] hover:underline"
         href={`/events/${bib.eventId}`}
       >
-        Cancel and return to event page
+        {dictionary.purchase.cancelLink}
       </Link>
     </div>
   );
@@ -166,15 +190,23 @@ export default async function BibPurchasePage({
 export async function generateMetadata({
   params,
 }: BibPurchasePageProps): Promise<Metadata> {
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
   const bib = await fetchBibById(params.bibId);
   if (!bib) {
-    return { title: "Bib Not Found | BibUp" };
+    return { title: dictionary.purchase.metadata.notFoundTitle };
   }
   const eventName =
     (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ||
     "Event";
   return {
-    description: `Confirm your purchase for a bib for ${eventName} priced at $${bib.price.toFixed(2)}.`,
-    title: `Purchase Bib for ${eventName} | BibUp`,
+    description: dictionary.purchase.metadata.descriptionTemplate
+      .replace("{eventName}", eventName)
+      .replace("{price}", bib.price.toFixed(2)),
+    title: dictionary.purchase.metadata.titleTemplate.replace(
+      "{eventName}",
+      eventName
+    ),
   };
 }
