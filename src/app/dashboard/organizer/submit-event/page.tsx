@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
+import { getDictionary } from "@/lib/getDictionary";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "@/lib/getLocale";
 import { redirect } from "next/navigation";
 import Link from "next/link"; // Import Link
 
 import { createEvent } from "@/services/event.services";
-import { getLocale } from "@/lib/getLocale";
-import { getDictionary } from "@/lib/getDictionary";
 
 export const metadata: Metadata = {
   title: "Submit New Event | Organizer Dashboard | BibUp",
@@ -39,7 +39,7 @@ export default async function SubmitEventPage({
     // Basic server-side validation
     if (!name || !dateString || !location) {
       redirect(
-        `/dashboard/organizer/submit-event?error=${encodeURIComponent("Event Name, Date, and Location are required.")}`
+        `/dashboard/organizer/submit-event?error=${encodeURIComponent("Event Name, Date, and Location are required.")}`,
       );
       return;
     }
@@ -61,7 +61,7 @@ export default async function SubmitEventPage({
         redirect("/dashboard/organizer?success=true");
       } else {
         redirect(
-          `/dashboard/organizer/submit-event?error=${encodeURIComponent("Failed to create event. Please check details.")}`
+          `/dashboard/organizer/submit-event?error=${encodeURIComponent("Failed to create event. Please check details.")}`,
         );
       }
     } catch (error) {
@@ -69,7 +69,7 @@ export default async function SubmitEventPage({
       const message =
         error instanceof Error ? error.message : "An unknown error occurred.";
       redirect(
-        `/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`
+        `/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`,
       );
     }
   }

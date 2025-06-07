@@ -9,9 +9,9 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getLocale } from "@/lib/getLocale";
 
 import Footer from "@/components/global/footer";
-import { getLocale } from "@/lib/getLocale";
 
 import "./globals.css";
 
