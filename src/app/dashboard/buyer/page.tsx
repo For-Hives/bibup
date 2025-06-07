@@ -60,15 +60,16 @@ const styles = {
 };
 
 export default async function BuyerDashboardPage({
-  searchParams,
+  searchParams: searchParamsPromise,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
 
   const { userId: clerkUserId } = await auth();
   const clerkUser = await currentUser();
+  const searchParams = await searchParamsPromise;
 
   if (clerkUserId == null || !clerkUser) {
     return (
