@@ -5,12 +5,11 @@ import type { Event } from "@/models/event.model";
 
 import React, { useEffect, useState } from "react"; // For managing form state
 
-import { redirect } from "next/navigation"; // Used by server action
 // Removed Metadata import from here
 import Link from "next/link";
 
-// Removed auth import from here as it's server-side
-import { createBib, CreateBibData } from "@/services/bib.services"; // createBib is a server action, can be called from client
+// Import the server action from the separate file
+import { handleListBibServerAction } from "./actions";
 
 // Metadata can be exported from client components in recent Next.js versions, but often better in server component
 // export const metadata: Metadata = {
@@ -356,105 +355,4 @@ export default function ListNewBibClientPage({
       </Link>
     </div>
   );
-}
-
-// Server action defined outside component, or imported if in separate file
-// This is the actual server action that will be called by the form.
-// It's defined here for clarity but could be in a separate actions.ts file.
-async function handleListBibServerAction(
-  formData: FormData,
-  sellerUserIdFromAuth: null | string,
-) {
-  "use server"; // This directive ensures this function runs on the server.
-
-  const sellerUserId = sellerUserIdFromAuth;
-  if (!sellerUserId) {
-    // This should ideally not happen if the page calling this is protected
-    // and initialAuthUserId is correctly passed.
-    // However, as a safeguard:
-    // Option 1: Throw an error
-    // throw new Error("User not authenticated.");
-    // Option 2: Redirect (less ideal from a pure server action not directly tied to navigation hooks)
-    // For now, let's assume this is handled by page/route protection.
-    // If we need to redirect, it's better done by the component calling this, based on response.
-    // But since form actions can redirect:
-    redirect("/dashboard/seller/list-bib?error=User not authenticated");
-    return; // Should not be reached if redirect works
-  }
-
-  const isNotListedEvent = formData.get("isNotListedEvent") === "on";
-  const priceStr = formData.get("price") as string;
-  const originalPriceStr = formData.get("originalPrice") as string;
-
-  // Explicitly type the extended CreateBibData for clarity
-  type ExtendedCreateBibData = CreateBibData & {
-    isNotListedEvent?: boolean;
-    unlistedEventDate?: string;
-    unlistedEventLocation?: string;
-    unlistedEventName?: string;
-  };
-
-  let bibData: ExtendedCreateBibData = {
-    originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
-    gender: formData.get("gender") as "female" | "male" | "unisex" | undefined,
-    registrationNumber: formData.get("registrationNumber") as string,
-    size: formData.get("size") as string | undefined,
-    eventId: formData.get("eventId") as string,
-    isNotListedEvent: isNotListedEvent,
-    price: parseFloat(priceStr),
-  };
-
-  if (isNotListedEvent) {
-    bibData.unlistedEventName = formData.get("unlistedEventName") as string;
-    bibData.unlistedEventDate = formData.get("unlistedEventDate") as string;
-    bibData.unlistedEventLocation = formData.get(
-      "unlistedEventLocation",
-    ) as string;
-    bibData.eventId = ""; // Ensure eventId is empty for unlisted
-    if (
-      !bibData.unlistedEventName ||
-      !bibData.unlistedEventDate ||
-      !bibData.unlistedEventLocation
-    ) {
-      redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("For unlisted events, event name, date, and location are required.")}`,
-      );
-      return;
-    }
-  } else {
-    if (!bibData.eventId) {
-      redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`,
-      );
-      return;
-    }
-  }
-
-  if (
-    !bibData.registrationNumber ||
-    isNaN(bibData.price) ||
-    bibData.price <= 0
-  ) {
-    redirect(
-      `/dashboard/seller/list-bib?error=${encodeURIComponent("Registration Number and a valid Price are required.")}`,
-    );
-    return;
-  }
-
-  try {
-    const newBib = await createBib(bibData, sellerUserId); // createBib needs to handle the new fields
-
-    if (newBib) {
-      redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`);
-    } else {
-      redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Failed to list bib. Please check details and try again.")}`,
-      );
-    }
-  } catch (error) {
-    console.error("Error listing bib:", error);
-    let message = "An unexpected error occurred.";
-    if (error instanceof Error) message = error.message;
-    redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(message)}`);
-  }
 }
