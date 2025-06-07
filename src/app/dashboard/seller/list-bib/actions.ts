@@ -2,7 +2,9 @@
 
 import { redirect } from 'next/navigation'
 
-import { createBib, CreateBibData } from '@/services/bib.services'
+import { createBib } from '@/services/bib.services'
+import { Bib } from '@/models'
+import { BibFormSchema } from './schemas'
 
 // Server action for handling bib listing
 export async function handleListBibServerAction(
@@ -12,70 +14,57 @@ export async function handleListBibServerAction(
 	const sellerUserId = sellerUserIdFromAuth
 	if (!sellerUserId) {
 		redirect('/dashboard/seller/list-bib?error=User not authenticated')
-		return
 	}
 
+	// Extraction des données du formulaire
 	const isNotListedEvent = formData.get('isNotListedEvent') === 'on'
 	const priceStr = formData.get('price') as string
 	const originalPriceStr = formData.get('originalPrice') as string
 
-	// Explicitly type the extended CreateBibData for clarity
-	type ExtendedCreateBibData = CreateBibData & {
-		isNotListedEvent?: boolean
-		unlistedEventDate?: string
-		unlistedEventLocation?: string
-		unlistedEventName?: string
-	}
-
-	let bibData: ExtendedCreateBibData = {
+	// Préparation des données pour la validation Zod
+	const formDataToValidate = {
+		registrationNumber: formData.get('registrationNumber') as string,
+		price: priceStr ? parseFloat(priceStr) : 0,
 		originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
 		gender: formData.get('gender') as 'female' | 'male' | 'unisex' | undefined,
-		registrationNumber: formData.get('registrationNumber') as string,
 		size: formData.get('size') as string | undefined,
 		eventId: formData.get('eventId') as string,
 		isNotListedEvent: isNotListedEvent,
-		price: parseFloat(priceStr),
+		unlistedEventName: formData.get('unlistedEventName') as string,
+		unlistedEventDate: formData.get('unlistedEventDate') as string,
+		unlistedEventLocation: formData.get('unlistedEventLocation') as string,
 	}
 
-	if (isNotListedEvent) {
-		bibData.unlistedEventName = formData.get('unlistedEventName') as string
-		bibData.unlistedEventDate = formData.get('unlistedEventDate') as string
-		bibData.unlistedEventLocation = formData.get(
-			'unlistedEventLocation'
-		) as string
-		bibData.eventId = '' // Ensure eventId is empty for unlisted
-		if (
-			!bibData.unlistedEventName ||
-			!bibData.unlistedEventDate ||
-			!bibData.unlistedEventLocation
-		) {
-			redirect(
-				`/dashboard/seller/list-bib?error=${encodeURIComponent('For unlisted events, event name, date, and location are required.')}`
-			)
-			return
-		}
-	} else {
-		if (!bibData.eventId) {
-			redirect(
-				`/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`
-			)
-			return
-		}
-	}
+	// Validation avec Zod
+	const validationResult = BibFormSchema.safeParse(formDataToValidate)
 
-	if (
-		!bibData.registrationNumber ||
-		isNaN(bibData.price) ||
-		bibData.price <= 0
-	) {
+	if (!validationResult.success) {
+		const errorMessages = validationResult.error.errors
+			.map(err => err.message)
+			.join(', ')
 		redirect(
-			`/dashboard/seller/list-bib?error=${encodeURIComponent('Registration Number and a valid Price are required.')}`
+			`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`
 		)
 		return
 	}
 
+	const validatedData = validationResult.data
+
+	// Préparation de l'objet Bib complet pour createBib
+	const bibToCreate: Bib = {
+		id: '', // Sera généré par le service
+		eventId: validatedData.eventId || '',
+		price: validatedData.price,
+		originalPrice: validatedData.originalPrice || 0,
+		registrationNumber: validatedData.registrationNumber,
+		sellerUserId: sellerUserId,
+		status: 'pending_validation',
+		gender: validatedData.gender,
+		size: validatedData.size,
+	}
+
 	try {
-		const newBib = await createBib(bibData, sellerUserId)
+		const newBib = await createBib(bibToCreate)
 
 		if (newBib) {
 			redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)

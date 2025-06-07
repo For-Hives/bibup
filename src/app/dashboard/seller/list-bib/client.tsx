@@ -10,6 +10,7 @@ import Link from 'next/link'
 
 // Import the server action from the separate file
 import { handleListBibServerAction } from './actions'
+import { BibFormSchema, type BibFormData } from './schemas'
 
 // Metadata can be exported from client components in recent Next.js versions, but often better in server component
 // export const metadata: Metadata = {
@@ -69,6 +70,7 @@ const styles = {
 	success: { textAlign: 'center' as const, marginTop: '10px', color: 'green' },
 	form: { flexDirection: 'column' as const, display: 'flex', gap: '15px' },
 	error: { textAlign: 'center' as const, marginTop: '10px', color: 'red' },
+	fieldError: { fontSize: '0.85em', marginTop: '5px', color: 'red' },
 	subtleNote: { fontSize: '0.9em', marginTop: '5px', color: '#555' },
 	header: { textAlign: 'center' as const, marginBottom: '25px' },
 	label: { fontWeight: 'bold' as const, marginBottom: '5px' },
@@ -90,6 +92,11 @@ export default function ListNewBibClientPage({
 }) {
 	const [isNotListedEvent, setIsNotListedEvent] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+	const [formData, setFormData] = useState<Partial<BibFormData>>({
+		isNotListedEvent: false,
+		price: 0,
+	})
 	// Success message is primarily handled by redirect to dashboard.
 	// This local success state isn't currently used but can be for client-side feedback.
 	// const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -104,10 +111,47 @@ export default function ListNewBibClientPage({
 		// }
 	}, [searchParams])
 
+	// Fonction de validation en temps réel
+	const validateField = (name: string, value: any) => {
+		const testData = { ...formData, [name]: value }
+		const result = BibFormSchema.safeParse(testData)
+
+		if (!result.success) {
+			const fieldError = result.error.errors.find(error =>
+				error.path.includes(name)
+			)
+			if (fieldError) {
+				setFieldErrors(prev => ({ ...prev, [name]: fieldError.message }))
+			} else {
+				setFieldErrors(prev => {
+					const { [name]: _, ...rest } = prev
+					return rest
+				})
+			}
+		} else {
+			setFieldErrors(prev => {
+				const { [name]: _, ...rest } = prev
+				return rest
+			})
+		}
+	}
+
+	// Gestionnaire de changement pour les champs du formulaire
+	const handleFieldChange = (name: string, value: any) => {
+		setFormData(prev => ({ ...prev, [name]: value }))
+		validateField(name, value)
+
+		// Gestion spéciale pour isNotListedEvent
+		if (name === 'isNotListedEvent') {
+			setIsNotListedEvent(value)
+		}
+	}
+
 	// Wrapper for the server action to be used in form's action prop.
 	// This is how client components can call server actions.
 	const formActionWrapper = (formData: FormData) => {
 		setErrorMessage(null) // Clear previous errors on new submission
+		setFieldErrors({}) // Clear field errors
 		// initialAuthUserId is passed from the server component wrapper.
 		handleListBibServerAction(formData, initialAuthUserId).catch(error => {
 			console.error('Error in form action:', error)
@@ -150,7 +194,9 @@ export default function ListNewBibClientPage({
 							checked={isNotListedEvent}
 							id="isNotListedEvent"
 							name="isNotListedEvent"
-							onChange={e => setIsNotListedEvent(e.target.checked)}
+							onChange={e =>
+								handleFieldChange('isNotListedEvent', e.target.checked)
+							}
 							style={styles.checkbox}
 							type="checkbox"
 						/>
@@ -169,6 +215,7 @@ export default function ListNewBibClientPage({
 							name="eventId"
 							required={!isNotListedEvent}
 							style={styles.select}
+							onChange={e => handleFieldChange('eventId', e.target.value)}
 						>
 							<option value="">
 								{
@@ -182,6 +229,9 @@ export default function ListNewBibClientPage({
 								</option>
 							))}
 						</select>
+						{fieldErrors.eventId && (
+							<p style={styles.fieldError}>{fieldErrors.eventId}</p>
+						)}
 						{partneredEvents.length === 0 && (
 							<p style={styles.subtleNote}>
 								No partnered events available. You can list your bib by checking
@@ -209,7 +259,13 @@ export default function ListNewBibClientPage({
 								required={isNotListedEvent}
 								style={styles.input}
 								type="text"
+								onChange={e =>
+									handleFieldChange('unlistedEventName', e.target.value)
+								}
 							/>
+							{fieldErrors.unlistedEventName && (
+								<p style={styles.fieldError}>{fieldErrors.unlistedEventName}</p>
+							)}
 						</div>
 						<div>
 							<label htmlFor="unlistedEventDate" style={styles.label}>
@@ -221,7 +277,13 @@ export default function ListNewBibClientPage({
 								required={isNotListedEvent}
 								style={styles.input}
 								type="date"
+								onChange={e =>
+									handleFieldChange('unlistedEventDate', e.target.value)
+								}
 							/>
+							{fieldErrors.unlistedEventDate && (
+								<p style={styles.fieldError}>{fieldErrors.unlistedEventDate}</p>
+							)}
 						</div>
 						<div>
 							<label htmlFor="unlistedEventLocation" style={styles.label}>
@@ -233,7 +295,15 @@ export default function ListNewBibClientPage({
 								required={isNotListedEvent}
 								style={styles.input}
 								type="text"
+								onChange={e =>
+									handleFieldChange('unlistedEventLocation', e.target.value)
+								}
 							/>
+							{fieldErrors.unlistedEventLocation && (
+								<p style={styles.fieldError}>
+									{fieldErrors.unlistedEventLocation}
+								</p>
+							)}
 						</div>
 					</div>
 				)}
@@ -252,7 +322,13 @@ export default function ListNewBibClientPage({
 						required
 						style={styles.input}
 						type="text"
+						onChange={e =>
+							handleFieldChange('registrationNumber', e.target.value)
+						}
 					/>
+					{fieldErrors.registrationNumber && (
+						<p style={styles.fieldError}>{fieldErrors.registrationNumber}</p>
+					)}
 				</div>
 
 				<div>
@@ -270,7 +346,13 @@ export default function ListNewBibClientPage({
 						step="0.01"
 						style={styles.input}
 						type="number"
+						onChange={e =>
+							handleFieldChange('price', parseFloat(e.target.value) || 0)
+						}
 					/>
+					{fieldErrors.price && (
+						<p style={styles.fieldError}>{fieldErrors.price}</p>
+					)}
 				</div>
 
 				<div>
@@ -284,7 +366,16 @@ export default function ListNewBibClientPage({
 						step="0.01"
 						style={styles.input}
 						type="number"
+						onChange={e =>
+							handleFieldChange(
+								'originalPrice',
+								parseFloat(e.target.value) || undefined
+							)
+						}
 					/>
+					{fieldErrors.originalPrice && (
+						<p style={styles.fieldError}>{fieldErrors.originalPrice}</p>
+					)}
 				</div>
 
 				<div>
@@ -299,14 +390,28 @@ export default function ListNewBibClientPage({
 						}
 						style={styles.input}
 						type="text"
+						onChange={e => handleFieldChange('size', e.target.value)}
 					/>
+					{fieldErrors.size && (
+						<p style={styles.fieldError}>{fieldErrors.size}</p>
+					)}
 				</div>
 
 				<div>
 					<label htmlFor="gender" style={styles.label}>
 						{dictionary.dashboard.seller?.listBib?.form?.gender}:
 					</label>
-					<select id="gender" name="gender" style={styles.select}>
+					<select
+						id="gender"
+						name="gender"
+						style={styles.select}
+						onChange={e =>
+							handleFieldChange(
+								'gender',
+								e.target.value as 'female' | 'male' | 'unisex' | undefined
+							)
+						}
+					>
 						<option value="">
 							{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}
 						</option>
@@ -314,6 +419,9 @@ export default function ListNewBibClientPage({
 						<option value="female">Female</option>
 						<option value="unisex">Unisex</option>
 					</select>
+					{fieldErrors.gender && (
+						<p style={styles.fieldError}>{fieldErrors.gender}</p>
+					)}
 				</div>
 
 				<div>
