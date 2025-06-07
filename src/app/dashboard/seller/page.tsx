@@ -142,35 +142,36 @@ export default async function SellerDashboardPage({
 									<div className="font-semibold text-[var(--primary-pastel)]">
 										{' '}
 										{/* Using primary-pastel for bib name, adjust if needed */}
-										{dictionary.dashboard.seller.bibFor}{' '}
+										{dictionary.dashboard.seller.yourBibUpBalance}{' '}
 										{bib.expand?.eventId?.name ??
 											`Event ID: ${bib.eventId ?? 'N/A'}`}
 									</div>
 									<p className="text-sm text-[var(--text-dark)]">
-										{dictionary.dashboard.seller.regNumber}{' '}
+										{dictionary.dashboard.seller.myBibs}{' '}
 										{bib.registrationNumber}
 									</p>
 									<p className="text-sm text-[var(--text-dark)]">
-										{dictionary.dashboard.seller.price} ${bib.price.toFixed(2)}
+										{dictionary.dashboard.seller.welcome} $
+										{bib.price.toFixed(2)}
 									</p>
 									{bib.originalPrice && (
 										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.original} $
+											{dictionary.dashboard.seller.welcome} $
 											{bib.originalPrice.toFixed(2)}
 										</p>
 									)}
 									{bib.size && (
 										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.size} {bib.size}
+											{dictionary.dashboard.seller.title} {bib.size}
 										</p>
 									)}
 									{bib.gender && (
 										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.gender} {bib.gender}
+											{dictionary.dashboard.seller.description} {bib.gender}
 										</p>
 									)}
 									<p className="mt-1 text-sm">
-										{dictionary.dashboard.seller.statusLabel}{' '}
+										{dictionary.dashboard.seller.listNewBib}{' '}
 										<span
 											className={`status-badge ${getBibStatusClass(bib.status)}`}
 										>
@@ -186,7 +187,7 @@ export default async function SellerDashboardPage({
 											className="btn btn-secondary mt-2 inline-block px-3 py-1 text-xs"
 											href={`/dashboard/seller/edit-bib/${bib.id}`}
 										>
-											{dictionary.dashboard.seller.editManage}
+											{dictionary.dashboard.seller.manageBibListings}
 										</Link>
 									)}
 								</li>
