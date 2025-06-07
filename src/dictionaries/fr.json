@@ -1,0 +1,59 @@
+{
+  "home": {
+    "hero": {
+      "title": "Bienvenue sur BibUp !",
+      "subtitle": "Votre place de marché pour acheter et vendre des dossards de course.",
+      "browseEventsButton": "Parcourir les Événements"
+    },
+    "impact": {
+      "title": "Notre Impact",
+      "activeEvents": "Événements Actifs Hébergés",
+      "bibsExchanged": "Dossards Échangés"
+    },
+    "callToAction": {
+      "title": "Facile et Sécurisé",
+      "description": "Que vous cherchiez à vendre un dossard que vous ne pouvez pas utiliser ou à trouver une inscription de dernière minute pour la course de vos rêves, BibUp vous facilite la tâche.",
+      "learnMoreButton": "En Savoir Plus (FAQ)"
+    }
+  },
+  "faq": {
+    "title": "Foire Aux Questions (FAQ)",
+    "sections": {
+      "general": {
+        "title": "Général",
+        "questions": [
+          {
+            "question": "Qu'est-ce que BibUp ?",
+            "answer": "BibUp est une plateforme de marché qui connecte les participants aux courses, leur permettant d'acheter et de vendre des dossards de course pour des événements de course à pied, des courses cyclistes, des triathlons et d'autres événements sportifs."
+          },
+          {
+            "question": "Comment fonctionne BibUp ?",
+            "answer": "Les coureurs qui ne peuvent pas participer à une course peuvent mettre leur dossard en vente. D'autres coureurs cherchant une inscription de dernière minute peuvent acheter ces dossards. Les organisateurs d'événements peuvent également lister les places disponibles sur notre plateforme."
+          }
+        ]
+      },
+      "sellers": {
+        "title": "Pour les Vendeurs",
+        "questions": [
+          {
+            "question": "Comment puis-je vendre mon dossard ?",
+            "answer": "Pour vendre votre dossard, vous devez d'abord créer un compte sur BibUp. Une fois connecté, accédez à la section 'Vendre un dossard', remplissez les informations concernant la course (nom, date, lieu), le type de dossard, et fixez votre prix. Assurez-vous que le transfert de dossard est autorisé par l'organisateur de la course."
+          },
+          {
+            "question": "Quels sont les frais pour vendre un dossard ?",
+            "answer": "BibUp prélève une commission de X% sur le prix de vente final de votre dossard. Cette commission nous aide à maintenir la plateforme et à offrir un support client de qualité."
+          }
+        ]
+      },
+      "buyers": {
+        "title": "Pour les Acheteurs",
+        "questions": [
+          {
+            "question": "Comment puis-je acheter un dossard ?",
+            "answer": "Parcourez les dossards disponibles sur notre plateforme, sélectionnez la course qui vous intéresse, et finalisez l'achat via notre système de paiement sécurisé. Une fois le paiement confirmé, vous recevrez les détails du transfert de dossard."
+          }
+        ]
+      }
+    }
+  }
+}

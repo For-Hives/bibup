@@ -4,17 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { fetchApprovedPublicEvents } from "@/services/event.services";
+import { getLocale } from "@/lib/getLocale";
+import { getDictionary } from "@/lib/getDictionary";
 
 export default async function Home() {
   let totalEvents = 0;
   let totalBibsSold = 0;
+
+  // Get locale and dictionary
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
 
   try {
     const events: Event[] = await fetchApprovedPublicEvents();
     totalEvents = events.length;
     totalBibsSold = events.reduce(
       (sum, event) => sum + (event.bibsSold || 0),
-      0,
+      0
     );
   } catch (error) {
     console.error("Failed to fetch event data for KPIs:", error);
@@ -25,13 +31,13 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="text-center py-16 px-4 md:py-24 bg-[var(--primary-pastel)]">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-          Welcome to BibUp!
+          {dictionary.home.hero.title}
         </h1>
         <p className="text-lg md:text-xl mb-8 text-white/90">
-          Your marketplace for buying and selling race bibs.
+          {dictionary.home.hero.subtitle}
         </p>
         <Link className="btn btn-primary text-lg px-8 py-3" href="/events">
-          Browse Events
+          {dictionary.home.hero.browseEventsButton}
         </Link>
       </section>
 
@@ -39,7 +45,7 @@ export default async function Home() {
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8 text-[var(--text-dark)]">
-            Our Impact
+            {dictionary.home.impact.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Bento Box for Active Events */}
@@ -48,7 +54,7 @@ export default async function Home() {
                 {totalEvents}
               </h3>
               <p className="text-xl text-[var(--text-dark)]">
-                Active Events Hosted
+                {dictionary.home.impact.activeEvents}
               </p>
             </div>
             {/* Bento Box for Bibs Exchanged */}
@@ -56,7 +62,9 @@ export default async function Home() {
               <h3 className="text-4xl font-bold text-[var(--accent-sporty)] mb-2">
                 {totalBibsSold}
               </h3>
-              <p className="text-xl text-[var(--text-dark)]">Bibs Exchanged</p>
+              <p className="text-xl text-[var(--text-dark)]">
+                {dictionary.home.impact.bibsExchanged}
+              </p>
             </div>
           </div>
         </div>
@@ -66,15 +74,14 @@ export default async function Home() {
       <section className="py-12 px-4 bg-[var(--secondary-pastel)]/30">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 text-[var(--text-dark)]">
-            Easy & Secure
+            {dictionary.home.callToAction.title}
           </h2>
           <p className="text-lg mb-8 text-[var(--text-dark)]/80">
-            Whether you're looking to sell a bib you can't use or find a
-            last-minute entry to your dream race, BibUp makes it simple.
+            {dictionary.home.callToAction.description}
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Link className="btn btn-secondary" href="/faq">
-              Learn More (FAQ)
+              {dictionary.home.callToAction.learnMoreButton}
             </Link>
             {/* Future: Link to Sign Up or specific user roles */}
             {/* <Link href="/sign-up" className="btn btn-primary">
