@@ -31,15 +31,16 @@ const getEventStatusClass = (status: Event["status"]): string => {
 };
 
 export default async function OrganizerDashboardPage({
-  searchParams,
+  searchParams: searchParamsPromise,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
 
   const { userId } = await auth();
   const user = await currentUser();
+  const searchParams = await searchParamsPromise;
 
   if (userId == null || !user) {
     return (

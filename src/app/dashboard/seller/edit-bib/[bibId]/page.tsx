@@ -11,9 +11,9 @@ import {
   UpdateBibData,
 } from "@/services/bib.services";
 
-type EditBibPageProps = {
-  params: { bibId: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+export type EditBibPageProps = {
+  params: Promise<{ bibId: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 // Helper to get status class string from globals.css
@@ -39,10 +39,12 @@ const getBibStatusClass = (status: Bib["status"]): string => {
 };
 
 export default async function EditBibPage({
-  searchParams,
-  params,
+  searchParams: searchParamsPromise,
+  params: paramsPromise,
 }: EditBibPageProps) {
   const { userId: sellerUserId } = await auth();
+  const params = await paramsPromise;
+  const searchParams = await searchParamsPromise;
   const { bibId } = params;
 
   if (sellerUserId == null || sellerUserId === "") {
@@ -405,7 +407,10 @@ export default async function EditBibPage({
   );
 }
 
-export function generateMetadata({ params }: EditBibPageProps): Metadata {
+export async function generateMetadata({
+  params: paramsPromise,
+}: EditBibPageProps): Promise<Metadata> {
+  const params = await paramsPromise;
   return {
     title: `Edit Bib ${params.bibId} | Seller Dashboard | BibUp`,
   };
