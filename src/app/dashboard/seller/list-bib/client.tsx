@@ -120,7 +120,7 @@ export default function ListNewBibClientPage({
     // Displaying something here is a fallback.
     return (
       <p style={styles.container}>
-        {dictionary.seller.listBib.errors.loginRequired}
+        {dictionary.dashboard.seller.listBib.errors.loginRequired}
       </p>
     );
   }
@@ -128,23 +128,18 @@ export default function ListNewBibClientPage({
   if (!dictionary) {
     // If dictionary is not available, we can't render the page properly.
     // This should ideally not happen if the server component is set up correctly.
-    return (
-      <p style={styles.container}>
-        {dictionary?.seller?.listBib?.errors?.dictionaryNotFound ??
-          "Dictionary data not found."}
-      </p>
-    );
+    return <p style={styles.container}>"Dictionary data not found."</p>;
   }
 
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <h1>{dictionary.seller.listBib.title}</h1>
+        <h1>{dictionary.dashboard.seller.listBib.title}</h1>
       </header>
 
       {errorMessage && (
         <p style={styles.error}>
-          {dictionary.seller?.errorMessage} {errorMessage}
+          {dictionary.dashboard.seller?.errorMessage} {errorMessage}
         </p>
       )}
       {/* {successMessage && <p style={styles.success}>{successMessage}</p>} */}
@@ -160,14 +155,14 @@ export default function ListNewBibClientPage({
               style={styles.checkbox}
               type="checkbox"
             />
-            {dictionary.seller?.listBib.form.notListedEvent}
+            {dictionary.dashboard.seller?.listBib.form.notListedEvent}
           </label>
         </div>
 
         {!isNotListedEvent ? (
           <div>
             <label htmlFor="eventId" style={styles.label}>
-              {dictionary.seller?.listBib?.form?.eventSelect}:
+              {dictionary.dashboard.seller?.listBib?.form?.eventSelect}:
             </label>
             <select
               disabled={isNotListedEvent}
@@ -177,7 +172,10 @@ export default function ListNewBibClientPage({
               style={styles.select}
             >
               <option value="">
-                {dictionary.seller?.listBib?.form?.eventSelectPlaceholder}
+                {
+                  dictionary.dashboard.seller?.listBib?.form
+                    ?.eventSelectPlaceholder
+                }
               </option>
               {partneredEvents.map((event) => (
                 <option key={event.id} value={event.id}>
@@ -200,13 +198,14 @@ export default function ListNewBibClientPage({
             </p>
             <div>
               <label htmlFor="unlistedEventName" style={styles.label}>
-                {dictionary.seller?.listBib?.form?.unlistedEventName}:
+                {dictionary.dashboard.seller?.listBib?.form?.unlistedEventName}:
               </label>
               <input
                 id="unlistedEventName"
                 name="unlistedEventName"
                 placeholder={
-                  dictionary.seller?.listBib?.form?.unlistedEventNamePlaceholder
+                  dictionary.dashboard.seller?.listBib?.form
+                    ?.unlistedEventNamePlaceholder
                 }
                 required={isNotListedEvent}
                 style={styles.input}
@@ -242,13 +241,14 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="registrationNumber" style={styles.label}>
-            {dictionary.seller?.listBib?.form?.registrationNumber}:
+            {dictionary.dashboard.seller?.listBib?.form?.registrationNumber}:
           </label>
           <input
             id="registrationNumber"
             name="registrationNumber"
             placeholder={
-              dictionary.seller?.listBib?.form?.registrationNumberPlaceholder
+              dictionary.dashboard.seller?.listBib?.form
+                ?.registrationNumberPlaceholder
             }
             required
             style={styles.input}
@@ -258,13 +258,15 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="price" style={styles.label}>
-            {dictionary.seller?.listBib?.form?.price}:
+            {dictionary.dashboard.seller?.listBib?.form?.price}:
           </label>
           <input
             id="price"
             min="0.01"
             name="price"
-            placeholder={dictionary.seller?.listBib?.form?.pricePlaceholder}
+            placeholder={
+              dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder
+            }
             required
             step="0.01"
             style={styles.input}
@@ -288,12 +290,14 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="size" style={styles.label}>
-            {dictionary.seller?.listBib?.form?.size}:
+            {dictionary.dashboard.seller?.listBib?.form?.size}:
           </label>
           <input
             id="size"
             name="size"
-            placeholder={dictionary.seller?.listBib?.form?.sizePlaceholder}
+            placeholder={
+              dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder
+            }
             style={styles.input}
             type="text"
           />
@@ -301,11 +305,11 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="gender" style={styles.label}>
-            {dictionary.seller?.listBib?.form?.gender}:
+            {dictionary.dashboard.seller?.listBib?.form?.gender}:
           </label>
           <select id="gender" name="gender" style={styles.select}>
             <option value="">
-              {dictionary.seller?.listBib?.form?.genderPlaceholder}
+              {dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}
             </option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -315,12 +319,14 @@ export default function ListNewBibClientPage({
 
         <div>
           <label htmlFor="notes" style={styles.label}>
-            {dictionary.seller?.listBib?.form?.notes}:
+            {dictionary.dashboard.seller?.listBib?.form?.notes}:
           </label>
           <textarea
             id="notes"
             name="notes"
-            placeholder={dictionary.seller?.listBib?.form?.notesPlaceholder}
+            placeholder={
+              dictionary.dashboard.seller?.listBib?.form?.notesPlaceholder
+            }
             rows={3}
             style={styles.input}
           />
@@ -342,11 +348,11 @@ export default function ListNewBibClientPage({
           style={styles.button}
           type="submit"
         >
-          {dictionary.seller?.listBib?.form?.submit}
+          {dictionary.dashboard.seller?.listBib?.form?.submit}
         </button>
       </form>
       <Link href="/dashboard/seller" style={styles.link}>
-        {dictionary.seller?.listBib?.backToDashboard}
+        {dictionary.dashboard.seller?.listBib?.backToDashboard}
       </Link>
     </div>
   );
@@ -357,7 +363,7 @@ export default function ListNewBibClientPage({
 // It's defined here for clarity but could be in a separate actions.ts file.
 async function handleListBibServerAction(
   formData: FormData,
-  sellerUserIdFromAuth: null | string,
+  sellerUserIdFromAuth: null | string
 ) {
   "use server"; // This directive ensures this function runs on the server.
 
@@ -402,7 +408,7 @@ async function handleListBibServerAction(
     bibData.unlistedEventName = formData.get("unlistedEventName") as string;
     bibData.unlistedEventDate = formData.get("unlistedEventDate") as string;
     bibData.unlistedEventLocation = formData.get(
-      "unlistedEventLocation",
+      "unlistedEventLocation"
     ) as string;
     bibData.eventId = ""; // Ensure eventId is empty for unlisted
     if (
@@ -411,14 +417,14 @@ async function handleListBibServerAction(
       !bibData.unlistedEventLocation
     ) {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("For unlisted events, event name, date, and location are required.")}`,
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("For unlisted events, event name, date, and location are required.")}`
       );
       return;
     }
   } else {
     if (!bibData.eventId) {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`,
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("Please select a partnered event or check 'My event is not listed'.")}`
       );
       return;
     }
@@ -430,7 +436,7 @@ async function handleListBibServerAction(
     bibData.price <= 0
   ) {
     redirect(
-      `/dashboard/seller/list-bib?error=${encodeURIComponent("Registration Number and a valid Price are required.")}`,
+      `/dashboard/seller/list-bib?error=${encodeURIComponent("Registration Number and a valid Price are required.")}`
     );
     return;
   }
@@ -442,7 +448,7 @@ async function handleListBibServerAction(
       redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`);
     } else {
       redirect(
-        `/dashboard/seller/list-bib?error=${encodeURIComponent("Failed to list bib. Please check details and try again.")}`,
+        `/dashboard/seller/list-bib?error=${encodeURIComponent("Failed to list bib. Please check details and try again.")}`
       );
     }
   } catch (error) {
