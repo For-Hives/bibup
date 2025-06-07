@@ -6,18 +6,18 @@
 
 :root {
   /* Color Palette */
-  --primary-pastel: #A7D8DE; /* Pastel Blue */
-  --secondary-pastel: #F5CEC7; /* Pastel Peach/Pink */
-  --accent-sporty: #FFB347; /* Pastel Orange */
-  --background-light: #F8F8F8; /* Very Light Gray */
+  --primary-pastel: #a7d8de; /* Pastel Blue */
+  --secondary-pastel: #f5cec7; /* Pastel Peach/Pink */
+  --accent-sporty: #ffb347; /* Pastel Orange */
+  --background-light: #f8f8f8; /* Very Light Gray */
   --text-dark: #333333;
-  --text-light: #F8F8F8; /* For dark backgrounds */
-  --border-color: #DDDDDD;
-  --success-bg: #D4EDDA;
+  --text-light: #f8f8f8; /* For dark backgrounds */
+  --border-color: #dddddd;
+  --success-bg: #d4edda;
   --success-text: #155724;
-  --error-bg: #F8D7DA;
-  --error-text: #721C24;
-  --warning-bg: #FFF3CD;
+  --error-bg: #f8d7da;
+  --error-text: #721c24;
+  --warning-bg: #fff3cd;
   --warning-text: #856404;
 
   /* Original theme variables - can be adjusted or removed if not used by Geist theme */
@@ -25,14 +25,20 @@
   --foreground: #171717; /* Overridden by --text-dark for body */
 }
 
+@theme {
+  --color-accent-sporty: oklch(0.6876 0.1079 324.43);
+  --color-primary-pastel: oklch(0.9012 0.0723 210.12);
+  --color-secondary-pastel: oklch(0.9012 0.0723 30.12);
+}
+
 /* Dark mode adjustments (optional, can be refined) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-pastel: #6A9AA0; /* Darker Pastel Blue */
-    --secondary-pastel: #C4A39F; /* Darker Pastel Peach/Pink */
-    --accent-sporty: #D99A3C; /* Darker Pastel Orange */
-    --background-light: #2D2D2D; /* Dark Gray background */
-    --text-dark: #E5E5E5; /* Light text for dark mode */
+    --primary-pastel: #6a9aa0; /* Darker Pastel Blue */
+    --secondary-pastel: #c4a39f; /* Darker Pastel Peach/Pink */
+    --accent-sporty: #d99a3c; /* Darker Pastel Orange */
+    --background-light: #2d2d2d; /* Dark Gray background */
+    --text-dark: #e5e5e5; /* Light text for dark mode */
     --border-color: #444444;
     /* Ensure success/error/warning have dark mode variants if needed */
   }
@@ -41,7 +47,12 @@
 body {
   background-color: var(--background-light);
   color: var(--text-dark);
-  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif); /* Using Geist if available */
+  font-family: var(
+    --font-geist-sans,
+    Arial,
+    Helvetica,
+    sans-serif
+  ); /* Using Geist if available */
 }
 
 /* Base Button Styles using Tailwind's @apply for reusability */
@@ -53,16 +64,16 @@ body {
 .btn-primary {
   @apply bg-accent-sporty text-white;
 }
-.btn-primary:hover {
-  @apply bg-opacity-90; /* Direct opacity, or a darker var(--accent-sporty-darker) if defined */
-}
+/* .btn-primary:hover {
+  @apply bg-opacity-90; /* Direct opacity, or a darker var(--accent-sporty-darker) if defined 
+} */
 
 .btn-secondary {
-  @apply bg-secondary-pastel text-text-dark;
+  @apply bg-secondary-pastel;
 }
-.btn-secondary:hover {
-  @apply bg-opacity-80; /* Direct opacity, or a darker var(--secondary-pastel-darker) */
-}
+/* .btn-secondary:hover {
+  @apply bg-opacity-80; /* Direct opacity, or a darker var(--secondary-pastel-darker) 
+} */
 
 .btn-withdraw {
   @apply bg-red-400 text-white; /* Example: distinct color for withdraw */
@@ -72,12 +83,11 @@ body {
 }
 
 .btn-waitlist {
-   @apply bg-yellow-400 text-text-dark; /* Example: Waitlist button */
+  @apply bg-yellow-400; /* Example: Waitlist button */
 }
 .btn-waitlist:hover {
-    @apply bg-yellow-500;
+  @apply bg-yellow-500;
 }
-
 
 /* Generic Bento Box Styling */
 .bento-box {
@@ -101,16 +111,19 @@ body {
 .status-pending {
   @apply bg-yellow-200 text-yellow-800;
 }
-.status-approved, .status-listed-public {
+.status-approved,
+.status-listed-public {
   @apply bg-green-200 text-green-800;
 }
-.status-rejected, .status-validation-failed {
+.status-rejected,
+.status-validation-failed {
   @apply bg-red-200 text-red-800;
 }
 .status-sold {
   @apply bg-blue-200 text-blue-800;
 }
-.status-withdrawn, .status-expired {
+.status-withdrawn,
+.status-expired {
   @apply bg-gray-200 text-gray-800;
 }
 
