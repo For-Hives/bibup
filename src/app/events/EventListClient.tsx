@@ -11,12 +11,12 @@ export default function EventListClient({
 }: {
   prefetchedEvents: Event[];
 }) {
-  const [events, setEvents] = useState<Event[]>(prefetchedEvents || []);
+  const [events] = useState<Event[]>(prefetchedEvents ?? []);
 
   // The form for adding new events has been removed as it's more of an admin/organizer feature.
   // The useEffect for fetching has also been removed as data is primarily passed from server component.
 
-  if (!events || events.length === 0) {
+  if (!events ?? events.length === 0) {
     return <p>No events to display.</p>;
   }
 

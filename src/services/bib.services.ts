@@ -46,8 +46,8 @@ export async function createBib(
     return null;
   }
   if (
-    !bibData.registrationNumber ||
-    bibData.price === undefined ||
+    !bibData.registrationNumber ??
+    bibData.price === undefined ??
     bibData.price < 0
   ) {
     console.error("Registration Number and a valid Price are required.");
@@ -59,8 +59,8 @@ export async function createBib(
 
   if (bibData.isNotListedEvent) {
     if (
-      !bibData.unlistedEventName ||
-      !bibData.unlistedEventDate ||
+      !bibData.unlistedEventName ??
+      !bibData.unlistedEventDate ??
       !bibData.unlistedEventLocation
     ) {
       console.error(
@@ -185,7 +185,7 @@ export async function fetchBibByIdForSeller(
   bibId: string,
   sellerUserId: string,
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
-  if (!bibId || !sellerUserId) {
+  if (!bibId ?? !sellerUserId) {
     console.error("Bib ID and Seller ID are required.");
     return null;
   }
@@ -361,7 +361,7 @@ export async function processBibSale(
   bibId: string,
   buyerUserId: string,
 ): Promise<{ error?: string; success: boolean; transaction?: Transaction }> {
-  if (!bibId || !buyerUserId) {
+  if (!bibId ?? !buyerUserId) {
     return { error: "Bib ID and Buyer User ID are required.", success: false };
   }
 
@@ -439,11 +439,11 @@ export async function processBibSale(
     // 7. Initiate Organizer Notification (Conceptual)
     if (updatedBib) {
       // Ensure bib was successfully marked as sold
-      await initiateOrganizerNotification(
-        updatedBib.id,
-        updatedBib.buyerUserId!,
-        updatedBib.eventId,
-      );
+      // await initiateOrganizerNotification(
+      //   updatedBib.id,
+      //   updatedBib.buyerUserId!,
+      //   updatedBib.eventId,
+      // );
     }
 
     return { success: true, transaction };
@@ -476,7 +476,7 @@ export async function updateBibBySeller(
   dataToUpdate: UpdateBibData | { status: Bib["status"] }, // Allow specific status updates or general data updates
   sellerUserId: string,
 ): Promise<Bib | null> {
-  if (!bibId || !sellerUserId) {
+  if (!bibId ?? !sellerUserId) {
     console.error("Bib ID and Seller ID are required for update.");
     return null;
   }
@@ -493,7 +493,7 @@ export async function updateBibBySeller(
 
     // Prevent changing eventId or sellerUserId directly with this function
     // Certain status transitions might also be restricted here or by app logic (e.g., can't change sold bib)
-    if (currentBib.status === "sold" || currentBib.status === "expired") {
+    if (currentBib.status === "sold" ?? currentBib.status === "expired") {
       console.warn(
         `Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`,
       );
@@ -548,7 +548,7 @@ export async function updateBibStatusByAdmin(
   newStatus: Bib["status"],
   adminNotes?: string,
 ): Promise<Bib | null> {
-  if (!bibId || !newStatus) {
+  if (!bibId ?? !newStatus) {
     console.error("Bib ID and new status are required for admin update.");
     return null;
   }
@@ -578,25 +578,25 @@ export async function updateBibStatusByAdmin(
   }
 }
 
-/**
- * Conceptual placeholder for notifying the event organizer about a bib transfer.
- * In a real scenario, this would trigger an email, webhook, or API call.
- * @param bibId The ID of the bib that was transferred.
- * @param newRunnerUserId The User ID of the new runner (buyer).
- * @param eventId The ID of the event.
- */
-async function initiateOrganizerNotification(
-  bibId: string,
-  newRunnerUserId: string,
-  eventId?: string,
-) {
-  // TODO: In a real application:
-  // 1. Fetch event details, especially organizer contact info or API endpoint.
-  //    const event = await pb.collection('events').getOne(eventId);
-  //    const organizer = await pb.collection('users').getOne(event.organizerId);
-  // 2. Construct notification payload (bib details, new runner details).
-  // 3. Send notification (e.g., via email service, webhook).
+// /**
+//  * Conceptual placeholder for notifying the event organizer about a bib transfer.
+//  * In a real scenario, this would trigger an email, webhook, or API call.
+//  * @param bibId The ID of the bib that was transferred.
+//  * @param newRunnerUserId The User ID of the new runner (buyer).
+//  * @param eventId The ID of the event.
+//  */
+// async function initiateOrganizerNotification(
+//   bibId: string,
+//   newRunnerUserId: string,
+//   eventId?: string,
+// ) {
+//   // TODO: In a real application:
+//   // 1. Fetch event details, especially organizer contact info or API endpoint.
+//   //    const event = await pb.collection('events').getOne(eventId);
+//   //    const organizer = await pb.collection('users').getOne(event.organizerId);
+//   // 2. Construct notification payload (bib details, new runner details).
+//   // 3. Send notification (e.g., via email service, webhook).
 
-  // This is a good place to integrate with external notification services or internal task queues.
-  return Promise.resolve(); // Indicate async completion
-}
+//   // This is a good place to integrate with external notification services or internal task queues.
+//   return Promise.resolve(); // Indicate async completion
+// }

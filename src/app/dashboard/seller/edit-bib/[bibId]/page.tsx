@@ -1,10 +1,7 @@
-import type { Event } from "@/models/event.model";
 import type { Bib } from "@/models/bib.model";
 import type { Metadata } from "next";
 
-import { getDictionary } from "@/lib/getDictionary";
 import { auth } from "@clerk/nextjs/server";
-import { getLocale } from "@/lib/getLocale";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -46,8 +43,7 @@ export default async function EditBibPage({
   params,
 }: EditBibPageProps) {
   const { userId: sellerUserId } = await auth();
-  const locale = await getLocale();
-  const dictionary = await getDictionary(locale);
+
   const { bibId } = params;
 
   if (!sellerUserId) {
@@ -73,9 +69,10 @@ export default async function EditBibPage({
   }
 
   const eventName =
-    bibWithEvent.expand?.eventId?.name ||
-    bibWithEvent.unlistedEventName ||
-    `Event ID: ${bibWithEvent.eventId || "N/A"}`;
+    bibWithEvent.expand?.eventId?.name ??
+    bibWithEvent.unlistedEventName ??
+    `Event ID: ${bibWithEvent.eventId ?? "N/A"}`;
+
   const successMessage = searchParams?.success
     ? decodeURIComponent(searchParams.success as string)
     : null;
@@ -94,7 +91,7 @@ export default async function EditBibPage({
       size: formData.get("size") as string | undefined,
     };
 
-    if (isNaN(dataToUpdate.price!) || dataToUpdate.price! <= 0) {
+    if (isNaN(dataToUpdate.price!) ?? dataToUpdate.price! <= 0) {
       redirect(
         `/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent("Valid price is required.")}`,
       );
@@ -288,8 +285,8 @@ export default async function EditBibPage({
             <button
               className="btn btn-withdraw"
               disabled={
-                bibWithEvent.status === "sold" ||
-                bibWithEvent.status === "withdrawn" ||
+                bibWithEvent.status === "sold" ??
+                bibWithEvent.status === "withdrawn" ??
                 bibWithEvent.status === "expired"
               }
               type="submit"
@@ -298,8 +295,8 @@ export default async function EditBibPage({
             </button>
           </form>
 
-          {(bibWithEvent.status === "listed_private" ||
-            bibWithEvent.status === "pending_validation" ||
+          {(bibWithEvent.status === "listed_private" ??
+            bibWithEvent.status === "pending_validation" ??
             bibWithEvent.status === "withdrawn") &&
             bibWithEvent.status !== "pending_event_verification" && (
               <form action={() => handleToggleListingStatus("listed_public")}>
@@ -341,9 +338,7 @@ export default async function EditBibPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: EditBibPageProps): Promise<Metadata> {
+export function generateMetadata({ params }: EditBibPageProps): Metadata {
   return {
     title: `Edit Bib ${params.bibId} | Seller Dashboard | BibUp`,
   };

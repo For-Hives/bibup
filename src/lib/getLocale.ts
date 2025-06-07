@@ -33,6 +33,8 @@ export async function getLocale() {
   } catch (error) {
     // During static generation, headers() might not be available
     // Return default locale
+
+    console.error("Error getting locale:", error);
     return "en";
   }
 }

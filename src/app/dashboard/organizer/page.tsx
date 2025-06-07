@@ -41,7 +41,7 @@ export default async function OrganizerDashboardPage({
   const { userId } = await auth();
   const user = await currentUser();
 
-  if (!userId || !user) {
+  if (!userId ?? !user) {
     return (
       <div className="p-4 md:p-8 max-w-4xl mx-auto text-[var(--text-dark)]">
         {dictionary.dashboard.organizer.pleaseSignIn}
@@ -50,7 +50,7 @@ export default async function OrganizerDashboardPage({
   }
 
   const organizerName =
-    user.firstName || user.emailAddresses[0]?.emailAddress || "Organizer";
+    user.firstName ?? user.emailAddresses[0]?.emailAddress ?? "Organizer";
 
   let submittedEvents: Event[] = [];
   if (userId) {

@@ -12,131 +12,130 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 import * as espree from "espree";
 import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 
+// Configuration commune des règles
+const baseRules = {
+  "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
+  "no-only-tests/no-only-tests": "error",
+  "react-hooks/exhaustive-deps": "off",
+  "@next/next/no-img-element": "off",
+  "prettier/prettier": "error",
+  ...nextPlugin.configs.recommended.rules,
+  ...nextPlugin.configs["core-web-vitals"].rules,
+  "promise/always-return": "off",
+  "woke/all": "warn",
+  "jsx-a11y/alt-text": "off",
+  "jsx-a11y/anchor-has-content": "off",
+};
+
+// Configuration commune des règles perfectionist
+const perfectionistRules = {
+  "perfectionist/sort-imports": [
+    "error",
+    {
+      groups: [
+        "type",
+        "react",
+        "nanostores",
+        ["builtin", "external"],
+        "internal-type",
+        "internal",
+        ["parent-type", "sibling-type", "index-type"],
+        ["parent", "sibling", "index"],
+        "side-effect",
+        "style",
+        "object",
+        "unknown",
+      ],
+      customGroups: {
+        value: {
+          nanostores: "@nanostores/.*",
+          react: ["react", "react-*"],
+        },
+        type: {
+          react: "react",
+        },
+      },
+      internalPattern: [
+        "@/components/.*",
+        "@/services/.*",
+        "@/constants/.*",
+        "@/helpers/.*",
+        "@/app/actions.*",
+      ],
+      newlinesBetween: "always",
+      type: "line-length",
+      order: "desc",
+    },
+  ],
+  "perfectionist/sort-objects": [
+    "warn",
+    {
+      type: "line-length",
+      order: "desc",
+    },
+  ],
+  "perfectionist/sort-enums": [
+    "error",
+    {
+      type: "line-length",
+      order: "desc",
+    },
+  ],
+};
+
+// Plugins communs
+const basePlugins = {
+  "no-only-tests": noOnlyTestsPlugin,
+  "react-hooks": reactHooksPlugin,
+  "@next/next": nextPlugin,
+  woke: wokePlugin,
+  "jsx-a11y": jsxA11yPlugin,
+};
+
+// Options communes du parser
+const baseParserOptions = {
+  ecmaFeatures: { jsx: true },
+  ecmaVersion: "latest",
+  sourceType: "module",
+};
+
 export default [
   perfectionist.configs["recommended-natural"],
   eslintPluginPrettierRecommended,
   ...queryPlugin.configs["flat/recommended"],
   promisePlugin.configs["flat/recommended"],
+
   // Configuration pour JavaScript
   {
-    rules: {
-      "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
-      "no-only-tests/no-only-tests": "error",
-      "react-hooks/exhaustive-deps": "off",
-
-      "@next/next/no-img-element": "off",
-      "prettier/prettier": "error",
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules,
-
-      "perfectionist/sort-imports": [
-        "error",
-        {
-          groups: [
-            "type",
-            "react",
-            "nanostores",
-            ["builtin", "external"],
-            "internal-type",
-            "internal",
-            ["parent-type", "sibling-type", "index-type"],
-            ["parent", "sibling", "index"],
-            "side-effect",
-            "style",
-            "object",
-            "unknown",
-          ],
-          // Correction ici (customGroups au lieu de custom-groups)
-          customGroups: {
-            value: {
-              nanostores: "@nanostores/.*",
-              react: ["react", "react-*"],
-            },
-            type: {
-              react: "react",
-            },
-          },
-          // Correction ici (internalPattern au lieu de internal-pattern)
-          internalPattern: [
-            "@/components/.*",
-            "@/services/.*",
-            "@/constants/.*",
-            "@/helpers/.*",
-            "@/app/actions.*",
-          ],
-          newlinesBetween: "always",
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-      "perfectionist/sort-objects": [
-        "warn",
-        {
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-      "perfectionist/sort-enums": [
-        "error",
-        {
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-
-      "promise/always-return": "off",
-
-      "woke/all": "warn",
-      "jsx-a11y/alt-text": "off",
-      "jsx-a11y/anchor-has-content": "off",
-    },
+    files: ["**/*.{js,jsx,mjs,cjs}"],
     languageOptions: {
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-        ecmaVersion: "latest",
-        sourceType: "module",
-      },
       parser: espree,
+      parserOptions: baseParserOptions,
     },
-    plugins: {
-      "no-only-tests": noOnlyTestsPlugin,
-      "react-hooks": reactHooksPlugin,
-      "@next/next": nextPlugin,
-      woke: wokePlugin,
-      "jsx-a11y": jsxA11yPlugin,
+    plugins: basePlugins,
+    rules: {
+      ...baseRules,
+      ...perfectionistRules,
     },
-    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
   },
+
   // Configuration pour TypeScript
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        ecmaFeatures: { jsx: true },
-        ecmaVersion: "latest",
-        sourceType: "module",
+        ...baseParserOptions,
         project: "./tsconfig.json",
       },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
-      "no-only-tests": noOnlyTestsPlugin,
-      "react-hooks": reactHooksPlugin,
-      "@next/next": nextPlugin,
-      woke: wokePlugin,
-      "jsx-a11y": jsxA11yPlugin,
+      ...basePlugins,
     },
     rules: {
-      // Hérite des règles de base
-      "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
-      "no-only-tests/no-only-tests": "error",
-      "react-hooks/exhaustive-deps": "off",
-      "@next/next/no-img-element": "off",
-      "prettier/prettier": "error",
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules,
-
+      ...baseRules,
+      ...perfectionistRules,
       // Règles TypeScript spécifiques
       ...tsPlugin.configs.recommended.rules,
       ...tsPlugin.configs["recommended-type-checked"].rules,
@@ -146,64 +145,9 @@ export default [
       "@typescript-eslint/prefer-nullish-coalescing": "error",
       "@typescript-eslint/prefer-optional-chain": "error",
       "@typescript-eslint/no-unnecessary-type-assertion": "error",
-
-      // Règles perfectionist pour TypeScript
-      "perfectionist/sort-imports": [
-        "error",
-        {
-          groups: [
-            "type",
-            "react",
-            "nanostores",
-            ["builtin", "external"],
-            "internal-type",
-            "internal",
-            ["parent-type", "sibling-type", "index-type"],
-            ["parent", "sibling", "index"],
-            "side-effect",
-            "style",
-            "object",
-            "unknown",
-          ],
-          customGroups: {
-            value: {
-              nanostores: "@nanostores/.*",
-              react: ["react", "react-*"],
-            },
-            type: {
-              react: "react",
-            },
-          },
-          internalPattern: [
-            "@/components/.*",
-            "@/services/.*",
-            "@/constants/.*",
-            "@/helpers/.*",
-            "@/app/actions.*",
-          ],
-          newlinesBetween: "always",
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-      "perfectionist/sort-objects": [
-        "warn",
-        {
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-      "perfectionist/sort-enums": [
-        "error",
-        {
-          type: "line-length",
-          order: "desc",
-        },
-      ],
-      "promise/always-return": "off",
-      "woke/all": "warn",
-      "jsx-a11y/alt-text": "off",
-      "jsx-a11y/anchor-has-content": "off",
+      "@typescript-eslint/no-unsafe-assignment": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
     },
   },
 ];

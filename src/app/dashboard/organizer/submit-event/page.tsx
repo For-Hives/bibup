@@ -37,7 +37,7 @@ export default async function SubmitEventPage({
     const participantCountStr = formData.get("eventParticipantCount") as string;
 
     // Basic server-side validation
-    if (!name || !dateString || !location) {
+    if (!name ?? !dateString ?? !location) {
       redirect(
         `/dashboard/organizer/submit-event?error=${encodeURIComponent("Event Name, Date, and Location are required.")}`,
       );
