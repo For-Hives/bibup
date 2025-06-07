@@ -1,130 +1,130 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Color Palette */
-  --primary-pastel: #a7d8de; /* Pastel Blue */
-  --secondary-pastel: #f5cec7; /* Pastel Peach/Pink */
-  --accent-sporty: #ffb347; /* Pastel Orange */
-  --background-light: #f8f8f8; /* Very Light Gray */
-  --text-dark: #333333;
-  --text-light: #f8f8f8; /* For dark backgrounds */
-  --border-color: #dddddd;
-  --success-bg: #d4edda;
-  --success-text: #155724;
-  --error-bg: #f8d7da;
-  --error-text: #721c24;
-  --warning-bg: #fff3cd;
-  --warning-text: #856404;
+	/* Color Palette */
+	--primary-pastel: #a7d8de; /* Pastel Blue */
+	--secondary-pastel: #f5cec7; /* Pastel Peach/Pink */
+	--accent-sporty: #ffb347; /* Pastel Orange */
+	--background-light: #f8f8f8; /* Very Light Gray */
+	--text-dark: #333333;
+	--text-light: #f8f8f8; /* For dark backgrounds */
+	--border-color: #dddddd;
+	--success-bg: #d4edda;
+	--success-text: #155724;
+	--error-bg: #f8d7da;
+	--error-text: #721c24;
+	--warning-bg: #fff3cd;
+	--warning-text: #856404;
 
-  /* Original theme variables - can be adjusted or removed if not used by Geist theme */
-  --background: #ffffff; /* Overridden by --background-light for body */
-  --foreground: #171717; /* Overridden by --text-dark for body */
+	/* Original theme variables - can be adjusted or removed if not used by Geist theme */
+	--background: #ffffff; /* Overridden by --background-light for body */
+	--foreground: #171717; /* Overridden by --text-dark for body */
 }
 
 @theme {
-  --color-accent-sporty: oklch(0.6876 0.1079 324.43);
-  --color-primary-pastel: oklch(0.9012 0.0723 210.12);
-  --color-secondary-pastel: oklch(0.9012 0.0723 30.12);
+	--color-accent-sporty: oklch(0.6876 0.1079 324.43);
+	--color-primary-pastel: oklch(0.9012 0.0723 210.12);
+	--color-secondary-pastel: oklch(0.9012 0.0723 30.12);
 }
 
 /* Dark mode adjustments (optional, can be refined) */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --primary-pastel: #6a9aa0; /* Darker Pastel Blue */
-    --secondary-pastel: #c4a39f; /* Darker Pastel Peach/Pink */
-    --accent-sporty: #d99a3c; /* Darker Pastel Orange */
-    --background-light: #2d2d2d; /* Dark Gray background */
-    --text-dark: #e5e5e5; /* Light text for dark mode */
-    --border-color: #444444;
-    /* Ensure success/error/warning have dark mode variants if needed */
-  }
+	:root {
+		--primary-pastel: #6a9aa0; /* Darker Pastel Blue */
+		--secondary-pastel: #c4a39f; /* Darker Pastel Peach/Pink */
+		--accent-sporty: #d99a3c; /* Darker Pastel Orange */
+		--background-light: #2d2d2d; /* Dark Gray background */
+		--text-dark: #e5e5e5; /* Light text for dark mode */
+		--border-color: #444444;
+		/* Ensure success/error/warning have dark mode variants if needed */
+	}
 }
 
 body {
-  background-color: var(--background-light);
-  color: var(--text-dark);
-  font-family: var(
-    --font-geist-sans,
-    Arial,
-    Helvetica,
-    sans-serif
-  ); /* Using Geist if available */
+	background-color: var(--background-light);
+	color: var(--text-dark);
+	font-family: var(
+		--font-geist-sans,
+		Arial,
+		Helvetica,
+		sans-serif
+	); /* Using Geist if available */
 }
 
 /* Base Button Styles using Tailwind's @apply for reusability */
 /* These can be applied as classes e.g., class="btn btn-primary" */
 .btn {
-  @apply font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-150 ease-in-out;
+	@apply rounded-lg px-4 py-2 font-semibold shadow-md transition-colors duration-150 ease-in-out;
 }
 
 .btn-primary {
-  @apply bg-accent-sporty text-white;
+	@apply bg-accent-sporty text-white;
 }
 /* .btn-primary:hover {
   @apply bg-opacity-90; /* Direct opacity, or a darker var(--accent-sporty-darker) if defined 
 } */
 
 .btn-secondary {
-  @apply bg-secondary-pastel;
+	@apply bg-secondary-pastel;
 }
 /* .btn-secondary:hover {
   @apply bg-opacity-80; /* Direct opacity, or a darker var(--secondary-pastel-darker) 
 } */
 
 .btn-withdraw {
-  @apply bg-red-400 text-white; /* Example: distinct color for withdraw */
+	@apply bg-red-400 text-white; /* Example: distinct color for withdraw */
 }
 .btn-withdraw:hover {
-  @apply bg-red-500;
+	@apply bg-red-500;
 }
 
 .btn-waitlist {
-  @apply bg-yellow-400; /* Example: Waitlist button */
+	@apply bg-yellow-400; /* Example: Waitlist button */
 }
 .btn-waitlist:hover {
-  @apply bg-yellow-500;
+	@apply bg-yellow-500;
 }
 
 /* Generic Bento Box Styling */
 .bento-box {
-  @apply bg-white p-6 rounded-xl shadow-lg border;
-  border-color: var(--border-color); /* Using CSS var for border */
+	@apply rounded-xl border bg-white p-6 shadow-lg;
+	border-color: var(--border-color); /* Using CSS var for border */
 }
 /* Dark mode for bento-box if needed */
 @media (prefers-color-scheme: dark) {
-  .bento-box {
-    @apply bg-neutral-800; /* Example dark mode bento box background */
-    border-color: var(--border-color);
-  }
+	.bento-box {
+		@apply bg-neutral-800; /* Example dark mode bento box background */
+		border-color: var(--border-color);
+	}
 }
 
 /* Status Badge Base */
 .status-badge {
-  @apply px-3 py-1 rounded-full text-xs font-semibold leading-tight;
+	@apply rounded-full px-3 py-1 text-xs leading-tight font-semibold;
 }
 
 /* Specific Statuses - Example, can be expanded */
 .status-pending {
-  @apply bg-yellow-200 text-yellow-800;
+	@apply bg-yellow-200 text-yellow-800;
 }
 .status-approved,
 .status-listed-public {
-  @apply bg-green-200 text-green-800;
+	@apply bg-green-200 text-green-800;
 }
 .status-rejected,
 .status-validation-failed {
-  @apply bg-red-200 text-red-800;
+	@apply bg-red-200 text-red-800;
 }
 .status-sold {
-  @apply bg-blue-200 text-blue-800;
+	@apply bg-blue-200 text-blue-800;
 }
 .status-withdrawn,
 .status-expired {
-  @apply bg-gray-200 text-gray-800;
+	@apply bg-gray-200 text-gray-800;
 }
 
 /* Ensure Tailwind directives are at the top */

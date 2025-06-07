@@ -1,6 +1,6 @@
 interface Race {
-  id: string;
-  name: string;
+	id: string
+	name: string
 }
 
-export type { Race }; // Exporting
+export type { Race } // Exporting
