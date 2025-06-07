@@ -1,9 +1,10 @@
 "use server";
 
-import { pb } from "@/lib/pocketbaseClient";
 import type { Transaction } from "@/models/transaction.model";
 
-export const PLATFORM_FEE_PERCENTAGE = 0.10; // 10%
+import { pb } from "@/lib/pocketbaseClient";
+
+export const PLATFORM_FEE_PERCENTAGE = 0.1; // 10%
 
 /**
  * Creates a new transaction record.
@@ -11,29 +12,48 @@ export const PLATFORM_FEE_PERCENTAGE = 0.10; // 10%
  *   Expects: bibId, buyerUserId, sellerUserId, amount (selling price of bib), platformFee, status.
  */
 export async function createTransaction(
-  transactionData: Omit<Transaction, 'id' | 'transactionDate'>
-): Promise<Transaction | null> {
-  if (!transactionData.bibId || !transactionData.buyerUserId || !transactionData.sellerUserId ||
-      transactionData.amount === undefined || transactionData.platformFee === undefined || !transactionData.status) {
-    console.error("Missing required fields for transaction creation:", transactionData);
+  transactionData: Omit<Transaction, "id" | "transactionDate">,
+): Promise<null | Transaction> {
+  if (
+    !transactionData.bibId ||
+    !transactionData.buyerUserId ||
+    !transactionData.sellerUserId ||
+    transactionData.amount === undefined ||
+    transactionData.platformFee === undefined ||
+    !transactionData.status
+  ) {
+    console.error(
+      "Missing required fields for transaction creation:",
+      transactionData,
+    );
     return null;
   }
 
   try {
-    const dataToCreate: Omit<Transaction, 'id'> = {
+    const dataToCreate: Omit<Transaction, "id"> = {
       ...transactionData,
       transactionDate: new Date(), // Set current date/time for the transaction
     };
 
-    const record = await pb.collection("transactions").create<Transaction>(dataToCreate);
+    const record = await pb
+      .collection("transactions")
+      .create<Transaction>(dataToCreate);
     return record;
   } catch (error) {
     console.error("Error creating transaction:", error);
-    if (error && typeof error === 'object' && 'message' in error) {
-        console.error('PocketBase error details:', error.message);
-        if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
-            console.error('PocketBase response data:', (error.response as any).data);
-        }
+    if (error && typeof error === "object" && "message" in error) {
+      console.error("PocketBase error details:", error.message);
+      if (
+        "response" in error &&
+        error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response
+      ) {
+        console.error(
+          "PocketBase response data:",
+          (error.response as any).data,
+        );
+      }
     }
     return null;
   }

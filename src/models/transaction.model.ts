@@ -1,15 +1,15 @@
-import { User } from './user.model';
-import { Bib } from './bib.model';
+import { User } from "./user.model";
+import { Bib } from "./bib.model";
 
 export interface Transaction {
-  id: string;
+  amount: number; // Total amount paid by buyer
   bibId: string;
   buyerUserId: string;
-  sellerUserId: string;
-  transactionDate: Date; // Should be DateTime
-  amount: number; // Total amount paid by buyer
-  platformFee: number;
+  id: string;
   paymentIntentId?: string; // For Stripe or other payment processor
-  status: 'pending' | 'succeeded' | 'failed' | 'refunded' | 'claimed';
+  platformFee: number;
+  sellerUserId: string;
+  status: "claimed" | "failed" | "pending" | "refunded" | "succeeded";
+  transactionDate: Date; // Should be DateTime
   // Add other relevant transaction details here
 }
