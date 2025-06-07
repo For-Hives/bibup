@@ -9,7 +9,7 @@ import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 import nextPlugin from '@next/eslint-plugin-next'
 import promisePlugin from 'eslint-plugin-promise'
 import tsParser from '@typescript-eslint/parser'
-import wokePlugin from 'eslint-plugin-woke'
+
 import * as espree from 'espree'
 
 // Configuration commune des règles
@@ -24,7 +24,6 @@ const baseRules = {
 	'jsx-a11y/anchor-has-content': 'off',
 	'promise/always-return': 'off',
 	'jsx-a11y/alt-text': 'off',
-	'woke/all': 'warn',
 }
 
 // Configuration commune des règles perfectionist
@@ -89,7 +88,6 @@ const basePlugins = {
 	'react-hooks': reactHooksPlugin,
 	'jsx-a11y': jsxA11yPlugin,
 	'@next/next': nextPlugin,
-	woke: wokePlugin,
 }
 
 // Options communes du parser
