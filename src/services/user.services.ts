@@ -25,22 +25,22 @@ export async function createUser(
 
 		const record = await pb.collection('users').create<User>(newUserRecord)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error creating user in PocketBase:', error)
 		// It's good to check for specific PocketBase error types if possible
 		// For example, if it's a unique constraint violation, etc.
-		if (error && typeof error === 'object' && 'message' in error) {
+		if (error !== null && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', error.message)
 			// Check if it's a response error
 			if (
 				'response' in error &&
-				error.response &&
+				error.response !== null &&
 				typeof error.response === 'object' &&
 				'data' in error.response
 			) {
 				console.error(
 					'PocketBase response data:',
-					(error?.response as any)?.data
+					(error.response as { data: unknown }).data
 				)
 			}
 		}
@@ -68,12 +68,12 @@ export async function fetchUserByClerkId(
 			.collection('users')
 			.getFirstListItem<User>(`clerkId = "${clerkId}"`)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		// PocketBase getFirstListItem throws an error if no item is found or multiple are found (if not unique)
 		// It also throws for other query errors.
 		console.error(`Error fetching user by Clerk ID "${clerkId}":`, error)
 		if (
-			error &&
+			error !== null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			error.status === 404
@@ -125,9 +125,9 @@ export async function updateUserBalance(
 		})
 
 		return updatedRecord
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error updating balance for user ${clerkUserId}:`, error)
-		if (error && typeof error === 'object' && 'message' in error) {
+		if (error !== null && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', error.message)
 		}
 		return null
