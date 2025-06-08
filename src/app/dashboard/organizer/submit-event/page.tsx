@@ -1,13 +1,15 @@
 import type { Event } from '@/models/event.model' // Updated model import
 import type { Metadata } from 'next'
 
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { auth } from '@clerk/nextjs/server'
 import { getLocale } from '@/lib/getLocale'
 import { redirect } from 'next/navigation'
 import Link from 'next/link' // Import Link
 
 import { createEvent } from '@/services/event.services'
+
+import submitEventTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	title: 'Submit New Event | Organizer Dashboard | BibUp',
@@ -23,7 +25,7 @@ export default async function SubmitEventPage({
 	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, submitEventTranslations)
 	const searchParams = await searchParamsPromise
 	async function handleSubmitEvent(formData: FormData) {
 		'use server'
@@ -83,13 +85,13 @@ export default async function SubmitEventPage({
 	return (
 		<div className="mx-auto max-w-2xl p-4 text-[var(--text-dark)] md:p-8">
 			<header className="mb-8 text-center">
-				<h1 className="text-3xl font-bold">{dictionary.dashboard.organizer.submitEvent.title}</h1>
+				<h1 className="text-3xl font-bold">{t.title}</h1>
 			</header>
 
 			{}
 			{errorMessage != null ? (
 				<div className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-center text-[var(--error-text)]">
-					{dictionary.dashboard.organizer.submitEvent.errorPrefix} {errorMessage}
+					{t.errorPrefix} {errorMessage}
 				</div>
 			) : null}
 
@@ -99,7 +101,7 @@ export default async function SubmitEventPage({
 			>
 				<div>
 					<label className="mb-1 block text-sm font-medium" htmlFor="eventName">
-						{dictionary.dashboard.organizer.submitEvent.eventNameLabel}
+						{t.eventNameLabel}
 					</label>
 					<input
 						className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
@@ -111,7 +113,7 @@ export default async function SubmitEventPage({
 				</div>
 				<div>
 					<label className="mb-1 block text-sm font-medium" htmlFor="eventDate">
-						{dictionary.dashboard.organizer.submitEvent.eventDateLabel}
+						{t.eventDateLabel}
 					</label>
 					<input
 						className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
@@ -123,7 +125,7 @@ export default async function SubmitEventPage({
 				</div>
 				<div>
 					<label className="mb-1 block text-sm font-medium" htmlFor="eventLocation">
-						{dictionary.dashboard.organizer.submitEvent.eventLocation}
+						{t.eventLocation}
 					</label>
 					<input
 						className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
@@ -135,7 +137,7 @@ export default async function SubmitEventPage({
 				</div>
 				<div>
 					<label className="mb-1 block text-sm font-medium" htmlFor="eventDescription">
-						{dictionary.dashboard.organizer.submitEvent.eventDescription}
+						{t.eventDescription}
 					</label>
 					<textarea
 						className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
@@ -146,7 +148,7 @@ export default async function SubmitEventPage({
 				</div>
 				<div>
 					<label className="mb-1 block text-sm font-medium" htmlFor="eventParticipantCount">
-						{dictionary.dashboard.organizer.submitEvent.participantCount}
+						{t.participantCount}
 					</label>
 					<input
 						className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
@@ -157,11 +159,11 @@ export default async function SubmitEventPage({
 					/>
 				</div>
 				<button className="btn btn-primary w-full" type="submit">
-					{dictionary.dashboard.organizer.submitEvent.submit}
+					{t.submit}
 				</button>
 			</form>
 			<Link className="mt-6 block text-center text-[var(--accent-sporty)] hover:underline" href="/dashboard/organizer">
-				{dictionary.dashboard.organizer.submitEvent.backToDashboard}
+				{t.backToDashboard}
 			</Link>
 		</div>
 	)
