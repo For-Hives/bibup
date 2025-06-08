@@ -80,14 +80,14 @@ export default async function SellerDashboardPage({
 			: null
 
 	return (
-		<div className="mx-auto max-w-5xl space-y-8 p-4 md:p-8">		<header className="mb-8 text-center">
-			<h1 className="text-3xl font-bold text-[var(--text-dark)]">{t.title}</h1>
-		</header>
-
-		<p className="text-center text-xl text-[var(--text-dark)]">
-			{t.welcomeMessage}, {sellerName}!
-		</p>
-
+		<div className="mx-auto max-w-5xl space-y-8 p-4 md:p-8">
+			{' '}
+			<header className="mb-8 text-center">
+				<h1 className="text-3xl font-bold text-[var(--text-dark)]">{t.title}</h1>
+			</header>
+			<p className="text-center text-xl text-[var(--text-dark)]">
+				{t.welcomeMessage}, {sellerName}!
+			</p>
 			{/* Messages */}
 			{successMessage != null && (
 				<div className="mb-6 rounded-lg border border-green-300 bg-[var(--success-bg)] p-4 text-center text-[var(--success-text)]">
@@ -99,29 +99,22 @@ export default async function SellerDashboardPage({
 					Error: {errorMessage}
 				</div>
 			)}
-
 			{/* Bento Grid Layout */}
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+				{' '}
 				{/* Balance Box */}
 				<div className="bento-box flex flex-col items-center justify-center md:col-span-1">
-					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">
-						{dictionary.dashboard.seller.yourBibUpBalance}
-					</h2>
+					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">{t.yourBibUpBalance}</h2>
 					<p className="text-3xl font-bold text-[var(--accent-sporty)]">${bibUpBalance.toFixed(2)}</p>
 				</div>
-
 				{/* Manage Bib Listings Box (takes more space) */}
 				<div className="bento-box md:col-span-2">
-					<h2 className="mb-4 text-xl font-semibold text-[var(--text-dark)]">
-						{dictionary.dashboard.seller.manageBibListings}
-					</h2>
+					<h2 className="mb-4 text-xl font-semibold text-[var(--text-dark)]">{t.manageBibListings}</h2>
 					<Link className="btn btn-primary mb-6 w-full md:w-auto" href="/dashboard/seller/list-bib">
-						{dictionary.dashboard.seller.listNewBib}
+						{t.listNewBib}
 					</Link>
 
-					<h3 className="mt-6 mb-3 text-lg font-semibold text-[var(--text-dark)]">
-						{dictionary.dashboard.seller.yourListedBibs}
-					</h3>
+					<h3 className="mt-6 mb-3 text-lg font-semibold text-[var(--text-dark)]">{t.yourListedBibs}</h3>
 					{listedBibs.length > 0 ? (
 						<ul className="space-y-4">
 							{listedBibs.map(bib => {
@@ -131,33 +124,32 @@ export default async function SellerDashboardPage({
 								return (
 									<li className="rounded-lg border border-[var(--border-color)] bg-white p-4 shadow" key={bib.id}>
 										<div className="font-semibold text-[var(--primary-pastel)]">
-											{' '}
 											{/* Using primary-pastel for bib name, adjust if needed */}
-											{dictionary.dashboard.seller.yourBibUpBalance} {displayBibName}
+											Bib for: {displayBibName}
 										</div>
 										<p className="text-sm text-[var(--text-dark)]">
-											{dictionary.dashboard.seller.myBibs} {bib.registrationNumber}
+											{t.registrationNumber} {bib.registrationNumber}
 										</p>
 										<p className="text-sm text-[var(--text-dark)]">
-											{dictionary.dashboard.seller.welcome} ${bib.price.toFixed(2)}
+											{t.price} ${bib.price.toFixed(2)}
 										</p>
 										{bib.originalPrice != null && bib.originalPrice !== 0 && !isNaN(bib.originalPrice) && (
 											<p className="text-xs text-gray-500">
-												{dictionary.dashboard.seller.welcome} ${bib.originalPrice.toFixed(2)}
+												{t.originalPrice} ${bib.originalPrice.toFixed(2)}
 											</p>
 										)}
 										{bib.size != null && bib.size !== '' && (
 											<p className="text-xs text-gray-500">
-												{dictionary.dashboard.seller.title} {bib.size}
+												{t.size} {bib.size}
 											</p>
 										)}
 										{bib.gender != null && (
 											<p className="text-xs text-gray-500">
-												{dictionary.dashboard.seller.description} {bib.gender}
+												{t.gender} {bib.gender}
 											</p>
 										)}
 										<p className="mt-1 text-sm">
-											{dictionary.dashboard.seller.listNewBib}{' '}
+											{t.status}{' '}
 											<span className={`status-badge ${getBibStatusClass(bib.status)}`}>
 												{bib.status.replace(/_/g, ' ').toUpperCase()}
 											</span>
@@ -171,7 +163,7 @@ export default async function SellerDashboardPage({
 												className="btn btn-secondary mt-2 inline-block px-3 py-1 text-xs"
 												href={`/dashboard/seller/edit-bib/${bib.id}`}
 											>
-												{dictionary.dashboard.seller.manageBibListings}
+												{t.editBib}
 											</Link>
 										)}
 									</li>
@@ -179,7 +171,7 @@ export default async function SellerDashboardPage({
 							})}
 						</ul>
 					) : (
-						<p className="text-[var(--text-dark)]">{dictionary.dashboard.seller.noBibsListed}</p>
+						<p className="text-[var(--text-dark)]">{t.noBibsListed}</p>
 					)}
 				</div>
 			</div>
