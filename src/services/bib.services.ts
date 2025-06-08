@@ -33,11 +33,11 @@ export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'pric
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
 export async function createBib(bibData: Bib): Promise<Bib | null> {
-	if (!bibData.sellerUserId) {
+	if (bibData.sellerUserId === '') {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
 	}
-	if (bibData.registrationNumber == '' || bibData.price === undefined || bibData.price < 0) {
+	if (bibData.registrationNumber === '' || bibData.price === undefined || bibData.price < 0) {
 		console.error('Registration Number and a valid Price are required.')
 		return null
 	}
@@ -61,7 +61,7 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
 
 		const record = await pb.collection('bibs').create<Bib>(dataToCreate)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error creating bib listing:', error)
 
 		return null
@@ -73,7 +73,7 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
  * @param bibId The ID of the bib to fetch.
  */
 export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
-	if (!bibId) {
+	if (bibId === '') {
 		console.error('Bib ID is required.')
 		return null
 	}
@@ -84,7 +84,7 @@ export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { e
 		})
 
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching bib with ID "${bibId}":`, error)
 
 		// For other errors, you might want to throw or return null based on your error handling strategy
@@ -101,7 +101,7 @@ export async function fetchBibByIdForSeller(
 	bibId: string,
 	sellerUserId: string
 ): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
-	if (!bibId || !sellerUserId) {
+	if (bibId === '' || sellerUserId === '') {
 		console.error('Bib ID and Seller ID are required.')
 		return null
 	}
@@ -114,7 +114,7 @@ export async function fetchBibByIdForSeller(
 			return null // Not the owner
 		}
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching bib ${bibId} for seller ${sellerUserId}:`, error)
 
 		// For other errors, you might want to throw or return null based on your error handling strategy
@@ -127,7 +127,7 @@ export async function fetchBibByIdForSeller(
  * @param buyerUserId The ID of the buyer whose purchased bibs are to be fetched.
  */
 export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { expand?: { eventId: Event } })[]> {
-	if (!buyerUserId) {
+	if (buyerUserId === '') {
 		console.error('Buyer User ID is required to fetch their purchased bibs.')
 		return []
 	}
@@ -139,7 +139,7 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 			sort: '-updated', // Sort by last update (effectively purchase date for sold bibs), newest first
 		})
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error)
 
 		// For other errors, return empty array for safety
@@ -153,7 +153,7 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
  * @param sellerUserId The ID of the seller whose bibs are to be fetched.
  */
 export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
-	if (!sellerUserId) {
+	if (sellerUserId === '') {
 		console.error('Seller ID is required to fetch their bibs.')
 		return []
 	}
@@ -171,7 +171,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 		// The actual structure of 'expand' depends on your PocketBase relation setup.
 		// This is a common pattern but might need adjustment.
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching bibs for seller ID "${sellerUserId}":`, error)
 
 		// For other errors, return empty array for safety
@@ -184,7 +184,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
  * @param eventId The ID of the event.
  */
 export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<Bib[]> {
-	if (!eventId) {
+	if (eventId === '') {
 		console.error('Event ID is required to fetch publicly listed bibs.')
 		return []
 	}
@@ -196,7 +196,7 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 			// This would require sellerUserId to be a relation field in PocketBase to a 'users' collection
 		})
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching publicly listed bibs for event ${eventId}:`, error)
 
 		// For other errors, return empty array for safety
@@ -214,7 +214,7 @@ export async function processBibSale(
 	bibId: string,
 	buyerUserId: string
 ): Promise<{ error?: string; success: boolean; transaction?: Transaction }> {
-	if (!bibId || !buyerUserId) {
+	if (bibId === '' || buyerUserId === '') {
 		return { error: 'Bib ID and Buyer User ID are required.', success: false }
 	}
 
@@ -294,7 +294,7 @@ export async function processBibSale(
 		}
 
 		return { success: true, transaction }
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error processing bib sale for bib ID ${bibId}:`, error)
 		let errorMessage = 'An unexpected error occurred during bib sale processing.'
 		if (error instanceof Error) {
@@ -317,7 +317,7 @@ export async function updateBibBySeller(
 	dataToUpdate: { status: Bib['status'] }, // Allow specific status updates or general data updates
 	sellerUserId: string
 ): Promise<Bib | null> {
-	if (!bibId || !sellerUserId) {
+	if (bibId === '' || sellerUserId === '') {
 		console.error('Bib ID and Seller ID are required for update.')
 		return null
 	}
@@ -351,7 +351,8 @@ export async function updateBibBySeller(
 				sold: [], // Cannot be changed by seller
 			}
 
-			if (!allowedStatusChanges[currentBib.status]?.includes(newStatus)) {
+			const allowedChanges = allowedStatusChanges[currentBib.status]
+			if (!allowedChanges?.includes(newStatus)) {
 				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
 				// return null; // Or throw an error indicating invalid transition
 			}
@@ -360,7 +361,7 @@ export async function updateBibBySeller(
 
 		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 		return updatedRecord
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error updating bib ${bibId}:`, error)
 
 		return null
@@ -375,7 +376,7 @@ export async function updateBibBySeller(
  * @param adminNotes Optional notes from the admin regarding the status change.
  */
 export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['status']): Promise<Bib | null> {
-	if (!bibId || !newStatus) {
+	if (bibId === '' || newStatus === '') {
 		console.error('Bib ID and new status are required for admin update.')
 		return null
 	}
@@ -389,10 +390,10 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 
 		return updatedRecord
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error updating bib ${bibId} status by admin:`, error)
 		if (error != null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
+			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
 		return null
 	}

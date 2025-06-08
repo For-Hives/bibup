@@ -13,12 +13,12 @@ export async function createTransaction(
 	transactionData: Omit<Transaction, 'id' | 'transactionDate'>
 ): Promise<null | Transaction> {
 	if (
-		!transactionData.bibId ||
-		!transactionData.buyerUserId ||
-		!transactionData.sellerUserId ||
+		transactionData.bibId === '' ||
+		transactionData.buyerUserId === '' ||
+		transactionData.sellerUserId === '' ||
 		transactionData.amount === undefined ||
 		transactionData.platformFee === undefined ||
-		!transactionData.status
+		transactionData.status === ''
 	) {
 		console.error('Missing required fields for transaction creation:', transactionData)
 		return null
@@ -32,12 +32,18 @@ export async function createTransaction(
 
 		const record = await pb.collection('transactions').create<Transaction>(dataToCreate)
 		return record
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error creating transaction:', error)
-		if (error && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-			if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
-				console.error('PocketBase response data:', (error.response as any)?.data)
+		if (error != null && typeof error === 'object') {
+			// Check error is a non-null object
+			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				console.error('PocketBase error details:', (error as { message: string }).message)
+			}
+			if ('response' in error) {
+				const response = (error as { response: unknown }).response
+				if (response != null && typeof response === 'object' && 'data' in response) {
+					console.error('PocketBase response data:', (response as { data: unknown }).data)
+				}
 			}
 		}
 		return null
