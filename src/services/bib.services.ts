@@ -58,8 +58,8 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
 		const dataToCreate: Omit<Bib, 'id'> = {
 			registrationNumber: bibData.registrationNumber,
 			originalPrice: bibData.originalPrice,
-			privateListingToken: undefined,
 			sellerUserId: bibData.sellerUserId,
+			privateListingToken: undefined,
 			gender: bibData.gender,
 			buyerUserId: undefined,
 			eventId: finalEventId, // This will be undefined for unlisted events

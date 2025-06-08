@@ -4,15 +4,15 @@ import { z } from 'zod'
 export const BibFormSchema = z
 	.object({
 		registrationNumber: z.string().min(1, "Le numéro d'inscription est requis"),
+		gender: z.enum(['female', 'male', 'unisex']).nullable().optional(),
 		price: z.number().positive('Le prix doit être supérieur à 0'),
-		originalPrice: z.number().optional(),
-		gender: z.enum(['female', 'male', 'unisex']).optional(),
-		size: z.string().optional(),
-		eventId: z.string().optional(),
 		isNotListedEvent: z.boolean().default(false),
+		unlistedEventLocation: z.string().optional(),
 		unlistedEventName: z.string().optional(),
 		unlistedEventDate: z.string().optional(),
-		unlistedEventLocation: z.string().optional(),
+		originalPrice: z.number().optional(),
+		eventId: z.string().optional(),
+		size: z.string().optional(),
 	})
 	.refine(
 		data => {

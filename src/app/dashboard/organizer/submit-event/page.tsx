@@ -1,3 +1,4 @@
+import type { Event } from '@/models/event.model' // Updated model import
 import type { Metadata } from 'next'
 
 import { getDictionary } from '@/lib/getDictionary'
@@ -5,9 +6,8 @@ import { auth } from '@clerk/nextjs/server'
 import { getLocale } from '@/lib/getLocale'
 import { redirect } from 'next/navigation'
 import Link from 'next/link' // Import Link
-import type { Event } from '@/models/event.model' // Updated model import
 
-import { saveEvent } from '@/services/event.services'
+import { createEvent } from '@/services/event.services'
 
 export const metadata: Metadata = {
 	title: 'Submit New Event | Organizer Dashboard | BibUp',
@@ -47,22 +47,22 @@ export default async function SubmitEventPage({
 		}
 
 		const eventData: Event = {
-			description: (formData.get('eventDescription') as string) ?? '',
-			date: new Date(dateString),
-			location,
-			name,
-			isPartnered: false,
-			organizerId: userId,
 			participantCount: participantCountStr
 				? parseInt(participantCountStr, 10)
 				: 0,
+			description: (formData.get('eventDescription') as string) ?? '',
+			date: new Date(dateString),
 			status: 'pending_approval',
+			organizerId: userId,
+			isPartnered: false,
 			bibsSold: 0,
+			location,
 			id: '',
+			name,
 		}
 
 		try {
-			const newEvent = await saveEvent(eventData)
+			const newEvent = await createEvent(eventData)
 
 			if (newEvent) {
 				redirect('/dashboard/organizer?success=true')
