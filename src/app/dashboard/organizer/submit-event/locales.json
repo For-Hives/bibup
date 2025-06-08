@@ -1,0 +1,47 @@
+{
+	"en": {
+		"title": "Submit New Event",
+		"eventNameLabel": "Event Name:",
+		"eventDateLabel": "Event Date:",
+		"eventLocation": "Event Location:",
+		"eventDescription": "Event Description (Optional):",
+		"participantCount": "Expected Participant Count:",
+		"submit": "Submit Event",
+		"backToDashboard": "← Back to Organizer Dashboard",
+		"errorPrefix": "Error:",
+		"validationError": "Event Name, Date, and Location are required.",
+		"createError": "Failed to create event. Please check details.",
+		"loginRequired": "You must be logged in to submit an event.",
+		"unknownError": "An unknown error occurred."
+	},
+	"fr": {
+		"title": "Soumettre un Nouvel Événement",
+		"eventNameLabel": "Nom de l'Événement :",
+		"eventDateLabel": "Date de l'Événement :",
+		"eventLocation": "Lieu de l'Événement :",
+		"eventDescription": "Description de l'Événement (Optionnel) :",
+		"participantCount": "Nombre de Participants Attendus :",
+		"submit": "Soumettre l'Événement",
+		"backToDashboard": "← Retour au Tableau de Bord Organisateur",
+		"errorPrefix": "Erreur :",
+		"validationError": "Le nom de l'événement, la date et le lieu sont requis.",
+		"createError": "Échec de la création de l'événement. Veuillez vérifier les détails.",
+		"loginRequired": "Vous devez être connecté pour soumettre un événement.",
+		"unknownError": "Une erreur inconnue s'est produite."
+	},
+	"ko": {
+		"title": "새로운 이벤트 제출",
+		"eventNameLabel": "이벤트 이름:",
+		"eventDateLabel": "이벤트 날짜:",
+		"eventLocation": "이벤트 위치:",
+		"eventDescription": "이벤트 설명 (선택 사항):",
+		"participantCount": "예상 참가자 수:",
+		"submit": "이벤트 제출",
+		"backToDashboard": "← 주최자 대시보드로 돌아가기",
+		"errorPrefix": "오류:",
+		"validationError": "이벤트 이름, 날짜, 위치는 필수입니다.",
+		"createError": "이벤트 생성에 실패했습니다. 세부 정보를 확인해주세요.",
+		"loginRequired": "이벤트를 제출하려면 로그인해야 합니다.",
+		"unknownError": "알 수 없는 오류가 발생했습니다."
+	}
+}

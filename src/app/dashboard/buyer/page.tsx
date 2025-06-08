@@ -159,7 +159,7 @@ export default async function BuyerDashboardPage({
 								<p style={styles.itemDetail}>
 									{t.status}{' '}
 									{waitlistEntry.notifiedAt
-										? (t.notifiedOn as string) + ' ' + new Date(waitlistEntry.notifiedAt).toLocaleDateString()
+										? t.notifiedOn + ' ' + new Date(waitlistEntry.notifiedAt).toLocaleDateString()
 										: t.waitingForNotification}
 								</p>
 							</li>
