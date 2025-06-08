@@ -1,9 +1,14 @@
 'use server'
 
+import type { Transaction } from '@/models/transaction.model'
 import type { Event } from '@/models/event.model' // For expanding event details if possible
 import type { Bib } from '@/models/bib.model'
 
 import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path to your PocketBase client
+
+// Import Transaction services and User services for processBibSale
+import { createTransaction } from './transaction.services'
+import { updateUserBalance } from './user.services'
 
 // Type for the data expected by createBib, accommodating both partnered and unlisted event scenarios
 export type CreateBibData = Partial<
@@ -95,17 +100,11 @@ export async function fetchBibById(
 			.getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
 				expand: 'eventId', // Expand event details
 			})
+
 		return record
 	} catch (error) {
 		console.error(`Error fetching bib with ID "${bibId}":`, error)
-		if (
-			error != null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return null // Not found
-		}
+
 		// For other errors, you might want to throw or return null based on your error handling strategy
 		return null
 	}
@@ -142,14 +141,7 @@ export async function fetchBibByIdForSeller(
 			`Error fetching bib ${bibId} for seller ${sellerUserId}:`,
 			error
 		)
-		if (
-			error != null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return null // Not found
-		}
+
 		// For other errors, you might want to throw or return null based on your error handling strategy
 		return null
 	}
@@ -178,15 +170,7 @@ export async function fetchBibsByBuyer(
 		return records
 	} catch (error) {
 		console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error)
-		// Check if it's a 404 error (no records found for this buyer)
-		if (
-			error != null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No bibs found for this buyer, return empty array
-		}
+
 		// For other errors, return empty array for safety
 		return []
 	}
@@ -211,39 +195,20 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 			.collection('bibs')
 			.getFullList<Bib & { expand?: { eventId: Event } }>({
 				filter: `sellerUserId = "${sellerUserId}"`,
-				expand: 'eventId', // Tells PocketBase to include the related event record
 				sort: '-created', // Sort by creation date, newest first
 			})
 
 		// Map records to include expanded event name, or handle as needed
 		// The actual structure of 'expand' depends on your PocketBase relation setup.
 		// This is a common pattern but might need adjustment.
-		return records.map(record => ({
-			...record,
-			// If eventId is expanded, eventName can be accessed, e.g., record.expand?.eventId?.name
-			// This simplified mapping assumes the expand works as expected.
-		}))
+		return records
 	} catch (error) {
 		console.error(`Error fetching bibs for seller ID "${sellerUserId}":`, error)
-		// Check if it's a 404 error (no records found for this seller)
-		if (
-			error != null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No bibs found for this seller, return empty array
-		}
+
 		// For other errors, return empty array for safety
 		return []
 	}
 }
-
-import type { Transaction } from '@/models/transaction.model'
-
-// Import Transaction services and User services for processBibSale
-import { createTransaction } from './transaction.services'
-import { updateUserBalance } from './user.services'
 
 /**
  * Fetches all publicly listed bibs for a specific event.
@@ -269,15 +234,7 @@ export async function fetchPubliclyListedBibsForEvent(
 			`Error fetching publicly listed bibs for event ${eventId}:`,
 			error
 		)
-		// Check if it's a 404 error (no records found for this event)
-		if (
-			error != null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
-			return [] // No bibs found for this event, return empty array
-		}
+
 		// For other errors, return empty array for safety
 		return []
 	}
@@ -321,7 +278,7 @@ export async function processBibSale(
 		// }
 
 		// 3. Calculate platform fee and seller amount.
-		const platformFeeAmount = bib.price * 0.1
+		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic
 		const amountToSeller = bib.price - platformFeeAmount
 
 		// 4. Create the transaction record.
@@ -405,7 +362,7 @@ export async function processBibSale(
  */
 export async function updateBibBySeller(
 	bibId: string,
-	dataToUpdate: UpdateBibData | { status: Bib['status'] }, // Allow specific status updates or general data updates
+	dataToUpdate: { status: Bib['status'] }, // Allow specific status updates or general data updates
 	sellerUserId: string
 ): Promise<Bib | null> {
 	if (!bibId || !sellerUserId) {
@@ -461,9 +418,7 @@ export async function updateBibBySeller(
 		return updatedRecord
 	} catch (error) {
 		console.error(`Error updating bib ${bibId}:`, error)
-		if (error != null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-		}
+
 		return null
 	}
 }
@@ -477,8 +432,7 @@ export async function updateBibBySeller(
  */
 export async function updateBibStatusByAdmin(
 	bibId: string,
-	newStatus: Bib['status'],
-	adminNotes?: string
+	newStatus: Bib['status']
 ): Promise<Bib | null> {
 	if (!bibId || !newStatus) {
 		console.error('Bib ID and new status are required for admin update.')
@@ -486,13 +440,8 @@ export async function updateBibStatusByAdmin(
 	}
 
 	try {
-		const dataToUpdate: Partial<Bib> & { adminNotes?: string } = {
+		const dataToUpdate: Partial<Bib> = {
 			status: newStatus,
-		}
-		if ((adminNotes?.trim() ?? '') !== '') {
-			// Assuming 'adminNotes' is a field in your Bib model/collection.
-			// If not, this part needs to be adjusted (e.g., add to a generic 'notes' field).
-			dataToUpdate.adminNotes = adminNotes
 		}
 
 		// Direct update without seller ownership check.
