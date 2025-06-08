@@ -125,7 +125,7 @@ export default async function SellerDashboardPage({
 									<li className="rounded-lg border border-[var(--border-color)] bg-white p-4 shadow" key={bib.id}>
 										<div className="font-semibold text-[var(--primary-pastel)]">
 											{/* Using primary-pastel for bib name, adjust if needed */}
-											Bib for: {displayBibName}
+											{t.bibFor} {displayBibName}
 										</div>
 										<p className="text-sm text-[var(--text-dark)]">
 											{t.registrationNumber} {bib.registrationNumber}

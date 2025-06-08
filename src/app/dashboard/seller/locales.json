@@ -18,7 +18,8 @@
 		"size": "Size:",
 		"gender": "Gender:",
 		"status": "Status:",
-		"editBib": "Edit Bib"
+		"editBib": "Edit Bib",
+		"bibFor": "Bib for:"
 	},
 	"fr": {
 		"title": "Tableau de bord vendeur",
@@ -39,7 +40,8 @@
 		"size": "Taille :",
 		"gender": "Genre :",
 		"status": "Statut :",
-		"editBib": "Modifier le dossard"
+		"editBib": "Modifier le dossard",
+		"bibFor": "Dossard pour :"
 	},
 	"ko": {
 		"title": "판매자 대시보드",
@@ -60,6 +62,7 @@
 		"size": "크기:",
 		"gender": "성별:",
 		"status": "상태:",
-		"editBib": "비브 편집"
+		"editBib": "비브 편집",
+		"bibFor": "비브 대상:"
 	}
 }
