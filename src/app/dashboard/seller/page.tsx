@@ -4,12 +4,14 @@ import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { fetchBibsBySeller } from '@/services/bib.services'
+
+import sellerTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	title: 'Seller Dashboard | BibUp',
@@ -43,7 +45,7 @@ export default async function SellerDashboardPage({
 	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, sellerTranslations)
 
 	const { userId: clerkUserId } = await auth()
 	const clerkUser = await currentUser()

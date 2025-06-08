@@ -1,0 +1,62 @@
+{
+	"en": {
+		"events": {
+			"title": "Browse Events",
+			"description": "Find and purchase race bibs for upcoming events",
+			"searchPlaceholder": "Search events...",
+			"noEvents": "No events available",
+			"loading": "Loading events...",
+			"filters": {
+				"all": "All Events",
+				"location": "Location",
+				"date": "Date",
+				"category": "Category"
+			},
+			"eventCard": {
+				"viewDetails": "View Details",
+				"bibsAvailable": "bibs available",
+				"soldOut": "Sold Out"
+			}
+		}
+	},
+	"fr": {
+		"events": {
+			"title": "Parcourir les événements",
+			"description": "Trouvez et achetez des dossards pour les événements à venir",
+			"searchPlaceholder": "Rechercher des événements...",
+			"noEvents": "Aucun événement disponible",
+			"loading": "Chargement des événements...",
+			"filters": {
+				"all": "Tous les événements",
+				"location": "Lieu",
+				"date": "Date",
+				"category": "Catégorie"
+			},
+			"eventCard": {
+				"viewDetails": "Voir les détails",
+				"bibsAvailable": "dossards disponibles",
+				"soldOut": "Épuisé"
+			}
+		}
+	},
+	"ko": {
+		"events": {
+			"title": "이벤트 둘러보기",
+			"description": "다가오는 이벤트의 레이스 비브를 찾고 구매하세요",
+			"searchPlaceholder": "이벤트 검색...",
+			"noEvents": "사용 가능한 이벤트가 없습니다",
+			"loading": "이벤트 로딩 중...",
+			"filters": {
+				"all": "모든 이벤트",
+				"location": "위치",
+				"date": "날짜",
+				"category": "카테고리"
+			},
+			"eventCard": {
+				"viewDetails": "세부 정보 보기",
+				"bibsAvailable": "개 비브 사용 가능",
+				"soldOut": "매진"
+			}
+		}
+	}
+}

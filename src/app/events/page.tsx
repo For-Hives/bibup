@@ -1,22 +1,23 @@
 import type { Event } from '@/models/event.model' // Import Event type
 
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
 import { fetchApprovedPublicEvents } from '@/services/event.services' // Updated service import
-// import EventListClient from "./EventListClient"; // Will address this if client component is complex
+
+import eventsTranslations from './locales.json'
 
 export default async function EventsPage() {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, eventsTranslations)
 
 	const events: Event[] = await fetchApprovedPublicEvents()
 
 	return (
 		<div style={{ padding: '20px' }}>
 			<main style={{ maxWidth: '800px', margin: '0 auto' }}>
-				<h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}>{dictionary.events.title}</h1>
-				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>{dictionary.events.description}</p>
+				<h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}>{t.events.title}</h1>
+				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>{t.events.description}</p>
 				{events.length > 0 ? (
 					<ul style={{ listStyle: 'none', padding: 0 }}>
 						{events.map(event => (
@@ -50,7 +51,7 @@ export default async function EventsPage() {
 						))}
 					</ul>
 				) : (
-					<p style={{ textAlign: 'center' }}>{dictionary.events.noEvents}</p>
+					<p style={{ textAlign: 'center' }}>{t.events.noEvents}</p>
 				)}
 				{/*
           If EventListClient is needed for interactions, its usage would be here.

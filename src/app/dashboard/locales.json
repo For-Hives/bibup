@@ -1,0 +1,62 @@
+{
+	"en": {
+		"dashboard": {
+			"title": "Dashboard",
+			"organizer": {
+				"title": "Organizer Dashboard",
+				"description": "Manage your events and submissions."
+			},
+			"buyer": {
+				"title": "Buyer Dashboard",
+				"description": "View your purchases and manage your waitlist entries."
+			},
+			"seller": {
+				"title": "Seller Dashboard",
+				"description": "Manage your bib listings and view your sales."
+			}
+		},
+		"auth": {
+			"signInToAccessDashboard": "Please sign in to access your dashboard."
+		}
+	},
+	"fr": {
+		"dashboard": {
+			"title": "Tableau de bord",
+			"organizer": {
+				"title": "Tableau de bord organisateur",
+				"description": "Gérez vos événements et soumissions."
+			},
+			"buyer": {
+				"title": "Tableau de bord acheteur",
+				"description": "Consultez vos achats et gérez vos inscriptions en liste d'attente."
+			},
+			"seller": {
+				"title": "Tableau de bord vendeur",
+				"description": "Gérez vos annonces de dossards et consultez vos ventes."
+			}
+		},
+		"auth": {
+			"signInToAccessDashboard": "Veuillez vous connecter pour accéder à votre tableau de bord."
+		}
+	},
+	"ko": {
+		"dashboard": {
+			"title": "대시보드",
+			"organizer": {
+				"title": "주최자 대시보드",
+				"description": "이벤트 및 제출을 관리하세요."
+			},
+			"buyer": {
+				"title": "구매자 대시보드",
+				"description": "구매 내역을 보고 대기 목록 항목을 관리하세요."
+			},
+			"seller": {
+				"title": "판매자 대시보드",
+				"description": "비브 목록을 관리하고 판매를 확인하세요."
+			}
+		},
+		"auth": {
+			"signInToAccessDashboard": "대시보드에 액세스하려면 로그인하세요."
+		}
+	}
+}

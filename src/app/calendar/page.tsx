@@ -1,10 +1,12 @@
 import type { Event } from '@/models/event.model' // Adjust path as necessary
 
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
 import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
+
+import calendarTranslations from './locales.json'
 
 interface GroupedEvents {
 	[yearMonth: string]: Event[]
@@ -12,7 +14,7 @@ interface GroupedEvents {
 
 export default async function CalendarPage() {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, calendarTranslations)
 
 	const events: Event[] = await fetchApprovedPublicEvents()
 
@@ -37,8 +39,8 @@ export default async function CalendarPage() {
 	return (
 		<div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
 			<header style={{ marginBottom: '30px', textAlign: 'center' }}>
-				<h1>{dictionary.calendar.title}</h1>
-				<p>{dictionary.calendar.description}</p>
+				<h1>{t.calendar.title}</h1>
+				<p>{t.calendar.description}</p>
 			</header>
 
 			<main style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -102,7 +104,7 @@ export default async function CalendarPage() {
 						</section>
 					))
 				) : (
-					<p style={{ textAlign: 'center', fontSize: '1.2em' }}>{dictionary.calendar.noEvents}</p>
+					<p style={{ textAlign: 'center', fontSize: '1.2em' }}>{t.calendar.noEvents}</p>
 				)}
 			</main>
 		</div>
