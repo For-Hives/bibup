@@ -4,6 +4,7 @@ import type { Event } from '@/models/event.model'
 
 import React, { useEffect, useState } from 'react'
 
+import * as v from 'valibot'
 import Link from 'next/link'
 
 import { type BibFormData, BibFormSchema } from './schemas'
@@ -80,12 +81,16 @@ export default function ListNewBibClientPage({
 	// Fonction de validation en temps réel
 	const validateField = (name: string, value: unknown) => {
 		const testData = { ...formData, [name]: value }
-		const result = BibFormSchema.safeParse(testData)
+		const result = v.safeParse(BibFormSchema, testData)
 
 		if (!result.success) {
-			const fieldError = result.error.errors.find(error => error.path.includes(name))
-			if (fieldError) {
-				setFieldErrors(prev => ({ ...prev, [name]: fieldError.message }))
+			const flatErrors = v.flatten(result.issues)
+			const fieldIssues = flatErrors.nested?.[name]
+			if (fieldIssues && fieldIssues.length > 0) {
+				setFieldErrors(prev => ({ ...prev, [name]: fieldIssues[0] }))
+			} else if (flatErrors.root && flatErrors.root.length > 0) {
+				// For general validation errors (like cross-field validation)
+				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Erreur de validation' }))
 			} else {
 				setFieldErrors(prev => {
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
