@@ -14,11 +14,7 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
-	if (
-		!eventData.name ||
-		isNaN(eventData.date.getTime()) ||
-		!eventData.location
-	) {
+	if (!eventData.name || isNaN(eventData.date.getTime()) || !eventData.location) {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
@@ -86,9 +82,7 @@ export async function fetchEventById(id: string): Promise<Event | null> {
  * Fetches all events submitted by a specific organizer.
  * @param organizerId The ID of the organizer whose events are to be fetched.
  */
-export async function fetchEventsByOrganizer(
-	organizerId: string
-): Promise<Event[]> {
+export async function fetchEventsByOrganizer(organizerId: string): Promise<Event[]> {
 	if (!organizerId) {
 		console.error('Organizer ID is required to fetch their events.')
 		return [] // Return empty array if no organizerId is provided
@@ -100,10 +94,7 @@ export async function fetchEventsByOrganizer(
 		})
 		return records
 	} catch (error: unknown) {
-		console.error(
-			`Error fetching events for organizer ID "${organizerId}":`,
-			error
-		)
+		console.error(`Error fetching events for organizer ID "${organizerId}":`, error)
 		// For other errors (connection issues, collection doesn't exist, etc.)
 		// Return empty array for safety to prevent UI crashes
 		return []

@@ -47,12 +47,7 @@
 body {
 	background-color: var(--background-light);
 	color: var(--text-dark);
-	font-family: var(
-		--font-geist-sans,
-		Arial,
-		Helvetica,
-		sans-serif
-	); /* Using Geist if available */
+	font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif); /* Using Geist if available */
 }
 
 /* Base Button Styles using Tailwind's @apply for reusability */

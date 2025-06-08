@@ -6,11 +6,7 @@ import { useState } from 'react'
 
 // This client component now primarily just displays the events passed to it.
 // It could be used for client-side filtering/sorting in the future if needed.
-export default function EventListClient({
-	prefetchedEvents,
-}: {
-	prefetchedEvents: Event[]
-}) {
+export default function EventListClient({ prefetchedEvents }: { prefetchedEvents: Event[] }) {
 	const [events] = useState<Event[]>(prefetchedEvents ?? [])
 
 	// The form for adding new events has been removed as it's more of an admin/organizer feature.
@@ -22,9 +18,7 @@ export default function EventListClient({
 
 	return (
 		<div className="mt-8">
-			<h2 className="mb-4 text-center text-2xl font-bold sm:text-left">
-				Event List (Client Component):
-			</h2>
+			<h2 className="mb-4 text-center text-2xl font-bold sm:text-left">Event List (Client Component):</h2>
 			<ul>
 				{events.map(event => (
 					<li
@@ -32,10 +26,7 @@ export default function EventListClient({
 						key={event.id}
 					>
 						{/* Linking to the event detail page */}
-						<a
-							className="cursor-pointer underline hover:text-blue-600"
-							href={`/events/${event.id}`}
-						>
+						<a className="cursor-pointer underline hover:text-blue-600" href={`/events/${event.id}`}>
 							{event.name}
 						</a>
 						<p className="text-xs text-gray-600">

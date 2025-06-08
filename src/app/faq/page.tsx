@@ -5,8 +5,7 @@ import { getDictionary } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
 export const metadata: Metadata = {
-	description:
-		'Frequently Asked Questions about buying, selling, and organizing events on BibUp.',
+	description: 'Frequently Asked Questions about buying, selling, and organizing events on BibUp.',
 	title: 'FAQ | BibUp',
 }
 
@@ -51,9 +50,7 @@ export default async function FAQPage() {
 
 			{/* General Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>
-					{dictionary.faq.sections.general.title}
-				</h2>
+				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.general.title}</h2>
 				{dictionary.faq.sections.general.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>
@@ -64,9 +61,7 @@ export default async function FAQPage() {
 
 			{/* Sellers Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>
-					{dictionary.faq.sections.sellers.title}
-				</h2>
+				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.sellers.title}</h2>
 				{dictionary.faq.sections.sellers.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>
@@ -77,9 +72,7 @@ export default async function FAQPage() {
 
 			{/* Buyers Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>
-					{dictionary.faq.sections.buyers.title}
-				</h2>
+				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.buyers.title}</h2>
 				{dictionary.faq.sections.buyers.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>

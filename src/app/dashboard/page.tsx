@@ -32,34 +32,22 @@ export default async function DashboardPage() {
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
 						href="/dashboard/organizer"
 					>
-						<h2 className="mb-2 text-2xl font-semibold">
-							{dictionary.dashboard.organizer.title}
-						</h2>
-						<p className="text-sm text-gray-600 dark:text-gray-400">
-							{dictionary.dashboard.organizer.description}
-						</p>
+						<h2 className="mb-2 text-2xl font-semibold">{dictionary.dashboard.organizer.title}</h2>
+						<p className="text-sm text-gray-600 dark:text-gray-400">{dictionary.dashboard.organizer.description}</p>
 					</Link>
 					<Link
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
 						href="/dashboard/buyer"
 					>
-						<h2 className="mb-2 text-2xl font-semibold">
-							{dictionary.dashboard.buyer.title}
-						</h2>
-						<p className="text-sm text-gray-600 dark:text-gray-400">
-							{dictionary.dashboard.buyer.description}
-						</p>
+						<h2 className="mb-2 text-2xl font-semibold">{dictionary.dashboard.buyer.title}</h2>
+						<p className="text-sm text-gray-600 dark:text-gray-400">{dictionary.dashboard.buyer.description}</p>
 					</Link>
 					<Link
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
 						href="/dashboard/seller"
 					>
-						<h2 className="mb-2 text-2xl font-semibold">
-							{dictionary.dashboard.seller.title}
-						</h2>
-						<p className="text-sm text-gray-600 dark:text-gray-400">
-							{dictionary.dashboard.seller.description}
-						</p>
+						<h2 className="mb-2 text-2xl font-semibold">{dictionary.dashboard.seller.title}</h2>
+						<p className="text-sm text-gray-600 dark:text-gray-400">{dictionary.dashboard.seller.description}</p>
 					</Link>
 				</nav>
 			)}

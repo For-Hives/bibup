@@ -20,10 +20,7 @@ export async function createTransaction(
 		transactionData.platformFee === undefined ||
 		!transactionData.status
 	) {
-		console.error(
-			'Missing required fields for transaction creation:',
-			transactionData
-		)
+		console.error('Missing required fields for transaction creation:', transactionData)
 		return null
 	}
 
@@ -33,24 +30,14 @@ export async function createTransaction(
 			transactionDate: new Date(), // Set current date/time for the transaction
 		}
 
-		const record = await pb
-			.collection('transactions')
-			.create<Transaction>(dataToCreate)
+		const record = await pb.collection('transactions').create<Transaction>(dataToCreate)
 		return record
 	} catch (error) {
 		console.error('Error creating transaction:', error)
 		if (error && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', error.message)
-			if (
-				'response' in error &&
-				error.response &&
-				typeof error.response === 'object' &&
-				'data' in error.response
-			) {
-				console.error(
-					'PocketBase response data:',
-					(error.response as any)?.data
-				)
+			if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+				console.error('PocketBase response data:', (error.response as any)?.data)
 			}
 		}
 		return null

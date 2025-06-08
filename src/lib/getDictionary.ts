@@ -8,9 +8,7 @@ const dictionaries = {
 
 export const getDictionary = async (locale: string) => {
 	// Default to 'en' if locale is not supported
-	const supportedLocale = Object.keys(dictionaries).includes(locale)
-		? locale
-		: 'en'
+	const supportedLocale = Object.keys(dictionaries).includes(locale) ? locale : 'en'
 	return dictionaries[supportedLocale as keyof typeof dictionaries]()
 }
 

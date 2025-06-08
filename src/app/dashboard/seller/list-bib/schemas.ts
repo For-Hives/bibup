@@ -18,11 +18,7 @@ export const BibFormSchema = z
 		data => {
 			// Si l'événement n'est pas listé, les champs de l'événement sont requis
 			if (data.isNotListedEvent) {
-				return !!(
-					data.unlistedEventName &&
-					data.unlistedEventDate &&
-					data.unlistedEventLocation
-				)
+				return !!(data.unlistedEventName && data.unlistedEventDate && data.unlistedEventLocation)
 			}
 			// Si l'événement est listé, eventId est requis
 			return !!data.eventId

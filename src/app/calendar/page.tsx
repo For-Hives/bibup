@@ -81,8 +81,7 @@ export default async function CalendarPage() {
 											{event.name}
 										</Link>
 										<p style={{ margin: '5px 0 0' }}>
-											<strong>Date:</strong>{' '}
-											{new Date(event.date).toLocaleDateString()}
+											<strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
 										</p>
 										<p style={{ margin: '5px 0 0' }}>
 											<strong>Location:</strong> {event.location}
@@ -105,9 +104,7 @@ export default async function CalendarPage() {
 						</section>
 					))
 				) : (
-					<p style={{ textAlign: 'center', fontSize: '1.2em' }}>
-						{dictionary.calendar.noEvents}
-					</p>
+					<p style={{ textAlign: 'center', fontSize: '1.2em' }}>{dictionary.calendar.noEvents}</p>
 				)}
 			</main>
 		</div>

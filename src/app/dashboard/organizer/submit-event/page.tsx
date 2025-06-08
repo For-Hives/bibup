@@ -47,9 +47,7 @@ export default async function SubmitEventPage({
 		}
 
 		const eventData: Event = {
-			participantCount: participantCountStr
-				? parseInt(participantCountStr, 10)
-				: 0,
+			participantCount: participantCountStr ? parseInt(participantCountStr, 10) : 0,
 			description: (formData.get('eventDescription') as string) ?? '',
 			date: new Date(dateString),
 			status: 'pending_approval',
@@ -73,31 +71,23 @@ export default async function SubmitEventPage({
 			}
 		} catch (error) {
 			console.error('Error submitting event:', error)
-			const message =
-				error instanceof Error ? error.message : 'An unknown error occurred.'
-			redirect(
-				`/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`
-			)
+			const message = error instanceof Error ? error.message : 'An unknown error occurred.'
+			redirect(`/dashboard/organizer/submit-event?error=${encodeURIComponent(message)}`)
 		}
 	}
 
-	const errorMessage = searchParams?.error
-		? decodeURIComponent(searchParams.error as string)
-		: null
+	const errorMessage = searchParams?.error ? decodeURIComponent(searchParams.error as string) : null
 	// Success message is typically displayed on the redirect target page (Organizer Dashboard)
 
 	return (
 		<div className="mx-auto max-w-2xl p-4 text-[var(--text-dark)] md:p-8">
 			<header className="mb-8 text-center">
-				<h1 className="text-3xl font-bold">
-					{dictionary.dashboard.organizer.submitEvent.title}
-				</h1>
+				<h1 className="text-3xl font-bold">{dictionary.dashboard.organizer.submitEvent.title}</h1>
 			</header>
 
 			{errorMessage && (
 				<div className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-center text-[var(--error-text)]">
-					{dictionary.dashboard.organizer.submitEvent.errorPrefix}{' '}
-					{errorMessage}
+					{dictionary.dashboard.organizer.submitEvent.errorPrefix} {errorMessage}
 				</div>
 			)}
 
@@ -130,10 +120,7 @@ export default async function SubmitEventPage({
 					/>
 				</div>
 				<div>
-					<label
-						className="mb-1 block text-sm font-medium"
-						htmlFor="eventLocation"
-					>
+					<label className="mb-1 block text-sm font-medium" htmlFor="eventLocation">
 						{dictionary.dashboard.organizer.submitEvent.eventLocation}
 					</label>
 					<input
@@ -145,10 +132,7 @@ export default async function SubmitEventPage({
 					/>
 				</div>
 				<div>
-					<label
-						className="mb-1 block text-sm font-medium"
-						htmlFor="eventDescription"
-					>
+					<label className="mb-1 block text-sm font-medium" htmlFor="eventDescription">
 						{dictionary.dashboard.organizer.submitEvent.eventDescription}
 					</label>
 					<textarea
@@ -159,10 +143,7 @@ export default async function SubmitEventPage({
 					></textarea>
 				</div>
 				<div>
-					<label
-						className="mb-1 block text-sm font-medium"
-						htmlFor="eventParticipantCount"
-					>
+					<label className="mb-1 block text-sm font-medium" htmlFor="eventParticipantCount">
 						{dictionary.dashboard.organizer.submitEvent.participantCount}
 					</label>
 					<input
@@ -177,10 +158,7 @@ export default async function SubmitEventPage({
 					{dictionary.dashboard.organizer.submitEvent.submit}
 				</button>
 			</form>
-			<Link
-				className="mt-6 block text-center text-[var(--accent-sporty)] hover:underline"
-				href="/dashboard/organizer"
-			>
+			<Link className="mt-6 block text-center text-[var(--accent-sporty)] hover:underline" href="/dashboard/organizer">
 				{dictionary.dashboard.organizer.submitEvent.backToDashboard}
 			</Link>
 		</div>

@@ -15,14 +15,8 @@ export default async function EventsPage() {
 	return (
 		<div style={{ padding: '20px' }}>
 			<main style={{ maxWidth: '800px', margin: '0 auto' }}>
-				<h1
-					style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}
-				>
-					{dictionary.events.title}
-				</h1>
-				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>
-					{dictionary.events.description}
-				</p>
+				<h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}>{dictionary.events.title}</h1>
+				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>{dictionary.events.description}</p>
 				{events.length > 0 ? (
 					<ul style={{ listStyle: 'none', padding: 0 }}>
 						{events.map(event => (
@@ -46,8 +40,7 @@ export default async function EventsPage() {
 									{event.name}
 								</a>
 								<p>
-									<strong>Date:</strong>{' '}
-									{new Date(event.date).toLocaleDateString()}
+									<strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
 								</p>
 								<p>
 									<strong>Location:</strong> {event.location}
