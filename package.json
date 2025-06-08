@@ -4,12 +4,12 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
+		"dev:debug": "next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
 		"prettier": "prettier --write ."
 	},
-	"packageManager": "pnpm@10.11.01",
 	"dependencies": {
 		"@clerk/nextjs": "6.21.0",
 		"@formatjs/intl-localematcher": "0.6.1",

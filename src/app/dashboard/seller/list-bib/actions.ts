@@ -1,9 +1,10 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { Bib } from '@/models'
 
 import { createBib } from '@/services/bib.services'
-import { Bib } from '@/models'
+
 import { BibFormSchema } from './schemas'
 
 // Server action for handling bib listing
@@ -23,16 +24,16 @@ export async function handleListBibServerAction(
 
 	// Préparation des données pour la validation Zod
 	const formDataToValidate = {
-		registrationNumber: formData.get('registrationNumber') as string,
-		price: priceStr ? parseFloat(priceStr) : 0,
 		originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
 		gender: formData.get('gender') as 'female' | 'male' | 'unisex' | undefined,
-		size: formData.get('size') as string | undefined,
-		eventId: formData.get('eventId') as string,
-		isNotListedEvent: isNotListedEvent,
+		unlistedEventLocation: formData.get('unlistedEventLocation') as string,
+		registrationNumber: formData.get('registrationNumber') as string,
 		unlistedEventName: formData.get('unlistedEventName') as string,
 		unlistedEventDate: formData.get('unlistedEventDate') as string,
-		unlistedEventLocation: formData.get('unlistedEventLocation') as string,
+		size: formData.get('size') as string | undefined,
+		price: priceStr ? parseFloat(priceStr) : 0,
+		eventId: formData.get('eventId') as string,
+		isNotListedEvent: isNotListedEvent,
 	}
 
 	// Validation avec Zod
@@ -52,15 +53,15 @@ export async function handleListBibServerAction(
 
 	// Préparation de l'objet Bib complet pour createBib
 	const bibToCreate: Bib = {
-		id: '', // Sera généré par le service
-		eventId: validatedData.eventId || '',
-		price: validatedData.price,
-		originalPrice: validatedData.originalPrice || 0,
 		registrationNumber: validatedData.registrationNumber,
-		sellerUserId: sellerUserId,
+		originalPrice: validatedData.originalPrice ?? 0,
+		gender: validatedData.gender ?? undefined,
+		eventId: validatedData.eventId ?? '',
 		status: 'pending_validation',
-		gender: validatedData.gender,
+		price: validatedData.price,
+		sellerUserId: sellerUserId,
 		size: validatedData.size,
+		id: '', // Sera généré par le service
 	}
 
 	try {

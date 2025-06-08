@@ -8,9 +8,9 @@ import React, { useEffect, useState } from 'react' // For managing form state
 // Removed Metadata import from here
 import Link from 'next/link'
 
+import { type BibFormData, BibFormSchema } from './schemas'
 // Import the server action from the separate file
 import { handleListBibServerAction } from './actions'
-import { BibFormSchema, type BibFormData } from './schemas'
 
 // Metadata can be exported from client components in recent Next.js versions, but often better in server component
 // export const metadata: Metadata = {
@@ -124,13 +124,13 @@ export default function ListNewBibClientPage({
 				setFieldErrors(prev => ({ ...prev, [name]: fieldError.message }))
 			} else {
 				setFieldErrors(prev => {
-					const { [name]: _, ...rest } = prev
+					const { ...rest } = prev
 					return rest
 				})
 			}
 		} else {
 			setFieldErrors(prev => {
-				const { [name]: _, ...rest } = prev
+				const { ...rest } = prev
 				return rest
 			})
 		}
@@ -213,9 +213,9 @@ export default function ListNewBibClientPage({
 							disabled={isNotListedEvent}
 							id="eventId"
 							name="eventId"
+							onChange={e => handleFieldChange('eventId', e.target.value)}
 							required={!isNotListedEvent}
 							style={styles.select}
-							onChange={e => handleFieldChange('eventId', e.target.value)}
 						>
 							<option value="">
 								{
@@ -252,6 +252,9 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventName"
 								name="unlistedEventName"
+								onChange={e =>
+									handleFieldChange('unlistedEventName', e.target.value)
+								}
 								placeholder={
 									dictionary.dashboard.seller?.listBib?.form
 										?.unlistedEventNamePlaceholder
@@ -259,9 +262,6 @@ export default function ListNewBibClientPage({
 								required={isNotListedEvent}
 								style={styles.input}
 								type="text"
-								onChange={e =>
-									handleFieldChange('unlistedEventName', e.target.value)
-								}
 							/>
 							{fieldErrors.unlistedEventName && (
 								<p style={styles.fieldError}>{fieldErrors.unlistedEventName}</p>
@@ -274,12 +274,12 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventDate"
 								name="unlistedEventDate"
-								required={isNotListedEvent}
-								style={styles.input}
-								type="date"
 								onChange={e =>
 									handleFieldChange('unlistedEventDate', e.target.value)
 								}
+								required={isNotListedEvent}
+								style={styles.input}
+								type="date"
 							/>
 							{fieldErrors.unlistedEventDate && (
 								<p style={styles.fieldError}>{fieldErrors.unlistedEventDate}</p>
@@ -292,12 +292,12 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventLocation"
 								name="unlistedEventLocation"
-								required={isNotListedEvent}
-								style={styles.input}
-								type="text"
 								onChange={e =>
 									handleFieldChange('unlistedEventLocation', e.target.value)
 								}
+								required={isNotListedEvent}
+								style={styles.input}
+								type="text"
 							/>
 							{fieldErrors.unlistedEventLocation && (
 								<p style={styles.fieldError}>
@@ -315,6 +315,9 @@ export default function ListNewBibClientPage({
 					<input
 						id="registrationNumber"
 						name="registrationNumber"
+						onChange={e =>
+							handleFieldChange('registrationNumber', e.target.value)
+						}
 						placeholder={
 							dictionary.dashboard.seller?.listBib?.form
 								?.registrationNumberPlaceholder
@@ -322,9 +325,6 @@ export default function ListNewBibClientPage({
 						required
 						style={styles.input}
 						type="text"
-						onChange={e =>
-							handleFieldChange('registrationNumber', e.target.value)
-						}
 					/>
 					{fieldErrors.registrationNumber && (
 						<p style={styles.fieldError}>{fieldErrors.registrationNumber}</p>
@@ -339,6 +339,9 @@ export default function ListNewBibClientPage({
 						id="price"
 						min="0.01"
 						name="price"
+						onChange={e =>
+							handleFieldChange('price', parseFloat(e.target.value) || 0)
+						}
 						placeholder={
 							dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder
 						}
@@ -346,9 +349,6 @@ export default function ListNewBibClientPage({
 						step="0.01"
 						style={styles.input}
 						type="number"
-						onChange={e =>
-							handleFieldChange('price', parseFloat(e.target.value) || 0)
-						}
 					/>
 					{fieldErrors.price && (
 						<p style={styles.fieldError}>{fieldErrors.price}</p>
@@ -363,15 +363,15 @@ export default function ListNewBibClientPage({
 						id="originalPrice"
 						min="0.00"
 						name="originalPrice"
-						step="0.01"
-						style={styles.input}
-						type="number"
 						onChange={e =>
 							handleFieldChange(
 								'originalPrice',
 								parseFloat(e.target.value) || undefined
 							)
 						}
+						step="0.01"
+						style={styles.input}
+						type="number"
 					/>
 					{fieldErrors.originalPrice && (
 						<p style={styles.fieldError}>{fieldErrors.originalPrice}</p>
@@ -385,12 +385,12 @@ export default function ListNewBibClientPage({
 					<input
 						id="size"
 						name="size"
+						onChange={e => handleFieldChange('size', e.target.value)}
 						placeholder={
 							dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder
 						}
 						style={styles.input}
 						type="text"
-						onChange={e => handleFieldChange('size', e.target.value)}
 					/>
 					{fieldErrors.size && (
 						<p style={styles.fieldError}>{fieldErrors.size}</p>
@@ -404,13 +404,13 @@ export default function ListNewBibClientPage({
 					<select
 						id="gender"
 						name="gender"
-						style={styles.select}
 						onChange={e =>
 							handleFieldChange(
 								'gender',
 								e.target.value as 'female' | 'male' | 'unisex' | undefined
 							)
 						}
+						style={styles.select}
 					>
 						<option value="">
 							{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}

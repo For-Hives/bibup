@@ -9,7 +9,7 @@ import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path
  * @param eventData Partial data for the new event. Fields like name, date, location, description are expected.
  * @param organizerId The ID of the user (organizer) creating the event.
  */
-export async function saveEvent(eventData: Event): Promise<Event | null> {
+export async function createEvent(eventData: Event): Promise<Event | null> {
 	if (!eventData.organizerId) {
 		console.error('Organizer ID is required to create an event.')
 		return null
@@ -28,10 +28,10 @@ export async function saveEvent(eventData: Event): Promise<Event | null> {
 			participantCount: eventData.participantCount ?? 0, // Default participantCount
 			isPartnered: eventData.isPartnered ?? false, // Default isPartnered
 			description: eventData.description ?? '',
+			organizerId: eventData.organizerId,
 			date: new Date(eventData.date), // Ensure date is a Date object
 			location: eventData.location,
 			status: 'pending_approval', // Default status
-			organizerId: eventData.organizerId,
 			name: eventData.name,
 			bibsSold: 0, // Default bibsSold
 			// Ensure any other required fields from the Event model are present with defaults if necessary
