@@ -1,0 +1,113 @@
+{
+	"en": {
+		"title": "List a New Bib",
+		"metadataTitle": "List Your Race Bib - BibUp",
+		"metadataDescription": "List your race bib for sale on our marketplace. Sell your unused race bibs easily.",
+		"loginRequired": "You must be logged in to list a bib.",
+		"noBibsListedError": "Error listing bib:",
+		"backToDashboard": "← Back to Seller Dashboard",
+		"form": {
+			"notListedEvent": "My event isn't listed here",
+			"eventSelect": "Select Event",
+			"eventSelectPlaceholder": "Select an event",
+			"unlistedEventName": "Event Name",
+			"unlistedEventNamePlaceholder": "Enter the event name",
+			"unlistedEventDate": "Event Date",
+			"unlistedEventLocation": "Event Location (City, State/Country)",
+			"registrationNumber": "Registration Number",
+			"registrationNumberPlaceholder": "Enter your bib number or registration ID",
+			"price": "Price ($)",
+			"pricePlaceholder": "Enter your asking price",
+			"originalPrice": "Original Price ($) (Optional)",
+			"size": "Size",
+			"sizePlaceholder": "e.g., XS, S, M, L, XL",
+			"gender": "Gender",
+			"genderPlaceholder": "Select gender",
+			"notes": "Additional Notes",
+			"notesPlaceholder": "Any additional information about the bib...",
+			"submit": "List Bib for Sale"
+		},
+		"unlistedEventInfo": "Please provide details for your unlisted event. This will undergo verification.",
+		"partneredEventsEmpty": "No partnered events available. You can list your bib by checking the box above.",
+		"legalNotice": "By listing this bib, you confirm that you are authorized to sell it and that it adheres to the event organizer's transfer policies. For unlisted events, ensure accuracy as this will be verified.",
+		"genderOptions": {
+			"male": "Male",
+			"female": "Female",
+			"unisex": "Unisex"
+		}
+	},
+	"fr": {
+		"title": "Lister un Nouveau Dossard",
+		"metadataTitle": "Listez Votre Dossard de Course - BibUp",
+		"metadataDescription": "Listez votre dossard de course en vente sur notre marketplace. Vendez facilement vos dossards inutilisés.",
+		"loginRequired": "Vous devez être connecté pour lister un dossard.",
+		"noBibsListedError": "Erreur lors de la liste du dossard:",
+		"backToDashboard": "← Retour au Tableau de Bord Vendeur",
+		"form": {
+			"notListedEvent": "Mon événement n'est pas listé ici",
+			"eventSelect": "Sélectionner un Événement",
+			"eventSelectPlaceholder": "Sélectionner un événement",
+			"unlistedEventName": "Nom de l'Événement",
+			"unlistedEventNamePlaceholder": "Entrez le nom de l'événement",
+			"unlistedEventDate": "Date de l'Événement",
+			"unlistedEventLocation": "Lieu de l'Événement (Ville, État/Pays)",
+			"registrationNumber": "Numéro d'Inscription",
+			"registrationNumberPlaceholder": "Entrez votre numéro de dossard ou ID d'inscription",
+			"price": "Prix ($)",
+			"pricePlaceholder": "Entrez votre prix demandé",
+			"originalPrice": "Prix Original ($) (Optionnel)",
+			"size": "Taille",
+			"sizePlaceholder": "ex: XS, S, M, L, XL",
+			"gender": "Genre",
+			"genderPlaceholder": "Sélectionner le genre",
+			"notes": "Notes Supplémentaires",
+			"notesPlaceholder": "Toute information supplémentaire sur le dossard...",
+			"submit": "Lister le Dossard en Vente"
+		},
+		"unlistedEventInfo": "Veuillez fournir les détails de votre événement non listé. Ceci sera vérifié.",
+		"partneredEventsEmpty": "Aucun événement partenaire disponible. Vous pouvez lister votre dossard en cochant la case ci-dessus.",
+		"legalNotice": "En listant ce dossard, vous confirmez que vous êtes autorisé à le vendre et qu'il respecte les politiques de transfert de l'organisateur de l'événement. Pour les événements non listés, assurez-vous de l'exactitude car cela sera vérifié.",
+		"genderOptions": {
+			"male": "Homme",
+			"female": "Femme",
+			"unisex": "Unisexe"
+		}
+	},
+	"ko": {
+		"title": "새 번호표 등록",
+		"metadataTitle": "레이스 번호표 등록 - BibUp",
+		"metadataDescription": "마켓플레이스에서 레이스 번호표를 판매로 등록하세요. 사용하지 않는 레이스 번호표를 쉽게 판매하세요.",
+		"loginRequired": "번호표를 등록하려면 로그인해야 합니다.",
+		"noBibsListedError": "번호표 등록 오류:",
+		"backToDashboard": "← 판매자 대시보드로 돌아가기",
+		"form": {
+			"notListedEvent": "내 이벤트가 여기에 없습니다",
+			"eventSelect": "이벤트 선택",
+			"eventSelectPlaceholder": "이벤트를 선택하세요",
+			"unlistedEventName": "이벤트 이름",
+			"unlistedEventNamePlaceholder": "이벤트 이름을 입력하세요",
+			"unlistedEventDate": "이벤트 날짜",
+			"unlistedEventLocation": "이벤트 위치 (도시, 주/국가)",
+			"registrationNumber": "등록 번호",
+			"registrationNumberPlaceholder": "번호표 번호 또는 등록 ID를 입력하세요",
+			"price": "가격 ($)",
+			"pricePlaceholder": "요청 가격을 입력하세요",
+			"originalPrice": "원래 가격 ($) (선택사항)",
+			"size": "사이즈",
+			"sizePlaceholder": "예: XS, S, M, L, XL",
+			"gender": "성별",
+			"genderPlaceholder": "성별을 선택하세요",
+			"notes": "추가 메모",
+			"notesPlaceholder": "번호표에 대한 추가 정보...",
+			"submit": "판매용 번호표 등록"
+		},
+		"unlistedEventInfo": "등록되지 않은 이벤트의 세부 정보를 제공해 주세요. 이는 검증을 거칩니다.",
+		"partneredEventsEmpty": "파트너 이벤트가 없습니다. 위의 체크박스를 선택하여 번호표를 등록할 수 있습니다.",
+		"legalNotice": "이 번호표를 등록함으로써 판매할 권한이 있으며 이벤트 주최자의 양도 정책을 준수함을 확인합니다. 등록되지 않은 이벤트의 경우 검증될 것이므로 정확성을 보장하세요.",
+		"genderOptions": {
+			"male": "남성",
+			"female": "여성",
+			"unisex": "남녀공용"
+		}
+	}
+}

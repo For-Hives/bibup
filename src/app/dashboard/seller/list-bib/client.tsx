@@ -1,28 +1,62 @@
 'use client' // Required for useState and client-side interactions
 
-// Removed fetchPartneredApprovedEvents import from here
 import type { Event } from '@/models/event.model'
 
-import React, { useEffect, useState } from 'react' // For managing form state
+import React, { useEffect, useState } from 'react'
 
-// Removed Metadata import from here
-import { Dictionary } from '@/lib/getDictionary'
 import Link from 'next/link'
 
 import { type BibFormData, BibFormSchema } from './schemas'
-// Import the server action from the separate file
 import { handleListBibServerAction } from './actions'
+
+type Translations = {
+	backToDashboard: string
+	form: {
+		eventSelect: string
+		eventSelectPlaceholder: string
+		gender: string
+		genderPlaceholder: string
+		notes: string
+		notesPlaceholder: string
+		notListedEvent: string
+		originalPrice: string
+		price: string
+		pricePlaceholder: string
+		registrationNumber: string
+		registrationNumberPlaceholder: string
+		size: string
+		sizePlaceholder: string
+		submit: string
+		unlistedEventDate: string
+		unlistedEventLocation: string
+		unlistedEventName: string
+		unlistedEventNamePlaceholder: string
+	}
+	genderOptions: {
+		female: string
+		male: string
+		unisex: string
+	}
+	legalNotice: string
+	loginRequired: string
+	metadataDescription: string
+	metadataTitle: string
+	noBibsListedError: string
+	partneredEventsEmpty: string
+	title: string
+	unlistedEventInfo: string
+}
 
 export default function ListNewBibClientPage({
 	initialAuthUserId,
 	partneredEvents,
+	translations: t,
 	searchParams,
-	dictionary,
 }: {
-	dictionary: Dictionary
 	initialAuthUserId: null | string
 	partneredEvents: Event[]
 	searchParams?: { [key: string]: string | string[] | undefined }
+	translations: Translations
 }) {
 	const [isNotListedEvent, setIsNotListedEvent] = useState(false)
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -95,20 +129,18 @@ export default function ListNewBibClientPage({
 	if (initialAuthUserId === null || initialAuthUserId === '') {
 		// This case should be handled by the server wrapper or middleware redirecting to sign-in
 		// Displaying something here is a fallback.
-		return <p className="container mx-auto max-w-2xl p-6">{dictionary.dashboard.seller.listBib.errors.loginRequired}</p>
+		return <p className="container mx-auto max-w-2xl p-6">{t.loginRequired}</p>
 	}
 
 	return (
 		<div className="container mx-auto max-w-2xl p-6">
 			<header className="mb-8 text-center">
-				<h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
-					{dictionary.dashboard.seller.listBib.title}
-				</h1>
+				<h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">{t.title}</h1>
 			</header>
 
 			{errorMessage !== null && errorMessage !== '' && (
 				<p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
-					{dictionary.dashboard.seller?.noBibsListed} {errorMessage}
+					{t.noBibsListedError} {errorMessage}
 				</p>
 			)}
 			{/* {successMessage && <p className="mb-4 rounded border border-green-300 bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">{successMessage}</p>} */}
@@ -127,14 +159,14 @@ export default function ListNewBibClientPage({
 							onChange={e => handleFieldChange('isNotListedEvent', e.target.checked)}
 							type="checkbox"
 						/>
-						<span>{dictionary.dashboard.seller?.listBib.form.notListedEvent}</span>
+						<span>{t.form.notListedEvent}</span>
 					</label>
 				</div>
 
 				{!isNotListedEvent ? (
 					<div>
 						<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="eventId">
-							{dictionary.dashboard.seller?.listBib?.form?.eventSelect}:
+							{t.form.eventSelect}:
 						</label>
 						<select
 							className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -144,7 +176,7 @@ export default function ListNewBibClientPage({
 							onChange={e => handleFieldChange('eventId', e.target.value)}
 							required={!isNotListedEvent}
 						>
-							<option value="">{dictionary.dashboard.seller?.listBib?.form?.eventSelectPlaceholder}</option>
+							<option value="">{t.form.eventSelectPlaceholder}</option>
 							{partneredEvents.map(event => (
 								<option key={event.id} value={event.id}>
 									{event.name} ({new Date(event.date).toLocaleDateString()})
@@ -155,29 +187,25 @@ export default function ListNewBibClientPage({
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.eventId}</p>
 						)}
 						{partneredEvents.length === 0 && (
-							<p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-								No partnered events available. You can list your bib by checking the box above.
-							</p>
+							<p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t.partneredEventsEmpty}</p>
 						)}
 					</div>
 				) : (
 					<div className="space-y-4">
-						<p className="text-sm text-gray-500 dark:text-gray-400">
-							Please provide details for your unlisted event. This will undergo verification.
-						</p>
+						<p className="text-sm text-gray-500 dark:text-gray-400">{t.unlistedEventInfo}</p>
 						<div>
 							<label
 								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
 								htmlFor="unlistedEventName"
 							>
-								{dictionary.dashboard.seller?.listBib?.form?.unlistedEventName}:
+								{t.form.unlistedEventName}:
 							</label>
 							<input
 								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 								id="unlistedEventName"
 								name="unlistedEventName"
 								onChange={e => handleFieldChange('unlistedEventName', e.target.value)}
-								placeholder={dictionary.dashboard.seller?.listBib?.form?.unlistedEventNamePlaceholder}
+								placeholder={t.form.unlistedEventNamePlaceholder}
 								required={isNotListedEvent}
 								type="text"
 							/>
@@ -190,7 +218,7 @@ export default function ListNewBibClientPage({
 								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
 								htmlFor="unlistedEventDate"
 							>
-								Event Date:
+								{t.form.unlistedEventDate}:
 							</label>
 							<input
 								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -209,7 +237,7 @@ export default function ListNewBibClientPage({
 								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
 								htmlFor="unlistedEventLocation"
 							>
-								Event Location (City, State/Country):
+								{t.form.unlistedEventLocation}:
 							</label>
 							<input
 								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -231,14 +259,14 @@ export default function ListNewBibClientPage({
 						className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
 						htmlFor="registrationNumber"
 					>
-						{dictionary.dashboard.seller?.listBib?.form?.registrationNumber}:
+						{t.form.registrationNumber}:
 					</label>
 					<input
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="registrationNumber"
 						name="registrationNumber"
 						onChange={e => handleFieldChange('registrationNumber', e.target.value)}
-						placeholder={dictionary.dashboard.seller?.listBib?.form?.registrationNumberPlaceholder}
+						placeholder={t.form.registrationNumberPlaceholder}
 						required
 						type="text"
 					/>
@@ -249,7 +277,7 @@ export default function ListNewBibClientPage({
 
 				<div>
 					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="price">
-						{dictionary.dashboard.seller?.listBib?.form?.price}:
+						{t.form.price}:
 					</label>
 					<input
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -257,7 +285,7 @@ export default function ListNewBibClientPage({
 						min="0.01"
 						name="price"
 						onChange={e => handleFieldChange('price', parseFloat(e.target.value) || 0)}
-						placeholder={dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder}
+						placeholder={t.form.pricePlaceholder}
 						required
 						step="0.01"
 						type="number"
@@ -267,7 +295,7 @@ export default function ListNewBibClientPage({
 
 				<div>
 					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="originalPrice">
-						Original Price ($) (Optional):
+						{t.form.originalPrice}:
 					</label>
 					<input
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -285,14 +313,14 @@ export default function ListNewBibClientPage({
 
 				<div>
 					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="size">
-						{dictionary.dashboard.seller?.listBib?.form?.size}:
+						{t.form.size}:
 					</label>
 					<input
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="size"
 						name="size"
 						onChange={e => handleFieldChange('size', e.target.value)}
-						placeholder={dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder}
+						placeholder={t.form.sizePlaceholder}
 						type="text"
 					/>
 					{fieldErrors.size && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.size}</p>}
@@ -300,7 +328,7 @@ export default function ListNewBibClientPage({
 
 				<div>
 					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="gender">
-						{dictionary.dashboard.seller?.listBib?.form?.gender}:
+						{t.form.gender}:
 					</label>
 					<select
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -308,44 +336,41 @@ export default function ListNewBibClientPage({
 						name="gender"
 						onChange={e => handleFieldChange('gender', e.target.value as 'female' | 'male' | 'unisex' | undefined)}
 					>
-						<option value="">{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}</option>
-						<option value="male">Male</option>
-						<option value="female">Female</option>
-						<option value="unisex">Unisex</option>
+						<option value="">{t.form.genderPlaceholder}</option>
+						<option value="male">{t.genderOptions.male}</option>
+						<option value="female">{t.genderOptions.female}</option>
+						<option value="unisex">{t.genderOptions.unisex}</option>
 					</select>
 					{fieldErrors.gender && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.gender}</p>}
 				</div>
 
 				<div>
 					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="notes">
-						{dictionary.dashboard.seller?.listBib?.form?.notes}:
+						{t.form.notes}:
 					</label>
 					<textarea
 						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="notes"
 						name="notes"
-						placeholder={dictionary.dashboard.seller?.listBib?.form?.notesPlaceholder}
+						placeholder={t.form.notesPlaceholder}
 						rows={3}
 					/>
 				</div>
 
-				<p className="text-sm text-gray-500 dark:text-gray-400">
-					By listing this bib, you confirm that you are authorized to sell it and that it adheres to the event
-					organizer's transfer policies. For unlisted events, ensure accuracy as this will be verified.
-				</p>
+				<p className="text-sm text-gray-500 dark:text-gray-400">{t.legalNotice}</p>
 
 				<button
 					className="w-full rounded-md bg-blue-600 px-4 py-2 text-white ring-2 transition-colors hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:bg-blue-500 dark:hover:bg-blue-600"
 					type="submit"
 				>
-					{dictionary.dashboard.seller?.listBib?.form?.submit}
+					{t.form.submit}
 				</button>
 			</form>
 			<Link
 				className="mt-4 inline-block text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
 				href="/dashboard/seller"
 			>
-				{dictionary.dashboard.seller?.listBib?.backToDashboard}
+				{t.backToDashboard}
 			</Link>
 		</div>
 	)
