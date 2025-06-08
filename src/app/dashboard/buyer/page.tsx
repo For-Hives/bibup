@@ -86,7 +86,8 @@ export default async function BuyerDashboardPage({
 	}
 
 	const purchaseSuccess = searchParams?.purchase_success === 'true'
-	const eventNameForSuccessMsg = searchParams?.event_name ? decodeURIComponent(searchParams.event_name as string) : ''
+	const eventNameForSuccessMsg =
+		typeof searchParams?.event_name === 'string' ? decodeURIComponent(searchParams.event_name) : ''
 
 	const showSuccessMessage = purchaseSuccess && Boolean(eventNameForSuccessMsg)
 	const successDisplay = showSuccessMessage ? (

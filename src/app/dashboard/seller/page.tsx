@@ -72,7 +72,10 @@ export default async function SellerDashboardPage({
 		searchParams?.success === 'true'
 			? `Bib listed successfully! Current status: ${bibStatusFromQuery ? bibStatusFromQuery.replace(/_/g, ' ').toUpperCase() : 'PENDING VALIDATION'}.`
 			: null
-	const errorMessage = searchParams?.error ? decodeURIComponent(searchParams.error as string) : null
+	const errorMessage =
+		searchParams?.error != null && typeof searchParams.error === 'string'
+			? decodeURIComponent(searchParams.error)
+			: null
 
 	return (
 		<div className="mx-auto max-w-5xl space-y-8 p-4 md:p-8">
