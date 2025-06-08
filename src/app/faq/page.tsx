@@ -1,8 +1,10 @@
 // src/app/faq/page.tsx
 import type { Metadata } from 'next'
 
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+
+import faqTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	description: 'Frequently Asked Questions about buying, selling, and organizing events on BibUp.',
@@ -40,18 +42,18 @@ const faqStyles = {
 
 export default async function FAQPage() {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, faqTranslations)
 
 	return (
 		<div style={faqStyles.container}>
 			<header style={faqStyles.header}>
-				<h1>{dictionary.faq.title}</h1>
+				<h1>{t.title}</h1>
 			</header>
 
 			{/* General Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.general.title}</h2>
-				{dictionary.faq.sections.general.questions.map((item, index) => (
+				<h2 style={faqStyles.sectionTitle}>{t.sections.general.title}</h2>
+				{t.sections.general.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>
 						<p style={faqStyles.answer}>{item.answer}</p>
@@ -61,8 +63,8 @@ export default async function FAQPage() {
 
 			{/* Sellers Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.sellers.title}</h2>
-				{dictionary.faq.sections.sellers.questions.map((item, index) => (
+				<h2 style={faqStyles.sectionTitle}>{t.sections.sellers.title}</h2>
+				{t.sections.sellers.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>
 						<p style={faqStyles.answer}>{item.answer}</p>
@@ -72,8 +74,8 @@ export default async function FAQPage() {
 
 			{/* Buyers Section */}
 			<section>
-				<h2 style={faqStyles.sectionTitle}>{dictionary.faq.sections.buyers.title}</h2>
-				{dictionary.faq.sections.buyers.questions.map((item, index) => (
+				<h2 style={faqStyles.sectionTitle}>{t.sections.buyers.title}</h2>
+				{t.sections.buyers.questions.map((item, index) => (
 					<div key={index}>
 						<h3 style={faqStyles.question}>{item.question}</h3>
 						<p style={faqStyles.answer}>{item.answer}</p>

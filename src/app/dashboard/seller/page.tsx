@@ -52,7 +52,7 @@ export default async function SellerDashboardPage({
 	const searchParams = await searchParamsPromise
 
 	if (clerkUserId == null || !clerkUser) {
-		return <div className="mx-auto max-w-4xl p-4 md:p-8">{dictionary.dashboard.seller.pleaseSignIn}</div>
+		return <div className="mx-auto max-w-4xl p-4 md:p-8">{t.pleaseSignIn}</div>
 	}
 
 	const sellerName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Seller'
@@ -80,14 +80,13 @@ export default async function SellerDashboardPage({
 			: null
 
 	return (
-		<div className="mx-auto max-w-5xl space-y-8 p-4 md:p-8">
-			<header className="mb-8 text-center">
-				<h1 className="text-3xl font-bold text-[var(--text-dark)]">{dictionary.dashboard.seller.title}</h1>
-			</header>
+		<div className="mx-auto max-w-5xl space-y-8 p-4 md:p-8">		<header className="mb-8 text-center">
+			<h1 className="text-3xl font-bold text-[var(--text-dark)]">{t.title}</h1>
+		</header>
 
-			<p className="text-center text-xl text-[var(--text-dark)]">
-				{dictionary.dashboard.seller.welcomeMessage}, {sellerName}!
-			</p>
+		<p className="text-center text-xl text-[var(--text-dark)]">
+			{t.welcomeMessage}, {sellerName}!
+		</p>
 
 			{/* Messages */}
 			{successMessage != null && (
