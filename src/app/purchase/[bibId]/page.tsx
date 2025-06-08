@@ -27,7 +27,7 @@ export default async function BibPurchasePage({
 	const searchParams = await searchParamsPromise
 	const { bibId } = params
 
-	if (!currentUserId) {
+	if (currentUserId == null) {
 		redirect(`/sign-in?redirect_url=/purchase/${bibId}`)
 	}
 
@@ -37,7 +37,9 @@ export default async function BibPurchasePage({
 		notFound()
 	}
 
-	const errorMessage = searchParams?.error ? decodeURIComponent(searchParams.error as string) : null
+	const errorParam = searchParams?.error
+	const errorMessage =
+		errorParam != null && typeof errorParam === 'string' && errorParam !== '' ? decodeURIComponent(errorParam) : null
 
 	if (bib.status !== 'listed_public') {
 		return (
@@ -73,7 +75,7 @@ export default async function BibPurchasePage({
 		const locale = await getLocale()
 		const dictionary = await getDictionary(locale)
 
-		if (!currentUserId) {
+		if (currentUserId == null) {
 			redirect(`/purchase/${bibId}?error=${encodeURIComponent(dictionary.purchase.errors.authFailed)}`)
 			return
 		}
@@ -103,7 +105,8 @@ export default async function BibPurchasePage({
 				<h1 className="text-3xl font-bold">{dictionary.purchase.title}</h1>
 			</header>
 
-			{errorMessage && (
+			{}
+			{errorMessage != null && (
 				<div className="mb-6 rounded-md border border-red-300 bg-[var(--error-bg)] p-3 text-center text-sm text-[var(--error-text)]">
 					{dictionary.purchase.errors.errorPrefix} {errorMessage}
 				</div>
@@ -123,12 +126,12 @@ export default async function BibPurchasePage({
 					<span className="font-semibold">{dictionary.purchase.details.registrationNumber}:</span>{' '}
 					{dictionary.purchase.details.registrationNumberNote}
 				</p>
-				{bib.size && (
+				{bib.size != null && bib.size !== '' && (
 					<p>
 						<span className="font-semibold">{dictionary.purchase.details.size}:</span> {bib.size}
 					</p>
 				)}
-				{bib.gender && (
+				{bib.gender != null && (
 					<p>
 						<span className="font-semibold">{dictionary.purchase.details.gender}:</span> {bib.gender}
 					</p>
@@ -162,7 +165,7 @@ export async function generateMetadata({ params: paramsPromise }: BibPurchasePag
 
 	const params = await paramsPromise
 	const bib = await fetchBibById(params.bibId)
-	if (!bib) {
+	if (bib == null) {
 		return { title: dictionary.purchase.metadata.notFoundTitle }
 	}
 	const eventName = (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ?? 'Event'

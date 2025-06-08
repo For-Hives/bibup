@@ -85,12 +85,13 @@ export default async function SellerDashboardPage({
 			</p>
 
 			{/* Messages */}
-			{successMessage && (
+			{}
+			{successMessage != null && (
 				<div className="mb-6 rounded-lg border border-green-300 bg-[var(--success-bg)] p-4 text-center text-[var(--success-text)]">
 					{successMessage}
 				</div>
 			)}
-			{errorMessage && (
+			{errorMessage != null && (
 				<div className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-center text-[var(--error-text)]">
 					Error: {errorMessage}
 				</div>
@@ -120,55 +121,59 @@ export default async function SellerDashboardPage({
 					</h3>
 					{listedBibs.length > 0 ? (
 						<ul className="space-y-4">
-							{listedBibs.map(bib => (
-								<li className="rounded-lg border border-[var(--border-color)] bg-white p-4 shadow" key={bib.id}>
-									<div className="font-semibold text-[var(--primary-pastel)]">
-										{' '}
-										{/* Using primary-pastel for bib name, adjust if needed */}
-										{dictionary.dashboard.seller.yourBibUpBalance}{' '}
-										{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId ?? 'N/A'}`}
-									</div>
-									<p className="text-sm text-[var(--text-dark)]">
-										{dictionary.dashboard.seller.myBibs} {bib.registrationNumber}
-									</p>
-									<p className="text-sm text-[var(--text-dark)]">
-										{dictionary.dashboard.seller.welcome} ${bib.price.toFixed(2)}
-									</p>
-									{bib.originalPrice && (
-										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.welcome} ${bib.originalPrice.toFixed(2)}
+							{listedBibs.map(bib => {
+								const eventName = bib.expand?.eventId?.name
+								const eventIdDisplay = bib.eventId != null && bib.eventId !== '' ? bib.eventId : 'N/A'
+								const displayBibName = eventName ?? `Event ID: ${eventIdDisplay}`
+								return (
+									<li className="rounded-lg border border-[var(--border-color)] bg-white p-4 shadow" key={bib.id}>
+										<div className="font-semibold text-[var(--primary-pastel)]">
+											{' '}
+											{/* Using primary-pastel for bib name, adjust if needed */}
+											{dictionary.dashboard.seller.yourBibUpBalance} {displayBibName}
+										</div>
+										<p className="text-sm text-[var(--text-dark)]">
+											{dictionary.dashboard.seller.myBibs} {bib.registrationNumber}
 										</p>
-									)}
-									{bib.size && (
-										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.title} {bib.size}
+										<p className="text-sm text-[var(--text-dark)]">
+											{dictionary.dashboard.seller.welcome} ${bib.price.toFixed(2)}
 										</p>
-									)}
-									{bib.gender && (
-										<p className="text-xs text-gray-500">
-											{dictionary.dashboard.seller.description} {bib.gender}
+										{bib.originalPrice != null && bib.originalPrice !== 0 && !isNaN(bib.originalPrice) && (
+											<p className="text-xs text-gray-500">
+												{dictionary.dashboard.seller.welcome} ${bib.originalPrice.toFixed(2)}
+											</p>
+										)}
+										{bib.size != null && bib.size !== '' && (
+											<p className="text-xs text-gray-500">
+												{dictionary.dashboard.seller.title} {bib.size}
+											</p>
+										)}
+										{bib.gender != null && (
+											<p className="text-xs text-gray-500">
+												{dictionary.dashboard.seller.description} {bib.gender}
+											</p>
+										)}
+										<p className="mt-1 text-sm">
+											{dictionary.dashboard.seller.listNewBib}{' '}
+											<span className={`status-badge ${getBibStatusClass(bib.status)}`}>
+												{bib.status.replace(/_/g, ' ').toUpperCase()}
+											</span>
 										</p>
-									)}
-									<p className="mt-1 text-sm">
-										{dictionary.dashboard.seller.listNewBib}{' '}
-										<span className={`status-badge ${getBibStatusClass(bib.status)}`}>
-											{bib.status.replace(/_/g, ' ').toUpperCase()}
-										</span>
-									</p>
-									{(bib.status === 'pending_validation' ||
-										bib.status === 'listed_public' ||
-										bib.status === 'listed_private' ||
-										bib.status === 'withdrawn' ||
-										bib.status === 'validation_failed') && (
-										<Link
-											className="btn btn-secondary mt-2 inline-block px-3 py-1 text-xs"
-											href={`/dashboard/seller/edit-bib/${bib.id}`}
-										>
-											{dictionary.dashboard.seller.manageBibListings}
-										</Link>
-									)}
-								</li>
-							))}
+										{(bib.status === 'pending_validation' ||
+											bib.status === 'listed_public' ||
+											bib.status === 'listed_private' ||
+											bib.status === 'withdrawn' ||
+											bib.status === 'validation_failed') && (
+											<Link
+												className="btn btn-secondary mt-2 inline-block px-3 py-1 text-xs"
+												href={`/dashboard/seller/edit-bib/${bib.id}`}
+											>
+												{dictionary.dashboard.seller.manageBibListings}
+											</Link>
+										)}
+									</li>
+								) // Added semicolon and ensured parenthesis is closed
+							})}
 						</ul>
 					) : (
 						<p className="text-[var(--text-dark)]">{dictionary.dashboard.seller.noBibsListed}</p>
