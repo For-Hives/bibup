@@ -1,10 +1,12 @@
 import type { Event } from '@/models/event.model'
 
-import { getDictionary } from '@/lib/getDictionary'
+import { type Dictionary, getTranslationsFromData } from '@/lib/getDictionary' // Updated import
 import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
 import { fetchApprovedPublicEvents } from '@/services/event.services'
+
+import homeTranslations from './locales.json' // Import the new locales.json
 
 export default async function Home() {
 	let totalEvents = 0
@@ -12,7 +14,8 @@ export default async function Home() {
 
 	// Get locale and dictionary
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	// Get translations specifically for the home page using the new system
+	const dictionary: Dictionary = getTranslationsFromData(locale, homeTranslations)
 
 	try {
 		const events: Event[] = await fetchApprovedPublicEvents()
@@ -22,31 +25,42 @@ export default async function Home() {
 		console.error('Failed to fetch event data for KPIs:', error)
 	}
 
+	// Ensure dictionary and its nested properties exist to prevent runtime errors
+	const heroTitle = dictionary.home?.hero?.title ?? 'Welcome!' // Fallback text
+	const heroSubtitle = dictionary.home?.hero?.subtitle ?? 'Find your next race bib.'
+	const browseEventsButton = dictionary.home?.hero?.browseEventsButton ?? 'Browse Events'
+	const impactTitle = dictionary.home?.impact?.title ?? 'Our Impact'
+	const activeEventsText = dictionary.home?.impact?.activeEvents ?? 'Active Events'
+	const bibsExchangedText = dictionary.home?.impact?.bibsExchanged ?? 'Bibs Exchanged'
+	const ctaTitle = dictionary.home?.callToAction?.title ?? 'Get Started'
+	const ctaDescription = dictionary.home?.callToAction?.description ?? 'Learn more or browse events.'
+	const learnMoreButton = dictionary.home?.callToAction?.learnMoreButton ?? 'Learn More'
+
 	return (
 		<div className="font-[family-name:var(--font-geist-sans)] text-[var(--text-dark)]">
 			{/* Hero Section */}
 			<section className="bg-[var(--primary-pastel)] px-4 py-16 text-center md:py-24">
-				<h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">{dictionary.home.hero.title}</h1>
-				<p className="mb-8 text-lg text-white/90 md:text-xl">{dictionary.home.hero.subtitle}</p>
+				<h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">{heroTitle}</h1>
+				<p className="mb-8 text-lg text-white/90 md:text-xl">{heroSubtitle}</p>
 				<Link className="btn btn-primary px-8 py-3 text-lg" href="/events">
-					{dictionary.home.hero.browseEventsButton}
+					{browseEventsButton}
 				</Link>
 			</section>
 
 			{/* KPIs Section - Bento Box Style */}
 			<section className="px-4 py-12">
 				<div className="mx-auto max-w-4xl text-center">
-					<h2 className="mb-8 text-3xl font-bold text-[var(--text-dark)]">{dictionary.home.impact.title}</h2>
+					<h2 className="mb-8 text-3xl font-bold text-[var(--text-dark)]">{impactTitle}</h2>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 						{/* Bento Box for Active Events */}
 						<div className="bento-box flex flex-col items-center justify-center text-center">
 							<h3 className="mb-2 text-4xl font-bold text-[var(--accent-sporty)]">{totalEvents}</h3>
-							<p className="text-xl text-[var(--text-dark)]">{dictionary.home.impact.activeEvents}</p>
+							<p className="text-xl text-[var(--text-dark)]">{activeEventsText}</p>
 						</div>
 						{/* Bento Box for Bibs Exchanged */}
 						<div className="bento-box flex flex-col items-center justify-center text-center">
 							<h3 className="mb-2 text-4xl font-bold text-[var(--accent-sporty)]">{totalBibsSold}</h3>
-							<p className="text-xl text-[var(--text-dark)]">{dictionary.home.impact.bibsExchanged}</p>
+							<p className="text-xl text-[var(--text-dark)]">{bibsExchangedText}</p>
 						</div>
 					</div>
 				</div>
@@ -55,11 +69,11 @@ export default async function Home() {
 			{/* Call to Action / How it works (Simplified) */}
 			<section className="bg-[var(--secondary-pastel)]/30 px-4 py-12">
 				<div className="mx-auto max-w-4xl text-center">
-					<h2 className="mb-4 text-3xl font-bold text-[var(--text-dark)]">{dictionary.home.callToAction.title}</h2>
-					<p className="mb-8 text-lg text-[var(--text-dark)]/80">{dictionary.home.callToAction.description}</p>
+					<h2 className="mb-4 text-3xl font-bold text-[var(--text-dark)]">{ctaTitle}</h2>
+					<p className="mb-8 text-lg text-[var(--text-dark)]/80">{ctaDescription}</p>
 					<div className="flex flex-col justify-center gap-4 md:flex-row">
 						<Link className="btn btn-secondary" href="/faq">
-							{dictionary.home.callToAction.learnMoreButton}
+							{learnMoreButton}
 						</Link>
 						{/* Future: Link to Sign Up or specific user roles */}
 						{/* <Link href="/sign-up" className="btn btn-primary">

@@ -1,0 +1,59 @@
+{
+	"en": {
+		"home": {
+			"hero": {
+				"title": "Welcome to BibUp!",
+				"subtitle": "Your platform for buying and selling race bibs.",
+				"browseEventsButton": "Browse Events"
+			},
+			"impact": {
+				"title": "Our Impact",
+				"activeEvents": "Active Events",
+				"bibsExchanged": "Bibs Exchanged"
+			},
+			"callToAction": {
+				"title": "Ready to Dive In?",
+				"description": "Learn more about how BibUp works or start browsing events now.",
+				"learnMoreButton": "Learn More (FAQ)"
+			}
+		}
+	},
+	"fr": {
+		"home": {
+			"hero": {
+				"title": "Bienvenue sur BibUp !",
+				"subtitle": "Votre plateforme pour acheter et vendre des dossards de course.",
+				"browseEventsButton": "Parcourir les événements"
+			},
+			"impact": {
+				"title": "Notre Impact",
+				"activeEvents": "Événements actifs",
+				"bibsExchanged": "Dossards échangés"
+			},
+			"callToAction": {
+				"title": "Prêt à commencer ?",
+				"description": "Apprenez-en plus sur le fonctionnement de BibUp ou commencez à parcourir les événements.",
+				"learnMoreButton": "En savoir plus (FAQ)"
+			}
+		}
+	},
+	"ko": {
+		"home": {
+			"hero": {
+				"title": "BibUp에 오신 것을 환영합니다!",
+				"subtitle": "레이스 참가권 구매 및 판매 플랫폼입니다.",
+				"browseEventsButton": "이벤트 찾아보기"
+			},
+			"impact": {
+				"title": "우리의 영향력",
+				"activeEvents": "진행 중인 이벤트",
+				"bibsExchanged": "교환된 참가권"
+			},
+			"callToAction": {
+				"title": "시작할 준비가 되셨나요?",
+				"description": "BibUp 작동 방식에 대해 자세히 알아보거나 지금 바로 이벤트를 찾아보세요.",
+				"learnMoreButton": "더 알아보기 (FAQ)"
+			}
+		}
+	}
+}
