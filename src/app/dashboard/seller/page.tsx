@@ -88,7 +88,6 @@ export default async function SellerDashboardPage({
 			</p>
 
 			{/* Messages */}
-			{}
 			{successMessage != null && (
 				<div className="mb-6 rounded-lg border border-green-300 bg-[var(--success-bg)] p-4 text-center text-[var(--success-text)]">
 					{successMessage}
