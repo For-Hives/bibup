@@ -12,15 +12,7 @@ import { updateUserBalance } from './user.services'
 
 // Type for the data expected by createBib, accommodating both partnered and unlisted event scenarios
 export type CreateBibData = Partial<
-	Omit<
-		Bib,
-		| 'buyerUserId'
-		| 'eventId'
-		| 'id'
-		| 'privateListingToken'
-		| 'sellerUserId'
-		| 'status'
-	>
+	Omit<Bib, 'buyerUserId' | 'eventId' | 'id' | 'privateListingToken' | 'sellerUserId' | 'status'>
 > & {
 	eventId?: string // Optional if isNotListedEvent is true
 	// Fields for unlisted event
@@ -33,9 +25,7 @@ export type CreateBibData = Partial<
 }
 
 // Allowed fields for update by seller. Status updates are specific.
-export type UpdateBibData = Partial<
-	Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size'>
->
+export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size'>>
 
 /**
  * Creates a new bib listing. Handles both partnered and unlisted events.
@@ -47,11 +37,7 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
 	}
-	if (
-		bibData.registrationNumber == '' ||
-		bibData.price === undefined ||
-		bibData.price < 0
-	) {
+	if (bibData.registrationNumber == '' || bibData.price === undefined || bibData.price < 0) {
 		console.error('Registration Number and a valid Price are required.')
 		return null
 	}
@@ -86,20 +72,16 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
  * Fetches a single bib by its ID for public display or pre-purchase.
  * @param bibId The ID of the bib to fetch.
  */
-export async function fetchBibById(
-	bibId: string
-): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
+export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
 	if (!bibId) {
 		console.error('Bib ID is required.')
 		return null
 	}
 	try {
 		// Using getOne, which throws an error if not found.
-		const record = await pb
-			.collection('bibs')
-			.getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
-				expand: 'eventId', // Expand event details
-			})
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
+			expand: 'eventId', // Expand event details
+		})
 
 		return record
 	} catch (error) {
@@ -124,23 +106,16 @@ export async function fetchBibByIdForSeller(
 		return null
 	}
 	try {
-		const record = await pb
-			.collection('bibs')
-			.getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
-				expand: 'eventId',
-			})
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
+			expand: 'eventId',
+		})
 		if (record.sellerUserId !== sellerUserId) {
-			console.warn(
-				`Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`
-			)
+			console.warn(`Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`)
 			return null // Not the owner
 		}
 		return record
 	} catch (error) {
-		console.error(
-			`Error fetching bib ${bibId} for seller ${sellerUserId}:`,
-			error
-		)
+		console.error(`Error fetching bib ${bibId} for seller ${sellerUserId}:`, error)
 
 		// For other errors, you might want to throw or return null based on your error handling strategy
 		return null
@@ -151,22 +126,18 @@ export async function fetchBibByIdForSeller(
  * Fetches all bibs purchased by a specific buyer.
  * @param buyerUserId The ID of the buyer whose purchased bibs are to be fetched.
  */
-export async function fetchBibsByBuyer(
-	buyerUserId: string
-): Promise<(Bib & { expand?: { eventId: Event } })[]> {
+export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { expand?: { eventId: Event } })[]> {
 	if (!buyerUserId) {
 		console.error('Buyer User ID is required to fetch their purchased bibs.')
 		return []
 	}
 
 	try {
-		const records = await pb
-			.collection('bibs')
-			.getFullList<Bib & { expand?: { eventId: Event } }>({
-				filter: `buyerUserId = "${buyerUserId}" && status = 'sold'`,
-				expand: 'eventId',
-				sort: '-updated', // Sort by last update (effectively purchase date for sold bibs), newest first
-			})
+		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
+			filter: `buyerUserId = "${buyerUserId}" && status = 'sold'`,
+			expand: 'eventId',
+			sort: '-updated', // Sort by last update (effectively purchase date for sold bibs), newest first
+		})
 		return records
 	} catch (error) {
 		console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error)
@@ -191,12 +162,10 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 		// Example with expanding the 'eventId' to get event details (e.g., event name)
 		// Adjust 'event' to whatever field name you use in PocketBase for the relation,
 		// and ensure the 'events' collection is configured to be expandable.
-		const records = await pb
-			.collection('bibs')
-			.getFullList<Bib & { expand?: { eventId: Event } }>({
-				filter: `sellerUserId = "${sellerUserId}"`,
-				sort: '-created', // Sort by creation date, newest first
-			})
+		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
+			filter: `sellerUserId = "${sellerUserId}"`,
+			sort: '-created', // Sort by creation date, newest first
+		})
 
 		// Map records to include expanded event name, or handle as needed
 		// The actual structure of 'expand' depends on your PocketBase relation setup.
@@ -214,9 +183,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
  * Fetches all publicly listed bibs for a specific event.
  * @param eventId The ID of the event.
  */
-export async function fetchPubliclyListedBibsForEvent(
-	eventId: string
-): Promise<Bib[]> {
+export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<Bib[]> {
 	if (!eventId) {
 		console.error('Event ID is required to fetch publicly listed bibs.')
 		return []
@@ -230,10 +197,7 @@ export async function fetchPubliclyListedBibsForEvent(
 		})
 		return records
 	} catch (error) {
-		console.error(
-			`Error fetching publicly listed bibs for event ${eventId}:`,
-			error
-		)
+		console.error(`Error fetching publicly listed bibs for event ${eventId}:`, error)
 
 		// For other errors, return empty array for safety
 		return []
@@ -297,10 +261,7 @@ export async function processBibSale(
 		}
 
 		// 5. Update seller's balance.
-		const sellerBalanceUpdated = await updateUserBalance(
-			bib.sellerUserId,
-			amountToSeller
-		)
+		const sellerBalanceUpdated = await updateUserBalance(bib.sellerUserId, amountToSeller)
 		if (sellerBalanceUpdated == null) {
 			// Attempt to mark transaction as failed or requiring attention if seller balance update fails.
 			// This is a critical error that needs monitoring/manual intervention.
@@ -308,12 +269,9 @@ export async function processBibSale(
 				notes: 'Seller balance update failed after fund capture.',
 				status: 'failed',
 			})
-			console.error(
-				`CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`
-			)
+			console.error(`CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`)
 			return {
-				error:
-					"Failed to update seller's balance. Transaction recorded but needs attention.",
+				error: "Failed to update seller's balance. Transaction recorded but needs attention.",
 				success: false,
 			}
 		}
@@ -338,16 +296,10 @@ export async function processBibSale(
 		return { success: true, transaction }
 	} catch (error) {
 		console.error(`Error processing bib sale for bib ID ${bibId}:`, error)
-		let errorMessage =
-			'An unexpected error occurred during bib sale processing.'
+		let errorMessage = 'An unexpected error occurred during bib sale processing.'
 		if (error instanceof Error) {
 			errorMessage = error.message
-		} else if (
-			typeof error === 'object' &&
-			error != null &&
-			'message' in error &&
-			typeof error.message === 'string'
-		) {
+		} else if (typeof error === 'object' && error != null && 'message' in error && typeof error.message === 'string') {
 			errorMessage = error.message
 		}
 		return { error: errorMessage, success: false }
@@ -374,18 +326,14 @@ export async function updateBibBySeller(
 		// First, verify ownership by fetching the bib
 		const currentBib = await pb.collection('bibs').getOne<Bib>(bibId)
 		if (currentBib.sellerUserId !== sellerUserId) {
-			console.warn(
-				`Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`
-			)
+			console.warn(`Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`)
 			return null
 		}
 
 		// Prevent changing eventId or sellerUserId directly with this function
 		// Certain status transitions might also be restricted here or by app logic (e.g., can't change sold bib)
 		if (currentBib.status === 'sold' || currentBib.status === 'expired') {
-			console.warn(
-				`Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`
-			)
+			console.warn(`Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`)
 			// return null; // Or throw an error
 		}
 
@@ -404,17 +352,13 @@ export async function updateBibBySeller(
 			}
 
 			if (!allowedStatusChanges[currentBib.status]?.includes(newStatus)) {
-				console.warn(
-					`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`
-				)
+				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
 				// return null; // Or throw an error indicating invalid transition
 			}
 			// For now, we'll allow the update if it's a status change. More complex logic can be added.
 		}
 
-		const updatedRecord = await pb
-			.collection('bibs')
-			.update<Bib>(bibId, dataToUpdate)
+		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 		return updatedRecord
 	} catch (error) {
 		console.error(`Error updating bib ${bibId}:`, error)
@@ -430,10 +374,7 @@ export async function updateBibBySeller(
  * @param newStatus The new status to set for the bib.
  * @param adminNotes Optional notes from the admin regarding the status change.
  */
-export async function updateBibStatusByAdmin(
-	bibId: string,
-	newStatus: Bib['status']
-): Promise<Bib | null> {
+export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['status']): Promise<Bib | null> {
 	if (!bibId || !newStatus) {
 		console.error('Bib ID and new status are required for admin update.')
 		return null
@@ -445,9 +386,7 @@ export async function updateBibStatusByAdmin(
 		}
 
 		// Direct update without seller ownership check.
-		const updatedRecord = await pb
-			.collection('bibs')
-			.update<Bib>(bibId, dataToUpdate)
+		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 
 		return updatedRecord
 	} catch (error) {

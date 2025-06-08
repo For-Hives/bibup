@@ -117,9 +117,7 @@ export default function ListNewBibClientPage({
 		const result = BibFormSchema.safeParse(testData)
 
 		if (!result.success) {
-			const fieldError = result.error.errors.find(error =>
-				error.path.includes(name)
-			)
+			const fieldError = result.error.errors.find(error => error.path.includes(name))
 			if (fieldError) {
 				setFieldErrors(prev => ({ ...prev, [name]: fieldError.message }))
 			} else {
@@ -161,11 +159,7 @@ export default function ListNewBibClientPage({
 	if (!initialAuthUserId) {
 		// This case should be handled by the server wrapper or middleware redirecting to sign-in
 		// Displaying something here is a fallback.
-		return (
-			<p style={styles.container}>
-				{dictionary.dashboard.seller.listBib.errors.loginRequired}
-			</p>
-		)
+		return <p style={styles.container}>{dictionary.dashboard.seller.listBib.errors.loginRequired}</p>
 	}
 
 	if (!dictionary) {
@@ -194,9 +188,7 @@ export default function ListNewBibClientPage({
 							checked={isNotListedEvent}
 							id="isNotListedEvent"
 							name="isNotListedEvent"
-							onChange={e =>
-								handleFieldChange('isNotListedEvent', e.target.checked)
-							}
+							onChange={e => handleFieldChange('isNotListedEvent', e.target.checked)}
 							style={styles.checkbox}
 							type="checkbox"
 						/>
@@ -217,33 +209,24 @@ export default function ListNewBibClientPage({
 							required={!isNotListedEvent}
 							style={styles.select}
 						>
-							<option value="">
-								{
-									dictionary.dashboard.seller?.listBib?.form
-										?.eventSelectPlaceholder
-								}
-							</option>
+							<option value="">{dictionary.dashboard.seller?.listBib?.form?.eventSelectPlaceholder}</option>
 							{partneredEvents.map(event => (
 								<option key={event.id} value={event.id}>
 									{event.name} ({new Date(event.date).toLocaleDateString()})
 								</option>
 							))}
 						</select>
-						{fieldErrors.eventId && (
-							<p style={styles.fieldError}>{fieldErrors.eventId}</p>
-						)}
+						{fieldErrors.eventId && <p style={styles.fieldError}>{fieldErrors.eventId}</p>}
 						{partneredEvents.length === 0 && (
 							<p style={styles.subtleNote}>
-								No partnered events available. You can list your bib by checking
-								the box above.
+								No partnered events available. You can list your bib by checking the box above.
 							</p>
 						)}
 					</div>
 				) : (
 					<div style={styles.fieldGroup}>
 						<p style={styles.subtleNote}>
-							Please provide details for your unlisted event. This will undergo
-							verification.
+							Please provide details for your unlisted event. This will undergo verification.
 						</p>
 						<div>
 							<label htmlFor="unlistedEventName" style={styles.label}>
@@ -252,20 +235,13 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventName"
 								name="unlistedEventName"
-								onChange={e =>
-									handleFieldChange('unlistedEventName', e.target.value)
-								}
-								placeholder={
-									dictionary.dashboard.seller?.listBib?.form
-										?.unlistedEventNamePlaceholder
-								}
+								onChange={e => handleFieldChange('unlistedEventName', e.target.value)}
+								placeholder={dictionary.dashboard.seller?.listBib?.form?.unlistedEventNamePlaceholder}
 								required={isNotListedEvent}
 								style={styles.input}
 								type="text"
 							/>
-							{fieldErrors.unlistedEventName && (
-								<p style={styles.fieldError}>{fieldErrors.unlistedEventName}</p>
-							)}
+							{fieldErrors.unlistedEventName && <p style={styles.fieldError}>{fieldErrors.unlistedEventName}</p>}
 						</div>
 						<div>
 							<label htmlFor="unlistedEventDate" style={styles.label}>
@@ -274,16 +250,12 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventDate"
 								name="unlistedEventDate"
-								onChange={e =>
-									handleFieldChange('unlistedEventDate', e.target.value)
-								}
+								onChange={e => handleFieldChange('unlistedEventDate', e.target.value)}
 								required={isNotListedEvent}
 								style={styles.input}
 								type="date"
 							/>
-							{fieldErrors.unlistedEventDate && (
-								<p style={styles.fieldError}>{fieldErrors.unlistedEventDate}</p>
-							)}
+							{fieldErrors.unlistedEventDate && <p style={styles.fieldError}>{fieldErrors.unlistedEventDate}</p>}
 						</div>
 						<div>
 							<label htmlFor="unlistedEventLocation" style={styles.label}>
@@ -292,17 +264,13 @@ export default function ListNewBibClientPage({
 							<input
 								id="unlistedEventLocation"
 								name="unlistedEventLocation"
-								onChange={e =>
-									handleFieldChange('unlistedEventLocation', e.target.value)
-								}
+								onChange={e => handleFieldChange('unlistedEventLocation', e.target.value)}
 								required={isNotListedEvent}
 								style={styles.input}
 								type="text"
 							/>
 							{fieldErrors.unlistedEventLocation && (
-								<p style={styles.fieldError}>
-									{fieldErrors.unlistedEventLocation}
-								</p>
+								<p style={styles.fieldError}>{fieldErrors.unlistedEventLocation}</p>
 							)}
 						</div>
 					</div>
@@ -315,20 +283,13 @@ export default function ListNewBibClientPage({
 					<input
 						id="registrationNumber"
 						name="registrationNumber"
-						onChange={e =>
-							handleFieldChange('registrationNumber', e.target.value)
-						}
-						placeholder={
-							dictionary.dashboard.seller?.listBib?.form
-								?.registrationNumberPlaceholder
-						}
+						onChange={e => handleFieldChange('registrationNumber', e.target.value)}
+						placeholder={dictionary.dashboard.seller?.listBib?.form?.registrationNumberPlaceholder}
 						required
 						style={styles.input}
 						type="text"
 					/>
-					{fieldErrors.registrationNumber && (
-						<p style={styles.fieldError}>{fieldErrors.registrationNumber}</p>
-					)}
+					{fieldErrors.registrationNumber && <p style={styles.fieldError}>{fieldErrors.registrationNumber}</p>}
 				</div>
 
 				<div>
@@ -339,20 +300,14 @@ export default function ListNewBibClientPage({
 						id="price"
 						min="0.01"
 						name="price"
-						onChange={e =>
-							handleFieldChange('price', parseFloat(e.target.value) || 0)
-						}
-						placeholder={
-							dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder
-						}
+						onChange={e => handleFieldChange('price', parseFloat(e.target.value) || 0)}
+						placeholder={dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder}
 						required
 						step="0.01"
 						style={styles.input}
 						type="number"
 					/>
-					{fieldErrors.price && (
-						<p style={styles.fieldError}>{fieldErrors.price}</p>
-					)}
+					{fieldErrors.price && <p style={styles.fieldError}>{fieldErrors.price}</p>}
 				</div>
 
 				<div>
@@ -363,19 +318,12 @@ export default function ListNewBibClientPage({
 						id="originalPrice"
 						min="0.00"
 						name="originalPrice"
-						onChange={e =>
-							handleFieldChange(
-								'originalPrice',
-								parseFloat(e.target.value) || undefined
-							)
-						}
+						onChange={e => handleFieldChange('originalPrice', parseFloat(e.target.value) || undefined)}
 						step="0.01"
 						style={styles.input}
 						type="number"
 					/>
-					{fieldErrors.originalPrice && (
-						<p style={styles.fieldError}>{fieldErrors.originalPrice}</p>
-					)}
+					{fieldErrors.originalPrice && <p style={styles.fieldError}>{fieldErrors.originalPrice}</p>}
 				</div>
 
 				<div>
@@ -386,15 +334,11 @@ export default function ListNewBibClientPage({
 						id="size"
 						name="size"
 						onChange={e => handleFieldChange('size', e.target.value)}
-						placeholder={
-							dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder
-						}
+						placeholder={dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder}
 						style={styles.input}
 						type="text"
 					/>
-					{fieldErrors.size && (
-						<p style={styles.fieldError}>{fieldErrors.size}</p>
-					)}
+					{fieldErrors.size && <p style={styles.fieldError}>{fieldErrors.size}</p>}
 				</div>
 
 				<div>
@@ -404,24 +348,15 @@ export default function ListNewBibClientPage({
 					<select
 						id="gender"
 						name="gender"
-						onChange={e =>
-							handleFieldChange(
-								'gender',
-								e.target.value as 'female' | 'male' | 'unisex' | undefined
-							)
-						}
+						onChange={e => handleFieldChange('gender', e.target.value as 'female' | 'male' | 'unisex' | undefined)}
 						style={styles.select}
 					>
-						<option value="">
-							{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}
-						</option>
+						<option value="">{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}</option>
 						<option value="male">Male</option>
 						<option value="female">Female</option>
 						<option value="unisex">Unisex</option>
 					</select>
-					{fieldErrors.gender && (
-						<p style={styles.fieldError}>{fieldErrors.gender}</p>
-					)}
+					{fieldErrors.gender && <p style={styles.fieldError}>{fieldErrors.gender}</p>}
 				</div>
 
 				<div>
@@ -431,18 +366,15 @@ export default function ListNewBibClientPage({
 					<textarea
 						id="notes"
 						name="notes"
-						placeholder={
-							dictionary.dashboard.seller?.listBib?.form?.notesPlaceholder
-						}
+						placeholder={dictionary.dashboard.seller?.listBib?.form?.notesPlaceholder}
 						rows={3}
 						style={styles.input}
 					/>
 				</div>
 
 				<p style={styles.subtleNote}>
-					By listing this bib, you confirm that you are authorized to sell it
-					and that it adheres to the event organizer's transfer policies. For
-					unlisted events, ensure accuracy as this will be verified.
+					By listing this bib, you confirm that you are authorized to sell it and that it adheres to the event
+					organizer's transfer policies. For unlisted events, ensure accuracy as this will be verified.
 				</p>
 
 				<button

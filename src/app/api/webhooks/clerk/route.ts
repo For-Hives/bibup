@@ -9,16 +9,9 @@ import { createUser, CreateUserDTO } from '@/services/user.services' // Adjust p
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
 export async function POST(req: Request) {
-	if (
-		WEBHOOK_SECRET === undefined ||
-		WEBHOOK_SECRET === null ||
-		WEBHOOK_SECRET.trim() === ''
-	) {
+	if (WEBHOOK_SECRET === undefined || WEBHOOK_SECRET === null || WEBHOOK_SECRET.trim() === '') {
 		console.error('CLERK_WEBHOOK_SECRET is not set')
-		return NextResponse.json(
-			{ error: 'Internal Server Error: Webhook secret not configured' },
-			{ status: 500 }
-		)
+		return NextResponse.json({ error: 'Internal Server Error: Webhook secret not configured' }, { status: 500 })
 	}
 
 	// Get the headers
@@ -29,10 +22,7 @@ export async function POST(req: Request) {
 
 	// If there are no headers, error out
 	if (svix_id == null || svix_timestamp == null || svix_signature == null) {
-		return NextResponse.json(
-			{ error: 'Error occured -- no svix headers' },
-			{ status: 400 }
-		)
+		return NextResponse.json({ error: 'Error occured -- no svix headers' }, { status: 400 })
 	}
 
 	// Get the body
@@ -53,10 +43,7 @@ export async function POST(req: Request) {
 		}) as WebhookEvent
 	} catch (err) {
 		console.error('Error verifying webhook:', err)
-		return NextResponse.json(
-			{ error: 'Error occured during webhook verification' },
-			{ status: 400 }
-		)
+		return NextResponse.json({ error: 'Error occured during webhook verification' }, { status: 400 })
 	}
 
 	// Get the ID and type
@@ -73,26 +60,14 @@ export async function POST(req: Request) {
 
 		if (!clerkId) {
 			console.error('Received user.created event without clerkId')
-			return NextResponse.json(
-				{ error: 'Missing Clerk User ID in webhook payload' },
-				{ status: 400 }
-			)
+			return NextResponse.json({ error: 'Missing Clerk User ID in webhook payload' }, { status: 400 })
 		}
 
-		const primaryEmail = email_addresses?.find(
-			email => email.id === evt.data.primary_email_address_id
-		)?.email_address
+		const primaryEmail = email_addresses?.find(email => email.id === evt.data.primary_email_address_id)?.email_address
 
-		if (
-			primaryEmail === undefined ||
-			primaryEmail === null ||
-			primaryEmail.trim() === ''
-		) {
+		if (primaryEmail === undefined || primaryEmail === null || primaryEmail.trim() === '') {
 			console.error(`User ${clerkId} has no primary email address.`)
-			return NextResponse.json(
-				{ error: 'Primary email address missing' },
-				{ status: 400 }
-			)
+			return NextResponse.json({ error: 'Primary email address missing' }, { status: 400 })
 		}
 
 		const userData: CreateUserDTO = {
@@ -109,10 +84,7 @@ export async function POST(req: Request) {
 			if (!newUserInDb) {
 				console.error(`Failed to create user ${clerkId} in PocketBase.`)
 				// Potentially, Clerk might retry the webhook. If not, this user will be out of sync.
-				return NextResponse.json(
-					{ error: 'Failed to create user in database' },
-					{ status: 500 }
-				)
+				return NextResponse.json({ error: 'Failed to create user in database' }, { status: 500 })
 			}
 
 			// Update Clerk user metadata with default role
@@ -124,15 +96,9 @@ export async function POST(req: Request) {
 			//   },
 			// });
 
-			return NextResponse.json(
-				{ message: 'User created and metadata updated successfully' },
-				{ status: 200 }
-			)
+			return NextResponse.json({ message: 'User created and metadata updated successfully' }, { status: 200 })
 		} catch (error) {
-			console.error(
-				`Error processing user.created event for ${clerkId}:`,
-				error
-			)
+			console.error(`Error processing user.created event for ${clerkId}:`, error)
 			// Check if the error is from Clerk SDK or PocketBase service
 			let errorMessage = 'Internal server error processing user creation.'
 			if (error instanceof Error) {
@@ -141,9 +107,6 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: errorMessage }, { status: 500 })
 		}
 	} else {
-		return NextResponse.json(
-			{ message: `Webhook received: ${eventType}, but no handler configured.` },
-			{ status: 200 }
-		)
+		return NextResponse.json({ message: `Webhook received: ${eventType}, but no handler configured.` }, { status: 200 })
 	}
 }

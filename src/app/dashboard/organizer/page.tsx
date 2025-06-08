@@ -50,25 +50,19 @@ export default async function OrganizerDashboardPage({
 		)
 	}
 
-	const organizerName =
-		user.firstName ?? user.emailAddresses[0]?.emailAddress ?? 'Organizer'
+	const organizerName = user.firstName ?? user.emailAddresses[0]?.emailAddress ?? 'Organizer'
 
 	let submittedEvents: Event[] = []
 	if (userId) {
 		submittedEvents = await fetchEventsByOrganizer(userId)
 	}
 
-	const successMessage =
-		searchParams?.success === 'true'
-			? dictionary.dashboard.organizer.eventSubmittedSuccess
-			: null
+	const successMessage = searchParams?.success === 'true' ? dictionary.dashboard.organizer.eventSubmittedSuccess : null
 
 	return (
 		<div className="mx-auto max-w-5xl space-y-8 p-4 text-[var(--text-dark)] md:p-8">
 			<header className="mb-8 text-center">
-				<h1 className="text-3xl font-bold">
-					{dictionary.dashboard.organizer.title}
-				</h1>
+				<h1 className="text-3xl font-bold">{dictionary.dashboard.organizer.title}</h1>
 			</header>
 
 			<p className="text-center text-xl">
@@ -87,21 +81,14 @@ export default async function OrganizerDashboardPage({
 				<section className="bento-box md:col-span-2">
 					{' '}
 					{/* Spans two columns on medium screens */}
-					<h2 className="mb-4 text-xl font-semibold">
-						{dictionary.dashboard.organizer.manageEvents}
-					</h2>
+					<h2 className="mb-4 text-xl font-semibold">{dictionary.dashboard.organizer.manageEvents}</h2>
 					<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
 						{dictionary.dashboard.organizer.manageEventsDescription}
 					</p>
-					<Link
-						className="btn btn-primary mb-6"
-						href="/dashboard/organizer/submit-event"
-					>
+					<Link className="btn btn-primary mb-6" href="/dashboard/organizer/submit-event">
 						{dictionary.dashboard.organizer.submitNewEvent}
 					</Link>
-					<h3 className="mt-6 mb-3 text-lg font-semibold">
-						{dictionary.dashboard.organizer.yourSubmittedEvents}
-					</h3>
+					<h3 className="mt-6 mb-3 text-lg font-semibold">{dictionary.dashboard.organizer.yourSubmittedEvents}</h3>
 					{submittedEvents.length > 0 ? (
 						<ul className="space-y-4">
 							{submittedEvents.map(event => (
@@ -109,21 +96,16 @@ export default async function OrganizerDashboardPage({
 									className="rounded-lg border border-[var(--border-color)] bg-white p-4 shadow dark:bg-neutral-700"
 									key={event.id}
 								>
-									<div className="font-semibold text-[var(--primary-pastel)]">
-										{event.name}
-									</div>
+									<div className="font-semibold text-[var(--primary-pastel)]">{event.name}</div>
 									<p className="text-sm">
-										{dictionary.dashboard.organizer.eventDate}{' '}
-										{new Date(event.date).toLocaleDateString()}
+										{dictionary.dashboard.organizer.eventDate} {new Date(event.date).toLocaleDateString()}
 									</p>
 									<p className="text-sm">
 										{dictionary.dashboard.organizer.location} {event.location}
 									</p>
 									<p className="mt-1 text-sm">
 										{dictionary.dashboard.organizer.status}{' '}
-										<span
-											className={`status-badge ${getEventStatusClass(event.status)}`}
-										>
+										<span className={`status-badge ${getEventStatusClass(event.status)}`}>
 											{event.status.replace(/_/g, ' ').toUpperCase()}
 										</span>
 									</p>
@@ -146,9 +128,7 @@ export default async function OrganizerDashboardPage({
 
 				{/* Section 2: Partnership & Support */}
 				<section className="bento-box">
-					<h2 className="mb-4 text-xl font-semibold">
-						{dictionary.dashboard.organizer.partnershipSupport}
-					</h2>
+					<h2 className="mb-4 text-xl font-semibold">{dictionary.dashboard.organizer.partnershipSupport}</h2>
 					<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
 						{dictionary.dashboard.organizer.partnershipDescription}
 					</p>
@@ -161,10 +141,7 @@ export default async function OrganizerDashboardPage({
 					</a>
 					<p className="mt-4 text-center text-xs">
 						{dictionary.dashboard.organizer.contactSupport}{' '}
-						<a
-							className="text-[var(--accent-sporty)] hover:underline"
-							href="mailto:support@bibup.com"
-						>
+						<a className="text-[var(--accent-sporty)] hover:underline" href="mailto:support@bibup.com">
 							{dictionary.dashboard.organizer.supportEmail}
 						</a>
 						.

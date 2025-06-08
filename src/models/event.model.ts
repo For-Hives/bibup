@@ -10,11 +10,6 @@ export interface Event {
 	name: string
 	organizerId: User['id'] // References a User ID
 	participantCount: number
-	status:
-		| 'approved'
-		| 'cancelled'
-		| 'completed'
-		| 'pending_approval'
-		| 'rejected'
+	status: 'approved' | 'cancelled' | 'completed' | 'pending_approval' | 'rejected'
 	// Add other relevant event details here
 }

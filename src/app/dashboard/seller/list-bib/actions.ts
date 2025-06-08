@@ -8,10 +8,7 @@ import { createBib } from '@/services/bib.services'
 import { BibFormSchema } from './schemas'
 
 // Server action for handling bib listing
-export async function handleListBibServerAction(
-	formData: FormData,
-	sellerUserIdFromAuth: null | string
-) {
+export async function handleListBibServerAction(formData: FormData, sellerUserIdFromAuth: null | string) {
 	const sellerUserId = sellerUserIdFromAuth
 	if (sellerUserId == null) {
 		redirect('/dashboard/seller/list-bib?error=User not authenticated')
@@ -40,12 +37,8 @@ export async function handleListBibServerAction(
 	const validationResult = BibFormSchema.safeParse(formDataToValidate)
 
 	if (!validationResult.success) {
-		const errorMessages = validationResult.error.errors
-			.map(err => err.message)
-			.join(', ')
-		redirect(
-			`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`
-		)
+		const errorMessages = validationResult.error.errors.map(err => err.message).join(', ')
+		redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 		return
 	}
 

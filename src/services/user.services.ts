@@ -10,9 +10,7 @@ export interface CreateUserDTO {
 	// roles and bibUpBalance will be set to defaults by the service
 }
 
-export async function createUser(
-	userData: CreateUserDTO
-): Promise<null | User> {
+export async function createUser(userData: CreateUserDTO): Promise<null | User> {
 	try {
 		const newUserRecord = {
 			firstName: userData.firstName,
@@ -38,10 +36,7 @@ export async function createUser(
 				typeof error.response === 'object' &&
 				'data' in error.response
 			) {
-				console.error(
-					'PocketBase response data:',
-					(error.response as { data: unknown }).data
-				)
+				console.error('PocketBase response data:', (error.response as { data: unknown }).data)
 			}
 		}
 		return null
@@ -55,29 +50,20 @@ export async function createUser(
  * Fetches a user from PocketBase by their Clerk ID.
  * @param clerkId The Clerk User ID.
  */
-export async function fetchUserByClerkId(
-	clerkId: string
-): Promise<null | User> {
+export async function fetchUserByClerkId(clerkId: string): Promise<null | User> {
 	if (!clerkId) {
 		console.error('Clerk ID is required to fetch user data.')
 		return null
 	}
 	try {
 		// Assuming 'clerkId' is a unique field in your 'users' collection
-		const record = await pb
-			.collection('users')
-			.getFirstListItem<User>(`clerkId = "${clerkId}"`)
+		const record = await pb.collection('users').getFirstListItem<User>(`clerkId = "${clerkId}"`)
 		return record
 	} catch (error: unknown) {
 		// PocketBase getFirstListItem throws an error if no item is found or multiple are found (if not unique)
 		// It also throws for other query errors.
 		console.error(`Error fetching user by Clerk ID "${clerkId}":`, error)
-		if (
-			error !== null &&
-			typeof error === 'object' &&
-			'status' in error &&
-			error.status === 404
-		) {
+		if (error !== null && typeof error === 'object' && 'status' in error && error.status === 404) {
 			console.warn(`User with Clerk ID ${clerkId} not found in PocketBase.`)
 			return null // Explicitly return null on 404
 		}
@@ -91,10 +77,7 @@ export async function fetchUserByClerkId(
  * @param clerkUserId The Clerk User ID of the user whose balance is to be updated.
  * @param amountToAdd The amount to add to the user's balance (can be negative to subtract).
  */
-export async function updateUserBalance(
-	clerkUserId: string,
-	amountToAdd: number
-): Promise<null | User> {
+export async function updateUserBalance(clerkUserId: string, amountToAdd: number): Promise<null | User> {
 	if (!clerkUserId) {
 		console.error('Clerk User ID is required to update balance.')
 		return null
@@ -108,9 +91,7 @@ export async function updateUserBalance(
 		// 1. Fetch the user by their Clerk ID to get their PocketBase record ID and current balance.
 		const user = await fetchUserByClerkId(clerkUserId)
 		if (!user) {
-			console.error(
-				`User with Clerk ID ${clerkUserId} not found. Cannot update balance.`
-			)
+			console.error(`User with Clerk ID ${clerkUserId} not found. Cannot update balance.`)
 			return null
 		}
 

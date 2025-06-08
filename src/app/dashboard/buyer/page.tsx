@@ -72,13 +72,10 @@ export default async function BuyerDashboardPage({
 	const searchParams = await searchParamsPromise
 
 	if (clerkUserId == null || !clerkUser) {
-		return (
-			<p style={styles.container}>{dictionary.dashboard.buyer.pleaseSignIn}</p>
-		)
+		return <p style={styles.container}>{dictionary.dashboard.buyer.pleaseSignIn}</p>
 	}
 
-	const buyerName =
-		clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
+	const buyerName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
 
 	let purchasedBibs: (Bib & { expand?: { eventId: Event } })[] = []
 	let userWaitlists: (Waitlist & { expand?: { eventId: Event } })[] = []
@@ -89,9 +86,7 @@ export default async function BuyerDashboardPage({
 	}
 
 	const purchaseSuccess = searchParams?.purchase_success === 'true'
-	const eventNameForSuccessMsg = searchParams?.event_name
-		? decodeURIComponent(searchParams.event_name as string)
-		: ''
+	const eventNameForSuccessMsg = searchParams?.event_name ? decodeURIComponent(searchParams.event_name as string) : ''
 
 	return (
 		<div style={styles.container}>
@@ -105,36 +100,29 @@ export default async function BuyerDashboardPage({
 
 			{purchaseSuccess && eventNameForSuccessMsg && (
 				<div style={styles.successMessage}>
-					{dictionary.dashboard.buyer.purchaseSuccess}{' '}
-					<strong>{eventNameForSuccessMsg}</strong>.{' '}
+					{dictionary.dashboard.buyer.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>.{' '}
 					{dictionary.dashboard.buyer.purchaseSuccessDetails}
 				</div>
 			)}
 
 			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>
-					{dictionary.dashboard.buyer.myPurchases}
-				</h2>
+				<h2 style={styles.sectionTitle}>{dictionary.dashboard.buyer.myPurchases}</h2>
 				{purchasedBibs.length > 0 ? (
 					<ul style={styles.list}>
 						{purchasedBibs.map(bib => (
 							<li key={bib.id} style={styles.listItem}>
 								<div style={styles.itemName}>
-									{dictionary.dashboard.buyer.bibForLabel}{' '}
-									{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
+									{dictionary.dashboard.buyer.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 								</div>
 								<p style={styles.itemDetail}>
 									{dictionary.dashboard.buyer.dateOfEvent}{' '}
-									{bib.expand?.eventId
-										? new Date(bib.expand.eventId.date).toLocaleDateString()
-										: 'N/A'}
+									{bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'}
 								</p>
 								<p style={styles.itemDetail}>
 									{dictionary.dashboard.buyer.pricePaid} ${bib.price.toFixed(2)}
 								</p>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.registrationNumber}{' '}
-									{bib.registrationNumber}{' '}
+									{dictionary.dashboard.buyer.registrationNumber} {bib.registrationNumber}{' '}
 									{dictionary.dashboard.buyer.keepRecords}
 								</p>
 							</li>
@@ -152,21 +140,15 @@ export default async function BuyerDashboardPage({
 			</section>
 
 			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>
-					{dictionary.dashboard.buyer.waitlistEntries}
-				</h2>
+				<h2 style={styles.sectionTitle}>{dictionary.dashboard.buyer.waitlistEntries}</h2>
 				{userWaitlists.length > 0 ? (
 					<ul style={styles.list}>
 						{userWaitlists.map(waitlistEntry => (
 							<li key={waitlistEntry.id} style={styles.listItem}>
 								<div style={styles.itemName}>
 									{dictionary.dashboard.buyer.eventLabel}{' '}
-									<Link
-										href={`/events/${waitlistEntry.eventId}`}
-										style={styles.link}
-									>
-										{waitlistEntry.expand?.eventId?.name ??
-											`Event ID: ${waitlistEntry.eventId}`}
+									<Link href={`/events/${waitlistEntry.eventId}`} style={styles.link}>
+										{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
 									</Link>
 								</div>
 								<p style={styles.itemDetail}>

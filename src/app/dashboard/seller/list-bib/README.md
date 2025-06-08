@@ -106,12 +106,8 @@ const formDataToValidate = {
 const validationResult = BibFormSchema.safeParse(formDataToValidate)
 
 if (!validationResult.success) {
-	const errorMessages = validationResult.error.errors
-		.map(err => err.message)
-		.join(', ')
-	redirect(
-		`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`
-	)
+	const errorMessages = validationResult.error.errors.map(err => err.message).join(', ')
+	redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 	return
 }
 ```
