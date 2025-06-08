@@ -39,7 +39,7 @@ export default async function SubmitEventPage({
 		const participantCountStr = formData.get('eventParticipantCount') as string
 
 		// Basic server-side validation
-		if (!name || !dateString || !location) {
+		if (name == null || name === '' || dateString == null || dateString === '' || location == null || location === '') {
 			redirect(
 				`/dashboard/organizer/submit-event?error=${encodeURIComponent('Event Name, Date, and Location are required.')}`
 			)
@@ -85,11 +85,12 @@ export default async function SubmitEventPage({
 				<h1 className="text-3xl font-bold">{dictionary.dashboard.organizer.submitEvent.title}</h1>
 			</header>
 
-			{errorMessage && (
+			{}
+			{errorMessage != null ? (
 				<div className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-center text-[var(--error-text)]">
 					{dictionary.dashboard.organizer.submitEvent.errorPrefix} {errorMessage}
 				</div>
-			)}
+			) : null}
 
 			<form
 				action={handleSubmitEvent}

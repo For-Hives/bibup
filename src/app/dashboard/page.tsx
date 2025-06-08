@@ -14,7 +14,7 @@ export default async function DashboardPage() {
 	const dictionary = await getDictionary(locale)
 	const { userId } = await auth()
 
-	if (!userId) {
+	if (userId == null) {
 		// Optionally, redirect to login if not authenticated, though Clerk should handle this.
 		// For now, we'll just not render the links if no user.
 		// Or, this page could be protected by middleware.
@@ -26,7 +26,7 @@ export default async function DashboardPage() {
 				<h1 className="text-4xl font-bold">{dictionary.dashboard.title}</h1>
 			</header>
 
-			{userId && (
+			{userId != null && (
 				<nav className="grid grid-cols-1 gap-6 md:grid-cols-3">
 					<Link
 						className="block rounded-xl border border-[var(--border-color)] bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl dark:bg-neutral-800"
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
 				</nav>
 			)}
 
-			{!userId && (
+			{userId == null && (
 				<div className="text-center">
 					<p>{dictionary.auth.signInToAccessDashboard}</p>
 					{/* Optionally, add a sign-in button here if not relying on global auth handling */}

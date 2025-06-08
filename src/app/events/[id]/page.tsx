@@ -32,7 +32,7 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 
 	async function handleJoinWaitlist(formData: FormData) {
 		'use server'
-		if (!userId) {
+		if (userId == null) {
 			redirect(`/sign-in?redirect_url=/events/${eventId}`)
 			return
 		}
@@ -62,7 +62,9 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 				<p className="text-md text-gray-600 dark:text-gray-400">
 					<strong>Location:</strong> {event.location}
 				</p>
-				{event.description && <p className="mt-4 text-gray-700 dark:text-gray-300">{event.description}</p>}
+				{event.description != null && event.description !== '' && (
+					<p className="mt-4 text-gray-700 dark:text-gray-300">{event.description}</p>
+				)}
 			</header>
 
 			{waitlistSuccess && (
@@ -70,7 +72,7 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 					You've been successfully added to the waitlist for {event.name}! We'll notify you if a bib becomes available.
 				</div>
 			)}
-			{waitlistError && (
+			{waitlistError != null && typeof waitlistError === 'string' && waitlistError !== '' && (
 				<div className="mb-4 rounded-md border border-red-300 bg-[var(--error-bg)] p-3 text-center text-sm text-[var(--error-text)]">
 					{waitlistError === 'already_added'
 						? `You are already on the waitlist for ${event.name}.`
@@ -86,13 +88,17 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 							<li className="bento-box flex flex-col justify-between sm:flex-row sm:items-center" key={bib.id}>
 								<div>
 									<div className="text-xl font-bold text-[var(--accent-sporty)]">Price: ${bib.price.toFixed(2)}</div>
-									{bib.originalPrice && (
+									{bib.originalPrice != null && bib.originalPrice !== 0 && !isNaN(bib.originalPrice) && (
 										<p className="text-xs text-gray-500 dark:text-gray-400">
 											Original Price: ${bib.originalPrice.toFixed(2)}
 										</p>
 									)}
-									{bib.size && <p className="text-sm text-gray-600 dark:text-gray-300">Size: {bib.size}</p>}
-									{bib.gender && <p className="text-sm text-gray-600 dark:text-gray-300">Gender: {bib.gender}</p>}
+									{bib.size != null && bib.size !== '' && (
+										<p className="text-sm text-gray-600 dark:text-gray-300">Size: {bib.size}</p>
+									)}
+									{bib.gender != null && (
+										<p className="text-sm text-gray-600 dark:text-gray-300">Gender: {bib.gender}</p>
+									)}
 								</div>
 								<Link className="btn btn-primary mt-3 sm:mt-0" href={`/purchase/${bib.id}`}>
 									Buy Bib
