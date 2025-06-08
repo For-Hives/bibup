@@ -87,8 +87,9 @@ export default async function EditBibPage({
 			return
 		}
 
-		const dataToUpdate: { status: Bib['status'] } = {
+		const dataToUpdate: { status: Bib['status']; price: number } = {
 			status: 'withdrawn',
+			price: price,
 		}
 
 		try {
