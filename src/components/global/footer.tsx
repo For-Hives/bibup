@@ -13,16 +13,16 @@ export function Footer() {
 					</div>
 
 					<div className="flex flex-wrap gap-6 text-sm">
-						<Link href="/faqs" className="text-gray-600 hover:text-green-600">
+						<Link className="text-gray-600 hover:text-green-600" href="/faqs">
 							FAQs
 						</Link>
-						<Link href="/contact" className="text-gray-600 hover:text-green-600">
+						<Link className="text-gray-600 hover:text-green-600" href="/contact">
 							Contact Us
 						</Link>
-						<Link href="/marketplace" className="font-medium text-green-600">
+						<Link className="font-medium text-green-600" href="/marketplace">
 							Marketplace
 						</Link>
-						<Link href="/legal" className="text-gray-600 hover:text-green-600">
+						<Link className="text-gray-600 hover:text-green-600" href="/legal">
 							Legal Notice
 						</Link>
 					</div>

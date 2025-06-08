@@ -4,10 +4,10 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { getLocale } from '@/lib/getLocale'
 
+import { Footer } from '@/components/global/footer'
 import Navbar from '@/components/global/Navbar'
 
 import './globals.css'
-import { Footer } from '@/components/global/footer'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
