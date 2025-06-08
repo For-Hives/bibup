@@ -1,15 +1,71 @@
 import 'server-only'
 
-const dictionaries = {
-	en: () => import('../dictionaries/en.json').then(module => module.default),
-	fr: () => import('../dictionaries/fr.json').then(module => module.default),
-	ko: () => import('../dictionaries/ko.json').then(module => module.default),
+// Type for the translations of a single page/component for one language
+// e.g., { "title": "Hello", "description": "Welcome" }
+export type PageTranslations = Record<string, string>
+
+// Type for the structure of a locales.json file
+// e.g., { "en": { "title": "Hello" }, "fr": { "title": "Bonjour" } }
+export type LocaleData = Record<string, PageTranslations>
+
+/**
+ * Extracts translations for a specific locale from loaded locales.json content.
+ *
+ * @param locale The desired locale (e.g., 'en', 'fr').
+ * @param localeJsonContent The content of the locales.json file (parsed JSON object).
+ * @param defaultLocale The default locale to use if the desired locale is not found (defaults to 'en').
+ * @returns The translations (PageTranslations) for the given locale.
+ *          Returns translations for the defaultLocale if the requested locale is not found.
+ *          Returns an empty object if neither the requested nor the default locale is found,
+ *          or if localeJsonContent is invalid.
+ */
+export const getTranslationsFromData = (
+	locale: string,
+	localeJsonContent: unknown, // Use unknown for safer type checking from JSON import
+	defaultLocale: string = 'en'
+): PageTranslations => {
+	// Validate localeJsonContent is a non-null object and not an array
+	if (typeof localeJsonContent !== 'object' || localeJsonContent === null || Array.isArray(localeJsonContent)) {
+		return {}
+	}
+
+	// Type assertion after basic validation
+	const data = localeJsonContent as Record<string, unknown>
+
+	// Helper to validate if a value is a PageTranslations object
+	const isPageTranslations = (value: unknown): value is PageTranslations => {
+		if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+			return false
+		}
+		// Check if all enumerable properties of 'value' are strings
+		for (const key in value) {
+			if (Object.prototype.hasOwnProperty.call(value, key)) {
+				if (typeof (value as Record<string, unknown>)[key] !== 'string') {
+					return false
+				}
+			}
+		}
+		return true
+	}
+
+	// Try to get translations for the current locale
+	if (Object.prototype.hasOwnProperty.call(data, locale)) {
+		const translations = data[locale]
+		if (isPageTranslations(translations)) {
+			return translations
+		}
+	}
+
+	// Fallback to default locale
+	if (Object.prototype.hasOwnProperty.call(data, defaultLocale)) {
+		const translations = data[defaultLocale]
+		if (isPageTranslations(translations)) {
+			return translations
+		}
+	}
+
+	return {}
 }
 
-export const getDictionary = async (locale: string) => {
-	// Default to 'en' if locale is not supported
-	const supportedLocale = Object.keys(dictionaries).includes(locale) ? locale : 'en'
-	return dictionaries[supportedLocale as keyof typeof dictionaries]()
-}
-
-export type Dictionary = Awaited<ReturnType<typeof getDictionary>>
+// The `Dictionary` type now refers to the translations for a single component/page.
+export type Dictionary = PageTranslations
