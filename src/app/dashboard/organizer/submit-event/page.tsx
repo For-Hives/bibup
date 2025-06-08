@@ -76,7 +76,8 @@ export default async function SubmitEventPage({
 		}
 	}
 
-	const errorMessage = searchParams?.error ? decodeURIComponent(searchParams.error as string) : null
+	const errorParam = searchParams?.error
+	const errorMessage = typeof errorParam === 'string' && errorParam.length > 0 ? decodeURIComponent(errorParam) : null
 	// Success message is typically displayed on the redirect target page (Organizer Dashboard)
 
 	return (
