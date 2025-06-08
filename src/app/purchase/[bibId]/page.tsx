@@ -3,12 +3,13 @@ import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import { notFound, redirect } from 'next/navigation'
+import { getLocale } from '@/lib/getLocale'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
 import { fetchBibById } from '@/services/bib.services'
+
 import translations from './locales.json'
 
 export type BibPurchasePageProps = {
