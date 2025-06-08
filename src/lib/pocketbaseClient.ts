@@ -3,7 +3,7 @@ import PocketBase from 'pocketbase'
 
 const { NEXT_PUBLIC_POCKETBASE_URL, POCKETBASE_TOKEN } = process.env
 
-if (!NEXT_PUBLIC_POCKETBASE_URL) {
+if (NEXT_PUBLIC_POCKETBASE_URL == null || NEXT_PUBLIC_POCKETBASE_URL === '') {
 	throw new Error('NEXT_PUBLIC_POCKETBASE_URL environment variable is required')
 }
 
@@ -12,6 +12,6 @@ export const pb = new PocketBase(NEXT_PUBLIC_POCKETBASE_URL)
 
 pb.autoCancellation(false)
 
-if (POCKETBASE_TOKEN) {
+if (POCKETBASE_TOKEN != null && POCKETBASE_TOKEN !== '') {
 	pb.authStore.save(POCKETBASE_TOKEN, null)
 }
