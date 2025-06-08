@@ -10,11 +10,11 @@ import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path
  * @param organizerId The ID of the user (organizer) creating the event.
  */
 export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (!eventData.organizerId) {
+	if (eventData.organizerId === '') {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
-	if (!eventData.name || isNaN(eventData.date.getTime()) || !eventData.location) {
+	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
@@ -83,7 +83,7 @@ export async function fetchEventById(id: string): Promise<Event | null> {
  * @param organizerId The ID of the organizer whose events are to be fetched.
  */
 export async function fetchEventsByOrganizer(organizerId: string): Promise<Event[]> {
-	if (!organizerId) {
+	if (organizerId === '') {
 		console.error('Organizer ID is required to fetch their events.')
 		return [] // Return empty array if no organizerId is provided
 	}
