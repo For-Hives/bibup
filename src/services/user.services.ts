@@ -27,16 +27,15 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 		console.error('Error creating user in PocketBase:', error)
 		// It's good to check for specific PocketBase error types if possible
 		// For example, if it's a unique constraint violation, etc.
-		if (error !== null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-			// Check if it's a response error
-			if (
-				'response' in error &&
-				error.response !== null &&
-				typeof error.response === 'object' &&
-				'data' in error.response
-			) {
-				console.error('PocketBase response data:', (error.response as { data: unknown }).data)
+		if (error != null && typeof error === 'object') {
+			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				console.error('PocketBase error details:', (error as { message: string }).message)
+			}
+			if ('response' in error) {
+				const response = (error as { response: unknown }).response
+				if (response != null && typeof response === 'object' && 'data' in response) {
+					console.error('PocketBase response data:', (response as { data: unknown }).data)
+				}
 			}
 		}
 		return null
@@ -51,7 +50,7 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
  * @param clerkId The Clerk User ID.
  */
 export async function fetchUserByClerkId(clerkId: string): Promise<null | User> {
-	if (!clerkId) {
+	if (clerkId === '') {
 		console.error('Clerk ID is required to fetch user data.')
 		return null
 	}
@@ -62,12 +61,17 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 	} catch (error: unknown) {
 		// PocketBase getFirstListItem throws an error if no item is found or multiple are found (if not unique)
 		// It also throws for other query errors.
-		console.error(`Error fetching user by Clerk ID "${clerkId}":`, error)
-		if (error !== null && typeof error === 'object' && 'status' in error && error.status === 404) {
+		if (
+			error != null &&
+			typeof error === 'object' &&
+			'status' in error &&
+			(error as { status: unknown }).status === 404
+		) {
 			console.warn(`User with Clerk ID ${clerkId} not found in PocketBase.`)
 			return null // Explicitly return null on 404
 		}
 		// For other errors, you might want to throw or handle differently
+		console.error(`Error fetching user by Clerk ID "${clerkId}":`, error) // Keep generic error log for other cases
 		return null
 	}
 }
@@ -78,7 +82,7 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
  * @param amountToAdd The amount to add to the user's balance (can be negative to subtract).
  */
 export async function updateUserBalance(clerkUserId: string, amountToAdd: number): Promise<null | User> {
-	if (!clerkUserId) {
+	if (clerkUserId === '') {
 		console.error('Clerk User ID is required to update balance.')
 		return null
 	}
@@ -90,7 +94,7 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 	try {
 		// 1. Fetch the user by their Clerk ID to get their PocketBase record ID and current balance.
 		const user = await fetchUserByClerkId(clerkUserId)
-		if (!user) {
+		if (user == null) {
 			console.error(`User with Clerk ID ${clerkUserId} not found. Cannot update balance.`)
 			return null
 		}
@@ -107,10 +111,15 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 
 		return updatedRecord
 	} catch (error: unknown) {
-		console.error(`Error updating balance for user ${clerkUserId}:`, error)
-		if (error !== null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
+		if (
+			error != null &&
+			typeof error === 'object' &&
+			'message' in error &&
+			typeof (error as { message: unknown }).message === 'string'
+		) {
+			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
+		console.error(`Error updating balance for user ${clerkUserId}:`, error) // Keep generic error log
 		return null
 	}
 }

@@ -23,7 +23,7 @@ export default function Loading() {
 
 						{/* Race Items Skeleton */}
 						<ul className="space-y-2">
-							{[...Array(5)].map((_, index) => (
+							{Array.from({ length: 5 }, (_, index) => (
 								<li key={index}>
 									<div className="h-6 w-full max-w-xs animate-pulse rounded bg-gray-300 dark:bg-gray-700"></div>
 								</li>

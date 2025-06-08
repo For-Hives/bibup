@@ -18,7 +18,7 @@ export async function createTransaction(
 		transactionData.sellerUserId === '' ||
 		transactionData.amount === undefined ||
 		transactionData.platformFee === undefined ||
-		transactionData.status === ''
+		!transactionData.status
 	) {
 		console.error('Missing required fields for transaction creation:', transactionData)
 		return null
