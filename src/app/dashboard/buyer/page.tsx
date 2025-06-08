@@ -4,12 +4,14 @@ import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { getDictionary } from '@/lib/getDictionary'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
 import { fetchUserWaitlists } from '@/services/waitlist.services' // Import waitlist service
 import { fetchBibsByBuyer } from '@/services/bib.services'
+
+import buyerTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	title: 'Buyer Dashboard | BibUp',
@@ -65,14 +67,14 @@ export default async function BuyerDashboardPage({
 	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, buyerTranslations)
 
 	const { userId: clerkUserId } = await auth()
 	const clerkUser = await currentUser()
 	const searchParams = await searchParamsPromise
 
 	if (clerkUserId == null || !clerkUser) {
-		return <p style={styles.container}>{dictionary.dashboard.buyer.pleaseSignIn}</p>
+		return <p style={styles.container}>{t.pleaseSignIn}</p>
 	}
 
 	const buyerName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
@@ -92,51 +94,47 @@ export default async function BuyerDashboardPage({
 	const showSuccessMessage = purchaseSuccess && Boolean(eventNameForSuccessMsg)
 	const successDisplay = showSuccessMessage ? (
 		<div style={styles.successMessage}>
-			{dictionary.dashboard.buyer.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>.{' '}
-			{dictionary.dashboard.buyer.purchaseSuccessDetails}
+			{t.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>. {t.purchaseSuccessDetails}
 		</div>
 	) : null
 
 	return (
 		<div style={styles.container}>
 			<header style={styles.header}>
-				<h1>{dictionary.dashboard.buyer.title}</h1>
+				<h1>{t.title}</h1>
 			</header>
-
 			<p style={styles.welcomeMessage}>
-				{dictionary.dashboard.buyer.welcome}, {buyerName}!
+				{t.welcome}, {buyerName}!
 			</p>
 
 			{successDisplay}
 
 			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>{dictionary.dashboard.buyer.myPurchases}</h2>
+				<h2 style={styles.sectionTitle}>{t.myPurchases}</h2>
 				{purchasedBibs.length > 0 ? (
 					<ul style={styles.list}>
 						{purchasedBibs.map(bib => (
 							<li key={bib.id} style={styles.listItem}>
 								<div style={styles.itemName}>
-									{dictionary.dashboard.buyer.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
+									{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 								</div>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.dateOfEvent}{' '}
-									{bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'}
+									{t.dateOfEvent} {bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'}
 								</p>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.pricePaid} ${bib.price.toFixed(2)}
+									{t.pricePaid} ${bib.price.toFixed(2)}
 								</p>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.registrationNumber} {bib.registrationNumber}{' '}
-									{dictionary.dashboard.buyer.keepRecords}
+									{t.registrationNumber} {bib.registrationNumber} {t.keepRecords}
 								</p>
 							</li>
 						))}
 					</ul>
 				) : (
 					<p>
-						{dictionary.dashboard.buyer.noPurchases}{' '}
+						{t.noPurchases}{' '}
 						<Link href="/events" style={styles.link}>
-							{dictionary.dashboard.buyer.browseEvents}
+							{t.browseEvents}
 						</Link>{' '}
 						to find bibs for sale!
 					</p>
@@ -144,37 +142,36 @@ export default async function BuyerDashboardPage({
 			</section>
 
 			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>{dictionary.dashboard.buyer.waitlistEntries}</h2>
+				<h2 style={styles.sectionTitle}>{t.waitlistEntries}</h2>
 				{userWaitlists.length > 0 ? (
 					<ul style={styles.list}>
 						{userWaitlists.map(waitlistEntry => (
 							<li key={waitlistEntry.id} style={styles.listItem}>
 								<div style={styles.itemName}>
-									{dictionary.dashboard.buyer.eventLabel}{' '}
+									{t.eventLabel}{' '}
 									<Link href={`/events/${waitlistEntry.eventId}`} style={styles.link}>
 										{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
 									</Link>
 								</div>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.dateAddedToWaitlist}{' '}
-									{new Date(waitlistEntry.addedAt).toLocaleDateString()}
+									{t.dateAddedToWaitlist} {new Date(waitlistEntry.addedAt).toLocaleDateString()}
 								</p>
 								<p style={styles.itemDetail}>
-									{dictionary.dashboard.buyer.status}{' '}
+									{t.status}{' '}
 									{waitlistEntry.notifiedAt
-										? `${dictionary.dashboard.buyer.notifiedOn} ${new Date(waitlistEntry.notifiedAt).toLocaleDateString()}`
-										: dictionary.dashboard.buyer.waitingForNotification}
+										? (t.notifiedOn as string) + ' ' + new Date(waitlistEntry.notifiedAt).toLocaleDateString()
+										: t.waitingForNotification}
 								</p>
 							</li>
 						))}
 					</ul>
 				) : (
 					<p>
-						{dictionary.dashboard.buyer.noWaitlistEntries}{' '}
+						{t.noWaitlistEntries}{' '}
 						<Link href="/events" style={styles.link}>
-							{dictionary.dashboard.buyer.browseEventsWaitlist}
+							{t.browseEventsWaitlist}
 						</Link>{' '}
-						{dictionary.dashboard.buyer.waitlistJoinText}
+						{t.waitlistJoinText}
 					</p>
 				)}
 			</section>
