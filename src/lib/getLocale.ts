@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 
 export async function getLocale() {
 	// During build time, return default locale to avoid dynamic server usage
-	if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+	if (process.env.NODE_ENV === 'production' && (process.env.VERCEL_ENV == null || process.env.VERCEL_ENV === '')) {
 		return 'en'
 	}
 

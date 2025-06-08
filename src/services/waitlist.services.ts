@@ -14,7 +14,7 @@ import { pb } from '@/lib/pocketbaseClient'
  *          Returns an object with `error: 'already_on_waitlist'` for duplicates.
  */
 export async function addToWaitlist(eventId: string, userId: string): Promise<null | (Waitlist & { error?: string })> {
-	if (!eventId || !userId) {
+	if (eventId === '' || userId === '') {
 		console.error('Event ID and User ID are required to join a waitlist.')
 		return null
 	}
@@ -30,7 +30,12 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		} catch (error: unknown) {
 			// PocketBase throws 404 if getFirstListItem finds no record, which is expected if not on waitlist.
 			// We only care about other errors here.
-			if (error !== null && typeof error === 'object' && 'status' in error && error.status !== 404) {
+			if (
+				error != null &&
+				typeof error === 'object' &&
+				'status' in error &&
+				(error as { status: unknown }).status !== 404
+			) {
 				throw error // Re-throw unexpected errors
 			}
 		}
@@ -48,19 +53,19 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		const record = await pb.collection('waitlists').create<Waitlist>(dataToCreate)
 		return record
 	} catch (error: unknown) {
-		console.error(`Error adding user ${userId} to waitlist for event ${eventId}:`, error)
-		if (error !== null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', error.message)
-			if (
-				'response' in error &&
-				error.response !== null &&
-				typeof error.response === 'object' &&
-				'data' in error.response
-			) {
-				console.error('PocketBase response data:', (error.response as { data: unknown }).data)
+		console.error(`Error adding user ${userId} to waitlist for event ${eventId}:`, error) // Keep this line
+		if (error != null && typeof error === 'object') {
+			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				console.error('PocketBase error details:', (error as { message: string }).message)
+			}
+			if ('response' in error) {
+				const response = (error as { response: unknown }).response
+				if (response != null && typeof response === 'object' && 'data' in response) {
+					console.error('PocketBase response data:', (response as { data: unknown }).data)
+				}
 			}
 		}
-		return null
+		return null // Ensure this is outside the if, at the end of the catch
 	}
 }
 
@@ -69,7 +74,7 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
  * @param userId The ID of the user whose waitlist entries are to be fetched.
  */
 export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { expand?: { eventId: Event } })[]> {
-	if (!userId) {
+	if (userId === '') {
 		console.error('User ID is required to fetch their waitlists.')
 		return []
 	}
@@ -81,7 +86,7 @@ export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { 
 			sort: '-addedAt', // Sort by when they were added, newest first
 		})
 		return records
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(`Error fetching waitlists for user ID "${userId}":`, error)
 		return []
 	}

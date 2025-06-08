@@ -376,7 +376,7 @@ export async function updateBibBySeller(
  * @param adminNotes Optional notes from the admin regarding the status change.
  */
 export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['status']): Promise<Bib | null> {
-	if (bibId === '' || newStatus === '') {
+	if (bibId === '' || !newStatus) {
 		console.error('Bib ID and new status are required for admin update.')
 		return null
 	}
