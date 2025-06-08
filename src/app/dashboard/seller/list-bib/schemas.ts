@@ -1,41 +1,35 @@
-import { z } from 'zod'
+import * as v from 'valibot'
 
-// Schéma Zod pour la validation du formulaire de listing de dossard
-export const BibFormSchema = z
-	.object({
-		registrationNumber: z.string().min(1, "Le numéro d'inscription est requis"),
-		gender: z.enum(['female', 'male', 'unisex']).nullable().optional(),
-		price: z.number().positive('Le prix doit être supérieur à 0'),
-		isNotListedEvent: z.boolean().default(false),
-		unlistedEventLocation: z.string().optional(),
-		unlistedEventName: z.string().optional(),
-		unlistedEventDate: z.string().optional(),
-		originalPrice: z.number().optional(),
-		eventId: z.string().optional(),
-		size: z.string().optional(),
-	})
-	.refine(
-		data => {
-			// Si l'événement n'est pas listé, les champs de l'événement sont requis
-			if (data.isNotListedEvent) {
-				return (
-					data.unlistedEventName != null &&
-					data.unlistedEventName !== '' &&
-					data.unlistedEventDate != null &&
-					data.unlistedEventDate !== '' &&
-					data.unlistedEventLocation != null &&
-					data.unlistedEventLocation !== ''
-				)
-			}
-			// Si l'événement est listé, eventId est requis
-			return data.eventId != null && data.eventId !== ''
-		},
-		{
-			message:
-				'Pour les événements non listés, le nom, la date et le lieu sont requis. Pour les événements partenaires, veuillez sélectionner un événement.',
-			path: ['eventId'],
+// Valibot schema for validating the bib listing form
+export const BibFormSchema = v.pipe(
+	v.object({
+		registrationNumber: v.pipe(v.string(), v.minLength(1, 'The registration number is required')), // TODO: use localized error message
+		price: v.pipe(v.number(), v.minValue(0.01, 'The price must be greater than 0')),
+		gender: v.optional(v.nullable(v.picklist(['female', 'male', 'unisex']))),
+		isNotListedEvent: v.optional(v.boolean(), false),
+		unlistedEventLocation: v.optional(v.string()),
+		unlistedEventName: v.optional(v.string()),
+		unlistedEventDate: v.optional(v.string()),
+		originalPrice: v.optional(v.number()),
+		eventId: v.optional(v.string()),
+		size: v.optional(v.string()),
+	}),
+	v.check(data => {
+		// If the event is not listed, event fields are required
+		if (data.isNotListedEvent) {
+			return (
+				data.unlistedEventName != null &&
+				data.unlistedEventName !== '' &&
+				data.unlistedEventDate != null &&
+				data.unlistedEventDate !== '' &&
+				data.unlistedEventLocation != null &&
+				data.unlistedEventLocation !== ''
+			)
 		}
-	)
+		// If the event is listed, eventId is required
+		return data.eventId != null && data.eventId !== ''
+	}, 'For unlisted events, name, date, and location are required. For partner events, please select an event.')
+)
 
-// Type inféré du schéma pour TypeScript
-export type BibFormData = z.infer<typeof BibFormSchema>
+// Inferred type from the schema for TypeScript
+export type BibFormData = v.InferOutput<typeof BibFormSchema>

@@ -3,6 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Bib } from '@/models/bib.model'
+import * as v from 'valibot'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { createBib } from '@/services/bib.services'
@@ -29,7 +30,7 @@ export async function handleListBibServerAction(formData: FormData) {
 	const originalPriceStr = formData.get('originalPrice') as string
 	const gender = formData.get('gender') == '' ? undefined : (formData.get('gender') as 'female' | 'male' | 'unisex')
 
-	// Préparation des données pour la validation Zod
+	// Préparation des données pour la validation Valibot
 	const formDataToValidate = {
 		unlistedEventLocation: (formData.get('unlistedEventLocation') as string) ?? undefined,
 		size: formData.get('size') == '' ? undefined : (formData.get('size') as string),
@@ -43,18 +44,17 @@ export async function handleListBibServerAction(formData: FormData) {
 		gender: gender,
 	}
 
-	// Validation avec Zod
-	const validationResult = BibFormSchema.safeParse(formDataToValidate)
+	// Validation avec Valibot
+	const validationResult = v.safeParse(BibFormSchema, formDataToValidate)
 
 	if (!validationResult.success) {
-		console.error('object to validate:', formDataToValidate)
-		console.error('Validation failed:', validationResult.error)
-		const errorMessages = validationResult.error.errors.map(err => err.message).join(', ')
+		const flatErrors = v.flatten(validationResult.issues)
+		const errorMessages = flatErrors.root?.join(', ') ?? 'Erreur de validation'
 		redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 		return
 	}
 
-	const validatedData = validationResult.data
+	const validatedData = validationResult.output
 
 	// Préparation de l'objet Bib complet pour createBib
 	const bibToCreate: Omit<Bib, 'id'> = {
