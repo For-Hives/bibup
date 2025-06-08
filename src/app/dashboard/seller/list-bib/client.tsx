@@ -6,78 +6,12 @@ import type { Event } from '@/models/event.model'
 import React, { useEffect, useState } from 'react' // For managing form state
 
 // Removed Metadata import from here
+import { Dictionary } from '@/lib/getDictionary'
 import Link from 'next/link'
 
 import { type BibFormData, BibFormSchema } from './schemas'
 // Import the server action from the separate file
 import { handleListBibServerAction } from './actions'
-
-// Metadata can be exported from client components in recent Next.js versions, but often better in server component
-// export const metadata: Metadata = {
-//   title: 'List a New Bib | Seller Dashboard | BibUp',
-// };
-
-// Basic styling (can be refactored)
-const styles = {
-	button: {
-		backgroundColor: '#0070f3',
-		padding: '12px 20px',
-		borderRadius: '4px',
-		cursor: 'pointer',
-		fontSize: '1.1em',
-		marginTop: '10px',
-		color: 'white',
-		border: 'none',
-	},
-	link: {
-		textAlign: 'center' as const,
-		textDecoration: 'underline',
-		marginTop: '20px',
-		color: '#0070f3',
-		display: 'block',
-	},
-	select: {
-		border: '1px solid #ccc',
-		backgroundColor: 'white',
-		borderRadius: '4px',
-		padding: '10px',
-		fontSize: '1em',
-	},
-	container: {
-		fontFamily: 'Arial, sans-serif',
-		maxWidth: '700px',
-		margin: '0 auto',
-		padding: '20px',
-	},
-	fieldGroup: {
-		border: '1px dashed #ccc',
-		borderRadius: '5px',
-		marginTop: '10px',
-		padding: '15px',
-	},
-	input: {
-		border: '1px solid #ccc',
-		borderRadius: '4px',
-		padding: '10px',
-		fontSize: '1em',
-	},
-	checkboxLabel: {
-		alignItems: 'center',
-		fontSize: '0.95em',
-		display: 'flex',
-		gap: '8px',
-	},
-	success: { textAlign: 'center' as const, marginTop: '10px', color: 'green' },
-	form: { flexDirection: 'column' as const, display: 'flex', gap: '15px' },
-	error: { textAlign: 'center' as const, marginTop: '10px', color: 'red' },
-	fieldError: { fontSize: '0.85em', marginTop: '5px', color: 'red' },
-	subtleNote: { fontSize: '0.9em', marginTop: '5px', color: '#555' },
-	header: { textAlign: 'center' as const, marginBottom: '25px' },
-	label: { fontWeight: 'bold' as const, marginBottom: '5px' },
-	checkbox: { height: '16px', width: '16px' },
-}
-
-import { Dictionary } from '@/lib/getDictionary'
 
 export default function ListNewBibClientPage({
 	initialAuthUserId,
@@ -102,8 +36,8 @@ export default function ListNewBibClientPage({
 	// const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (searchParams?.error) {
-			setErrorMessage(decodeURIComponent(searchParams.error as string))
+		if (searchParams?.error != null && typeof searchParams.error === 'string') {
+			setErrorMessage(decodeURIComponent(searchParams.error))
 		}
 		// If a success message needs to be displayed on *this* page after a redirect back to it:
 		// if (searchParams?.successClient) {
@@ -112,7 +46,7 @@ export default function ListNewBibClientPage({
 	}, [searchParams])
 
 	// Fonction de validation en temps réel
-	const validateField = (name: string, value: any) => {
+	const validateField = (name: string, value: unknown) => {
 		const testData = { ...formData, [name]: value }
 		const result = BibFormSchema.safeParse(testData)
 
@@ -122,25 +56,27 @@ export default function ListNewBibClientPage({
 				setFieldErrors(prev => ({ ...prev, [name]: fieldError.message }))
 			} else {
 				setFieldErrors(prev => {
-					const { ...rest } = prev
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+					const { [name]: _, ...rest } = prev
 					return rest
 				})
 			}
 		} else {
 			setFieldErrors(prev => {
-				const { ...rest } = prev
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const { [name]: _, ...rest } = prev
 				return rest
 			})
 		}
 	}
 
 	// Gestionnaire de changement pour les champs du formulaire
-	const handleFieldChange = (name: string, value: any) => {
+	const handleFieldChange = (name: string, value: unknown) => {
 		setFormData(prev => ({ ...prev, [name]: value }))
 		validateField(name, value)
 
 		// Gestion spéciale pour isNotListedEvent
-		if (name === 'isNotListedEvent') {
+		if (name === 'isNotListedEvent' && typeof value === 'boolean') {
 			setIsNotListedEvent(value)
 		}
 	}
@@ -156,58 +92,57 @@ export default function ListNewBibClientPage({
 		})
 	}
 
-	if (!initialAuthUserId) {
+	if (initialAuthUserId === null || initialAuthUserId === '') {
 		// This case should be handled by the server wrapper or middleware redirecting to sign-in
 		// Displaying something here is a fallback.
-		return <p style={styles.container}>{dictionary.dashboard.seller.listBib.errors.loginRequired}</p>
-	}
-
-	if (!dictionary) {
-		// If dictionary is not available, we can't render the page properly.
-		// This should ideally not happen if the server component is set up correctly.
-		return <p style={styles.container}>"Dictionary data not found."</p>
+		return <p className="container mx-auto max-w-2xl p-6">{dictionary.dashboard.seller.listBib.errors.loginRequired}</p>
 	}
 
 	return (
-		<div style={styles.container}>
-			<header style={styles.header}>
-				<h1>{dictionary.dashboard.seller.listBib.title}</h1>
+		<div className="container mx-auto max-w-2xl p-6">
+			<header className="mb-8 text-center">
+				<h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+					{dictionary.dashboard.seller.listBib.title}
+				</h1>
 			</header>
 
-			{errorMessage && (
-				<p style={styles.error}>
+			{errorMessage !== null && errorMessage !== '' && (
+				<p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
 					{dictionary.dashboard.seller?.noBibsListed} {errorMessage}
 				</p>
 			)}
-			{/* {successMessage && <p style={styles.success}>{successMessage}</p>} */}
+			{/* {successMessage && <p className="mb-4 rounded border border-green-300 bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">{successMessage}</p>} */}
 
-			<form action={formActionWrapper} style={styles.form}>
+			<form action={formActionWrapper} className="space-y-6">
 				<div>
-					<label htmlFor="isNotListedEvent" style={styles.checkboxLabel}>
+					<label
+						className="flex items-center space-x-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+						htmlFor="isNotListedEvent"
+					>
 						<input
 							checked={isNotListedEvent}
+							className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 							id="isNotListedEvent"
 							name="isNotListedEvent"
 							onChange={e => handleFieldChange('isNotListedEvent', e.target.checked)}
-							style={styles.checkbox}
 							type="checkbox"
 						/>
-						{dictionary.dashboard.seller?.listBib.form.notListedEvent}
+						<span>{dictionary.dashboard.seller?.listBib.form.notListedEvent}</span>
 					</label>
 				</div>
 
 				{!isNotListedEvent ? (
 					<div>
-						<label htmlFor="eventId" style={styles.label}>
+						<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="eventId">
 							{dictionary.dashboard.seller?.listBib?.form?.eventSelect}:
 						</label>
 						<select
+							className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 							disabled={isNotListedEvent}
 							id="eventId"
 							name="eventId"
 							onChange={e => handleFieldChange('eventId', e.target.value)}
 							required={!isNotListedEvent}
-							style={styles.select}
 						>
 							<option value="">{dictionary.dashboard.seller?.listBib?.form?.eventSelectPlaceholder}</option>
 							{partneredEvents.map(event => (
@@ -216,87 +151,108 @@ export default function ListNewBibClientPage({
 								</option>
 							))}
 						</select>
-						{fieldErrors.eventId && <p style={styles.fieldError}>{fieldErrors.eventId}</p>}
+						{fieldErrors.eventId && (
+							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.eventId}</p>
+						)}
 						{partneredEvents.length === 0 && (
-							<p style={styles.subtleNote}>
+							<p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
 								No partnered events available. You can list your bib by checking the box above.
 							</p>
 						)}
 					</div>
 				) : (
-					<div style={styles.fieldGroup}>
-						<p style={styles.subtleNote}>
+					<div className="space-y-4">
+						<p className="text-sm text-gray-500 dark:text-gray-400">
 							Please provide details for your unlisted event. This will undergo verification.
 						</p>
 						<div>
-							<label htmlFor="unlistedEventName" style={styles.label}>
+							<label
+								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+								htmlFor="unlistedEventName"
+							>
 								{dictionary.dashboard.seller?.listBib?.form?.unlistedEventName}:
 							</label>
 							<input
+								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 								id="unlistedEventName"
 								name="unlistedEventName"
 								onChange={e => handleFieldChange('unlistedEventName', e.target.value)}
 								placeholder={dictionary.dashboard.seller?.listBib?.form?.unlistedEventNamePlaceholder}
 								required={isNotListedEvent}
-								style={styles.input}
 								type="text"
 							/>
-							{fieldErrors.unlistedEventName && <p style={styles.fieldError}>{fieldErrors.unlistedEventName}</p>}
+							{fieldErrors.unlistedEventName && (
+								<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.unlistedEventName}</p>
+							)}
 						</div>
 						<div>
-							<label htmlFor="unlistedEventDate" style={styles.label}>
+							<label
+								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+								htmlFor="unlistedEventDate"
+							>
 								Event Date:
 							</label>
 							<input
+								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 								id="unlistedEventDate"
 								name="unlistedEventDate"
 								onChange={e => handleFieldChange('unlistedEventDate', e.target.value)}
 								required={isNotListedEvent}
-								style={styles.input}
 								type="date"
 							/>
-							{fieldErrors.unlistedEventDate && <p style={styles.fieldError}>{fieldErrors.unlistedEventDate}</p>}
+							{fieldErrors.unlistedEventDate && (
+								<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.unlistedEventDate}</p>
+							)}
 						</div>
 						<div>
-							<label htmlFor="unlistedEventLocation" style={styles.label}>
+							<label
+								className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+								htmlFor="unlistedEventLocation"
+							>
 								Event Location (City, State/Country):
 							</label>
 							<input
+								className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 								id="unlistedEventLocation"
 								name="unlistedEventLocation"
 								onChange={e => handleFieldChange('unlistedEventLocation', e.target.value)}
 								required={isNotListedEvent}
-								style={styles.input}
 								type="text"
 							/>
 							{fieldErrors.unlistedEventLocation && (
-								<p style={styles.fieldError}>{fieldErrors.unlistedEventLocation}</p>
+								<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.unlistedEventLocation}</p>
 							)}
 						</div>
 					</div>
 				)}
 
 				<div>
-					<label htmlFor="registrationNumber" style={styles.label}>
+					<label
+						className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+						htmlFor="registrationNumber"
+					>
 						{dictionary.dashboard.seller?.listBib?.form?.registrationNumber}:
 					</label>
 					<input
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="registrationNumber"
 						name="registrationNumber"
 						onChange={e => handleFieldChange('registrationNumber', e.target.value)}
 						placeholder={dictionary.dashboard.seller?.listBib?.form?.registrationNumberPlaceholder}
 						required
-						style={styles.input}
 						type="text"
 					/>
-					{fieldErrors.registrationNumber && <p style={styles.fieldError}>{fieldErrors.registrationNumber}</p>}
+					{fieldErrors.registrationNumber && (
+						<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.registrationNumber}</p>
+					)}
 				</div>
 
 				<div>
-					<label htmlFor="price" style={styles.label}>
+					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="price">
 						{dictionary.dashboard.seller?.listBib?.form?.price}:
 					</label>
 					<input
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="price"
 						min="0.01"
 						name="price"
@@ -304,89 +260,91 @@ export default function ListNewBibClientPage({
 						placeholder={dictionary.dashboard.seller?.listBib?.form?.pricePlaceholder}
 						required
 						step="0.01"
-						style={styles.input}
 						type="number"
 					/>
-					{fieldErrors.price && <p style={styles.fieldError}>{fieldErrors.price}</p>}
+					{fieldErrors.price && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.price}</p>}
 				</div>
 
 				<div>
-					<label htmlFor="originalPrice" style={styles.label}>
+					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="originalPrice">
 						Original Price ($) (Optional):
 					</label>
 					<input
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="originalPrice"
 						min="0.00"
 						name="originalPrice"
 						onChange={e => handleFieldChange('originalPrice', parseFloat(e.target.value) || undefined)}
 						step="0.01"
-						style={styles.input}
 						type="number"
 					/>
-					{fieldErrors.originalPrice && <p style={styles.fieldError}>{fieldErrors.originalPrice}</p>}
+					{fieldErrors.originalPrice && (
+						<p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.originalPrice}</p>
+					)}
 				</div>
 
 				<div>
-					<label htmlFor="size" style={styles.label}>
+					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="size">
 						{dictionary.dashboard.seller?.listBib?.form?.size}:
 					</label>
 					<input
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="size"
 						name="size"
 						onChange={e => handleFieldChange('size', e.target.value)}
 						placeholder={dictionary.dashboard.seller?.listBib?.form?.sizePlaceholder}
-						style={styles.input}
 						type="text"
 					/>
-					{fieldErrors.size && <p style={styles.fieldError}>{fieldErrors.size}</p>}
+					{fieldErrors.size && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.size}</p>}
 				</div>
 
 				<div>
-					<label htmlFor="gender" style={styles.label}>
+					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="gender">
 						{dictionary.dashboard.seller?.listBib?.form?.gender}:
 					</label>
 					<select
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="gender"
 						name="gender"
 						onChange={e => handleFieldChange('gender', e.target.value as 'female' | 'male' | 'unisex' | undefined)}
-						style={styles.select}
 					>
 						<option value="">{dictionary.dashboard.seller?.listBib?.form?.genderPlaceholder}</option>
 						<option value="male">Male</option>
 						<option value="female">Female</option>
 						<option value="unisex">Unisex</option>
 					</select>
-					{fieldErrors.gender && <p style={styles.fieldError}>{fieldErrors.gender}</p>}
+					{fieldErrors.gender && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.gender}</p>}
 				</div>
 
 				<div>
-					<label htmlFor="notes" style={styles.label}>
+					<label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="notes">
 						{dictionary.dashboard.seller?.listBib?.form?.notes}:
 					</label>
 					<textarea
+						className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						id="notes"
 						name="notes"
 						placeholder={dictionary.dashboard.seller?.listBib?.form?.notesPlaceholder}
 						rows={3}
-						style={styles.input}
 					/>
 				</div>
 
-				<p style={styles.subtleNote}>
+				<p className="text-sm text-gray-500 dark:text-gray-400">
 					By listing this bib, you confirm that you are authorized to sell it and that it adheres to the event
 					organizer's transfer policies. For unlisted events, ensure accuracy as this will be verified.
 				</p>
 
 				<button
-					onMouseOut={e => (e.currentTarget.style.backgroundColor = '#0070f3')}
-					onMouseOver={e => (e.currentTarget.style.backgroundColor = '#0056b3')}
-					style={styles.button}
+					className="w-full rounded-md bg-blue-600 px-4 py-2 text-white ring-2 transition-colors hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:bg-blue-500 dark:hover:bg-blue-600"
 					type="submit"
 				>
 					{dictionary.dashboard.seller?.listBib?.form?.submit}
 				</button>
 			</form>
-			<Link href="/dashboard/seller" style={styles.link}>
+			<Link
+				className="mt-4 inline-block text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+				href="/dashboard/seller"
+			>
 				{dictionary.dashboard.seller?.listBib?.backToDashboard}
 			</Link>
 		</div>
