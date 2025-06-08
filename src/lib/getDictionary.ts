@@ -1,12 +1,14 @@
 import 'server-only'
 
-// Type for the translations of a single page/component for one language
-// e.g., { "title": "Hello", "description": "Welcome" }
-export type PageTranslations = Record<string, string>
-
-// Type for the structure of a locales.json file
-// e.g., { "en": { "title": "Hello" }, "fr": { "title": "Bonjour" } }
+// Defines the structure for a locales.json file, mapping locale codes (e.g., "en")
+// to their respective PageTranslations.
 export type LocaleData = Record<string, PageTranslations>
+
+// Defines the structure for translations of a single page/component.
+// Allows for nested objects where values are strings or further PageTranslations objects.
+export interface PageTranslations {
+	[key: string]: PageTranslations | string | undefined // Allow undefined for optional properties
+}
 
 /**
  * Extracts translations for a specific locale from loaded locales.json content.
@@ -26,32 +28,22 @@ export const getTranslationsFromData = (
 ): PageTranslations => {
 	// Validate localeJsonContent is a non-null object and not an array
 	if (typeof localeJsonContent !== 'object' || localeJsonContent === null || Array.isArray(localeJsonContent)) {
-		return {}
+		return {} // Return an empty PageTranslations-compatible object
 	}
 
 	// Type assertion after basic validation
 	const data = localeJsonContent as Record<string, unknown>
 
-	// Helper to validate if a value is a PageTranslations object
-	const isPageTranslations = (value: unknown): value is PageTranslations => {
-		if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-			return false
-		}
-		// Check if all enumerable properties of 'value' are strings
-		for (const key in value) {
-			if (Object.prototype.hasOwnProperty.call(value, key)) {
-				if (typeof (value as Record<string, unknown>)[key] !== 'string') {
-					return false
-				}
-			}
-		}
-		return true
+	// Helper to validate if a value can be considered a candidate for PageTranslations
+	// (i.e., it's a non-null, non-array object).
+	const isPageTranslationsCandidate = (value: unknown): value is PageTranslations => {
+		return typeof value === 'object' && value !== null && !Array.isArray(value)
 	}
 
 	// Try to get translations for the current locale
 	if (Object.prototype.hasOwnProperty.call(data, locale)) {
 		const translations = data[locale]
-		if (isPageTranslations(translations)) {
+		if (isPageTranslationsCandidate(translations)) {
 			return translations
 		}
 	}
@@ -59,13 +51,16 @@ export const getTranslationsFromData = (
 	// Fallback to default locale
 	if (Object.prototype.hasOwnProperty.call(data, defaultLocale)) {
 		const translations = data[defaultLocale]
-		if (isPageTranslations(translations)) {
+		if (isPageTranslationsCandidate(translations)) {
 			return translations
 		}
 	}
 
-	return {}
+	return {} // Return an empty PageTranslations-compatible object
 }
 
 // The `Dictionary` type now refers to the translations for a single component/page.
 export type Dictionary = PageTranslations
+
+// The original `dictionaries` constant and `getDictionary` function that loaded
+// from `src/dictionaries/*.json` are removed.
