@@ -2,13 +2,14 @@ import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
-import { notFound, redirect } from 'next/navigation'
-import { getDictionary } from '@/lib/getDictionary'
-import { auth } from '@clerk/nextjs/server'
+import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+import { notFound, redirect } from 'next/navigation'
+import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
 import { fetchBibById } from '@/services/bib.services'
+import translations from './locales.json'
 
 export type BibPurchasePageProps = {
 	params: Promise<{ bibId: string }>
@@ -20,7 +21,7 @@ export default async function BibPurchasePage({
 	params: paramsPromise,
 }: BibPurchasePageProps) {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, translations)
 
 	const { userId: currentUserId } = await auth()
 	const params = await paramsPromise
@@ -45,10 +46,10 @@ export default async function BibPurchasePage({
 		return (
 			<div className="mx-auto max-w-lg p-4 text-center text-[var(--text-dark)] md:p-8">
 				<p className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-[var(--error-text)]">
-					{dictionary.purchase.errors.bibNotAvailable.replace('{status}', bib.status)}
+					{t.purchase.errors.bibNotAvailable.replace('{status}', bib.status)}
 				</p>
 				<Link className="text-[var(--accent-sporty)] hover:underline" href="/events">
-					{dictionary.purchase.browseOtherEvents}
+					{t.purchase.browseOtherEvents}
 				</Link>
 			</div>
 		)
@@ -58,10 +59,10 @@ export default async function BibPurchasePage({
 		return (
 			<div className="mx-auto max-w-lg p-4 text-center text-[var(--text-dark)] md:p-8">
 				<p className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-[var(--error-text)]">
-					{dictionary.purchase.errors.cannotPurchaseOwnBib}
+					{t.purchase.errors.cannotPurchaseOwnBib}
 				</p>
 				<Link className="text-[var(--accent-sporty)] hover:underline" href={`/events/${bib.eventId}`}>
-					{dictionary.purchase.backToEventPage}
+					{t.purchase.backToEventPage}
 				</Link>
 			</div>
 		)
@@ -73,10 +74,10 @@ export default async function BibPurchasePage({
 	async function handleConfirmPurchase() {
 		'use server'
 		const locale = await getLocale()
-		const dictionary = await getDictionary(locale)
+		const t = getTranslations(locale, translations)
 
 		if (currentUserId == null) {
-			redirect(`/purchase/${bibId}?error=${encodeURIComponent(dictionary.purchase.errors.authFailed)}`)
+			redirect(`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.authFailed)}`)
 			return
 		}
 		const { processBibSale } = await import('@/services/bib.services')
@@ -87,13 +88,11 @@ export default async function BibPurchasePage({
 					`/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`
 				)
 			} else {
-				redirect(
-					`/purchase/${bibId}?error=${encodeURIComponent(result.error ?? dictionary.purchase.errors.purchaseFailed)}`
-				)
+				redirect(`/purchase/${bibId}?error=${encodeURIComponent(result.error ?? t.purchase.errors.purchaseFailed)}`)
 			}
 		} catch (error) {
 			console.error('Error in handleConfirmPurchase Server Action:', error)
-			let message = dictionary.purchase.errors.unexpectedError
+			let message = t.purchase.errors.unexpectedError
 			if (error instanceof Error) message = error.message
 			redirect(`/purchase/${bibId}?error=${encodeURIComponent(message)}`)
 		}
@@ -102,58 +101,58 @@ export default async function BibPurchasePage({
 	return (
 		<div className="mx-auto max-w-lg p-4 text-[var(--text-dark)] md:p-8">
 			<header className="mb-8 text-center">
-				<h1 className="text-3xl font-bold">{dictionary.purchase.title}</h1>
+				<h1 className="text-3xl font-bold">{t.purchase.title}</h1>
 			</header>
 
 			{}
 			{errorMessage != null && (
 				<div className="mb-6 rounded-md border border-red-300 bg-[var(--error-bg)] p-3 text-center text-sm text-[var(--error-text)]">
-					{dictionary.purchase.errors.errorPrefix} {errorMessage}
+					{t.purchase.errors.errorPrefix} {errorMessage}
 				</div>
 			)}
 
 			<div className="bento-box space-y-4">
 				<h2 className="mb-4 border-b border-[var(--border-color)] pb-3 text-xl font-semibold">
-					{dictionary.purchase.details.title}
+					{t.purchase.details.title}
 				</h2>
 				<p>
-					<span className="font-semibold">{dictionary.purchase.details.event}:</span> {eventName}
+					<span className="font-semibold">{t.purchase.details.event}:</span> {eventName}
 				</p>
 				<p>
-					<span className="font-semibold">{dictionary.purchase.details.eventDate}:</span> {eventDate}
+					<span className="font-semibold">{t.purchase.details.eventDate}:</span> {eventDate}
 				</p>
 				<p>
-					<span className="font-semibold">{dictionary.purchase.details.registrationNumber}:</span>{' '}
-					{dictionary.purchase.details.registrationNumberNote}
+					<span className="font-semibold">{t.purchase.details.registrationNumber}:</span>{' '}
+					{t.purchase.details.registrationNumberNote}
 				</p>
 				{bib.size != null && bib.size !== '' && (
 					<p>
-						<span className="font-semibold">{dictionary.purchase.details.size}:</span> {bib.size}
+						<span className="font-semibold">{t.purchase.details.size}:</span> {bib.size}
 					</p>
 				)}
 				{bib.gender != null && (
 					<p>
-						<span className="font-semibold">{dictionary.purchase.details.gender}:</span> {bib.gender}
+						<span className="font-semibold">{t.purchase.details.gender}:</span> {bib.gender}
 					</p>
 				)}
 
 				<div className="my-4 text-center text-2xl font-bold text-[var(--accent-sporty)]">
-					{dictionary.purchase.details.price}: ${bib.price.toFixed(2)}
+					{t.purchase.details.price}: ${bib.price.toFixed(2)}
 				</div>
 			</div>
 
 			<form action={handleConfirmPurchase} className="mt-6">
 				<button className="btn btn-primary w-full py-3 text-lg" type="submit">
-					{dictionary.purchase.confirmButton}
+					{t.purchase.confirmButton}
 				</button>
 			</form>
 
-			<p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">{dictionary.purchase.agreementText}</p>
+			<p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">{t.purchase.agreementText}</p>
 			<Link
 				className="mt-6 block text-center text-[var(--accent-sporty)] hover:underline"
 				href={`/events/${bib.eventId}`}
 			>
-				{dictionary.purchase.cancelLink}
+				{t.purchase.cancelLink}
 			</Link>
 		</div>
 	)
@@ -161,18 +160,18 @@ export default async function BibPurchasePage({
 
 export async function generateMetadata({ params: paramsPromise }: BibPurchasePageProps): Promise<Metadata> {
 	const locale = await getLocale()
-	const dictionary = await getDictionary(locale)
+	const t = getTranslations(locale, translations)
 
 	const params = await paramsPromise
 	const bib = await fetchBibById(params.bibId)
 	if (bib == null) {
-		return { title: dictionary.purchase.metadata.notFoundTitle }
+		return { title: t.purchase.metadata.notFoundTitle }
 	}
 	const eventName = (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ?? 'Event'
 	return {
-		description: dictionary.purchase.metadata.descriptionTemplate
+		description: t.purchase.metadata.descriptionTemplate
 			.replace('{eventName}', eventName)
 			.replace('{price}', bib.price.toFixed(2)),
-		title: dictionary.purchase.metadata.titleTemplate.replace('{eventName}', eventName),
+		title: t.purchase.metadata.titleTemplate.replace('{eventName}', eventName),
 	}
 }

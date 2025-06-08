@@ -1,0 +1,101 @@
+{
+	"en": {
+		"purchase": {
+			"title": "Confirm Your Bib Purchase",
+			"errors": {
+				"bibNotAvailable": "This bib is no longer available for purchase (Status: {status}).",
+				"cannotPurchaseOwnBib": "You cannot purchase your own bib listing.",
+				"authFailed": "User authentication failed. Please sign in again.",
+				"purchaseFailed": "Purchase failed. Please try again.",
+				"unexpectedError": "An unexpected error occurred during purchase.",
+				"errorPrefix": "Error:"
+			},
+			"details": {
+				"title": "Review Bib Details:",
+				"event": "Event",
+				"eventDate": "Event Date",
+				"registrationNumber": "Registration Number",
+				"registrationNumberNote": "(Provided after purchase)",
+				"size": "Size",
+				"gender": "Gender",
+				"price": "Price"
+			},
+			"confirmButton": "Confirm & Proceed to Payment (Simulated)",
+			"agreementText": "By clicking \"Confirm & Proceed\", you agree to purchase this bib. Further payment processing will be simulated in this version.",
+			"cancelLink": "Cancel and return to event page",
+			"browseOtherEvents": "Browse other events",
+			"backToEventPage": "Back to event page",
+			"metadata": {
+				"notFoundTitle": "Bib Not Found | BibUp",
+				"titleTemplate": "Purchase Bib for {eventName} | BibUp",
+				"descriptionTemplate": "Confirm your purchase for a bib for {eventName} priced at ${price}."
+			}
+		}
+	},
+	"fr": {
+		"purchase": {
+			"title": "Confirmer Votre Achat de Dossard",
+			"errors": {
+				"bibNotAvailable": "Ce dossard n'est plus disponible à l'achat (Statut : {status}).",
+				"cannotPurchaseOwnBib": "Vous ne pouvez pas acheter votre propre annonce de dossard.",
+				"authFailed": "L'authentification utilisateur a échoué. Veuillez vous reconnecter.",
+				"purchaseFailed": "L'achat a échoué. Veuillez réessayer.",
+				"unexpectedError": "Une erreur inattendue s'est produite lors de l'achat.",
+				"errorPrefix": "Erreur :"
+			},
+			"details": {
+				"title": "Réviser les Détails du Dossard :",
+				"event": "Événement",
+				"eventDate": "Date de l'Événement",
+				"registrationNumber": "Numéro d'Inscription",
+				"registrationNumberNote": "(Fourni après l'achat)",
+				"size": "Taille",
+				"gender": "Genre",
+				"price": "Prix"
+			},
+			"confirmButton": "Confirmer et Procéder au Paiement (Simulé)",
+			"agreementText": "En cliquant sur \"Confirmer et Procéder\", vous acceptez d'acheter ce dossard. Le traitement du paiement sera simulé dans cette version.",
+			"cancelLink": "Annuler et retourner à la page de l'événement",
+			"browseOtherEvents": "Parcourir d'autres événements",
+			"backToEventPage": "Retour à la page de l'événement",
+			"metadata": {
+				"notFoundTitle": "Dossard Introuvable | BibUp",
+				"titleTemplate": "Acheter un Dossard pour {eventName} | BibUp",
+				"descriptionTemplate": "Confirmez votre achat d'un dossard pour {eventName} au prix de {price}$."
+			}
+		}
+	},
+	"ko": {
+		"purchase": {
+			"title": "빕 구매 확인",
+			"errors": {
+				"bibNotAvailable": "해당 빕은 더 이상 구매할 수 없습니다 (상태: {status}).",
+				"cannotPurchaseOwnBib": "내 빕 목록을 구매할 수 없습니다.",
+				"authFailed": "사용자 인증에 실패했습니다. 다시 로그인해주세요.",
+				"purchaseFailed": "구매에 실패했습니다. 다시 시도해주세요.",
+				"unexpectedError": "구매 중 알 수 없는 오류가 발생했습니다.",
+				"errorPrefix": "오류:"
+			},
+			"details": {
+				"title": "빕 정보 검토:",
+				"event": "이벤트",
+				"eventDate": "이벤트 날짜",
+				"registrationNumber": "등록 번호",
+				"registrationNumberNote": "(구매 후 제공됨)",
+				"size": "사이즈",
+				"gender": "성별",
+				"price": "가격"
+			},
+			"confirmButton": "확인 및 결제로 진행 (시뮬레이션)",
+			"agreementText": "\"확인 및 진행\"을 클릭하면 이 빕 구매에 동의합니다. 이 버전에서는 추가 결제 처리가 시뮬레이션됩니다.",
+			"cancelLink": "취소하고 이벤트 페이지로 돌아가기",
+			"browseOtherEvents": "다른 이벤트 보기",
+			"backToEventPage": "이벤트 페이지로 돌아가기",
+			"metadata": {
+				"notFoundTitle": "빕을 찾을 수 없음 | BibUp",
+				"titleTemplate": "{eventName} 빕 구매 | BibUp",
+				"descriptionTemplate": "${price}짜리 {eventName} 빕 구매를 확인합니다."
+			}
+		}
+	}
+}

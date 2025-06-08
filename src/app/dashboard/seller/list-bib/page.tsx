@@ -5,9 +5,9 @@ import { auth } from '@clerk/nextjs/server'
 import { getLocale } from '@/lib/getLocale'
 
 import { fetchPartneredApprovedEvents } from '@/services/event.services'
-import translations from './locales.json'
 
 import ListNewBibClientPage from './client' // Assuming the client component is in client.tsx
+import translations from './locales.json'
 
 // Metadata can be defined in the Server Component
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,10 +38,10 @@ export default async function ListNewBibServerWrapper({
 	// Render the client component, passing the fetched data as props
 	return (
 		<ListNewBibClientPage
-			translations={t}
 			initialAuthUserId={userId}
 			partneredEvents={partneredEvents}
 			searchParams={searchParams}
+			translations={t}
 		/>
 	)
 }
