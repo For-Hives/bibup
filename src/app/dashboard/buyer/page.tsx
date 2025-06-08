@@ -88,6 +88,14 @@ export default async function BuyerDashboardPage({
 	const purchaseSuccess = searchParams?.purchase_success === 'true'
 	const eventNameForSuccessMsg = searchParams?.event_name ? decodeURIComponent(searchParams.event_name as string) : ''
 
+	const showSuccessMessage = purchaseSuccess && Boolean(eventNameForSuccessMsg)
+	const successDisplay = showSuccessMessage ? (
+		<div style={styles.successMessage}>
+			{dictionary.dashboard.buyer.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>.{' '}
+			{dictionary.dashboard.buyer.purchaseSuccessDetails}
+		</div>
+	) : null
+
 	return (
 		<div style={styles.container}>
 			<header style={styles.header}>
@@ -98,12 +106,7 @@ export default async function BuyerDashboardPage({
 				{dictionary.dashboard.buyer.welcome}, {buyerName}!
 			</p>
 
-			{purchaseSuccess && eventNameForSuccessMsg && (
-				<div style={styles.successMessage}>
-					{dictionary.dashboard.buyer.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>.{' '}
-					{dictionary.dashboard.buyer.purchaseSuccessDetails}
-				</div>
-			)}
+			{successDisplay}
 
 			<section style={styles.section}>
 				<h2 style={styles.sectionTitle}>{dictionary.dashboard.buyer.myPurchases}</h2>

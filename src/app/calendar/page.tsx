@@ -22,9 +22,7 @@ export default async function CalendarPage() {
 			year: 'numeric',
 			month: 'long',
 		})
-		if (!acc[yearMonth]) {
-			acc[yearMonth] = []
-		}
+		acc[yearMonth] ??= []
 		acc[yearMonth].push(event)
 		return acc
 	}, {} as GroupedEvents)
@@ -86,7 +84,7 @@ export default async function CalendarPage() {
 										<p style={{ margin: '5px 0 0' }}>
 											<strong>Location:</strong> {event.location}
 										</p>
-										{event.description && (
+										{event.description != null && event.description !== '' && (
 											<p
 												style={{
 													margin: '5px 0 0',

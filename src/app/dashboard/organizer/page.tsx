@@ -69,7 +69,7 @@ export default async function OrganizerDashboardPage({
 				{dictionary.dashboard.organizer.welcomeMessage}, {organizerName}!
 			</p>
 
-			{successMessage && (
+			{successMessage != null && (
 				<div className="mb-6 rounded-lg border border-green-300 bg-[var(--success-bg)] p-4 text-center text-[var(--success-text)]">
 					{successMessage}
 				</div>
