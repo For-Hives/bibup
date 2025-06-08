@@ -8,7 +8,6 @@ import Link from 'next/link'
 import {
 	fetchBibByIdForSeller,
 	updateBibBySeller,
-	UpdateBibData,
 } from '@/services/bib.services'
 
 export type EditBibPageProps = {
@@ -94,9 +93,6 @@ export default async function EditBibPage({
 		}
 
 		const priceValue = formData.get('price') as string
-		const originalPriceValue = formData.get('originalPrice') as string
-		const genderValue = formData.get('gender') as string
-		const sizeValue = formData.get('size') as string
 
 		const price = parseFloat(priceValue)
 
@@ -107,13 +103,8 @@ export default async function EditBibPage({
 			return
 		}
 
-		const dataToUpdate: UpdateBibData = {
-			originalPrice: originalPriceValue
-				? parseFloat(originalPriceValue)
-				: undefined,
-			gender: genderValue ? (genderValue as Bib['gender']) : undefined,
-			size: sizeValue || undefined,
-			price,
+		const dataToUpdate: { status: Bib['status'] } = {
+			status: 'withdrawn',
 		}
 
 		try {

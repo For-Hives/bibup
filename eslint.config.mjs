@@ -9,7 +9,6 @@ import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 import nextPlugin from '@next/eslint-plugin-next'
 import promisePlugin from 'eslint-plugin-promise'
 import tsParser from '@typescript-eslint/parser'
-
 import * as espree from 'espree'
 
 // Configuration commune des règles

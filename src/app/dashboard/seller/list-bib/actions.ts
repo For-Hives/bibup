@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { Bib } from '@/models'
+import { Bib } from '@/models/bib.model'
 
 import { createBib } from '@/services/bib.services'
 
@@ -13,7 +13,7 @@ export async function handleListBibServerAction(
 	sellerUserIdFromAuth: null | string
 ) {
 	const sellerUserId = sellerUserIdFromAuth
-	if (!sellerUserId) {
+	if (sellerUserId == null) {
 		redirect('/dashboard/seller/list-bib?error=User not authenticated')
 	}
 
