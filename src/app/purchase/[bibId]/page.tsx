@@ -8,7 +8,7 @@ import { getLocale } from '@/lib/getLocale'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
-import { fetchBibById } from '@/services/bib.services'
+import { fetchBibById, processBibSale } from '@/services/bib.services'
 
 import translations from './locales.json'
 
@@ -81,7 +81,7 @@ export default async function BibPurchasePage({
 			redirect(`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.authFailed)}`)
 			return
 		}
-		const { processBibSale } = await import('@/services/bib.services')
+
 		try {
 			const result = await processBibSale(bibId, currentUserId)
 			if (result.success && result.transaction) {
