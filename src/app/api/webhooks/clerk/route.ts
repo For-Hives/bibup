@@ -6,7 +6,7 @@ import { Webhook } from 'svix'
 import { createUser, CreateUserDTO } from '@/services/user.services' // Adjust path as necessary
 
 // Make sure to set CLERK_WEBHOOK_SECRET in your environment variables
-const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
+const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET
 
 export async function POST(req: Request) {
 	if (WEBHOOK_SECRET === undefined || WEBHOOK_SECRET === null || WEBHOOK_SECRET.trim() === '') {
