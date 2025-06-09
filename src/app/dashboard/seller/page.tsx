@@ -62,9 +62,13 @@ export default async function SellerDashboardPage({
 
 	if (clerkUserId) {
 		bibUpUser = await fetchUserByClerkId(clerkUserId)
-		listedBibs = (await fetchBibsBySeller(clerkUserId)) as (Bib & {
+		if (bibUpUser == null) {
+			return <div className="mx-auto max-w-4xl p-4 md:p-8">not found</div>
+		}
+		// Fetch bibs listed by this seller
+		listedBibs = (await fetchBibsBySeller(bibUpUser.id)) as (Bib & {
 			expand?: { eventId: Event }
-		})[]
+		})[] //TODO: use a proper client compoenent for this
 	}
 
 	const bibUpBalance = bibUpUser?.bibUpBalance ?? 0
