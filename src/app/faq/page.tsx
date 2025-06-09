@@ -7,8 +7,8 @@ import { getLocale } from '@/lib/getLocale'
 import faqTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	description: 'Frequently Asked Questions about buying, selling, and organizing events on BibUp.',
-	title: 'FAQ | BibUp',
+	description: 'Frequently Asked Questions about buying, selling, and organizing events on Beswib.',
+	title: 'FAQ | Beswib',
 }
 
 const faqStyles = {

@@ -8,7 +8,7 @@ import Link from 'next/link'
 import dashboardTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	title: 'Dashboard | BibUp',
+	title: 'Dashboard | Beswib',
 }
 
 export default async function DashboardPage() {

@@ -114,6 +114,6 @@ export default async function CalendarPage() {
 // Optional: Metadata for the page
 // import type { Metadata } from 'next'
 // export const metadata: Metadata = {
-//   title: 'Events Calendar | BibUp',
+//   title: 'Events Calendar | Beswib',
 //   description: 'Browse upcoming race events by month.',
 // }

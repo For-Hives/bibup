@@ -1,7 +1,7 @@
 {
 	"en": {
 		"title": "List a New Bib",
-		"metadataTitle": "List Your Race Bib - BibUp",
+		"metadataTitle": "List Your Race Bib - Beswib",
 		"metadataDescription": "List your race bib for sale on our marketplace. Sell your unused race bibs easily.",
 		"loginRequired": "You must be logged in to list a bib.",
 		"noBibsListedError": "Error listing bib:",
@@ -38,7 +38,7 @@
 	},
 	"fr": {
 		"title": "Lister un Nouveau Dossard",
-		"metadataTitle": "Listez Votre Dossard de Course - BibUp",
+		"metadataTitle": "Listez Votre Dossard de Course - Beswib",
 		"metadataDescription": "Listez votre dossard de course en vente sur notre marketplace. Vendez facilement vos dossards inutilisés.",
 		"loginRequired": "Vous devez être connecté pour lister un dossard.",
 		"noBibsListedError": "Erreur lors de la liste du dossard:",
@@ -75,7 +75,7 @@
 	},
 	"ko": {
 		"title": "새 번호표 등록",
-		"metadataTitle": "레이스 번호표 등록 - BibUp",
+		"metadataTitle": "레이스 번호표 등록 - Beswib",
 		"metadataDescription": "마켓플레이스에서 레이스 번호표를 판매로 등록하세요. 사용하지 않는 레이스 번호표를 쉽게 판매하세요.",
 		"loginRequired": "번호표를 등록하려면 로그인해야 합니다.",
 		"noBibsListedError": "번호표 등록 오류:",

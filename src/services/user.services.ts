@@ -77,7 +77,7 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 }
 
 /**
- * Updates a user's BibUp balance.
+ * Updates a user's Beswib balance.
  * @param clerkUserId The Clerk User ID of the user whose balance is to be updated.
  * @param amountToAdd The amount to add to the user's balance (can be negative to subtract).
  */

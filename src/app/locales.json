@@ -2,7 +2,7 @@
 	"en": {
 		"home": {
 			"hero": {
-				"title": "Welcome to BibUp!",
+				"title": "Welcome to Beswib!",
 				"subtitle": "Your platform for buying and selling race bibs.",
 				"browseEventsButton": "Browse Events"
 			},
@@ -13,7 +13,7 @@
 			},
 			"callToAction": {
 				"title": "Ready to Dive In?",
-				"description": "Learn more about how BibUp works or start browsing events now.",
+				"description": "Learn more about how Beswib works or start browsing events now.",
 				"learnMoreButton": "Learn More (FAQ)"
 			}
 		}
@@ -21,7 +21,7 @@
 	"fr": {
 		"home": {
 			"hero": {
-				"title": "Bienvenue sur BibUp !",
+				"title": "Bienvenue sur Beswib !",
 				"subtitle": "Votre plateforme pour acheter et vendre des dossards de course.",
 				"browseEventsButton": "Parcourir les événements"
 			},
@@ -32,7 +32,7 @@
 			},
 			"callToAction": {
 				"title": "Prêt à commencer ?",
-				"description": "Apprenez-en plus sur le fonctionnement de BibUp ou commencez à parcourir les événements.",
+				"description": "Apprenez-en plus sur le fonctionnement de Beswib ou commencez à parcourir les événements.",
 				"learnMoreButton": "En savoir plus (FAQ)"
 			}
 		}
@@ -40,7 +40,7 @@
 	"ko": {
 		"home": {
 			"hero": {
-				"title": "BibUp에 오신 것을 환영합니다!",
+				"title": "Beswib에 오신 것을 환영합니다!",
 				"subtitle": "레이스 참가권 구매 및 판매 플랫폼입니다.",
 				"browseEventsButton": "이벤트 찾아보기"
 			},
@@ -51,7 +51,7 @@
 			},
 			"callToAction": {
 				"title": "시작할 준비가 되셨나요?",
-				"description": "BibUp 작동 방식에 대해 자세히 알아보거나 지금 바로 이벤트를 찾아보세요.",
+				"description": "Beswib 작동 방식에 대해 자세히 알아보거나 지금 바로 이벤트를 찾아보세요.",
 				"learnMoreButton": "더 알아보기 (FAQ)"
 			}
 		}

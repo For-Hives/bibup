@@ -14,7 +14,7 @@ import { fetchBibsBySeller } from '@/services/bib.services'
 import sellerTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	title: 'Seller Dashboard | BibUp',
+	title: 'Seller Dashboard | Beswib',
 }
 
 // Helper to get status class string from globals.css
@@ -104,7 +104,7 @@ export default async function SellerDashboardPage({
 				{' '}
 				{/* Balance Box */}
 				<div className="bento-box flex flex-col items-center justify-center md:col-span-1">
-					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">{t.yourBibUpBalance}</h2>
+					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">{t.yourBeswibBalance}</h2>
 					<p className="text-3xl font-bold text-[var(--accent-sporty)]">${bibUpBalance.toFixed(2)}</p>
 				</div>
 				{/* Manage Bib Listings Box (takes more space) */}

@@ -332,6 +332,6 @@ export default async function EditBibPage({
 export async function generateMetadata({ params: paramsPromise }: EditBibPageProps): Promise<Metadata> {
 	const params = await paramsPromise
 	return {
-		title: `Edit Bib ${params.bibId} | Seller Dashboard | BibUp`,
+		title: `Edit Bib ${params.bibId} | Seller Dashboard | Beswib`,
 	}
 }
