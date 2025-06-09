@@ -14,7 +14,7 @@ import { fetchBibsByBuyer } from '@/services/bib.services'
 import buyerTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	title: 'Buyer Dashboard | BibUp',
+	title: 'Buyer Dashboard | Beswib',
 }
 
 // Basic styling (can be refactored)

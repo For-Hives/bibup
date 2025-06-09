@@ -12,7 +12,7 @@ import { createEvent } from '@/services/event.services'
 import submitEventTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	title: 'Submit New Event | Organizer Dashboard | BibUp',
+	title: 'Submit New Event | Organizer Dashboard | Beswib',
 }
 
 // Using Tailwind classes directly for styling this form page

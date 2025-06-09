@@ -11,7 +11,7 @@ import { fetchEventsByOrganizer } from '@/services/event.services'
 import organizerTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	title: 'Organizer Dashboard | BibUp',
+	title: 'Organizer Dashboard | Beswib',
 }
 
 // Helper to get status class string from globals.css
@@ -128,14 +128,14 @@ export default async function OrganizerDashboardPage({
 					<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t.partnershipDescription}</p>
 					<a
 						className="btn btn-secondary w-full"
-						href="mailto:partners@bibup.com?subject=Partnership Inquiry"
+						href="mailto:partners@beswib.com?subject=Partnership Inquiry"
 						// style={{backgroundColor: 'var(--secondary-pastel)', color: 'var(--text-dark)'}} // Using btn-secondary now
 					>
 						{t.scheduleMeeting}
 					</a>
 					<p className="mt-4 text-center text-xs">
 						{t.contactSupport}{' '}
-						<a className="text-[var(--accent-sporty)] hover:underline" href="mailto:support@bibup.com">
+						<a className="text-[var(--accent-sporty)] hover:underline" href="mailto:support@beswib.com">
 							{t.supportEmail}
 						</a>
 						.

@@ -17,7 +17,7 @@
 		"partnershipDescription": "Interested in becoming a partnered event or need assistance?",
 		"scheduleMeeting": "Schedule a Meeting / Inquire",
 		"contactSupport": "Alternatively, reach out to",
-		"supportEmail": "support@bibup.com",
+		"supportEmail": "support@beswib.com",
 		"eventSubmittedSuccess": "Event submitted successfully and is pending approval!"
 	},
 	"fr": {
@@ -38,7 +38,7 @@
 		"partnershipDescription": "Intéressé à devenir un événement partenaire ou besoin d'assistance ?",
 		"scheduleMeeting": "Planifier une Réunion / S'enquérir",
 		"contactSupport": "Alternativement, contactez",
-		"supportEmail": "support@bibup.com",
+		"supportEmail": "support@beswib.com",
 		"eventSubmittedSuccess": "Événement soumis avec succès et en attente d'approbation !"
 	},
 	"ko": {
@@ -59,7 +59,7 @@
 		"partnershipDescription": "파트너십 이벤트가 되고 싶으시거나 도움이 필요하신가요?",
 		"scheduleMeeting": "미팅 예약 / 문의",
 		"contactSupport": "또는 다음으로 문의하세요:",
-		"supportEmail": "support@bibup.com",
+		"supportEmail": "support@beswib.com",
 		"eventSubmittedSuccess": "이벤트가 성공적으로 제출되어 승인을 기다리고 있습니다!"
 	}
 }
