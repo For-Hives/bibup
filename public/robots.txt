@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Block all bots from accessing the site during development
+Sitemap: 
