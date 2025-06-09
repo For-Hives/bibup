@@ -48,12 +48,10 @@ type Translations = {
 }
 
 export default function ListNewBibClientPage({
-	initialAuthUserId,
 	partneredEvents,
 	translations: t,
 	searchParams,
 }: {
-	initialAuthUserId: null | string
 	partneredEvents: Event[]
 	searchParams?: { [key: string]: string | string[] | undefined }
 	translations: Translations
@@ -105,7 +103,7 @@ export default function ListNewBibClientPage({
 	}
 
 	// Gestionnaire de changement pour les champs du formulaire
-	const handleFieldChange = (name: string, value: unknown) => {
+	function handleFieldChange(name: string, value: unknown) {
 		setFormData(prev => ({ ...prev, [name]: value }))
 		validateField(name, value)
 
@@ -117,19 +115,13 @@ export default function ListNewBibClientPage({
 
 	// Wrapper for the server action to be used in form's action prop.
 	// This is how client components can call server actions.
-	const formActionWrapper = (formData: FormData) => {
+	function formActionWrapper(formData: FormData) {
 		setErrorMessage(null) // Clear previous errors on new submission
 		setFieldErrors({}) // Clear field errors
 		// initialAuthUserId is passed from the server component wrapper.
-		handleListBibServerAction(formData, initialAuthUserId).catch(error => {
+		handleListBibServerAction(formData).catch(error => {
 			console.error('Error in form action:', error)
 		})
-	}
-
-	if (initialAuthUserId === null || initialAuthUserId === '') {
-		// This case should be handled by the server wrapper or middleware redirecting to sign-in
-		// Displaying something here is a fallback.
-		return <p className="container mx-auto max-w-2xl p-6">{t.loginRequired}</p>
 	}
 
 	return (

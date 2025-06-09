@@ -27,7 +27,6 @@ export default async function ListNewBibServerWrapper({
 }: {
 	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-	const { userId } = await auth() // Get the authenticated user's ID (Clerk ID)
 	const locale = await getLocale()
 	const t = getTranslations(locale, translations)
 	const searchParams = await searchParamsPromise
@@ -36,12 +35,5 @@ export default async function ListNewBibServerWrapper({
 	const partneredEvents = await fetchPartneredApprovedEvents()
 
 	// Render the client component, passing the fetched data as props
-	return (
-		<ListNewBibClientPage
-			initialAuthUserId={userId}
-			partneredEvents={partneredEvents}
-			searchParams={searchParams}
-			translations={t}
-		/>
-	)
+	return <ListNewBibClientPage partneredEvents={partneredEvents} searchParams={searchParams} translations={t} />
 }

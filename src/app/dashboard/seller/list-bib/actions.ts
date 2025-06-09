@@ -8,7 +8,7 @@ import { createBib } from '@/services/bib.services'
 import { BibFormSchema } from './schemas'
 
 // Server action for handling bib listing
-export async function handleListBibServerAction(formData: FormData, sellerUserIdFromAuth: null | string) {
+export async function handleListBibServerAction(formData: FormData) {
 	const sellerUserId = sellerUserIdFromAuth
 	if (sellerUserId == null) {
 		redirect('/dashboard/seller/list-bib?error=User not authenticated')
