@@ -1,0 +1,147 @@
+'use server'
+
+import type { Bib } from '@/models/bib.model'
+
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+
+import { fetchBibByIdForSeller, updateBibBySeller } from '@/services/bib.services'
+import { fetchUserByClerkId } from '@/services/user.services'
+
+// Server action to toggle listing status
+export async function handleToggleListingStatus(
+	bibId: string,
+	newStatus: 'listed_private' | 'listed_public',
+	formData: FormData
+) {
+	const { userId: clerkId } = await auth()
+
+	if (clerkId == null || clerkId === '') {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
+		return
+	}
+
+	// Fetch the current bib to validate status transitions
+	const sellerUser = await fetchUserByClerkId(clerkId)
+	if (!sellerUser) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('User not found.')}`)
+		return
+	}
+
+	const bibWithEvent = await fetchBibByIdForSeller(bibId, sellerUser.id)
+	if (!bibWithEvent) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Bib not found.')}`)
+		return
+	}
+
+	// Validation for status transitions
+	if (bibWithEvent.status === 'validation_failed' && newStatus === 'listed_public') {
+		redirect(
+			`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Cannot make public until event details are verified by admin.')}`
+		)
+		return
+	}
+
+	if (bibWithEvent.status === 'sold' || bibWithEvent.status === 'expired') {
+		redirect(
+			`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent.status}.`)}`
+		)
+		return
+	}
+
+	try {
+		const updatedBib = await updateBibBySeller(bibId, { status: newStatus }, clerkId)
+
+		if (updatedBib) {
+			redirect(
+				`/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace('_', ' ')}.`)}`
+			)
+		} else {
+			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to change bib status.')}`)
+		}
+	} catch {
+		redirect(
+			`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while changing the bib status.')}`
+		)
+	}
+}
+
+// Server action to update bib details
+export async function handleUpdateBibDetails(bibId: string, formData: FormData) {
+	const { userId: clerkId } = await auth()
+
+	if (clerkId == null || clerkId === '') {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
+		return
+	}
+
+	const priceValue = formData.get('price') as string
+	const originalPriceValue = formData.get('originalPrice') as string
+	const size = formData.get('size') as string
+	const gender = formData.get('gender') as string
+
+	const price = parseFloat(priceValue)
+
+	if (isNaN(price) || price <= 0) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Valid price is required.')}`)
+		return
+	}
+
+	const dataToUpdate: Partial<Bib> = {
+		price: price,
+	}
+
+	// Add optional fields if they exist
+	if (originalPriceValue && originalPriceValue.trim() !== '') {
+		const originalPrice = parseFloat(originalPriceValue)
+		if (!isNaN(originalPrice) && originalPrice > 0) {
+			dataToUpdate.originalPrice = originalPrice
+		}
+	}
+
+	if (size && size.trim() !== '') {
+		dataToUpdate.size = size.trim()
+	}
+
+	if (gender && gender.trim() !== '') {
+		dataToUpdate.gender = gender as 'female' | 'male' | 'unisex'
+	}
+
+	try {
+		const updatedBib = await updateBibBySeller(bibId, dataToUpdate, clerkId)
+
+		if (updatedBib) {
+			redirect(`/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent('Bib details updated successfully!')}`)
+		} else {
+			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to update bib details.')}`)
+		}
+	} catch {
+		redirect(
+			`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while updating the bib.')}`
+		)
+	}
+}
+
+// Server action to withdraw bib
+export async function handleWithdrawBib(bibId: string, formData: FormData) {
+	const { userId: clerkId } = await auth()
+
+	if (clerkId == null || clerkId === '') {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
+		return
+	}
+
+	try {
+		const updatedBib = await updateBibBySeller(bibId, { status: 'withdrawn' }, clerkId)
+
+		if (updatedBib) {
+			redirect(`/dashboard/seller?success=${encodeURIComponent('Bib listing withdrawn.')}&bibStatus=withdrawn`)
+		} else {
+			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to withdraw bib.')}`)
+		}
+	} catch {
+		redirect(
+			`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while withdrawing the bib.')}`
+		)
+	}
+}

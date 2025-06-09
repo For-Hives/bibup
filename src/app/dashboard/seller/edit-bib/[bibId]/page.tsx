@@ -5,7 +5,10 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
-import { fetchBibByIdForSeller, updateBibBySeller } from '@/services/bib.services'
+import { fetchBibByIdForSeller } from '@/services/bib.services'
+import { fetchUserByClerkId } from '@/services/user.services'
+
+import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions'
 
 export type EditBibPageProps = {
 	params: Promise<{ bibId: string }>
@@ -38,16 +41,23 @@ export default async function EditBibPage({
 	searchParams: searchParamsPromise,
 	params: paramsPromise,
 }: EditBibPageProps) {
-	const { userId: sellerUserId } = await auth()
+	const { userId: clerkId } = await auth()
 	const params = await paramsPromise
 	const searchParams = await searchParamsPromise
 	const { bibId } = params
 
-	if (sellerUserId == null || sellerUserId === '') {
+	if (clerkId == null || clerkId === '') {
 		redirect(`/sign-in?redirect_url=/dashboard/seller/edit-bib/${bibId}`)
 	}
 
-	const bibWithEvent = await fetchBibByIdForSeller(bibId, sellerUserId)
+	// fetch user by clerkId to ensure sellerUserId is valid
+	const sellerUser = await fetchUserByClerkId(clerkId)
+	if (!sellerUser) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('User not found.')}`)
+		return
+	}
+	// Fetch the bib with event details for the seller
+	const bibWithEvent = await fetchBibByIdForSeller(bibId, sellerUser.id)
 
 	if (!bibWithEvent) {
 		return (
@@ -68,116 +78,6 @@ export default async function EditBibPage({
 		searchParams && typeof searchParams.success === 'string' ? decodeURIComponent(searchParams.success) : ''
 	const errorMessage =
 		searchParams && typeof searchParams.error === 'string' ? decodeURIComponent(searchParams.error) : ''
-
-	// Server action to update bib details
-	async function handleUpdateBibDetails(formData: FormData) {
-		'use server'
-
-		if (sellerUserId == null || sellerUserId === '') {
-			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
-			return
-		}
-
-		const priceValue = formData.get('price') as string
-
-		const price = parseFloat(priceValue)
-
-		if (isNaN(price) || price <= 0) {
-			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Valid price is required.')}`)
-			return
-		}
-
-		const dataToUpdate: { price: number; status: Bib['status'] } = {
-			status: 'withdrawn',
-			price: price,
-		}
-
-		try {
-			const updatedBib = await updateBibBySeller(bibId, dataToUpdate, sellerUserId)
-
-			if (updatedBib) {
-				redirect(
-					`/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent('Bib details updated successfully!')}`
-				)
-			} else {
-				redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to update bib details.')}`)
-			}
-		} catch {
-			redirect(
-				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while updating the bib.')}`
-			)
-		}
-	}
-
-	// Server action to withdraw bib
-	async function handleWithdrawBib() {
-		'use server'
-
-		if (sellerUserId == null || sellerUserId === '') {
-			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
-			return
-		}
-
-		try {
-			const updatedBib = await updateBibBySeller(bibId, { status: 'withdrawn' }, sellerUserId)
-
-			if (updatedBib) {
-				redirect(`/dashboard/seller?success=${encodeURIComponent('Bib listing withdrawn.')}&bibStatus=withdrawn`)
-			} else {
-				redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to withdraw bib.')}`)
-			}
-		} catch {
-			redirect(
-				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while withdrawing the bib.')}`
-			)
-		}
-	}
-
-	// Server action to toggle listing status
-	async function handleToggleListingStatus(newStatus: 'listed_private' | 'listed_public') {
-		'use server'
-
-		if (sellerUserId == null || sellerUserId === '') {
-			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
-			return
-		}
-
-		if (!bibWithEvent) {
-			redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Bib not found.')}`)
-			return
-		}
-
-		// Validation for status transitions
-		if (bibWithEvent.status === 'validation_failed' && newStatus === 'listed_public') {
-			redirect(
-				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Cannot make public until event details are verified by admin.')}`
-			)
-			return
-		}
-
-		if (bibWithEvent.status === 'sold' || bibWithEvent.status === 'expired') {
-			redirect(
-				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent(`Cannot change listing status from ${bibWithEvent.status}.`)}`
-			)
-			return
-		}
-
-		try {
-			const updatedBib = await updateBibBySeller(bibId, { status: newStatus }, sellerUserId)
-
-			if (updatedBib) {
-				redirect(
-					`/dashboard/seller/edit-bib/${bibId}?success=${encodeURIComponent(`Bib status changed to ${newStatus.replace('_', ' ')}.`)}`
-				)
-			} else {
-				redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Failed to change bib status.')}`)
-			}
-		} catch {
-			redirect(
-				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('An error occurred while changing the bib status.')}`
-			)
-		}
-	}
 
 	const canMakePublic = ['listed_private', 'pending_validation', 'withdrawn'].includes(bibWithEvent.status)
 
@@ -211,7 +111,7 @@ export default async function EditBibPage({
 
 			{/* Bib Details Form */}
 			<div className="bento-box mb-8">
-				<form action={handleUpdateBibDetails} className="space-y-4">
+				<form action={formData => handleUpdateBibDetails(bibId, formData)} autoComplete="off" className="space-y-4">
 					<div>
 						<label className="mb-1 block text-sm font-medium" htmlFor="price">
 							Selling Price ($):
@@ -291,7 +191,7 @@ export default async function EditBibPage({
 
 				<div className="flex flex-wrap gap-3">
 					{canWithdraw && (
-						<form action={handleWithdrawBib}>
+						<form action={formData => handleWithdrawBib(bibId, formData)} autoComplete="off">
 							<button className="btn btn-withdraw" type="submit">
 								Withdraw Listing
 							</button>
@@ -299,7 +199,7 @@ export default async function EditBibPage({
 					)}
 
 					{canMakePublic && (
-						<form action={() => handleToggleListingStatus('listed_public')}>
+						<form action={formData => handleToggleListingStatus(bibId, 'listed_public', formData)} autoComplete="off">
 							<button className="btn btn-secondary bg-green-500 text-white hover:bg-green-600" type="submit">
 								Make Public
 							</button>
@@ -307,8 +207,8 @@ export default async function EditBibPage({
 					)}
 
 					{canMakePrivate && (
-						<form action={() => handleToggleListingStatus('listed_private')}>
-							<button className="btn btn-secondary bg-purple-500 text-white hover:bg-purple-600" type="submit">
+						<form action={formData => handleToggleListingStatus(bibId, 'listed_private', formData)} autoComplete="off">
+							<button className="btn btn-secondary bg-purple-800 text-white hover:bg-purple-600" type="submit">
 								Make Private
 							</button>
 						</form>
