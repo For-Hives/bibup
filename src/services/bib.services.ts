@@ -32,7 +32,7 @@ export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'pric
  * @param bibData Data for the new bib, including potential unlisted event details.
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
-export async function createBib(bibData: Bib): Promise<Bib | null> {
+export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 	if (bibData.sellerUserId === '') {
 		console.error('Seller ID is required to create a bib listing.')
 		return null

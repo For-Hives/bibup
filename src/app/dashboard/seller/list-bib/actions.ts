@@ -1,16 +1,25 @@
 'use server'
 
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Bib } from '@/models/bib.model'
 
+import { fetchUserByClerkId } from '@/services/user.services'
 import { createBib } from '@/services/bib.services'
 
 import { BibFormSchema } from './schemas'
 
 // Server action for handling bib listing
 export async function handleListBibServerAction(formData: FormData) {
-	const sellerUserId = sellerUserIdFromAuth
-	if (sellerUserId == null) {
+	const { userId: clerkid } = await auth()
+	if (clerkid == null) {
+		throw new Error('User not authenticated')
+	}
+	const sellerUserIdFromAuth = await fetchUserByClerkId(clerkid)
+		.then(user => user?.id)
+		.catch(() => null)
+
+	if (sellerUserIdFromAuth == null) {
 		redirect('/dashboard/seller/list-bib?error=User not authenticated')
 	}
 
@@ -18,25 +27,28 @@ export async function handleListBibServerAction(formData: FormData) {
 	const isNotListedEvent = formData.get('isNotListedEvent') === 'on'
 	const priceStr = formData.get('price') as string
 	const originalPriceStr = formData.get('originalPrice') as string
+	const gender = formData.get('gender') == '' ? undefined : (formData.get('gender') as 'female' | 'male' | 'unisex')
 
 	// Préparation des données pour la validation Zod
 	const formDataToValidate = {
+		unlistedEventLocation: (formData.get('unlistedEventLocation') as string) ?? undefined,
+		size: formData.get('size') == '' ? undefined : (formData.get('size') as string),
+		unlistedEventName: (formData.get('unlistedEventName') as string) ?? undefined,
+		unlistedEventDate: (formData.get('unlistedEventDate') as string) ?? undefined,
 		originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
-		gender: formData.get('gender') as 'female' | 'male' | 'unisex' | undefined,
-		unlistedEventLocation: formData.get('unlistedEventLocation') as string,
 		registrationNumber: formData.get('registrationNumber') as string,
-		unlistedEventName: formData.get('unlistedEventName') as string,
-		unlistedEventDate: formData.get('unlistedEventDate') as string,
-		size: formData.get('size') as string | undefined,
 		price: priceStr ? parseFloat(priceStr) : 0,
 		eventId: formData.get('eventId') as string,
 		isNotListedEvent: isNotListedEvent,
+		gender: gender,
 	}
 
 	// Validation avec Zod
 	const validationResult = BibFormSchema.safeParse(formDataToValidate)
 
 	if (!validationResult.success) {
+		console.error('object to validate:', formDataToValidate)
+		console.error('Validation failed:', validationResult.error)
 		const errorMessages = validationResult.error.errors.map(err => err.message).join(', ')
 		redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 		return
@@ -45,16 +57,15 @@ export async function handleListBibServerAction(formData: FormData) {
 	const validatedData = validationResult.data
 
 	// Préparation de l'objet Bib complet pour createBib
-	const bibToCreate: Bib = {
+	const bibToCreate: Omit<Bib, 'id'> = {
 		registrationNumber: validatedData.registrationNumber,
 		originalPrice: validatedData.originalPrice ?? 0,
 		gender: validatedData.gender ?? undefined,
-		eventId: validatedData.eventId ?? '',
+		eventId: validatedData.eventId ?? '', // TODO: Creer liste d'attente de vente pour les events non listés
+		sellerUserId: sellerUserIdFromAuth,
 		status: 'pending_validation',
 		price: validatedData.price,
-		sellerUserId: sellerUserId,
 		size: validatedData.size,
-		id: '', // Sera généré par le service
 	}
 
 	try {
