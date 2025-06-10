@@ -63,7 +63,7 @@ export async function handleToggleListingStatus(
 			return
 		}
 		// Update the bib with the new status
-		const updatedBib = await updateBibBySeller(bibId, newBibData, clerkId)
+		const updatedBib = await updateBibBySeller(bibId, newBibData, sellerUser.id)
 
 		if (updatedBib) {
 			redirect(
