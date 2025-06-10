@@ -90,7 +90,7 @@ export default function ListNewBibClientPage({
 				setFieldErrors(prev => ({ ...prev, [name]: fieldIssues[0] }))
 			} else if (flatErrors.root && flatErrors.root.length > 0) {
 				// For general validation errors (like cross-field validation)
-				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Erreur de validation' }))
+				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Validation error' }))
 			} else {
 				setFieldErrors(prev => {
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
