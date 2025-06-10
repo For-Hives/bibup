@@ -23,7 +23,6 @@ export default async function Navbar() {
 			<div>
 				{/* Using global translation for App Name */}
 				<Link href="/">
-					{}
 					<h1>{t.GLOBAL.appName}</h1>
 				</Link>
 			</div>
