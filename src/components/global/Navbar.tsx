@@ -1,18 +1,14 @@
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
-import { getLocale } from '@/lib/getLocale' // Assuming this path
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
-// globalTranslationsData import removed as it's no longer passed to getTranslations
-import { getTranslations } from '@/lib/getDictionary' // Updated to use alias
-import pageTranslationsData from './locales.json' // Renamed import
-
-type TranslationsData = { [key: string]: any } // Define a type for translations data
-const typedPageTranslationsData: TranslationsData = pageTranslationsData // Explicitly type the JSON data
+import pageTranslationsData from './locales.json'
 
 export default async function Navbar() {
-	const locale: string = await getLocale() // Explicitly type locale
+	const locale: string = await getLocale()
 
-	const t = getTranslations(locale, typedPageTranslationsData)
+	const t = getTranslations(locale, pageTranslationsData)
 
 	return (
 		<header className="flex h-16 items-center justify-between gap-4 p-4">
