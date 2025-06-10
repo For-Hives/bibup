@@ -9,8 +9,6 @@ import pageTranslationsData from './locales.json' // Renamed import
 export default async function Navbar() {
 	const locale: string = await getLocale() // Explicitly type locale
 
-	
-
 	const t = getTranslations(
 		locale,
 		pageTranslationsData
