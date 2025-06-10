@@ -2,7 +2,7 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@cl
 import { getLocale } from '@/lib/getLocale' // Assuming this path
 import Link from 'next/link'
 
-import globalTranslationsData from '../../globalLocales.json' // Corrected path
+// globalTranslationsData import removed as it's no longer passed to getTranslations
 import { getTranslations } from '../../lib/getDictionary' // Corrected path
 import pageTranslationsData from './locales.json' // Renamed import
 
@@ -16,8 +16,8 @@ export default async function Navbar() {
 
 	const t = getTranslations(
 		locale,
-		pageTranslationsData,
-		globalTranslationsData
+		pageTranslationsData
+		// globalTranslationsData argument removed
 		// DefaultLocaleKey will use its default 'en' from getTranslations signature
 	)
 
