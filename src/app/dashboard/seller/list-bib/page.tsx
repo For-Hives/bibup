@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
 import { getTranslations } from '@/lib/getDictionary'
-import { auth } from '@clerk/nextjs/server'
 import { getLocale } from '@/lib/getLocale'
 
 import { fetchPartneredApprovedEvents } from '@/services/event.services'

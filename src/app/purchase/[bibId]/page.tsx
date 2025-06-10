@@ -10,7 +10,6 @@ import Link from 'next/link'
 
 import { fetchBibById, processBibSale } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
-import type { User } from '@/models/user.model'
 
 import translations from './locales.json'
 
@@ -28,8 +27,8 @@ export default async function BibPurchasePage({
 
 	const { userId: currentUserId } = await auth()
 
-	let currentUserPocketBaseId: string | null = null
-	if (currentUserId) {
+	let currentUserPocketBaseId: null | string = null
+	if (currentUserId != null) {
 		const pbUser = await fetchUserByClerkId(currentUserId)
 		currentUserPocketBaseId = pbUser ? pbUser.id : null
 	}
@@ -95,9 +94,7 @@ export default async function BibPurchasePage({
 
 		const user = await fetchUserByClerkId(currentUserId)
 		if (!user) {
-			redirect(
-				`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.userNotFound || 'User not found in our system.')}`
-			)
+			redirect(`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.authFailed)}`)
 			return
 		}
 		const pocketbaseUrl = user.id // This is the PocketBase User ID
