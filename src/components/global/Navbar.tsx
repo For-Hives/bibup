@@ -6,9 +6,6 @@ import Link from 'next/link'
 import { getTranslations } from '../../lib/getDictionary' // Corrected path
 import pageTranslationsData from './locales.json' // Renamed import
 
-// NavbarTranslations interface removed as it's no longer used
-// when relying on eslint-disable comments for the 't' variable.
-
 export default async function Navbar() {
 	const locale: string = await getLocale() // Explicitly type locale
 
