@@ -3,7 +3,7 @@ import { getLocale } from '@/lib/getLocale' // Assuming this path
 import Link from 'next/link'
 
 // globalTranslationsData import removed as it's no longer passed to getTranslations
-import { getTranslations } from '../../lib/getDictionary' // Corrected path
+import { getTranslations } from '@/lib/getDictionary' // Updated to use alias
 import pageTranslationsData from './locales.json' // Renamed import
 
 type TranslationsData = { [key: string]: any } // Define a type for translations data
