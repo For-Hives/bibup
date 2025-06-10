@@ -33,7 +33,6 @@ export default async function Navbar() {
 			<div className="flex items-center gap-4">
 				{/* Using page-specific translation for a navigation link */}
 				<Link href="/">
-					{}
 					<button>{t.navbar.homeLink}</button>
 				</Link>
 				<SignedIn>
