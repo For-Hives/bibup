@@ -46,6 +46,34 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 // export async function getUserById(id: string): Promise<User | null> { ... } // This would be for PocketBase record ID
 
 /**
+ * Fetches a user from PocketBase using their PocketBase record ID.
+ * @param userId The PocketBase record ID of the user.
+ * @returns The full User object if found, otherwise null.
+ */
+export async function fetchUserById(userId: string): Promise<User | null> {
+	if (userId === '') {
+		console.error('User ID (PocketBase record ID) is required to fetch user data.')
+		return null
+	}
+	try {
+		const record = await pb.collection('users').getOne<User>(userId)
+		return record
+	} catch (error: unknown) {
+		if (
+			error != null &&
+			typeof error === 'object' &&
+			'status' in error &&
+			(error as { status: unknown }).status === 404
+		) {
+			console.warn(`User with PocketBase ID ${userId} not found.`)
+			return null // Explicitly return null on 404
+		}
+		console.error(`Error fetching user by PocketBase ID "${userId}":`, error)
+		return null
+	}
+}
+
+/**
  * Fetches a user from PocketBase by their Clerk ID.
  * @param clerkId The Clerk User ID.
  */

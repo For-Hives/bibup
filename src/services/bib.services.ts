@@ -8,7 +8,8 @@ import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path
 
 // Import Transaction services and User services for processBibSale
 import { createTransaction } from './transaction.services'
-import { updateUserBalance } from './user.services'
+import { updateUserBalance, fetchUserById } from './user.services'
+import type { User } from '../models/user.model'
 
 // Type for the data expected by createBib, accommodating both partnered and unlisted event scenarios
 export type CreateBibData = Partial<
@@ -95,7 +96,7 @@ export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { e
 /**
  * Fetches a single bib by its ID for a specific seller, ensuring ownership.
  * @param bibId The ID of the bib to fetch.
- * @param sellerUserId The ID of the seller claiming ownership.
+ * @param sellerUserId The PocketBase ID of the seller claiming ownership.
  */
 export async function fetchBibByIdForSeller(
 	bibId: string,
@@ -124,7 +125,7 @@ export async function fetchBibByIdForSeller(
 
 /**
  * Fetches all bibs purchased by a specific buyer.
- * @param buyerUserId The ID of the buyer whose purchased bibs are to be fetched.
+ * @param buyerUserId The PocketBase ID of the buyer whose purchased bibs are to be fetched.
  */
 export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { expand?: { eventId: Event } })[]> {
 	if (buyerUserId === '') {
@@ -150,7 +151,7 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 /**
  * Fetches all bibs listed by a specific seller.
  * Optionally expands event details if your PocketBase setup allows and it's needed.
- * @param sellerUserId The ID of the seller whose bibs are to be fetched.
+ * @param sellerUserId The PocketBase ID of the seller whose bibs are to be fetched.
  */
 export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 	if (sellerUserId === '') {
@@ -208,7 +209,7 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
  * Processes the sale of a bib.
  * This involves creating a transaction, updating seller's balance, and marking the bib as sold.
  * @param bibId The ID of the bib being sold.
- * @param buyerUserId The Clerk User ID of the buyer.
+ * @param buyerUserId The PocketBase User ID of the buyer.
  */
 export async function processBibSale(
 	bibId: string,
@@ -235,11 +236,14 @@ export async function processBibSale(
 			return { error: 'Seller cannot buy their own bib.', success: false }
 		}
 
-		// 2. Fetch the Seller (User) - though not strictly needed if just updating balance by ID.
-		// const sellerUser = await fetchUserByClerkId(bib.dashboard.sellerUserId);
-		// if (!sellerUser) {
-		//   return { success: false, error: `Seller with ID ${bib.dashboard.sellerUserId} not found.` };
-		// }
+		// 2. Fetch the Seller User to get their Clerk ID for balance update.
+		const sellerUser = await fetchUserById(bib.sellerUserId)
+		if (sellerUser == null) {
+			return { error: `Seller user with PocketBase ID ${bib.sellerUserId} not found.`, success: false }
+		}
+		if (sellerUser.clerkId == null || sellerUser.clerkId === '') {
+			return { error: `Clerk ID not found for seller user ${bib.sellerUserId}.`, success: false }
+		}
 
 		// 3. Calculate platform fee and seller amount.
 		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic
@@ -261,7 +265,7 @@ export async function processBibSale(
 		}
 
 		// 5. Update seller's balance.
-		const sellerBalanceUpdated = await updateUserBalance(bib.sellerUserId, amountToSeller)
+		const sellerBalanceUpdated = await updateUserBalance(sellerUser.clerkId, amountToSeller)
 		if (sellerBalanceUpdated == null) {
 			// Attempt to mark transaction as failed or requiring attention if seller balance update fails.
 			// This is a critical error that needs monitoring/manual intervention.
@@ -269,7 +273,9 @@ export async function processBibSale(
 				notes: 'Seller balance update failed after fund capture.',
 				status: 'failed',
 			})
-			console.error(`CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`)
+			console.error(
+				`CRITICAL: Failed to update seller ${sellerUser.clerkId} balance for transaction ${transaction.id}.`
+			)
 			return {
 				error: "Failed to update seller's balance. Transaction recorded but needs attention.",
 				success: false,
@@ -310,7 +316,7 @@ export async function processBibSale(
  * Updates a bib listing by its seller.
  * @param bibId The ID of the bib to update.
  * @param dataToUpdate Data to update for the bib.
- * @param sellerUserId The ID of the seller performing the update.
+ * @param sellerUserId The PocketBase ID of the seller performing the update.
  */
 export async function updateBibBySeller(
 	bibId: string,
