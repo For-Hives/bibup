@@ -2,12 +2,9 @@ import globalLocalesData from './globalLocales.json'
 
 import 'server-only'
 
-// Type for the entire globalLocales.json file structure
-type AllGlobalLocales = Record<string, GlobalTranslationFileContent>
-
-// Type for the content of a global locale file, e.g., { "GLOBAL": { "appName": "My App" } }
-// This is the structure of globalLocalesData['en'], globalLocalesData['fr'], etc.
-type GlobalTranslationFileContent = { GLOBAL: Record<string, string> }
+type GlobalTranslationFileContent = ImportedGlobalLocales[keyof ImportedGlobalLocales]
+// Infer the actual type from the imported JSON data
+type ImportedGlobalLocales = typeof globalLocalesData
 
 // Structure for all page-specific translations, e.g., { en: { pageTitle: "..." }, fr: { pageTitle: "..." } }
 type PageLocales<T extends PageTranslationContent> = Record<string, T>
@@ -35,26 +32,26 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 		finalPageContent = pageLocaleJsonData[pageKeys[0] as LocaleKey]
 	}
 
-	// Cast the imported JSON to our detailed type
-	const typedGlobalLocales = globalLocalesData as AllGlobalLocales
+	// Use the imported JSON data directly with proper typing
+	const typedGlobalLocales = globalLocalesData
 
-	let finalGlobalContent: GlobalTranslationFileContent = { GLOBAL: {} } // Default to empty GLOBAL object
+	let finalGlobalContent: GlobalTranslationFileContent = { GLOBAL: { welcomeMessage: '', appName: '' } } // Default with proper structure
 
 	const globalLocaleKeys = Object.keys(typedGlobalLocales)
 
 	if (globalLocaleKeys.includes(locale)) {
-		finalGlobalContent = typedGlobalLocales[locale]
+		finalGlobalContent = typedGlobalLocales[locale as keyof typeof globalLocalesData]
 	} else if (globalLocaleKeys.includes(defaultLocale)) {
-		finalGlobalContent = typedGlobalLocales[defaultLocale]
+		finalGlobalContent = typedGlobalLocales[defaultLocale as keyof typeof globalLocalesData]
 	} else if (globalLocaleKeys.length > 0) {
-		// Similar casting consideration for globalLocaleKeys[0]
-		finalGlobalContent = typedGlobalLocales[globalLocaleKeys[0] as LocaleKey]
+		// Use the first available locale
+		const firstLocale = globalLocaleKeys[0] as keyof typeof globalLocalesData
+		finalGlobalContent = typedGlobalLocales[firstLocale]
 	}
 
 	// Ensure the GLOBAL property is present, as expected by GlobalTranslationFileContent
-	// This double-checks, complementing the initial { GLOBAL: {} }.
 	if (typeof finalGlobalContent?.GLOBAL === 'undefined') {
-		finalGlobalContent = { GLOBAL: {} }
+		finalGlobalContent = { GLOBAL: { welcomeMessage: '', appName: '' } }
 	}
 
 	return { ...finalPageContent, ...finalGlobalContent }
