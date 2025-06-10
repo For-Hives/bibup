@@ -6,10 +6,13 @@ import Link from 'next/link'
 import { getTranslations } from '../../lib/getDictionary' // Corrected path
 import pageTranslationsData from './locales.json' // Renamed import
 
+type TranslationsData = { [key: string]: any } // Define a type for translations data
+const typedPageTranslationsData: TranslationsData = pageTranslationsData // Explicitly type the JSON data
+
 export default async function Navbar() {
 	const locale: string = await getLocale() // Explicitly type locale
 
-	const t = getTranslations(locale, pageTranslationsData)
+	const t = getTranslations(locale, typedPageTranslationsData)
 
 	return (
 		<header className="flex h-16 items-center justify-between gap-4 p-4">
