@@ -9,6 +9,8 @@ import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
 import { fetchBibById, processBibSale } from '@/services/bib.services'
+import { fetchUserByClerkId } from '@/services/user.services'
+import type { User } from '@/models/user.model'
 
 import translations from './locales.json'
 
@@ -25,6 +27,13 @@ export default async function BibPurchasePage({
 	const t = getTranslations(locale, translations)
 
 	const { userId: currentUserId } = await auth()
+
+	let currentUserPocketBaseId: string | null = null
+	if (currentUserId) {
+		const pbUser = await fetchUserByClerkId(currentUserId)
+		currentUserPocketBaseId = pbUser ? pbUser.id : null
+	}
+
 	const params = await paramsPromise
 	const searchParams = await searchParamsPromise
 	const { bibId } = params
@@ -56,7 +65,8 @@ export default async function BibPurchasePage({
 		)
 	}
 
-	if (bib.sellerUserId === currentUserId) {
+	// Compare PocketBase ID of seller with PocketBase ID of current user
+	if (bib.sellerUserId === currentUserPocketBaseId) {
 		return (
 			<div className="mx-auto max-w-lg p-4 text-center text-[var(--text-dark)] md:p-8">
 				<p className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-[var(--error-text)]">
@@ -77,13 +87,23 @@ export default async function BibPurchasePage({
 		const locale = await getLocale()
 		const t = getTranslations(locale, translations)
 
+		// currentUserId is Clerk ID from auth()
 		if (currentUserId == null) {
 			redirect(`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.authFailed)}`)
 			return
 		}
 
+		const user = await fetchUserByClerkId(currentUserId)
+		if (!user) {
+			redirect(
+				`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.userNotFound || 'User not found in our system.')}`
+			)
+			return
+		}
+		const pocketbaseUrl = user.id // This is the PocketBase User ID
+
 		try {
-			const result = await processBibSale(bibId, currentUserId)
+			const result = await processBibSale(bibId, pocketbaseUrl)
 			if (result.success && result.transaction) {
 				redirect(
 					`/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`

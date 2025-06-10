@@ -7,7 +7,8 @@ import { pb } from '@/lib/pocketbaseClient'
 /**
  * Creates a new transaction record.
  * @param transactionData Data for the new transaction.
- *   Expects: bibId, buyerUserId, sellerUserId, amount (selling price of bib), platformFee, status.
+ *   Expects: bibId, buyerUserId (PocketBase User ID), sellerUserId (PocketBase User ID),
+ *   amount (selling price of bib), platformFee, status.
  */
 export async function createTransaction(
 	transactionData: Omit<Transaction, 'id' | 'transactionDate'>
