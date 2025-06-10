@@ -1,58 +1,159 @@
 import globalLocalesData from './globalLocales.json'
 
+/**
+ * SYSTÈME DE TRADUCTIONS INTERNATIONALES (i18n)
+ * ==============================================
+ *
+ * Ce fichier gère les traductions de l'application dans différentes langues.
+ * Il combine deux types de traductions :
+ *
+ * 1. TRADUCTIONS GLOBALES (fichier globalLocales.json)
+ *    - Contient les textes utilisés partout dans l'app (nom de l'app, messages généraux, etc.)
+ *    - Structure : { "en": { "GLOBAL": { "appName": "...", "welcomeMessage": "..." } }, "fr": {...} }
+ *
+ * 2. TRADUCTIONS SPÉCIFIQUES À UNE PAGE (fichiers locales.json dans chaque dossier)
+ *    - Contient les textes spécifiques à une page ou composant
+ *    - Structure : { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
+ *
+ * COMMENT ÇA MARCHE :
+ * - La fonction getTranslations() prend une langue (ex: "fr") et les traductions de page
+ * - Elle récupère automatiquement les traductions globales correspondantes
+ * - Elle retourne un objet qui combine les deux : { GLOBAL: {...}, navbar: {...} }
+ * - Si une langue n'existe pas, elle utilise l'anglais par défaut
+ * - Si le fichier globalLocales.json n'existe pas, elle utilise des valeurs par défaut
+ */
 import 'server-only'
 
+// DÉFINITION DES TYPES (pour que TypeScript comprenne la structure des données)
+// ===============================================================================
+
+// Type qui décrit la structure d'une traduction globale pour une langue
+// Ce type s'adapte automatiquement au contenu réel du fichier globalLocales.json
+// Exemple : { GLOBAL: { appName: "Mon App", welcomeMessage: "Bienvenue !" } }
 type GlobalTranslationFileContent = ImportedGlobalLocales[keyof ImportedGlobalLocales]
-// Infer the actual type from the imported JSON data
+
+// Type qui représente tout le fichier globalLocales.json importé
+// TypeScript peut ainsi connaître exactement quelles propriétés existent
 type ImportedGlobalLocales = typeof globalLocalesData
 
-// Structure for all page-specific translations, e.g., { en: { pageTitle: "..." }, fr: { pageTitle: "..." } }
+// Type qui décrit un ensemble de traductions de page pour toutes les langues
+// Le "T" est un type générique - ça veut dire qu'on peut l'adapter selon le contenu réel
+// Exemple : { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
 type PageLocales<T extends PageTranslationContent> = Record<string, T>
 
-// Type for the content of a standard locale, e.g., { "pageTitle": "My Page" }
+// Type qui décrit le contenu d'une traduction de page pour une langue
+// Record<string, unknown> = un objet avec des clés texte et des valeurs de n'importe quel type
+// Exemple : { "navbar": { "homeLink": "Home" }, "button": { "submit": "Submit" } }
 type PageTranslationContent = Record<string, unknown>
 
+/**
+ * FONCTION PRINCIPALE : getTranslations
+ * =====================================
+ *
+ * Cette fonction combine les traductions globales et les traductions spécifiques à une page.
+ *
+ * PARAMÈTRES :
+ * - locale : La langue demandée (ex: "fr", "en", "ko")
+ * - pageLocaleJsonData : Les traductions spécifiques à la page (importées depuis un fichier locales.json)
+ * - defaultLocale : La langue de secours si la langue demandée n'existe pas (par défaut: "en")
+ *
+ * RETOURNE :
+ * Un objet qui combine les traductions globales et de page.
+ * Exemple : { GLOBAL: { appName: "Mon App" }, navbar: { homeLink: "Accueil" } }
+ *
+ * LOGIQUE :
+ * 1. Cherche les traductions de page dans la langue demandée
+ * 2. Si introuvable, utilise la langue par défaut
+ * 3. Si toujours introuvable, utilise la première langue disponible
+ * 4. Fait la même chose pour les traductions globales
+ * 5. Combine les deux et retourne le résultat
+ */
 export function getTranslations<P extends PageTranslationContent, LocaleKey extends string = string>(
 	locale: LocaleKey,
 	pageLocaleJsonData: PageLocales<P>,
 	defaultLocale: LocaleKey = 'en' as LocaleKey
 ): GlobalTranslationFileContent & P {
-	// Return type combines page content with the global structure
+	// Le type de retour combine les traductions globales (GlobalTranslationFileContent) et de page (P)
 
-	let finalPageContent: P = {} as P
-	const pageKeys = Object.keys(pageLocaleJsonData)
+	// ÉTAPE 1 : Récupérer les traductions spécifiques à la page
+	// =========================================================
+	let finalPageContent: P = {} as P // Initialisation avec un objet vide
+	const pageKeys = Object.keys(pageLocaleJsonData) // Liste de toutes les langues disponibles pour cette page
 
+	// Essaie de trouver les traductions dans la langue demandée
 	if (pageKeys.includes(locale)) {
 		finalPageContent = pageLocaleJsonData[locale]
-	} else if (pageKeys.includes(defaultLocale)) {
+	}
+	// Si pas trouvé, essaie avec la langue par défaut
+	else if (pageKeys.includes(defaultLocale)) {
 		finalPageContent = pageLocaleJsonData[defaultLocale]
-	} else if (pageKeys.length > 0) {
-		// Ensure the key is treated as LocaleKey for type safety if pageKeys[0] might not be.
-		// However, Object.keys returns string[], so this cast is for conceptual alignment.
+	}
+	// Si toujours pas trouvé, prend la première langue disponible
+	else if (pageKeys.length > 0) {
+		// Le "as LocaleKey" dit à TypeScript de traiter cette chaîne comme une LocaleKey valide
 		finalPageContent = pageLocaleJsonData[pageKeys[0] as LocaleKey]
 	}
 
-	// Use the imported JSON data directly with proper typing
-	const typedGlobalLocales = globalLocalesData
+	// ÉTAPE 2 : Récupérer les traductions globales
+	// =============================================
+	const typedGlobalLocales = globalLocalesData // Les données globales importées du fichier JSON
 
-	let finalGlobalContent: GlobalTranslationFileContent = { GLOBAL: { welcomeMessage: '', appName: '' } } // Default with proper structure
+	// Initialisation avec une structure vide mais valide
+	let finalGlobalContent: GlobalTranslationFileContent = { GLOBAL: { welcomeMessage: '', appName: '' } }
+	const globalLocaleKeys = Object.keys(typedGlobalLocales) // Liste de toutes les langues disponibles globalement
 
-	const globalLocaleKeys = Object.keys(typedGlobalLocales)
-
+	// Même logique que pour les traductions de page
 	if (globalLocaleKeys.includes(locale)) {
 		finalGlobalContent = typedGlobalLocales[locale as keyof typeof globalLocalesData]
 	} else if (globalLocaleKeys.includes(defaultLocale)) {
 		finalGlobalContent = typedGlobalLocales[defaultLocale as keyof typeof globalLocalesData]
 	} else if (globalLocaleKeys.length > 0) {
-		// Use the first available locale
 		const firstLocale = globalLocaleKeys[0] as keyof typeof globalLocalesData
 		finalGlobalContent = typedGlobalLocales[firstLocale]
 	}
 
-	// Ensure the GLOBAL property is present, as expected by GlobalTranslationFileContent
-	if (typeof finalGlobalContent?.GLOBAL === 'undefined') {
-		finalGlobalContent = { GLOBAL: { welcomeMessage: '', appName: '' } }
-	}
-
+	// ÉTAPE 3 : Combiner et retourner le résultat
+	// ============================================
+	// L'opérateur "..." (spread) combine les deux objets en un seul
+	// Si une clé existe dans les deux, celle de droite (finalGlobalContent) prend le dessus
 	return { ...finalPageContent, ...finalGlobalContent }
 }
+
+/**
+ * EXEMPLE D'UTILISATION
+ * =====================
+ *
+ * // Dans un composant React (ex: Navbar.tsx)
+ * import { getTranslations } from './lib/getDictionary'
+ * import pageTranslations from './locales.json'
+ *
+ * // Le fichier ./locales.json contient :
+ * // {
+ * //   "en": { "navbar": { "homeLink": "Home" } },
+ * //   "fr": { "navbar": { "homeLink": "Accueil" } }
+ * // }
+ *
+ * export default function Navbar() {
+ *   const locale = "fr" // Récupéré depuis un système de détection de langue
+ *
+ *   // Appel de la fonction - elle combine automatiquement les traductions globales et de page
+ *   const t = getTranslations(locale, pageTranslations)
+ *
+ *   // Utilisation :
+ *   // t.GLOBAL.appName     -> "Mon App" (depuis globalLocales.json)
+ *   // t.navbar.homeLink    -> "Accueil" (depuis le fichier locales.json local)
+ *
+ *   return (
+ *     <nav>
+ *       <h1>{t.GLOBAL.appName}</h1>
+ *       <a href="/">{t.navbar.homeLink}</a>
+ *     </nav>
+ *   )
+ * }
+ *
+ * AVANTAGES DE CETTE APPROCHE :
+ * - Un seul appel de fonction pour récupérer toutes les traductions nécessaires
+ * - TypeScript connaît exactement quelles propriétés existent (autocomplétion)
+ * - Gestion automatique des langues de secours
+ * - Séparation claire entre traductions globales et spécifiques
+ */

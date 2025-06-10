@@ -1,20 +1,20 @@
 {
-  "en": {
-    "GLOBAL": {
-      "appName": "My Awesome App",
-      "welcomeMessage": "Welcome!"
-    }
-  },
-  "fr": {
-    "GLOBAL": {
-      "appName": "Mon Application Incroyable",
-      "welcomeMessage": "Bienvenue !"
-    }
-  },
-  "ko": {
-    "GLOBAL": {
-      "appName": "내 멋진 앱",
-      "welcomeMessage": "환영합니다!"
-    }
-  }
+	"en": {
+		"GLOBAL": {
+			"appName": "My Awesome App",
+			"welcomeMessage": "Welcome!"
+		}
+	},
+	"fr": {
+		"GLOBAL": {
+			"appName": "Mon Application Incroyable",
+			"welcomeMessage": "Bienvenue !"
+		}
+	},
+	"ko": {
+		"GLOBAL": {
+			"appName": "내 멋진 앱",
+			"welcomeMessage": "환영합니다!"
+		}
+	}
 }
