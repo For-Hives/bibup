@@ -1,8 +1,8 @@
 'use server'
 
-import type { Event } from '@/models/event.model' // Updated model import
+import type { Event } from '@/models/event.model'
 
-import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path to your PocketBase client
+import { pb } from '@/lib/pocketbaseClient'
 
 /**
  * Creates a new event. This function is intended for use by organizers.
@@ -10,27 +10,33 @@ import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path
  * @param organizerId The ID of the user (organizer) creating the event.
  */
 export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (eventData.organizerId === '') {
+	if (!eventData.organizerId) {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
-	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
+	if (
+		eventData.name === '' ||
+		// Assuming eventData.date is typed as Date and thus non-null.
+		// The instanceof check is also redundant if type is strictly Date.
+		// The primary runtime check needed is for the validity of the date value.
+		isNaN(eventData.date.getTime()) ||
+		eventData.location === ''
+	) {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
 
 	try {
 		const dataToCreate: Omit<Event, 'id'> = {
-			participantCount: eventData.participantCount ?? 0, // Default participantCount
-			isPartnered: eventData.isPartnered ?? false, // Default isPartnered
+			participantCount: eventData.participantCount ?? 0,
+			isPartnered: eventData.isPartnered ?? false,
 			description: eventData.description ?? '',
 			organizerId: eventData.organizerId,
-			date: new Date(eventData.date), // Ensure date is a Date object
+			date: new Date(eventData.date),
 			location: eventData.location,
-			status: 'pending_approval', // Default status
+			status: 'pending_approval',
 			name: eventData.name,
-			bibsSold: 0, // Default bibsSold
-			// Ensure any other required fields from the Event model are present with defaults if necessary
+			bibsSold: 0,
 		}
 
 		const record = await pb.collection('events').create<Event>(dataToCreate)
@@ -47,11 +53,9 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
  */
 export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 	try {
-		// Filter for events with status 'approved'
-		// Adjust the field name 'status' and value 'approved' if they differ in your PocketBase collection
 		const records = await pb.collection('events').getFullList<Event>({
 			filter: "status = 'approved'",
-			sort: 'date', // Sort by event date, upcoming first
+			sort: 'date',
 		})
 
 		// PocketBase SDK should correctly type records if <Event> is used with getFullList
@@ -74,7 +78,7 @@ export async function fetchEventById(id: string): Promise<Event | null> {
 	} catch (error: unknown) {
 		console.error(`Error fetching event with ID "${id}":`, error)
 
-		return null // Return null if the event is not found or an error occurs
+		return null
 	}
 }
 
@@ -85,17 +89,17 @@ export async function fetchEventById(id: string): Promise<Event | null> {
 export async function fetchEventsByOrganizer(organizerId: string): Promise<Event[]> {
 	if (organizerId === '') {
 		console.error('Organizer ID is required to fetch their events.')
-		return [] // Return empty array if no organizerId is provided
+		return []
 	}
 	try {
+		const filter = pb.filter('organizerId = {:organizerId}', { organizerId })
 		const records = await pb.collection('events').getFullList<Event>({
-			filter: `organizerId = "${organizerId}"`, // TODO: check if it is not possible to inject code here
-			sort: '-created', // Sort by creation date, newest first. Or use '-date' for event date.
+			sort: '-created',
+			filter,
 		})
 		return records
 	} catch (error: unknown) {
 		console.error(`Error fetching events for organizer ID "${organizerId}":`, error)
-		// For other errors (connection issues, collection doesn't exist, etc.)
 		// Return empty array for safety to prevent UI crashes
 		return []
 	}
@@ -109,7 +113,7 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 	try {
 		const records = await pb.collection('events').getFullList<Event>({
 			filter: "status = 'approved' && isPartnered = true",
-			sort: 'date', // Sort by event date, upcoming first
+			sort: 'date',
 		})
 		return records
 	} catch (error: unknown) {

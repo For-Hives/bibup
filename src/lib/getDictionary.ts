@@ -135,19 +135,13 @@ function getFallbackTranslation<T, LocaleKey extends string>(
 ): T {
 	const availableKeys = Object.keys(localeData)
 
-	// Essaie de trouver les traductions dans la langue demandée
 	if (availableKeys.includes(locale)) {
 		return localeData[locale]
-	}
-	// Si pas trouvé, essaie avec la langue par défaut
-	else if (availableKeys.includes(defaultLocale)) {
+	} else if (availableKeys.includes(defaultLocale)) {
 		return localeData[defaultLocale]
-	}
-	// Si toujours pas trouvé, prend la première langue disponible
-	else if (availableKeys.length > 0) {
+	} else if (availableKeys.length > 0) {
 		return localeData[availableKeys[0]]
 	}
-	// Si aucune langue disponible, retourne la valeur de fallback
 	return fallbackValue
 }
 

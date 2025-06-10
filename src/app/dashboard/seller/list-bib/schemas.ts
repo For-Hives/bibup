@@ -1,6 +1,5 @@
 import * as v from 'valibot'
 
-// Valibot schema for validating the bib listing form
 export const BibFormSchema = v.pipe(
 	v.object({
 		registrationNumber: v.pipe(v.string(), v.minLength(1, 'The registration number is required')), // TODO: use localized error message
@@ -15,21 +14,27 @@ export const BibFormSchema = v.pipe(
 		size: v.optional(v.string()),
 	}),
 	v.check(data => {
-		// If the event is not listed, event fields are required
 		if (data.isNotListedEvent) {
-			return (
+			// If it's an unlisted event, unlisted fields are required, and eventId should be blank.
+			const unlistedFieldsPresent =
 				data.unlistedEventName != null &&
 				data.unlistedEventName !== '' &&
 				data.unlistedEventDate != null &&
 				data.unlistedEventDate !== '' &&
 				data.unlistedEventLocation != null &&
 				data.unlistedEventLocation !== ''
-			)
+			const eventIdAbsent = data.eventId == null || data.eventId === ''
+			return unlistedFieldsPresent && eventIdAbsent
+		} else {
+			// If it's a listed event, eventId is required, and unlisted fields should be blank.
+			const eventIdPresent = data.eventId != null && data.eventId !== ''
+			const unlistedFieldsAbsent =
+				(data.unlistedEventName == null || data.unlistedEventName === '') &&
+				(data.unlistedEventDate == null || data.unlistedEventDate === '') &&
+				(data.unlistedEventLocation == null || data.unlistedEventLocation === '')
+			return eventIdPresent && unlistedFieldsAbsent
 		}
-		// If the event is listed, eventId is required
-		return data.eventId != null && data.eventId !== ''
-	}, 'For unlisted events, name, date, and location are required. For partner events, please select an event.')
+	}, 'For unlisted events, provide its details and ensure no listed event is selected. For listed events, select one and ensure no unlisted event details are provided.')
 )
 
-// Inferred type from the schema for TypeScript
 export type BibFormData = v.InferOutput<typeof BibFormSchema>

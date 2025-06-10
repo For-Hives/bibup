@@ -1,4 +1,4 @@
-'use client' // Required for useState and client-side interactions
+'use client'
 
 import type { Event } from '@/models/event.model'
 
@@ -78,7 +78,6 @@ export default function ListNewBibClientPage({
 		// }
 	}, [searchParams])
 
-	// Fonction de validation en temps réel
 	const validateField = (name: string, value: unknown) => {
 		const testData = { ...formData, [name]: value }
 		const result = v.safeParse(BibFormSchema, testData)
@@ -107,12 +106,10 @@ export default function ListNewBibClientPage({
 		}
 	}
 
-	// Gestionnaire de changement pour les champs du formulaire
 	function handleFieldChange(name: string, value: unknown) {
 		setFormData(prev => ({ ...prev, [name]: value }))
 		validateField(name, value)
 
-		// Gestion spéciale pour isNotListedEvent
 		if (name === 'isNotListedEvent' && typeof value === 'boolean') {
 			setIsNotListedEvent(value)
 		}
