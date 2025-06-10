@@ -1,7 +1,8 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { Bib } from '@/models/bib.model'
+// Bib model is no longer directly used here after type change for bibDataForService
+// import { Bib } from '@/models/bib.model'
 
 import { createBib } from '@/services/bib.services'
 
@@ -45,20 +46,23 @@ export async function handleListBibServerAction(formData: FormData, sellerUserId
 	const validatedData = validationResult.data
 
 	// Préparation de l'objet Bib complet pour createBib
-	const bibToCreate: Bib = {
+	// Adjusted to match CreateBibData type expected by the service
+	const bibDataForService: Parameters<typeof createBib>[0] = {
+		unlistedEventLocation: validatedData.isNotListedEvent ? validatedData.unlistedEventLocation : undefined,
+		// Unlisted event details, only relevant if isNotListedEvent is true
+		unlistedEventName: validatedData.isNotListedEvent ? validatedData.unlistedEventName : undefined,
+		unlistedEventDate: validatedData.isNotListedEvent ? validatedData.unlistedEventDate : undefined,
+		eventId: validatedData.eventId === '' ? undefined : validatedData.eventId, // Pass undefined if empty string
+		gender: validatedData.gender === null ? undefined : validatedData.gender,
 		registrationNumber: validatedData.registrationNumber,
-		originalPrice: validatedData.originalPrice ?? 0,
-		gender: validatedData.gender ?? undefined,
-		eventId: validatedData.eventId ?? '',
-		status: 'pending_validation',
+		isNotListedEvent: validatedData.isNotListedEvent,
+		originalPrice: validatedData.originalPrice, // Keep as potentially undefined
 		price: validatedData.price,
-		sellerUserId: sellerUserId,
 		size: validatedData.size,
-		id: '', // Sera généré par le service
 	}
 
 	try {
-		const newBib = await createBib(bibToCreate)
+		const newBib = await createBib(bibDataForService, sellerUserId)
 
 		if (newBib) {
 			redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)

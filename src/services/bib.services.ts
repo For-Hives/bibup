@@ -25,15 +25,15 @@ export type CreateBibData = Partial<
 }
 
 // Allowed fields for update by seller. Status updates are specific.
-export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size'>>
+export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size' | 'status'>>
 
 /**
  * Creates a new bib listing. Handles both partnered and unlisted events.
  * @param bibData Data for the new bib, including potential unlisted event details.
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
-export async function createBib(bibData: Bib): Promise<Bib | null> {
-	if (bibData.sellerUserId === '') {
+export async function createBib(bibData: CreateBibData, sellerUserId: string): Promise<Bib | null> {
+	if (sellerUserId === '') {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
 	}
@@ -42,25 +42,48 @@ export async function createBib(bibData: Bib): Promise<Bib | null> {
 		return null
 	}
 
+	// Additional validation for eventId based on isNotListedEvent
+	if (bibData.isNotListedEvent !== true && (typeof bibData.eventId !== 'string' || bibData.eventId.trim() === '')) {
+		console.error('Event ID (string) is required for partnered/listed events and cannot be empty.')
+		return null
+	}
+
 	let status: Bib['status'] = 'pending_validation'
-	let finalEventId: string = bibData.eventId
 
 	try {
-		const dataToCreate: Omit<Bib, 'id'> = {
+		// Base data object, eventId is handled conditionally
+		const dataToCreateBase = {
+			unlistedEventLocation: bibData.isNotListedEvent === true ? bibData.unlistedEventLocation : undefined,
+			// Fields from CreateBibData for unlisted events, if applicable
+			unlistedEventName: bibData.isNotListedEvent === true ? bibData.unlistedEventName : undefined,
+			unlistedEventDate: bibData.isNotListedEvent === true ? bibData.unlistedEventDate : undefined,
 			registrationNumber: bibData.registrationNumber,
 			originalPrice: bibData.originalPrice,
-			sellerUserId: bibData.sellerUserId,
 			privateListingToken: undefined,
+			sellerUserId: sellerUserId, // from parameter
 			gender: bibData.gender,
 			buyerUserId: undefined,
-			eventId: finalEventId, // This will be undefined for unlisted events
 			price: bibData.price,
 			size: bibData.size,
 			status: status,
 		}
 
-		const record = await pb.collection('bibs').create<Bib>(dataToCreate)
-		return record
+		let record
+		if (bibData.isNotListedEvent === true) {
+			// For unlisted events, eventId is not part of the record.
+			// This assumes the 'bibs' collection schema allows eventId to be omitted (e.g. not required or nullable)
+			// The type for create should ideally not include eventId
+			record = await pb.collection('bibs').create<Omit<Bib, 'eventId' | 'id'>>(dataToCreateBase)
+		} else {
+			// For listed events, eventId (validated above to be a string) must be included.
+			const dataWithEventId: Omit<Bib, 'id'> = {
+				...dataToCreateBase,
+				eventId: bibData.eventId as string, // Cast is safe due to validation above
+			}
+			record = await pb.collection('bibs').create<Omit<Bib, 'id'>>(dataWithEventId)
+		}
+		// Cast to Bib for the return type, assuming successful creation matches the model.
+		return record as Bib
 	} catch (error: unknown) {
 		console.error('Error creating bib listing:', error)
 
@@ -224,6 +247,7 @@ export async function processBibSale(
 		if (bib == null) {
 			return { error: `Bib with ID ${bibId} not found.`, success: false }
 		}
+		const originalBibStatus = bib.status // Store original status
 		if (bib.status !== 'listed_public') {
 			// Could also allow 'listed_private' if a private sale mechanism is implemented
 			return {
@@ -269,9 +293,13 @@ export async function processBibSale(
 				notes: 'Seller balance update failed after fund capture.',
 				status: 'failed',
 			})
-			console.error(`CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}.`)
+			// Revert bib status to original status if seller balance update fails
+			await pb.collection('bibs').update(bibId, { status: originalBibStatus })
+			console.error(
+				`CRITICAL: Failed to update seller ${bib.sellerUserId} balance for transaction ${transaction.id}. Bib status reverted to ${originalBibStatus}.`
+			)
 			return {
-				error: "Failed to update seller's balance. Transaction recorded but needs attention.",
+				error: "Failed to update seller's balance. Transaction recorded but needs attention. Bib status reverted.",
 				success: false,
 			}
 		}
@@ -314,7 +342,7 @@ export async function processBibSale(
  */
 export async function updateBibBySeller(
 	bibId: string,
-	dataToUpdate: { status: Bib['status'] }, // Allow specific status updates or general data updates
+	dataToUpdate: UpdateBibData, // Allow specific status updates or general data updates
 	sellerUserId: string
 ): Promise<Bib | null> {
 	if (bibId === '' || sellerUserId === '') {
@@ -338,7 +366,8 @@ export async function updateBibBySeller(
 		}
 
 		// If 'status' is part of dataToUpdate, ensure it's a valid transition
-		if ('status' in dataToUpdate) {
+		if (dataToUpdate.status) {
+			// Check if status is provided and not undefined
 			const newStatus = dataToUpdate.status
 			// Example: Allow withdrawing, or changing between listed_public and listed_private
 			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
@@ -352,14 +381,15 @@ export async function updateBibBySeller(
 			}
 
 			const allowedChanges = allowedStatusChanges[currentBib.status]
-			if (!allowedChanges?.includes(newStatus)) {
+			if (newStatus && !allowedChanges?.includes(newStatus)) {
+				// also check newStatus here
 				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
 				// return null; // Or throw an error indicating invalid transition
 			}
 			// For now, we'll allow the update if it's a status change. More complex logic can be added.
 		}
 
-		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
+		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate as Partial<Bib>)
 		return updatedRecord
 	} catch (error: unknown) {
 		console.error(`Error updating bib ${bibId}:`, error)
@@ -375,7 +405,11 @@ export async function updateBibBySeller(
  * @param newStatus The new status to set for the bib.
  * @param adminNotes Optional notes from the admin regarding the status change.
  */
-export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['status']): Promise<Bib | null> {
+export async function updateBibStatusByAdmin(
+	bibId: string,
+	newStatus: Bib['status'],
+	adminNotes?: string
+): Promise<Bib | null> {
 	if (bibId === '' || !newStatus) {
 		console.error('Bib ID and new status are required for admin update.')
 		return null
@@ -384,6 +418,11 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 	try {
 		const dataToUpdate: Partial<Bib> = {
 			status: newStatus,
+		}
+		if (adminNotes !== undefined) {
+			// Temporary cast to any to bypass missing 'adminNotes' in Bib model.
+			// TODO: Add adminNotes?: string to the Bib model definition.
+			;(dataToUpdate as any).adminNotes = adminNotes
 		}
 
 		// Direct update without seller ownership check.

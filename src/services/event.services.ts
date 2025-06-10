@@ -25,9 +25,9 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 			isPartnered: eventData.isPartnered ?? false, // Default isPartnered
 			description: eventData.description ?? '',
 			organizerId: eventData.organizerId,
-			date: new Date(eventData.date), // Ensure date is a Date object
 			location: eventData.location,
 			status: 'pending_approval', // Default status
+			date: eventData.date, // Assuming eventData.date is already a Date object as per Event type
 			name: eventData.name,
 			bibsSold: 0, // Default bibsSold
 			// Ensure any other required fields from the Event model are present with defaults if necessary
