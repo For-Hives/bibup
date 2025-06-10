@@ -2,7 +2,10 @@
 	"en": {
 		"GLOBAL": {
 			"appName": "My Awesome App",
-			"welcomeMessage": "Welcome!"
+			"welcomeMessage": "Welcome!",
+			"errors": {
+				"unexpected": "An unexpected error occurred." // TODO: Provide translations for other languages
+			}
 		}
 	},
 	"fr": {

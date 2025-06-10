@@ -16,7 +16,9 @@
 				"viewDetails": "View Details",
 				"bibsAvailable": "bibs available",
 				"soldOut": "Sold Out"
-			}
+			},
+			"noEventsToDisplay": "No events to display.", // TODO: Provide translations for other languages
+			"eventListTitleClient": "Event List (Client Component):" // TODO: Provide translations for other languages
 		}
 	},
 	"fr": {
@@ -36,7 +38,9 @@
 				"viewDetails": "Voir les détails",
 				"bibsAvailable": "dossards disponibles",
 				"soldOut": "Épuisé"
-			}
+			},
+			"noEventsToDisplay": "No events to display.", // TODO: Translate
+			"eventListTitleClient": "Event List (Client Component):" // TODO: Translate
 		}
 	},
 	"ko": {
@@ -56,7 +60,9 @@
 				"viewDetails": "세부 정보 보기",
 				"bibsAvailable": "개 비브 사용 가능",
 				"soldOut": "매진"
-			}
+			},
+			"noEventsToDisplay": "No events to display.", // TODO: Translate
+			"eventListTitleClient": "Event List (Client Component):" // TODO: Translate
 		}
 	}
 }
