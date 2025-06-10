@@ -6,10 +6,9 @@ import type { Bib } from '@/models/bib.model'
 
 import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path to your PocketBase client
 
+import { fetchUserById, updateUserBalance } from './user.services'
 // Import Transaction services and User services for processBibSale
 import { createTransaction } from './transaction.services'
-import { updateUserBalance, fetchUserById } from './user.services'
-import type { User } from '../models/user.model'
 
 // Type for the data expected by createBib, accommodating both partnered and unlisted event scenarios
 export type CreateBibData = Partial<
@@ -320,7 +319,7 @@ export async function processBibSale(
  */
 export async function updateBibBySeller(
 	bibId: string,
-	dataToUpdate: { status: Bib['status'] }, // Allow specific status updates or general data updates
+	dataToUpdate: Bib, // Allow specific status updates or general data updates
 	sellerUserId: string
 ): Promise<Bib | null> {
 	if (bibId === '' || sellerUserId === '') {

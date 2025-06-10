@@ -50,7 +50,20 @@ export async function handleToggleListingStatus(
 	}
 
 	try {
-		const updatedBib = await updateBibBySeller(bibId, { status: newStatus }, clerkId)
+		const newBibData: Bib = {
+			...bibWithEvent,
+			privateListingToken: newStatus === 'listed_private' ? (formData.get('privateListingToken') as string) : undefined,
+			status: newStatus,
+		}
+		// Ensure the privateListingToken is set only for private listings
+		if (newStatus === 'listed_private' && newBibData.privateListingToken == null) {
+			redirect(
+				`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Private listing token is required for private listings.')}`
+			)
+			return
+		}
+		// Update the bib with the new status
+		const updatedBib = await updateBibBySeller(bibId, newBibData, clerkId)
 
 		if (updatedBib) {
 			redirect(
@@ -75,6 +88,13 @@ export async function handleUpdateBibDetails(bibId: string, formData: FormData) 
 		return
 	}
 
+	// Fetch the current bib and user
+	const sellerUser = await fetchUserByClerkId(clerkId)
+	if (!sellerUser) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('User not found.')}`)
+		return
+	}
+
 	const priceValue = formData.get('price') as string
 	const originalPriceValue = formData.get('originalPrice') as string
 	const size = formData.get('size') as string
@@ -87,8 +107,13 @@ export async function handleUpdateBibDetails(bibId: string, formData: FormData) 
 		return
 	}
 
-	const dataToUpdate: Partial<Bib> = {
+	const dataToUpdate: Bib = {
+		registrationNumber: formData.get('registrationNumber') as string,
+		status: formData.get('status') as Bib['status'],
+		eventId: formData.get('eventId') as string,
+		sellerUserId: sellerUser.id,
 		price: price,
+		id: bibId,
 	}
 
 	// Add optional fields if they exist
@@ -104,7 +129,7 @@ export async function handleUpdateBibDetails(bibId: string, formData: FormData) 
 	}
 
 	if (gender && gender.trim() !== '') {
-		dataToUpdate.gender = gender as 'female' | 'male' | 'unisex'
+		dataToUpdate.gender = gender as Bib['gender']
 	}
 
 	try {
@@ -130,9 +155,30 @@ export async function handleWithdrawBib(bibId: string, formData: FormData) {
 		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('Authentication required.')}`)
 		return
 	}
+	// Fetch the current bib and user
+	const sellerUser = await fetchUserByClerkId(clerkId)
+	if (!sellerUser) {
+		redirect(`/dashboard/seller/edit-bib/${bibId}?error=${encodeURIComponent('User not found.')}`)
+		return
+	}
 
 	try {
-		const updatedBib = await updateBibBySeller(bibId, { status: 'withdrawn' }, clerkId)
+		const newBib: Bib = {
+			originalPrice: parseFloat(formData.get('originalPrice') as string) || undefined,
+
+			registrationNumber: formData.get('registrationNumber') as string,
+			price: parseFloat(formData.get('price') as string),
+			gender: formData.get('gender') as Bib['gender'],
+			eventId: formData.get('eventId') as string,
+			size: formData.get('size') as string,
+
+			sellerUserId: sellerUser.id,
+			buyerUserId: undefined, // Clear buyer if withdrawing
+			status: 'withdrawn',
+			id: bibId,
+		}
+
+		const updatedBib = await updateBibBySeller(bibId, newBib, clerkId)
 
 		if (updatedBib) {
 			redirect(`/dashboard/seller?success=${encodeURIComponent('Bib listing withdrawn.')}&bibStatus=withdrawn`)
