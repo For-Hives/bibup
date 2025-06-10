@@ -1,37 +1,51 @@
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
-import Image from 'next/image' // Import Image component
+import { getLocale } from '@/lib/getLocale' // Assuming this path
 import Link from 'next/link'
 
-export default function Navbar() {
+import globalTranslationsData from '../../globalLocales.json' // Corrected path
+import { getTranslations } from '../../lib/getDictionary' // Corrected path
+import pageTranslationsData from './locales.json' // Renamed import
+
+// NavbarTranslations interface removed as it's no longer used
+// when relying on eslint-disable comments for the 't' variable.
+
+export default async function Navbar() {
+	const locale: string = await getLocale() // Explicitly type locale
+
+	// Attempt 2: Use eslint-disable comments
+
+	const t = getTranslations(
+		locale,
+		pageTranslationsData,
+		globalTranslationsData
+		// DefaultLocaleKey will use its default 'en' from getTranslations signature
+	)
+
 	return (
 		<header className="flex h-16 items-center justify-between gap-4 p-4">
-			{' '}
-			{/* Changed justify-end to justify-between */}
 			<div>
-				{' '}
-				{/* Added a div to wrap the logo */}
+				{/* Using global translation for App Name */}
 				<Link href="/">
-					<Image
-						alt="App Logo"
-						height={24} // Adjust height as needed
-						src="/next.svg" // Using next.svg as a placeholder
-						width={100} // Adjust width as needed
-					/>
+					{}
+					<h1>{t.GLOBAL.appName}</h1>
 				</Link>
 			</div>
 			<div className="flex items-center gap-4">
-				{' '}
-				{/* Added a div to wrap the auth buttons and dashboard link */}
-				<SignedOut>
-					<SignInButton />
-					<SignUpButton />
-				</SignedOut>
+				{/* Using page-specific translation for a navigation link */}
+				<Link href="/">
+					{}
+					<button>{t.navbar.homeLink}</button>
+				</Link>
 				<SignedIn>
 					<Link href="/dashboard">
 						<button>Dashboard</button>
 					</Link>
 					<UserButton />
 				</SignedIn>
+				<SignedOut>
+					<SignInButton />
+					<SignUpButton />
+				</SignedOut>
 			</div>
 		</header>
 	)

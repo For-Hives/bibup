@@ -1,0 +1,17 @@
+{
+  "en": {
+    "navbar": {
+      "homeLink": "Home"
+    }
+  },
+  "fr": {
+    "navbar": {
+      "homeLink": "Accueil"
+    }
+  },
+  "ko": {
+    "navbar": {
+      "homeLink": "홈"
+    }
+  }
+}
