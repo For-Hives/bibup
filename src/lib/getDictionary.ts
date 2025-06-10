@@ -77,49 +77,78 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 
 	// ÉTAPE 1 : Récupérer les traductions spécifiques à la page
 	// =========================================================
-	let finalPageContent: P = {} as P // Initialisation avec un objet vide
-	const pageKeys = Object.keys(pageLocaleJsonData) // Liste de toutes les langues disponibles pour cette page
-
-	// Essaie de trouver les traductions dans la langue demandée
-	if (pageKeys.includes(locale)) {
-		finalPageContent = pageLocaleJsonData[locale]
-	}
-	// Si pas trouvé, essaie avec la langue par défaut
-	else if (pageKeys.includes(defaultLocale)) {
-		finalPageContent = pageLocaleJsonData[defaultLocale]
-	}
-	// Si toujours pas trouvé, prend la première langue disponible
-	else if (pageKeys.length > 0) {
-		// Le "as LocaleKey" dit à TypeScript de traiter cette chaîne comme une LocaleKey valide
-		finalPageContent = pageLocaleJsonData[pageKeys[0] as LocaleKey]
-	}
+	const finalPageContent: P = getFallbackTranslation(
+		locale,
+		defaultLocale,
+		pageLocaleJsonData,
+		{} as P // Valeur de fallback si aucune traduction n'est trouvée
+	)
 
 	// ÉTAPE 2 : Récupérer les traductions globales
 	// =============================================
 	const typedGlobalLocales = globalLocalesData // Les données globales importées du fichier JSON
 
-	// Initialisation dynamique basée sur la structure des données disponibles
-	let finalGlobalContent: GlobalTranslationFileContent =
+	// Initialisation dynamique pour la valeur de fallback
+	const defaultGlobalContent: GlobalTranslationFileContent =
 		Object.keys(typedGlobalLocales).length > 0
 			? { ...typedGlobalLocales[Object.keys(typedGlobalLocales)[0] as keyof typeof globalLocalesData] }
 			: ({} as GlobalTranslationFileContent)
-	const globalLocaleKeys = Object.keys(typedGlobalLocales) // Liste de toutes les langues disponibles globalement
 
-	// Même logique que pour les traductions de page
-	if (globalLocaleKeys.includes(locale)) {
-		finalGlobalContent = typedGlobalLocales[locale as keyof typeof globalLocalesData]
-	} else if (globalLocaleKeys.includes(defaultLocale)) {
-		finalGlobalContent = typedGlobalLocales[defaultLocale as keyof typeof globalLocalesData]
-	} else if (globalLocaleKeys.length > 0) {
-		const firstLocale = globalLocaleKeys[0] as keyof typeof globalLocalesData
-		finalGlobalContent = typedGlobalLocales[firstLocale]
-	}
+	const finalGlobalContent: GlobalTranslationFileContent = getFallbackTranslation(
+		locale,
+		defaultLocale,
+		typedGlobalLocales as Record<string, GlobalTranslationFileContent>,
+		defaultGlobalContent
+	)
 
 	// ÉTAPE 3 : Combiner et retourner le résultat
 	// ============================================
 	// L'opérateur "..." (spread) combine les deux objets en un seul
 	// Si une clé existe dans les deux, celle de droite (finalGlobalContent) prend le dessus
 	return { ...finalPageContent, ...finalGlobalContent }
+}
+
+/**
+ * HELPER FUNCTION: getFallbackTranslation
+ * ========================================
+ *
+ * Cette fonction implémente la logique de sélection de langue avec fallback.
+ * Elle est utilisée pour éviter la duplication entre les traductions de page et globales.
+ *
+ * PARAMÈTRES :
+ * - locale : La langue demandée
+ * - defaultLocale : La langue de secours
+ * - localeData : L'objet contenant toutes les traductions disponibles
+ * - fallbackValue : Valeur par défaut si aucune traduction n'est trouvée
+ *
+ * LOGIQUE :
+ * 1. Essaie la langue demandée
+ * 2. Si introuvable, essaie la langue par défaut
+ * 3. Si toujours introuvable, prend la première langue disponible
+ * 4. Si aucune langue disponible, retourne la valeur de fallback
+ */
+function getFallbackTranslation<T, LocaleKey extends string>(
+	locale: LocaleKey,
+	defaultLocale: LocaleKey,
+	localeData: Record<string, T>,
+	fallbackValue: T
+): T {
+	const availableKeys = Object.keys(localeData)
+
+	// Essaie de trouver les traductions dans la langue demandée
+	if (availableKeys.includes(locale)) {
+		return localeData[locale]
+	}
+	// Si pas trouvé, essaie avec la langue par défaut
+	else if (availableKeys.includes(defaultLocale)) {
+		return localeData[defaultLocale]
+	}
+	// Si toujours pas trouvé, prend la première langue disponible
+	else if (availableKeys.length > 0) {
+		return localeData[availableKeys[0]]
+	}
+	// Si aucune langue disponible, retourne la valeur de fallback
+	return fallbackValue
 }
 
 /**
