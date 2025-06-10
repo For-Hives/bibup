@@ -30,7 +30,7 @@
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
 		"svix": "1.67.0",
-		"zod": "3.25.56"
+		"zod": "3.25.57"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "3.3.1",
