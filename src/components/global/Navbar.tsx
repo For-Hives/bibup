@@ -9,12 +9,7 @@ import pageTranslationsData from './locales.json' // Renamed import
 export default async function Navbar() {
 	const locale: string = await getLocale() // Explicitly type locale
 
-	const t = getTranslations(
-		locale,
-		pageTranslationsData
-		// globalTranslationsData argument removed
-		// DefaultLocaleKey will use its default 'en' from getTranslations signature
-	)
+	const t = getTranslations(locale, pageTranslationsData)
 
 	return (
 		<header className="flex h-16 items-center justify-between gap-4 p-4">
