@@ -98,8 +98,11 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 	// =============================================
 	const typedGlobalLocales = globalLocalesData // Les données globales importées du fichier JSON
 
-	// Initialisation avec une structure vide mais valide
-	let finalGlobalContent: GlobalTranslationFileContent = { GLOBAL: { welcomeMessage: '', appName: '' } }
+	// Initialisation dynamique basée sur la structure des données disponibles
+	let finalGlobalContent: GlobalTranslationFileContent = 
+		Object.keys(typedGlobalLocales).length > 0
+			? { ...typedGlobalLocales[Object.keys(typedGlobalLocales)[0] as keyof typeof globalLocalesData] }
+			: ({} as GlobalTranslationFileContent);
 	const globalLocaleKeys = Object.keys(typedGlobalLocales) // Liste de toutes les langues disponibles globalement
 
 	// Même logique que pour les traductions de page
