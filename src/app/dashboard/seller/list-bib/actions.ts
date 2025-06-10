@@ -49,7 +49,7 @@ export async function handleListBibServerAction(formData: FormData) {
 
 	if (!validationResult.success) {
 		const flatErrors = v.flatten(validationResult.issues)
-		const errorMessages = flatErrors.root?.join(', ') ?? 'Erreur de validation'
+		const errorMessages = flatErrors.root?.join(', ') ?? 'Validation error'
 		redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 		return
 	}
