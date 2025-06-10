@@ -68,7 +68,7 @@ export default async function SellerDashboardPage({
 		// Fetch bibs listed by this seller
 		listedBibs = (await fetchBibsBySeller(bibUpUser.id)) as (Bib & {
 			expand?: { eventId: Event }
-		})[] //TODO: use a proper client compoenent for this
+		})[] //TODO: use a proper client component for this
 	}
 
 	const bibUpBalance = bibUpUser?.bibUpBalance ?? 0
