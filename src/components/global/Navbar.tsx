@@ -9,7 +9,7 @@ import pageTranslationsData from './locales.json' // Renamed import
 export default async function Navbar() {
 	const locale: string = await getLocale() // Explicitly type locale
 
-	// Attempt 2: Use eslint-disable comments
+	
 
 	const t = getTranslations(
 		locale,
