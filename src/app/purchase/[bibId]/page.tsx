@@ -97,10 +97,9 @@ export default async function BibPurchasePage({
 			redirect(`/purchase/${bibId}?error=${encodeURIComponent(t.purchase.errors.authFailed)}`)
 			return
 		}
-		const pocketbaseUrl = user.id // This is the PocketBase User ID
 
 		try {
-			const result = await processBibSale(bibId, pocketbaseUrl)
+			const result = await processBibSale(bibId, user.id)
 			if (result.success && result.transaction) {
 				redirect(
 					`/dashboard/buyer?purchase_success=true&bib_id=${bibId}&event_name=${encodeURIComponent(eventName)}&transaction_id=${result.transaction.id}`
