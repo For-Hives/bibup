@@ -17,8 +17,8 @@
 				"bibsAvailable": "bibs available",
 				"soldOut": "Sold Out"
 			},
-			"noEventsToDisplay": "No events to display.", // TODO: Provide translations for other languages
-			"eventListTitleClient": "Event List (Client Component):" // TODO: Provide translations for other languages
+			"noEventsToDisplay": "No events to display.",
+			"eventListTitleClient": "Event List (Client Component):"
 		}
 	},
 	"fr": {
@@ -39,8 +39,8 @@
 				"bibsAvailable": "dossards disponibles",
 				"soldOut": "Épuisé"
 			},
-			"noEventsToDisplay": "No events to display.", // TODO: Translate
-			"eventListTitleClient": "Event List (Client Component):" // TODO: Translate
+			"noEventsToDisplay": "Aucun événement à afficher.",
+			"eventListTitleClient": "Liste des événements (Composant client) :"
 		}
 	},
 	"ko": {
@@ -61,8 +61,8 @@
 				"bibsAvailable": "개 비브 사용 가능",
 				"soldOut": "매진"
 			},
-			"noEventsToDisplay": "No events to display.", // TODO: Translate
-			"eventListTitleClient": "Event List (Client Component):" // TODO: Translate
+			"noEventsToDisplay": "표시할 이벤트가 없습니다.",
+			"eventListTitleClient": "이벤트 목록 (클라이언트 컴포넌트):"
 		}
 	}
 }
