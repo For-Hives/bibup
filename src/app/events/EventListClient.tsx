@@ -37,16 +37,19 @@ export default function EventListClient({
 	const [events] = useState<Event[]>(prefetchedEvents ?? [])
 
 	useEffect(() => {
-		if (error) {
+		if (error != null) {
+			// More explicit check
 			toast.error(error)
 		}
 	}, [error])
 
-	if (events.length === 0 && !error) {
+	if (events.length === 0 && error == null) {
+		// More explicit check
 		return <p>{t.noEventsToDisplay}</p>
 	}
 
-	if (events.length === 0 && error) {
+	if (events.length === 0 && error != null) {
+		// More explicit check
 		return <p>Could not load events. An error occurred.</p>
 	}
 

@@ -19,7 +19,7 @@ export async function handleToggleListingStatus(
 	}
 
 	const sellerUser = await fetchUserByClerkId(clerkId)
-	if (!sellerUser) {
+	if (sellerUser == null) {
 		throw new Error('User not found.')
 	}
 
@@ -109,7 +109,7 @@ export async function handleUpdateBibDetails(
 		price: price,
 	}
 
-	if (originalPriceValue && originalPriceValue.trim() !== '') {
+	if (originalPriceValue != null && originalPriceValue.trim() !== '') {
 		const originalPrice = parseFloat(originalPriceValue)
 		if (!isNaN(originalPrice) && originalPrice >= 0) {
 			dataToUpdate.originalPrice = originalPrice
@@ -149,7 +149,7 @@ export async function handleWithdrawBib(
 		throw new Error('Authentication required.')
 	}
 	const sellerUser = await fetchUserByClerkId(clerkId)
-	if (!sellerUser) {
+	if (sellerUser == null) {
 		throw new Error('User not found.')
 	}
 
