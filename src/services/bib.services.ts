@@ -62,9 +62,7 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 		const record = await pb.collection('bibs').create<Bib>(dataToCreate)
 		return record
 	} catch (error: unknown) {
-		console.error('Error creating bib listing:', error)
-
-		return null
+		throw new Error('Error creating bib listing: ' + (error instanceof Error ? error.message : String(error)))
 	}
 }
 
@@ -85,10 +83,9 @@ export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { e
 
 		return record
 	} catch (error: unknown) {
-		console.error(`Error fetching bib with ID "${bibId}":`, error)
-
-		// For other errors, you might want to throw or return null based on your error handling strategy
-		return null
+		throw new Error(
+			`Error fetching bib with ID "${bibId}": ` + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -115,10 +112,10 @@ export async function fetchBibByIdForSeller(
 		}
 		return record
 	} catch (error: unknown) {
-		console.error(`Error fetching bib ${bibId} for seller ${sellerUserId}:`, error)
-
-		// For other errors, you might want to throw or return null based on your error handling strategy
-		return null
+		throw new Error(
+			`Error fetching bib ${bibId} for seller ${sellerUserId}: ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -140,10 +137,10 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 		})
 		return records
 	} catch (error: unknown) {
-		console.error(`Error fetching bibs for buyer ID "${buyerUserId}":`, error)
-
-		// For other errors, return empty array for safety
-		return []
+		throw new Error(
+			`Error fetching bibs for buyer ID "${buyerUserId}": ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -172,10 +169,10 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 		// This is a common pattern but might need adjustment.
 		return records
 	} catch (error: unknown) {
-		console.error(`Error fetching bibs for seller ID "${sellerUserId}":`, error)
-
-		// For other errors, return empty array for safety
-		return []
+		throw new Error(
+			`Error fetching bibs for seller ID "${sellerUserId}": ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -197,10 +194,10 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 		})
 		return records
 	} catch (error: unknown) {
-		console.error(`Error fetching publicly listed bibs for event ${eventId}:`, error)
-
-		// For other errors, return empty array for safety
-		return []
+		throw new Error(
+			`Error fetching publicly listed bibs for event ${eventId}: ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -300,14 +297,10 @@ export async function processBibSale(
 
 		return { success: true, transaction }
 	} catch (error: unknown) {
-		console.error(`Error processing bib sale for bib ID ${bibId}:`, error)
-		let errorMessage = 'An unexpected error occurred during bib sale processing.'
-		if (error instanceof Error) {
-			errorMessage = error.message
-		} else if (typeof error === 'object' && error != null && 'message' in error && typeof error.message === 'string') {
-			errorMessage = error.message
-		}
-		return { error: errorMessage, success: false }
+		throw new Error(
+			`Error processing bib sale for bib ID ${bibId}: ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -367,9 +360,7 @@ export async function updateBibBySeller(
 		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 		return updatedRecord
 	} catch (error: unknown) {
-		console.error(`Error updating bib ${bibId}:`, error)
-
-		return null
+		throw new Error(`Error updating bib ${bibId}: ` + (error instanceof Error ? error.message : String(error)))
 	}
 }
 
@@ -396,11 +387,13 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 
 		return updatedRecord
 	} catch (error: unknown) {
-		console.error(`Error updating bib ${bibId} status by admin:`, error)
 		if (error != null && typeof error === 'object' && 'message' in error) {
+			// Still log PocketBase specific errors if needed, but re-throw
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
-		return null
+		throw new Error(
+			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 

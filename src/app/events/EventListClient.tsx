@@ -2,15 +2,18 @@
 
 import type { Event } from '@/models/event.model'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 
 // This client component now primarily just displays the events passed to it.
 // It could be used for client-side filtering/sorting in the future if needed.
 export default function EventListClient({
 	prefetchedEvents,
 	translations: t,
+	error,
 }: {
 	prefetchedEvents: Event[]
+	error?: string | null
 	translations: {
 		description: string
 		eventCard: {
@@ -36,8 +39,19 @@ export default function EventListClient({
 }) {
 	const [events] = useState<Event[]>(prefetchedEvents ?? [])
 
-	if (events.length === 0) {
+	useEffect(() => {
+		if (error) {
+			toast.error(error)
+		}
+	}, [error])
+
+	if (events.length === 0 && !error) {
 		return <p>{t.noEventsToDisplay}</p>
+	}
+
+	// Optionally, display a specific message if there's an error and no events
+	if (events.length === 0 && error) {
+		return <p>Could not load events. An error occurred.</p> // Or use a translation
 	}
 
 	return (

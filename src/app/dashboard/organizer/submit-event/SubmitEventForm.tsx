@@ -1,0 +1,106 @@
+'use client'
+
+import React from 'react' // useEffect might be needed for other things later, but not for this simple form
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { handleSubmitEvent } from './actions' // Import the server action
+
+// Define a more specific type for translations if possible, or use a generic one
+interface SubmitEventFormProps {
+	translations: {
+		[key: string]: string // Simple structure, adjust as needed based on your translation file
+		eventNameLabel: string
+		eventDateLabel: string
+		eventLocation: string
+		eventDescription: string
+		participantCount: string
+		submit: string
+		// Add other specific keys used in the form if you have them
+	}
+}
+
+export default function SubmitEventForm({ translations: t }: SubmitEventFormProps) {
+	const router = useRouter()
+
+	async function formActionWrapper(formData: FormData) {
+		const result = await handleSubmitEvent(formData)
+
+		if (result.error) {
+			toast.error(result.error)
+		} else if (result.success && result.redirectPath) {
+			// Optionally show a success toast before redirecting
+			toast.success('Event submitted successfully!')
+			router.push(result.redirectPath)
+		}
+	}
+
+	return (
+		<form
+			action={formActionWrapper}
+			className="space-y-6 rounded-xl border border-[var(--border-color)] bg-white p-6 shadow-lg md:p-8 dark:bg-neutral-800"
+		>
+			<div>
+				<label className="mb-1 block text-sm font-medium" htmlFor="name">
+					{t.eventNameLabel}
+				</label>
+				<input
+					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
+					id="name"
+					name="name" // Ensure name attributes match what server action expects (e.g., 'name' not 'eventName')
+					required
+					type="text"
+				/>
+			</div>
+			<div>
+				<label className="mb-1 block text-sm font-medium" htmlFor="date">
+					{t.eventDateLabel}
+				</label>
+				<input
+					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
+					id="date"
+					name="date" // Ensure name attributes match
+					required
+					type="date"
+				/>
+			</div>
+			<div>
+				<label className="mb-1 block text-sm font-medium" htmlFor="location">
+					{t.eventLocation}
+				</label>
+				<input
+					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
+					id="location"
+					name="location" // Ensure name attributes match
+					required
+					type="text"
+				/>
+			</div>
+			<div>
+				<label className="mb-1 block text-sm font-medium" htmlFor="description">
+					{t.eventDescription}
+				</label>
+				<textarea
+					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
+					id="description"
+					name="description" // Ensure name attributes match
+					rows={4}
+				></textarea>
+			</div>
+			<div>
+				<label className="mb-1 block text-sm font-medium" htmlFor="participantCount">
+					{t.participantCount}
+				</label>
+				<input
+					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
+					id="participantCount"
+					min="0"
+					name="participantCount" // Ensure name attributes match
+					type="number"
+				/>
+			</div>
+			<button className="btn btn-primary w-full" type="submit">
+				{t.submit}
+			</button>
+		</form>
+	)
+}

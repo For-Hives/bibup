@@ -40,9 +40,7 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 		const record = await pb.collection('events').create<Event>(dataToCreate)
 		return record
 	} catch (error: unknown) {
-		console.error('Error creating event:', error)
-
-		return null
+		throw new Error('Error creating event: ' + (error instanceof Error ? error.message : String(error)))
 	}
 }
 
@@ -59,9 +57,9 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 		// PocketBase SDK should correctly type records if <Event> is used with getFullList
 		return records
 	} catch (error: unknown) {
-		console.error('Error fetching approved public events:', error)
-		// Return empty array on other errors for safety and consistency with other functions
-		return []
+		throw new Error(
+			'Error fetching approved public events: ' + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -74,9 +72,9 @@ export async function fetchEventById(id: string): Promise<Event | null> {
 		const record = await pb.collection('events').getOne<Event>(id)
 		return record
 	} catch (error: unknown) {
-		console.error(`Error fetching event with ID "${id}":`, error)
-
-		return null
+		throw new Error(
+			`Error fetching event with ID "${id}": ` + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -97,9 +95,10 @@ export async function fetchEventsByOrganizer(organizerId: string): Promise<Event
 		})
 		return records
 	} catch (error: unknown) {
-		console.error(`Error fetching events for organizer ID "${organizerId}":`, error)
-		// Return empty array for safety to prevent UI crashes
-		return []
+		throw new Error(
+			`Error fetching events for organizer ID "${organizerId}": ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -115,9 +114,9 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 		})
 		return records
 	} catch (error: unknown) {
-		console.error('Error fetching partnered and approved events:', error)
-
-		// For other errors, return empty array for safety
-		return []
+		throw new Error(
+			'Error fetching partnered and approved events: ' +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
