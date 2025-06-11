@@ -105,7 +105,8 @@ export default function ListNewBibClientPage({
 		setFieldErrors({})
 		try {
 			const result = await handleListBibServerAction(formData)
-			if (result.success && result.redirectPath) {
+			if (result.success && result.redirectPath != null) {
+				// More explicit check
 				router.push(result.redirectPath)
 			}
 		} catch (e: unknown) {

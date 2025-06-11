@@ -26,12 +26,13 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 }> {
 	const { userId: clerkId } = await auth()
 
-	if (!clerkId) {
+	if (clerkId == null) {
 		throw new Error('You must be logged in to submit an event.')
 	}
 
 	const user = await fetchUserByClerkId(clerkId)
-	if (!user) {
+	if (user == null) {
+		// Also updated this check for consistency, as fetchUserByClerkId can return null
 		throw new Error('Organizer user record not found.')
 	}
 
