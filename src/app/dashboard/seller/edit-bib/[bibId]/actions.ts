@@ -89,7 +89,7 @@ export async function handleUpdateBibDetails(
 	const gender = formData.get('gender') as null | string
 	const registrationNumber = formData.get('registrationNumber') as null | string
 
-	if (!registrationNumber || registrationNumber.trim() === '') {
+	if (registrationNumber == null || registrationNumber.trim() === '') {
 		throw new Error('Registration number is required.')
 	}
 
@@ -120,8 +120,8 @@ export async function handleUpdateBibDetails(
 		dataToUpdate.originalPrice = undefined
 	}
 
-	dataToUpdate.size = size && size.trim() !== '' ? size.trim() : undefined
-	dataToUpdate.gender = gender && gender.trim() !== '' ? (gender as Bib['gender']) : undefined
+	dataToUpdate.size = size != null && size.trim() !== '' ? size.trim() : undefined
+	dataToUpdate.gender = gender != null && gender.trim() !== '' ? (gender as Bib['gender']) : undefined
 
 	try {
 		const partialUpdatedBib = await updateBibBySeller(bibId, dataToUpdate, sellerUser.id)
