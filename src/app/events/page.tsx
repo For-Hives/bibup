@@ -12,7 +12,7 @@ export default async function EventsPage() {
 	const locale = await getLocale()
 	const t = getTranslations(locale, eventsTranslations)
 
-	let events: Event[] = []
+	let events: Event[] | undefined
 	let error: null | string = null
 
 	try {
