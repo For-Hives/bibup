@@ -14,7 +14,7 @@ export default async function EventsPage() {
 	const t = getTranslations(locale, eventsTranslations)
 
 	let events: Event[] = []
-	let error: string | null = null
+	let error: null | string = null
 
 	try {
 		events = await fetchApprovedPublicEvents()
@@ -28,7 +28,7 @@ export default async function EventsPage() {
 				<h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}>{t.events.title}</h1>
 				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>{t.events.description}</p>
 				{/* EventListClient will now handle the display of events or "no events" message */}
-				<EventListClient prefetchedEvents={events} translations={t.events} error={error} />
+				<EventListClient error={error} prefetchedEvents={events} translations={t.events} />
 			</main>
 		</div>
 	)

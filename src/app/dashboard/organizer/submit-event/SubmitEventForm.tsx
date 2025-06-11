@@ -1,22 +1,32 @@
 'use client'
 
 import React from 'react' // useEffect might be needed for other things later, but not for this simple form
+
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+
 import { handleSubmitEvent } from './actions' // Import the server action
 
-// Define a more specific type for translations if possible, or use a generic one
 interface SubmitEventFormProps {
-	translations: {
-		[key: string]: string // Simple structure, adjust as needed based on your translation file
-		eventNameLabel: string
-		eventDateLabel: string
-		eventLocation: string
-		eventDescription: string
-		participantCount: string
-		submit: string
-		// Add other specific keys used in the form if you have them
-	}
+	translations: SubmitEventTranslations
+}
+
+interface SubmitEventTranslations {
+	backToDashboard: string
+	createError: string
+	errorPrefix: string
+	eventDateLabel: string
+	eventDescription: string
+	eventLocation: string
+	eventNameLabel: string
+	loginRequired: string
+	participantCount: string
+	submit: string
+	title: string
+	unknownError: string
+	validationError: string
+	// Potentially add GLOBAL types if getTranslations merges them
+	// GLOBAL?: { appName: string; welcomeMessage: string; errors: { unexpected: string } }
 }
 
 export default function SubmitEventForm({ translations: t }: SubmitEventFormProps) {
@@ -25,9 +35,11 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 	async function formActionWrapper(formData: FormData) {
 		const result = await handleSubmitEvent(formData)
 
-		if (result.error) {
+		if (result.error != null) {
+			// More explicit check
 			toast.error(result.error)
-		} else if (result.success && result.redirectPath) {
+		} else if (result.success && result.redirectPath != null) {
+			// More explicit check
 			// Optionally show a success toast before redirecting
 			toast.success('Event submitted successfully!')
 			router.push(result.redirectPath)

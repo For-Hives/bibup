@@ -2,7 +2,8 @@
 
 import type { Event } from '@/models/event.model'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
 import { toast } from 'sonner'
 
 // This client component now primarily just displays the events passed to it.
@@ -12,8 +13,8 @@ export default function EventListClient({
 	translations: t,
 	error,
 }: {
+	error?: null | string
 	prefetchedEvents: Event[]
-	error?: string | null
 	translations: {
 		description: string
 		eventCard: {

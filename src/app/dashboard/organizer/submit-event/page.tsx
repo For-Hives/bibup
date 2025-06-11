@@ -1,4 +1,3 @@
-import type { Event } from '@/models/event.model' // Updated model import
 import type { Metadata } from 'next'
 
 import { getTranslations } from '@/lib/getDictionary'
@@ -7,9 +6,9 @@ import { getLocale } from '@/lib/getLocale'
 // import { redirect } from 'next/navigation' // No longer needed here
 import Link from 'next/link' // Import Link
 
+import submitEventTranslations from './locales.json'
 // import { createEvent } from '@/services/event.services' // No longer needed here
 import SubmitEventForm from './SubmitEventForm' // Import the new client component
-import submitEventTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	title: 'Submit New Event | Organizer Dashboard | Beswib',

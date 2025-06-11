@@ -73,7 +73,7 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 		}
 		// For other errors, you might want to throw or handle differently
 		throw new Error(
-			`Error fetching user by Clerk ID "${clerkId}": ` + (error instanceof Error ? error.message : String(error)),
+			`Error fetching user by Clerk ID "${clerkId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -103,8 +103,7 @@ export async function fetchUserById(userId: string): Promise<null | User> {
 			return null
 		}
 		throw new Error(
-			`Error fetching user by PocketBase ID "${userId}": ` +
-				(error instanceof Error ? error.message : String(error)),
+			`Error fetching user by PocketBase ID "${userId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -154,7 +153,7 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
 		throw new Error(
-			`Error updating balance for user ${clerkUserId}: ` + (error instanceof Error ? error.message : String(error)),
+			`Error updating balance for user ${clerkUserId}: ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }

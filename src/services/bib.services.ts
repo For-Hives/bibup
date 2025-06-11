@@ -84,7 +84,7 @@ export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { e
 		return record
 	} catch (error: unknown) {
 		throw new Error(
-			`Error fetching bib with ID "${bibId}": ` + (error instanceof Error ? error.message : String(error)),
+			`Error fetching bib with ID "${bibId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -114,7 +114,7 @@ export async function fetchBibByIdForSeller(
 	} catch (error: unknown) {
 		throw new Error(
 			`Error fetching bib ${bibId} for seller ${sellerUserId}: ` +
-				(error instanceof Error ? error.message : String(error)),
+				(error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -138,8 +138,7 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 		return records
 	} catch (error: unknown) {
 		throw new Error(
-			`Error fetching bibs for buyer ID "${buyerUserId}": ` +
-				(error instanceof Error ? error.message : String(error)),
+			`Error fetching bibs for buyer ID "${buyerUserId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -170,8 +169,7 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 		return records
 	} catch (error: unknown) {
 		throw new Error(
-			`Error fetching bibs for seller ID "${sellerUserId}": ` +
-				(error instanceof Error ? error.message : String(error)),
+			`Error fetching bibs for seller ID "${sellerUserId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -196,7 +194,7 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 	} catch (error: unknown) {
 		throw new Error(
 			`Error fetching publicly listed bibs for event ${eventId}: ` +
-				(error instanceof Error ? error.message : String(error)),
+				(error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -298,8 +296,7 @@ export async function processBibSale(
 		return { success: true, transaction }
 	} catch (error: unknown) {
 		throw new Error(
-			`Error processing bib sale for bib ID ${bibId}: ` +
-				(error instanceof Error ? error.message : String(error)),
+			`Error processing bib sale for bib ID ${bibId}: ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -392,7 +389,7 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
 		throw new Error(
-			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error)),
+			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
