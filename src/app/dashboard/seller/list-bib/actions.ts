@@ -21,9 +21,6 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 	const sellerUserIdFromAuth = await fetchUserByClerkId(clerkid)
 		.then(user => user?.id)
 		.catch(() => {
-			// This catch is for fetchUserByClerkId failing, not for user being null.
-			// If fetchUserByClerkId throws, it will be caught by the outer try-catch if not handled here.
-			// For now, let it return null, to be caught by the check below.
 			return null
 		})
 
@@ -78,18 +75,11 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 	try {
 		const newBib = await createBib(bibToCreate)
 
-		// If createBib completes without error, newBib should be valid.
-		// The explicit `if (newBib)` check might be redundant if createBib always throws on failure
-		// (which it should, based on previous service refactoring).
-		// However, keeping it for safety or if createBib's contract changes.
 		if (!newBib) {
-			// This case implies createBib returned null/undefined without throwing.
 			throw new Error('Failed to list bib after creation attempt.')
 		}
 		return { redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}`, success: true }
 	} catch (error: unknown) {
-		// This will catch errors from createBib, fetchUserByClerkId (if it throws),
-		// or any other unexpected errors in the try block.
 		throw new Error(`Failed to list bib: ${error instanceof Error ? error.message : String(error)}`)
 	}
 }

@@ -3,12 +3,10 @@
 import type { Bib } from '@/models/bib.model'
 
 import { auth } from '@clerk/nextjs/server'
-// import { redirect } from 'next/navigation' // No longer using redirect directly
 
 import { fetchBibByIdForSeller, updateBibBySeller } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
 
-// Server action to toggle listing status
 export async function handleToggleListingStatus(
 	bibId: string,
 	newStatus: 'listed_private' | 'listed_public',
@@ -55,10 +53,8 @@ export async function handleToggleListingStatus(
 		if (!partialUpdatedBib) {
 			throw new Error('Failed to change bib status.')
 		}
-		// Fetch the full bib to ensure all fields, including eventId, are present and correctly typed
 		const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
 		if (!fullUpdatedBib) {
-			// This case means the update might have succeeded but fetching the full bib failed
 			throw new Error('Failed to retrieve full bib details after status change.')
 		}
 		return {
@@ -87,11 +83,6 @@ export async function handleUpdateBibDetails(
 		throw new Error('User not found.')
 	}
 
-	// It's good practice to fetch the existing bib to ensure it exists and belongs to the user
-	// and to merge with existing data if only partial updates are allowed.
-	// However, the current updateBibBySeller might handle full updates or overwrite.
-	// For simplicity, we'll proceed with constructing dataToUpdate from formData.
-
 	const priceValue = formData.get('price') as string
 	const originalPriceValue = formData.get('originalPrice') as string
 	const size = formData.get('size') as null | string
@@ -107,33 +98,26 @@ export async function handleUpdateBibDetails(
 		throw new Error('Valid price is required.')
 	}
 
-	// Assuming 'status' and 'eventId' are not changed by this action directly or are pre-filled in the form.
-	// If they are part of the form, they should be read from formData like other fields.
-	// For this example, we'll assume they are not part of this specific update form or are handled elsewhere.
-	// Fetching the original bib would be safer to get current status and eventId.
 	const currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
 	if (!currentBib) {
 		throw new Error('Original bib not found.')
 	}
 
 	const dataToUpdate: Bib = {
-		...currentBib, // Start with existing data
+		...currentBib,
 		registrationNumber: registrationNumber,
 		price: price,
-		// id: bibId, // already in currentBib
-		// sellerUserId: sellerUser.id, // already in currentBib
 	}
 
 	if (originalPriceValue && originalPriceValue.trim() !== '') {
 		const originalPrice = parseFloat(originalPriceValue)
 		if (!isNaN(originalPrice) && originalPrice >= 0) {
-			// Allow 0 for original price
 			dataToUpdate.originalPrice = originalPrice
 		} else {
 			throw new Error('Invalid original price format.')
 		}
 	} else {
-		dataToUpdate.originalPrice = undefined // Or 0, depending on your model
+		dataToUpdate.originalPrice = undefined
 	}
 
 	dataToUpdate.size = size && size.trim() !== '' ? size.trim() : undefined
@@ -145,7 +129,6 @@ export async function handleUpdateBibDetails(
 		if (!partialUpdatedBib) {
 			throw new Error('Failed to update bib details.')
 		}
-		// Fetch the full bib to ensure all fields are present and correctly typed
 		const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
 		if (!fullUpdatedBib) {
 			throw new Error('Failed to retrieve full bib details after update.')
@@ -159,7 +142,6 @@ export async function handleUpdateBibDetails(
 
 export async function handleWithdrawBib(
 	bibId: string
-	// formData: FormData // formData might not be needed if we just set status to withdrawn
 ): Promise<{ error?: string; redirectPath?: string; success: boolean }> {
 	const { userId: clerkId } = await auth()
 
@@ -176,14 +158,13 @@ export async function handleWithdrawBib(
 		throw new Error('Bib not found or not owned by user.')
 	}
 
-	// Check if bib can be withdrawn
 	if (currentBib.status === 'sold' || currentBib.status === 'expired' || currentBib.status === 'withdrawn') {
 		throw new Error(`Cannot withdraw bib with status: ${currentBib.status}.`)
 	}
 
 	try {
 		const bibDataToUpdate: Partial<Bib> = {
-			buyerUserId: undefined, // Clear buyer if any (though unlikely for non-sold bibs)
+			buyerUserId: undefined,
 			status: 'withdrawn',
 		}
 

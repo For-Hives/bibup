@@ -1,7 +1,7 @@
 'use server'
 
 import type { Waitlist } from '@/models/waitlist.model'
-import type { Event } from '@/models/event.model' // For expanding event details
+import type { Event } from '@/models/event.model'
 
 import { pb } from '@/lib/pocketbaseClient'
 
@@ -25,29 +25,27 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 			const existingEntry = await pb
 				.collection('waitlists')
 				.getFirstListItem<Waitlist>(`userId = "${userId}" && eventId = "${eventId}"`)
-			// existingEntry will always be truthy if no error is thrown
 			return { ...existingEntry, error: 'already_on_waitlist' }
 		} catch (error: unknown) {
-			// PocketBase throws 404 if getFirstListItem finds no record, which is expected if not on waitlist.
-			// We only care about other errors here.
+			// PocketBase's getFirstListItem throws a 404 error if no record is found,
+			// which is the expected behavior if the user is not already on the waitlist.
+			// We only re-throw if it's an unexpected error (not a 404).
 			if (
 				error != null &&
 				typeof error === 'object' &&
 				'status' in error &&
 				(error as { status: unknown }).status !== 404
 			) {
-				throw error // Re-throw unexpected errors
+				throw error
 			}
 		}
 
-		// Create new waitlist entry
 		const dataToCreate: Omit<Waitlist, 'addedAt' | 'id' | 'notifiedAt'> & {
 			addedAt: Date
 		} = {
 			addedAt: new Date(),
 			eventId: eventId,
 			userId: userId,
-			// requestedBibSize, requestedBibGender can be added later if needed
 		}
 
 		const record = await pb.collection('waitlists').create<Waitlist>(dataToCreate)
@@ -55,7 +53,6 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 	} catch (error: unknown) {
 		if (error != null && typeof error === 'object') {
 			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
-				// Still log PocketBase specific errors if needed, but re-throw
 				console.error('PocketBase error details:', (error as { message: string }).message)
 			}
 			if ('response' in error) {
@@ -85,8 +82,8 @@ export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { 
 	try {
 		const records = await pb.collection('waitlists').getFullList<Waitlist & { expand?: { eventId: Event } }>({
 			filter: `userId = "${userId}"`,
-			expand: 'eventId', // Expand related event details
-			sort: '-addedAt', // Sort by when they were added, newest first
+			expand: 'eventId',
+			sort: '-addedAt',
 		})
 		return records
 	} catch (error: unknown) {

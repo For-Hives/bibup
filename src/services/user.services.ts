@@ -1,13 +1,12 @@
-import type { User } from '@/models/user.model' // Adjust path as needed
+import type { User } from '@/models/user.model'
 
-import { pb } from '@/lib/pocketbaseClient' // Assuming PocketBase client is initialized here
+import { pb } from '@/lib/pocketbaseClient'
 
 export interface CreateUserDTO {
 	clerkId: string
 	email: string
 	firstName: string
 	lastName: string
-	// roles and bibUpBalance will be set to defaults by the service
 }
 
 export async function createUser(userData: CreateUserDTO): Promise<null | User> {
@@ -17,18 +16,15 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 			lastName: userData.lastName,
 			clerkId: userData.clerkId,
 			email: userData.email,
-			roles: ['buyer'], // Default role
-			bibUpBalance: 0, // Default balance
+			roles: ['buyer'],
+			bibUpBalance: 0,
 		}
 
 		const record = await pb.collection('users').create<User>(newUserRecord)
 		return record
 	} catch (error: unknown) {
-		// It's good to check for specific PocketBase error types if possible
-		// For example, if it's a unique constraint violation, etc.
 		if (error != null && typeof error === 'object') {
 			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
-				// Still log PocketBase specific errors if needed, but re-throw
 				console.error('PocketBase error details:', (error as { message: string }).message)
 			}
 			if ('response' in error) {
@@ -42,9 +38,6 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 	}
 }
 
-// Potential future functions:
-// export async function getUserById(id: string): Promise<User | null> { ... } // This would be for PocketBase record ID
-
 /**
  * Fetches a user from PocketBase by their Clerk ID.
  * @param clerkId The Clerk User ID.
@@ -55,23 +48,21 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 		return null
 	}
 	try {
-		// Assuming 'clerkId' is a unique field in your 'users' collection
 		const record = await pb.collection('users').getFirstListItem<User>(`clerkId = "${clerkId}"`)
 		return record
 	} catch (error: unknown) {
-		// PocketBase getFirstListItem throws an error if no item is found or multiple are found (if not unique)
-		// It also throws for other query errors.
+		// PocketBase getFirstListItem throws an error if no item is found (which is a 404).
+		// This is an expected "not found" case, so we return null.
 		if (
 			error != null &&
 			typeof error === 'object' &&
 			'status' in error &&
 			(error as { status: unknown }).status === 404
 		) {
-			// Explicitly return null on 404 as this is a "not found" case, not an unexpected error
 			console.warn(`User with Clerk ID ${clerkId} not found in PocketBase.`)
 			return null
 		}
-		// For other errors, you might want to throw or handle differently
+		// For other types of errors, re-throw.
 		throw new Error(
 			`Error fetching user by Clerk ID "${clerkId}": ` + (error instanceof Error ? error.message : String(error))
 		)
@@ -98,7 +89,7 @@ export async function fetchUserById(userId: string): Promise<null | User> {
 			'status' in error &&
 			(error as { status: unknown }).status === 404
 		) {
-			// Explicitly return null on 404 as this is a "not found" case, not an unexpected error
+			// Expected "not found" case.
 			console.warn(`User with PocketBase ID ${userId} not found.`)
 			return null
 		}
@@ -124,19 +115,15 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 	}
 
 	try {
-		// 1. Fetch the user by their Clerk ID to get their PocketBase record ID and current balance.
 		const user = await fetchUserByClerkId(clerkUserId)
 		if (user == null) {
 			console.error(`User with Clerk ID ${clerkUserId} not found. Cannot update balance.`)
-			return null
+			return null // Or throw new Error('User not found, cannot update balance.')
 		}
 
-		// 2. Calculate the new balance.
 		const currentBalance = user.bibUpBalance ?? 0
 		const newBalance = currentBalance + amountToAdd
 
-		// 3. Update the user's record with the new balance.
-		// PocketBase `update` method requires the record ID.
 		const updatedRecord = await pb.collection('users').update<User>(user.id, {
 			bibUpBalance: newBalance,
 		})
@@ -149,7 +136,6 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 			'message' in error &&
 			typeof (error as { message: unknown }).message === 'string'
 		) {
-			// Still log PocketBase specific errors if needed, but re-throw
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
 		throw new Error(
@@ -157,5 +143,3 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 		)
 	}
 }
-
-// export async function updateUserRoles(clerkId: string, roles: string[]): Promise<User | null> { ... }

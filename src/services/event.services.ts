@@ -14,12 +14,7 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
-	if (
-		eventData.name === '' ||
-		// The primary runtime check needed is for the validity of the date value.
-		isNaN(eventData.date.getTime()) ||
-		eventData.location === ''
-	) {
+	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
@@ -54,7 +49,6 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 			sort: 'date',
 		})
 
-		// PocketBase SDK should correctly type records if <Event> is used with getFullList
 		return records
 	} catch (error: unknown) {
 		throw new Error(

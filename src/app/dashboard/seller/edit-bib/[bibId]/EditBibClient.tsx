@@ -1,6 +1,6 @@
 'use client'
 
-import type { Event } from '@/models/event.model' // Assuming Event model is needed for expanded bib
+import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
 import React, { useEffect, useState } from 'react'
@@ -12,19 +12,18 @@ import Link from 'next/link'
 import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions'
 
 interface EditBibClientProps {
-	bibId: string // Re-adding bibId prop - this was already re-added and confirmed correct.
+	bibId: string
 	initialBibWithEvent: (Bib & { expand?: { eventId?: Event } }) | null
 	initialError?: null | string
-	translations: EditBibTranslations // Use the specific type
+	translations: EditBibTranslations
 }
 
-// Define a more specific type for translations
 interface EditBibTranslations {
 	actions: string
 	backToDashboard: string
 	bibDetails: string
 	bibNotFound: string
-	bibNotFoundOrNoPermission: string // Added from usage in page.tsx
+	bibNotFoundOrNoPermission: string
 	confirmWithdraw: string
 	currentStatus: string
 	errorFetchingBib: string
@@ -49,47 +48,42 @@ interface EditBibTranslations {
 	size: string
 	title: string
 	updateDetails: string
-	userNotFound: string // Added from usage in page.tsx
+	userNotFound: string
 	withdrawListing: string
-	// Potentially add GLOBAL types if getTranslations merges them
-	// GLOBAL?: { appName: string; welcomeMessage: string; errors: { unexpected: string } }
 }
 
 export default function EditBibClient({
 	initialBibWithEvent,
 	translations: t,
 	initialError,
-	bibId, // Destructure bibId
+	bibId,
 }: EditBibClientProps) {
 	const router = useRouter()
 	const [bib, setBib] = useState<(Bib & { expand?: { eventId?: Event } }) | null>(initialBibWithEvent)
-	const [isLoading, setIsLoading] = useState(false) // For disabling forms during action
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		if (initialError != null) {
-			// More explicit check
 			toast.error(initialError)
 		}
 	}, [initialError])
 
 	async function handleUpdateDetailsAction(formData: FormData) {
-		// Use bibId prop for consistency, especially if bib state could be null when action is triggered
 		setIsLoading(true)
 		try {
 			const result = await handleUpdateBibDetails(bibId, formData)
-			// Server action now throws errors, so only success case is handled here.
 			if (result.success) {
 				toast.success(result.message ?? 'Details updated successfully!')
 				if (result.updatedBib) {
 					const newEventId = result.updatedBib.eventId
 					if (typeof newEventId !== 'string') {
 						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-						return // Or handle more gracefully
+						return
 					}
 					const nextState: Bib & { expand?: { eventId?: Event } } = {
 						...result.updatedBib,
 						eventId: newEventId,
-						expand: bib?.expand, // Preserve existing expand
+						expand: bib?.expand,
 					}
 					setBib(nextState)
 				}
@@ -102,23 +96,21 @@ export default function EditBibClient({
 	}
 
 	async function handleToggleListingStatusAction(newStatus: 'listed_private' | 'listed_public', formData: FormData) {
-		// Use bibId prop
 		setIsLoading(true)
 		try {
 			const result = await handleToggleListingStatus(bibId, newStatus, formData)
-			// Server action now throws errors.
 			if (result.success) {
 				toast.success(result.message ?? 'Listing status updated!')
 				if (result.updatedBib) {
 					const newEventId = result.updatedBib.eventId
 					if (typeof newEventId !== 'string') {
 						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-						return // Or handle more gracefully
+						return
 					}
 					const nextState: Bib & { expand?: { eventId?: Event } } = {
 						...result.updatedBib,
 						eventId: newEventId,
-						expand: bib?.expand, // Preserve existing expand
+						expand: bib?.expand,
 					}
 					setBib(nextState)
 				}
@@ -131,11 +123,9 @@ export default function EditBibClient({
 	}
 
 	async function handleWithdrawAction() {
-		// Use bibId prop
 		setIsLoading(true)
 		try {
 			const result = await handleWithdrawBib(bibId)
-			// Server action now throws errors.
 			if (result.success && result.redirectPath != null) {
 				toast.success('Bib withdrawn successfully!')
 				router.push(result.redirectPath)
@@ -148,15 +138,10 @@ export default function EditBibClient({
 	}
 
 	if (bib == null && initialError == null) {
-		// Explicit checks
-		// This case should ideally be handled by the server component sending an initialError
 		return <p>{t.bibNotFound ?? 'Bib not found.'}</p>
 	}
 
 	if (initialError != null && bib == null) {
-		// Explicit checks
-		// Error occurred during initial fetch, message already toasted via useEffect
-		// We can show a general error message here or rely on the toast.
 		return (
 			<div className="container mx-auto p-4 text-center">
 				<p className="text-red-500">{initialError}</p>
@@ -168,13 +153,9 @@ export default function EditBibClient({
 	}
 
 	if (bib == null) {
-		// Explicit check
-		// Fallback if bib is null for any other reason after initial checks
 		return <p>Loading bib details or an unexpected error occurred.</p>
 	}
 
-	// Determine if event details are available
-	// For bib.status, it's non-nullable in model, but defensive check is okay.
 	const currentStatusDisplay = typeof bib.status === 'string' ? bib.status.replace('_', ' ') : 'N/A'
 	const eventName = bib.expand?.eventId?.name ?? 'N/A'
 	const eventDate = bib.expand?.eventId?.date != null ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'
@@ -189,7 +170,6 @@ export default function EditBibClient({
 				</p>
 			</header>
 
-			{/* Event Details Section */}
 			<section className="mb-8 rounded-lg border bg-white p-6 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
 				<h2 className="mb-4 text-xl font-semibold">{t.eventDetails}</h2>
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -205,7 +185,6 @@ export default function EditBibClient({
 				</div>
 			</section>
 
-			{/* Bib Details Update Form */}
 			<section className="mb-8 rounded-lg border bg-white p-6 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
 				<h2 className="mb-4 text-xl font-semibold">{t.bibDetails}</h2>
 				<form action={handleUpdateDetailsAction} className="space-y-4">
@@ -294,7 +273,6 @@ export default function EditBibClient({
 				</form>
 			</section>
 
-			{/* Listing Status Management */}
 			{bib.status !== 'sold' && bib.status !== 'expired' && bib.status !== 'withdrawn' && (
 				<section className="mb-8 rounded-lg border bg-white p-6 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
 					<h2 className="mb-4 text-xl font-semibold">{t.listingStatus}</h2>
@@ -356,7 +334,6 @@ export default function EditBibClient({
 				</section>
 			)}
 
-			{/* Withdraw Listing Section */}
 			{bib.status !== 'sold' && bib.status !== 'expired' && bib.status !== 'withdrawn' && (
 				<section className="mb-8 rounded-lg border bg-white p-6 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
 					<h2 className="mb-4 text-xl font-semibold">{t.withdrawListing}</h2>
@@ -364,7 +341,6 @@ export default function EditBibClient({
 						className="btn btn-danger"
 						disabled={isLoading}
 						onClick={() => {
-							// Voiding the promise to satisfy lint rule, error handling is inside handleWithdrawAction
 							void handleWithdrawAction()
 						}}
 					>

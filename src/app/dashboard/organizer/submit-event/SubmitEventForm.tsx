@@ -1,11 +1,11 @@
 'use client'
 
-import React from 'react' // useEffect might be needed for other things later, but not for this simple form
+import React from 'react'
 
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-import { handleSubmitEvent } from './actions' // Import the server action
+import { handleSubmitEvent } from './actions'
 
 interface SubmitEventFormProps {
 	translations: SubmitEventTranslations
@@ -25,8 +25,6 @@ interface SubmitEventTranslations {
 	title: string
 	unknownError: string
 	validationError: string
-	// Potentially add GLOBAL types if getTranslations merges them
-	// GLOBAL?: { appName: string; welcomeMessage: string; errors: { unexpected: string } }
 }
 
 export default function SubmitEventForm({ translations: t }: SubmitEventFormProps) {
@@ -35,13 +33,10 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 	async function formActionWrapper(formData: FormData) {
 		try {
 			const result = await handleSubmitEvent(formData)
-			// handleSubmitEvent now throws errors, so it only returns on success.
 			if (result.success && result.redirectPath != null) {
-				// Optionally show a success toast before redirecting
 				toast.success('Event submitted successfully!')
 				router.push(result.redirectPath)
 			}
-			// Handle cases where success is true but no redirectPath, if applicable
 		} catch (e: unknown) {
 			toast.error(e instanceof Error ? e.message : String(e))
 		}
@@ -59,7 +54,7 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 				<input
 					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
 					id="name"
-					name="name" // Ensure name attributes match what server action expects (e.g., 'name' not 'eventName')
+					name="name"
 					required
 					type="text"
 				/>
@@ -71,7 +66,7 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 				<input
 					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
 					id="date"
-					name="date" // Ensure name attributes match
+					name="date"
 					required
 					type="date"
 				/>
@@ -83,7 +78,7 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 				<input
 					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
 					id="location"
-					name="location" // Ensure name attributes match
+					name="location"
 					required
 					type="text"
 				/>
@@ -95,7 +90,7 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 				<textarea
 					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
 					id="description"
-					name="description" // Ensure name attributes match
+					name="description"
 					rows={4}
 				></textarea>
 			</div>
@@ -107,7 +102,7 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 					className="w-full rounded-md border border-[var(--border-color)] p-2 shadow-sm focus:border-[var(--accent-sporty)] focus:ring-[var(--accent-sporty)] dark:border-neutral-600 dark:bg-neutral-700"
 					id="participantCount"
 					min="0"
-					name="participantCount" // Ensure name attributes match
+					name="participantCount"
 					type="number"
 				/>
 			</div>

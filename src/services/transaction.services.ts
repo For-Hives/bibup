@@ -28,16 +28,14 @@ export async function createTransaction(
 	try {
 		const dataToCreate: Omit<Transaction, 'id'> = {
 			...transactionData,
-			transactionDate: new Date(), // Set current date/time for the transaction
+			transactionDate: new Date(),
 		}
 
 		const record = await pb.collection('transactions').create<Transaction>(dataToCreate)
 		return record
 	} catch (error: unknown) {
 		if (error != null && typeof error === 'object') {
-			// Check error is a non-null object
 			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
-				// Still log PocketBase specific errors if needed, but re-throw
 				console.error('PocketBase error details:', (error as { message: string }).message)
 			}
 			if ('response' in error) {
