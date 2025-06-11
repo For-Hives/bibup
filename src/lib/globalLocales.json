@@ -4,20 +4,26 @@
 			"appName": "My Awesome App",
 			"welcomeMessage": "Welcome!",
 			"errors": {
-				"unexpected": "An unexpected error occurred." // TODO: Provide translations for other languages
+				"unexpected": "An unexpected error occurred."
 			}
 		}
 	},
 	"fr": {
 		"GLOBAL": {
 			"appName": "Mon Application Incroyable",
-			"welcomeMessage": "Bienvenue !"
+			"welcomeMessage": "Bienvenue !",
+			"errors": {
+				"unexpected": "Une erreur inattendue s'est produite."
+			}
 		}
 	},
 	"ko": {
 		"GLOBAL": {
 			"appName": "내 멋진 앱",
-			"welcomeMessage": "환영합니다!"
+			"welcomeMessage": "환영합니다!",
+			"errors": {
+				"unexpected": "예상치 못한 오류가 발생했습니다."
+			}
 		}
 	}
 }

@@ -36,7 +36,7 @@
 			"unisex": "Unisex"
 		},
 		"errors": {
-			"listBibFailed": "Failed to list bib. Please check details and try again." // TODO: Provide translations for other languages
+			"listBibFailed": "Failed to list bib. Please check details and try again."
 		}
 	},
 	"fr": {
@@ -74,6 +74,9 @@
 			"male": "Homme",
 			"female": "Femme",
 			"unisex": "Unisexe"
+		},
+		"errors": {
+			"listBibFailed": "Échec de la liste du dossard. Veuillez vérifier les détails et réessayer."
 		}
 	},
 	"ko": {
@@ -111,6 +114,9 @@
 			"male": "남성",
 			"female": "여성",
 			"unisex": "남녀공용"
+		},
+		"errors": {
+			"listBibFailed": "번호표 등록에 실패했습니다. 세부 정보를 확인하고 다시 시도해 주세요."
 		}
 	}
 }
