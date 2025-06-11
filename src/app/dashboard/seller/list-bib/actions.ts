@@ -69,7 +69,7 @@ export async function handleListBibServerAction(formData: FormData) {
 		if (newBib) {
 			redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)
 		} else {
-			redirect(`/dashboard/seller/list-bib?error=errorListBibFailed`)
+			redirect(`/dashboard/seller/list-bib?error=listBibFailed`)
 		}
 	} catch (error) {
 		console.error('Error listing bib:', error)
