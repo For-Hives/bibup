@@ -14,12 +14,12 @@ import editBibTranslations from './locales.json'
 import EditBibClient from './EditBibClient'
 
 export type EditBibPageProps = {
-	params: { bibId: string }
+	params: Promise<{ bibId: string }>
 }
 
 export default async function EditBibPage({ params }: EditBibPageProps) {
 	const { userId: clerkId } = await auth()
-	const { bibId } = params
+	const { bibId } = await params
 	let initialBibWithEvent: (Bib & { expand?: { eventId?: Event } }) | null = null
 	let errorMessage: null | string = null
 
@@ -56,8 +56,9 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 	)
 }
 
-export function generateMetadata({ params }: EditBibPageProps): Metadata {
+export async function generateMetadata({ params }: EditBibPageProps): Promise<Metadata> {
+	const { bibId } = await params
 	return {
-		title: `Edit Bib ${params.bibId} | Seller Dashboard | Beswib`,
+		title: `Edit Bib ${bibId} | Seller Dashboard | Beswib`,
 	}
 }
