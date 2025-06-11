@@ -77,6 +77,6 @@ export async function handleListBibServerAction(formData: FormData) {
 		// For a generic unexpected error, we'll use the global key.
 		// If specific error messages from `error.message` should be preserved and internationalized,
 		// a more complex error handling and localization strategy would be needed here.
-		redirect(`/dashboard/seller/list-bib?error=errorGlobalUnexpected`)
+		redirect(`/dashboard/seller/list-bib?error=unexpected`)
 	}
 }
