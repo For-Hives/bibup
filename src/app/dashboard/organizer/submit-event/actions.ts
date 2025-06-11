@@ -1,6 +1,6 @@
 'use server'
 
-import type { Event } from '@/models/event.model' // Assuming Event model path
+import type { Event } from '@/models/event.model'
 
 import { auth } from '@clerk/nextjs/server'
 import * as v from 'valibot'
@@ -8,8 +8,6 @@ import * as v from 'valibot'
 import { fetchUserByClerkId } from '@/services/user.services'
 import { createEvent } from '@/services/event.services'
 
-// Define a schema for event form data validation (similar to BibFormSchema if you have one)
-// This is a basic example; adjust validation rules as needed.
 const EventFormSchema = v.object({
 	date: v.pipe(
 		v.string(),
@@ -19,7 +17,6 @@ const EventFormSchema = v.object({
 	location: v.pipe(v.string(), v.minLength(1, 'Event location is required.')),
 	name: v.pipe(v.string(), v.minLength(1, 'Event name is required.')),
 	description: v.optional(v.string(), ''),
-	// Add other fields as necessary, e.g., isPartnered, participantCount
 })
 
 export async function handleSubmitEvent(formData: FormData): Promise<{
@@ -42,7 +39,7 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 		description: formData.get('description') as string,
 		location: formData.get('location') as string,
 		name: formData.get('name') as string,
-		date: formData.get('date') as string, // Keep as string for validation, transform will convert
+		date: formData.get('date') as string,
 	}
 
 	const validationResult = v.safeParse(EventFormSchema, dataToValidate)
@@ -62,23 +59,16 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 
 	const eventData: Omit<Event, 'bibsSold' | 'id' | 'isPartnered' | 'participantCount' | 'status'> &
 		Partial<Pick<Event, 'isPartnered' | 'participantCount'>> = {
-		description: description ?? '', // Ensure description is not undefined
-		organizerId: user.id, // Use the PocketBase user ID
+		description: description ?? '',
+		organizerId: user.id,
 		location,
 		name,
-		date, // Already a Date object due to transform
-		// Default values for other fields if not provided by form
-		// status: 'pending_approval', // Set by createEvent service if not provided
-		// bibsSold: 0,
-		// participantCount: 0, // Example: default to 0, or get from form
-		// isPartnered: false, // Example: default to false, or get from form
+		date,
 	}
 
 	try {
-		const newEvent = await createEvent(eventData as Event) // Cast needed if createEvent expects full Event type
+		const newEvent = await createEvent(eventData as Event)
 		if (!newEvent) {
-			// This case implies createEvent returned null/undefined without throwing.
-			// Based on service refactor, createEvent should throw on failure.
 			throw new Error('Failed to create event after submission.')
 		}
 		return { redirectPath: '/dashboard/organizer?success=true', success: true }

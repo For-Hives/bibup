@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react'
 
 import { toast } from 'sonner'
 
-// This client component now primarily just displays the events passed to it.
-// It could be used for client-side filtering/sorting in the future if needed.
 export default function EventListClient({
 	prefetchedEvents,
 	translations: t,
@@ -30,11 +28,9 @@ export default function EventListClient({
 			location: string
 		}
 		loading: string
-		noEvents: string // Note: This was the original key for "No events available"
-		// Keys specifically used by this component
+		noEvents: string
 		noEventsToDisplay: string
 		searchPlaceholder: string
-		// Properties from src/app/events/locales.json "en.events"
 		title: string
 	}
 }) {
@@ -50,9 +46,8 @@ export default function EventListClient({
 		return <p>{t.noEventsToDisplay}</p>
 	}
 
-	// Optionally, display a specific message if there's an error and no events
 	if (events.length === 0 && error) {
-		return <p>Could not load events. An error occurred.</p> // Or use a translation
+		return <p>Could not load events. An error occurred.</p>
 	}
 
 	return (

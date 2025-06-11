@@ -1,30 +1,26 @@
 'use server'
 
 import type { Transaction } from '@/models/transaction.model'
-import type { Event } from '@/models/event.model' // For expanding event details if possible
+import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
-import { pb } from '@/lib/pocketbaseClient' // Assuming this is the correct path to your PocketBase client
+import { pb } from '@/lib/pocketbaseClient'
 
 import { fetchUserById, updateUserBalance } from './user.services'
-// Import Transaction services and User services for processBibSale
 import { createTransaction } from './transaction.services'
 
-// Type for the data expected by createBib, accommodating both partnered and unlisted event scenarios
 export type CreateBibData = Partial<
 	Omit<Bib, 'buyerUserId' | 'eventId' | 'id' | 'privateListingToken' | 'sellerUserId' | 'status'>
 > & {
-	eventId?: string // Optional if isNotListedEvent is true
-	// Fields for unlisted event
+	eventId?: string
 	isNotListedEvent?: boolean
 	price: number
 	registrationNumber: string
-	unlistedEventDate?: string // Store as string, convert/validate as needed
+	unlistedEventDate?: string
 	unlistedEventLocation?: string
 	unlistedEventName?: string
 }
 
-// Allowed fields for update by seller. Status updates are specific.
 export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size'>>
 
 /**
@@ -53,7 +49,7 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 			privateListingToken: undefined,
 			gender: bibData.gender,
 			buyerUserId: undefined,
-			eventId: finalEventId, // This will be undefined for unlisted events
+			eventId: finalEventId,
 			price: bibData.price,
 			size: bibData.size,
 			status: status,
@@ -76,9 +72,8 @@ export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { e
 		return null
 	}
 	try {
-		// Using getOne, which throws an error if not found.
 		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
-			expand: 'eventId', // Expand event details
+			expand: 'eventId',
 		})
 
 		return record
@@ -108,7 +103,7 @@ export async function fetchBibByIdForSeller(
 		})
 		if (record.sellerUserId !== sellerUserId) {
 			console.warn(`Seller ${sellerUserId} attempted to access bib ${bibId} owned by ${record.sellerUserId}.`)
-			return null // Not the owner
+			return null
 		}
 		return record
 	} catch (error: unknown) {
@@ -133,7 +128,7 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
 			filter: `buyerUserId = "${buyerUserId}" && status = 'sold'`,
 			expand: 'eventId',
-			sort: '-updated', // Sort by last update (effectively purchase date for sold bibs), newest first
+			sort: '-updated',
 		})
 		return records
 	} catch (error: unknown) {
@@ -155,17 +150,11 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 	}
 
 	try {
-		// Example with expanding the 'eventId' to get event details (e.g., event name)
-		// Adjust 'event' to whatever field name you use in PocketBase for the relation,
-		// and ensure the 'events' collection is configured to be expandable.
 		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
 			filter: `sellerUserId = "${sellerUserId}"`,
-			sort: '-created', // Sort by creation date, newest first
+			sort: '-created',
 		})
 
-		// Map records to include expanded event name, or handle as needed
-		// The actual structure of 'expand' depends on your PocketBase relation setup.
-		// This is a common pattern but might need adjustment.
 		return records
 	} catch (error: unknown) {
 		throw new Error(
@@ -186,9 +175,7 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 	try {
 		const records = await pb.collection('bibs').getFullList<Bib>({
 			filter: `eventId = "${eventId}" && status = 'listed_public'`,
-			sort: 'price', // Sort by price, lowest first
-			// Optionally expand seller details if needed, e.g., expand: 'sellerUserId'
-			// This would require sellerUserId to be a relation field in PocketBase to a 'users' collection
+			sort: 'price',
 		})
 		return records
 	} catch (error: unknown) {
@@ -214,13 +201,11 @@ export async function processBibSale(
 	}
 
 	try {
-		// 1. Fetch the Bib. Ensure it's available for sale.
 		const bib = await pb.collection('bibs').getOne<Bib>(bibId)
 		if (bib == null) {
 			return { error: `Bib with ID ${bibId} not found.`, success: false }
 		}
 		if (bib.status !== 'listed_public') {
-			// Could also allow 'listed_private' if a private sale mechanism is implemented
 			return {
 				error: `Bib is not available for sale. Current status: ${bib.status}.`,
 				success: false,
@@ -248,10 +233,9 @@ export async function processBibSale(
 			sellerUserId: bib.sellerUserId,
 			platformFee: platformFeeAmount,
 			buyerUserId: buyerUserId,
-			status: 'succeeded', // Assuming payment is processed successfully by this point
-			amount: bib.price, // Total amount paid by buyer
+			status: 'succeeded',
+			amount: bib.price,
 			bibId: bib.id,
-			// paymentIntentId would be set here if using a real payment gateway
 		})
 
 		if (transaction == null) {
@@ -261,7 +245,6 @@ export async function processBibSale(
 		// 5. Update seller's balance.
 		const sellerBalanceUpdated = await updateUserBalance(sellerUser.clerkId, amountToSeller)
 		if (sellerBalanceUpdated == null) {
-			// Attempt to mark transaction as failed or requiring attention if seller balance update fails.
 			// This is a critical error that needs monitoring/manual intervention.
 			await pb.collection('transactions').update(transaction.id, {
 				notes: 'Seller balance update failed after fund capture.',
@@ -277,21 +260,14 @@ export async function processBibSale(
 		}
 
 		// 6. Update the Bib status to 'sold' and set buyerUserId.
-		// Using a direct update here as this is a system action, not directly initiated by the seller for these specific fields.
-		const updatedBib = await pb.collection('bibs').update<Bib>(bibId, {
+		await pb.collection('bibs').update<Bib>(bibId, {
 			buyerUserId: buyerUserId,
 			status: 'sold',
 		})
 
-		// 7. Initiate Organizer Notification (Conceptual)
-		if (updatedBib != null) {
-			// Ensure bib was successfully marked as sold
-			// await initiateOrganizerNotification(
-			//   updatedBib.id,
-			//   updatedBib.buyerUserId!,
-			//   updatedBib.eventId,
-			// );
-		}
+		// 7. Initiate Organizer Notification (Conceptual placeholder)
+		// Example: if (updatedBibRecordFromPreviousLine != null) { ... }
+		// Since updatedBib is not used, this conceptual part would need adjustment if re-enabled.
 
 		return { success: true, transaction }
 	} catch (error: unknown) {
@@ -318,29 +294,27 @@ export async function updateBibBySeller(
 	}
 
 	try {
-		// First, verify ownership by fetching the bib
 		const currentBib = await pb.collection('bibs').getOne<Bib>(bibId)
 		if (currentBib.sellerUserId !== sellerUserId) {
 			console.warn(`Unauthorized attempt by seller ${sellerUserId} to update bib ${bibId}.`)
 			return null
 		}
 
-		// Prevent changing eventId or sellerUserId directly with this function
-		// Certain status transitions might also be restricted here or by app logic (e.g., can't change sold bib)
+		// Prevent changing eventId or sellerUserId directly with this function.
+		// Certain status transitions might also be restricted (e.g., can't change sold bib).
 		if (currentBib.status === 'sold' || currentBib.status === 'expired') {
 			console.warn(`Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`)
-			// return null; // Or throw an error
+			// Consider throwing an error or returning specific result if update is not allowed.
 		}
 
 		// If 'status' is part of dataToUpdate, ensure it's a valid transition
 		if ('status' in dataToUpdate) {
 			const newStatus = dataToUpdate.status
-			// Example: Allow withdrawing, or changing between listed_public and listed_private
 			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
-				pending_validation: ['listed_public', 'listed_private', 'withdrawn'], // Assuming admin moves to pending_validation_passed first
+				pending_validation: ['listed_public', 'listed_private', 'withdrawn'],
 				listed_public: ['listed_private', 'withdrawn'],
 				listed_private: ['listed_public', 'withdrawn'],
-				withdrawn: ['listed_public', 'listed_private'], // Allow re-listing
+				withdrawn: ['listed_public', 'listed_private'],
 				validation_failed: ['withdrawn'],
 				expired: ['withdrawn'],
 				sold: [], // Cannot be changed by seller
@@ -349,9 +323,8 @@ export async function updateBibBySeller(
 			const allowedChanges = allowedStatusChanges[currentBib.status]
 			if (!allowedChanges?.includes(newStatus)) {
 				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
-				// return null; // Or throw an error indicating invalid transition
+				// Consider throwing an error for invalid transitions.
 			}
-			// For now, we'll allow the update if it's a status change. More complex logic can be added.
 		}
 
 		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
@@ -379,13 +352,11 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 			status: newStatus,
 		}
 
-		// Direct update without seller ownership check.
 		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 
 		return updatedRecord
 	} catch (error: unknown) {
 		if (error != null && typeof error === 'object' && 'message' in error) {
-			// Still log PocketBase specific errors if needed, but re-throw
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
 		throw new Error(
@@ -393,26 +364,3 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 		)
 	}
 }
-
-// /**
-//  * Conceptual placeholder for notifying the event organizer about a bib transfer.
-//  * In a real scenario, this would trigger an email, webhook, or API call.
-//  * @param bibId The ID of the bib that was transferred.
-//  * @param newRunnerUserId The User ID of the new runner (buyer).
-//  * @param eventId The ID of the event.
-//  */
-// async function initiateOrganizerNotification(
-//   bibId: string,
-//   newRunnerUserId: string,
-//   eventId?: string,
-// ) {
-//   // TODO: In a real application:
-//   // 1. Fetch event details, especially organizer contact info or API endpoint.
-//   //    const event = await pb.collection('events').getOne(eventId);
-//   //    const organizer = await pb.collection('users').getOne(event.organizerId);
-//   // 2. Construct notification payload (bib details, new runner details).
-//   // 3. Send notification (e.g., via email service, webhook).
-
-//   // This is a good place to integrate with external notification services or internal task queues.
-//   return Promise.resolve(); // Indicate async completion
-// }

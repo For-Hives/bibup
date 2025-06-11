@@ -2,7 +2,7 @@
 
 import type { Event } from '@/models/event.model'
 
-import React, { useState } from 'react' // Removed useEffect
+import React, { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -53,33 +53,17 @@ type Translations = {
 export default function ListNewBibClientPage({
 	partneredEvents,
 	translations: t,
-}: // searchParams, // Removed searchParams
-{
+}: {
 	partneredEvents: Event[]
-	// searchParams?: { [key: string]: string | string[] | undefined } // Removed searchParams
 	translations: Translations
 }) {
-	const router = useRouter() // Added router
+	const router = useRouter()
 	const [isNotListedEvent, setIsNotListedEvent] = useState(false)
-	// const [errorMessage, setErrorMessage] = useState<null | string>(null) // Removed errorMessage state
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 	const [formData, setFormData] = useState<Partial<BibFormData>>({
 		isNotListedEvent: false,
 		price: 0,
 	})
-	// Success message is primarily handled by redirect to dashboard.
-	// This local success state isn't currently used but can be for client-side feedback.
-	// const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-	// useEffect(() => { // Removed useEffect for searchParams
-	// 	if (searchParams?.error != null && typeof searchParams.error === 'string') {
-	// 		setErrorMessage(decodeURIComponent(searchParams.error))
-	// 	}
-	// 	// If a success message needs to be displayed on *this* page after a redirect back to it:
-	// 	// if (searchParams?.successClient) {
-	// 	//   setSuccessMessage(decodeURIComponent(searchParams.successClient as string));
-	// 	// }
-	// }, [searchParams])
 
 	const validateField = (name: string, value: unknown) => {
 		const testData = { ...formData, [name]: value }
@@ -91,7 +75,6 @@ export default function ListNewBibClientPage({
 			if (fieldIssues && fieldIssues.length > 0) {
 				setFieldErrors(prev => ({ ...prev, [name]: fieldIssues[0] }))
 			} else if (flatErrors.root && flatErrors.root.length > 0) {
-				// For general validation errors (like cross-field validation)
 				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Validation error' }))
 			} else {
 				setFieldErrors(prev => {
@@ -118,19 +101,13 @@ export default function ListNewBibClientPage({
 		}
 	}
 
-	// Wrapper for the server action to be used in form's action prop.
-	// This is how client components can call server actions.
 	async function formActionWrapper(formData: FormData) {
-		setFieldErrors({}) // Clear field errors
+		setFieldErrors({})
 		try {
 			const result = await handleListBibServerAction(formData)
-			// The server action now only returns a result object on success.
-			// Errors are thrown and caught by the catch block.
 			if (result.success && result.redirectPath) {
 				router.push(result.redirectPath)
 			}
-			// If there's a success case but no redirectPath (e.g. success message without redirect),
-			// it could be handled here, but current action always provides redirectPath on success.
 		} catch (e: unknown) {
 			toast.error(e instanceof Error ? e.message : String(e))
 		}
@@ -141,13 +118,6 @@ export default function ListNewBibClientPage({
 			<header className="mb-8 text-center">
 				<h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">{t.title}</h1>
 			</header>
-
-			{/* {errorMessage !== null && errorMessage !== '' && ( // Removed error message p tag
-				<p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
-					{t.noBibsListedError} {errorMessage}
-				</p>
-			)} */}
-			{/* {successMessage && <p className="mb-4 rounded border border-green-300 bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">{successMessage}</p>} */}
 
 			<form action={formActionWrapper} className="space-y-6">
 				<div>
