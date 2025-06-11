@@ -17,25 +17,25 @@ export async function handleToggleListingStatus(
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
-		return { error: 'Authentication required.', success: false }
+		throw new Error('Authentication required.')
 	}
 
 	const sellerUser = await fetchUserByClerkId(clerkId)
 	if (!sellerUser) {
-		return { error: 'User not found.', success: false }
+		throw new Error('User not found.')
 	}
 
 	const bibWithEvent = await fetchBibByIdForSeller(bibId, sellerUser.id)
 	if (!bibWithEvent) {
-		return { error: 'Bib not found.', success: false }
+		throw new Error('Bib not found.')
 	}
 
 	if (bibWithEvent.status === 'validation_failed' && newStatus === 'listed_public') {
-		return { error: 'Cannot make public until event details are verified by admin.', success: false }
+		throw new Error('Cannot make public until event details are verified by admin.')
 	}
 
 	if (bibWithEvent.status === 'sold' || bibWithEvent.status === 'expired') {
-		return { error: `Cannot change listing status from ${bibWithEvent.status}.`, success: false }
+		throw new Error(`Cannot change listing status from ${bibWithEvent.status}.`)
 	}
 
 	try {
@@ -48,29 +48,27 @@ export async function handleToggleListingStatus(
 			newStatus === 'listed_private' &&
 			(newBibData.privateListingToken == null || newBibData.privateListingToken.trim() === '')
 		) {
-			return { error: 'Private listing token is required for private listings.', success: false }
+			throw new Error('Private listing token is required for private listings.')
 		}
 		const partialUpdatedBib = await updateBibBySeller(bibId, newBibData, sellerUser.id)
 
-		if (partialUpdatedBib) {
-			// Fetch the full bib to ensure all fields, including eventId, are present and correctly typed
-			const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
-			if (fullUpdatedBib) {
-				return {
-					message: `Bib status changed to ${newStatus.replace('_', ' ')}.`,
-					updatedBib: fullUpdatedBib,
-					success: true,
-				}
-			} else {
-				// This case means the update might have succeeded but fetching the full bib failed
-				return { error: 'Failed to retrieve full bib details after status change.', success: false }
-			}
-		} else {
-			return { error: 'Failed to change bib status.', success: false }
+		if (!partialUpdatedBib) {
+			throw new Error('Failed to change bib status.')
+		}
+		// Fetch the full bib to ensure all fields, including eventId, are present and correctly typed
+		const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
+		if (!fullUpdatedBib) {
+			// This case means the update might have succeeded but fetching the full bib failed
+			throw new Error('Failed to retrieve full bib details after status change.')
+		}
+		return {
+			message: `Bib status changed to ${newStatus.replace('_', ' ')}.`,
+			updatedBib: fullUpdatedBib,
+			success: true,
 		}
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
-		return { error: `An error occurred while changing the bib status: ${error}`, success: false }
+		throw new Error(`An error occurred while changing the bib status: ${error}`)
 	}
 }
 
@@ -81,12 +79,12 @@ export async function handleUpdateBibDetails(
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
-		return { error: 'Authentication required.', success: false }
+		throw new Error('Authentication required.')
 	}
 
 	const sellerUser = await fetchUserByClerkId(clerkId)
 	if (!sellerUser) {
-		return { error: 'User not found.', success: false }
+		throw new Error('User not found.')
 	}
 
 	// It's good practice to fetch the existing bib to ensure it exists and belongs to the user
@@ -101,26 +99,21 @@ export async function handleUpdateBibDetails(
 	const registrationNumber = formData.get('registrationNumber') as null | string
 
 	if (!registrationNumber || registrationNumber.trim() === '') {
-		return { error: 'Registration number is required.', success: false }
+		throw new Error('Registration number is required.')
 	}
 
 	const price = parseFloat(priceValue)
 	if (isNaN(price) || price <= 0) {
-		return { error: 'Valid price is required.', success: false }
+		throw new Error('Valid price is required.')
 	}
 
 	// Assuming 'status' and 'eventId' are not changed by this action directly or are pre-filled in the form.
 	// If they are part of the form, they should be read from formData like other fields.
 	// For this example, we'll assume they are not part of this specific update form or are handled elsewhere.
 	// Fetching the original bib would be safer to get current status and eventId.
-	let currentBib;
-	try {
-		currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id);
-	} catch (error) {
-		return { error: 'Failed to fetch the original bib. Please try again later.', success: false };
-	}
+	const currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
 	if (!currentBib) {
-		return { error: 'Original bib not found.', success: false };
+		throw new Error('Original bib not found.')
 	}
 
 	const dataToUpdate: Bib = {
@@ -137,7 +130,7 @@ export async function handleUpdateBibDetails(
 			// Allow 0 for original price
 			dataToUpdate.originalPrice = originalPrice
 		} else {
-			return { error: 'Invalid original price format.', success: false }
+			throw new Error('Invalid original price format.')
 		}
 	} else {
 		dataToUpdate.originalPrice = undefined // Or 0, depending on your model
@@ -149,20 +142,18 @@ export async function handleUpdateBibDetails(
 	try {
 		const partialUpdatedBib = await updateBibBySeller(bibId, dataToUpdate, sellerUser.id)
 
-		if (partialUpdatedBib) {
-			// Fetch the full bib to ensure all fields are present and correctly typed
-			const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
-			if (fullUpdatedBib) {
-				return { message: 'Bib details updated successfully!', updatedBib: fullUpdatedBib, success: true }
-			} else {
-				return { error: 'Failed to retrieve full bib details after update.', success: false }
-			}
-		} else {
-			return { error: 'Failed to update bib details.', success: false }
+		if (!partialUpdatedBib) {
+			throw new Error('Failed to update bib details.')
 		}
+		// Fetch the full bib to ensure all fields are present and correctly typed
+		const fullUpdatedBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
+		if (!fullUpdatedBib) {
+			throw new Error('Failed to retrieve full bib details after update.')
+		}
+		return { message: 'Bib details updated successfully!', updatedBib: fullUpdatedBib, success: true }
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
-		return { error: `An error occurred while updating the bib: ${error}`, success: false }
+		throw new Error(`An error occurred while updating the bib: ${error}`)
 	}
 }
 
@@ -173,27 +164,21 @@ export async function handleWithdrawBib(
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
-		return { error: 'Authentication required.', success: false }
+		throw new Error('Authentication required.')
 	}
 	const sellerUser = await fetchUserByClerkId(clerkId)
 	if (!sellerUser) {
-		return { error: 'User not found.', success: false }
+		throw new Error('User not found.')
 	}
 
-	let currentBib: Bib | null = null
-	try {
-		currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
-	} catch (e: unknown) {
-		const error = e instanceof Error ? e.message : String(e)
-		return { error: `An error occurred while fetching the bib: ${error}`, success: false }
-	}
+	const currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
 	if (!currentBib) {
-		return { error: 'Bib not found or not owned by user.', success: false }
+		throw new Error('Bib not found or not owned by user.')
 	}
 
 	// Check if bib can be withdrawn
 	if (currentBib.status === 'sold' || currentBib.status === 'expired' || currentBib.status === 'withdrawn') {
-		return { error: `Cannot withdraw bib with status: ${currentBib.status}.`, success: false }
+		throw new Error(`Cannot withdraw bib with status: ${currentBib.status}.`)
 	}
 
 	try {
@@ -204,13 +189,12 @@ export async function handleWithdrawBib(
 
 		const updatedBib = await updateBibBySeller(bibId, { ...currentBib, ...bibDataToUpdate }, sellerUser.id)
 
-		if (updatedBib) {
-			return { redirectPath: '/dashboard/seller?success=Bib+listing+withdrawn', success: true }
-		} else {
-			return { error: 'Failed to withdraw bib.', success: false }
+		if (!updatedBib) {
+			throw new Error('Failed to withdraw bib.')
 		}
+		return { redirectPath: '/dashboard/seller?success=Bib+listing+withdrawn', success: true }
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
-		return { error: `An error occurred while withdrawing the bib: ${error}`, success: false }
+		throw new Error(`An error occurred while withdrawing the bib: ${error}`)
 	}
 }

@@ -75,71 +75,75 @@ export default function EditBibClient({
 	async function handleUpdateDetailsAction(formData: FormData) {
 		// Use bibId prop for consistency, especially if bib state could be null when action is triggered
 		setIsLoading(true)
-		const result = await handleUpdateBibDetails(bibId, formData)
-		setIsLoading(false)
-
-		if (result.error != null) {
-			// More explicit check
-			toast.error(result.error)
-		} else if (result.success) {
-			toast.success(result.message ?? 'Details updated successfully!') // nullish coalescing handles message string or undefined
-			if (result.updatedBib) {
-				const newEventId = result.updatedBib.eventId
-				if (typeof newEventId !== 'string') {
-					toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-					return
+		try {
+			const result = await handleUpdateBibDetails(bibId, formData)
+			// Server action now throws errors, so only success case is handled here.
+			if (result.success) {
+				toast.success(result.message ?? 'Details updated successfully!')
+				if (result.updatedBib) {
+					const newEventId = result.updatedBib.eventId
+					if (typeof newEventId !== 'string') {
+						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
+						return // Or handle more gracefully
+					}
+					const nextState: Bib & { expand?: { eventId?: Event } } = {
+						...result.updatedBib,
+						eventId: newEventId,
+						expand: bib?.expand, // Preserve existing expand
+					}
+					setBib(nextState)
 				}
-				const nextState: Bib & { expand?: { eventId?: Event } } = {
-					...result.updatedBib,
-					eventId: newEventId,
-					expand: bib?.expand, // Preserve existing expand
-				}
-				setBib(nextState)
 			}
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : String(e))
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
 	async function handleToggleListingStatusAction(newStatus: 'listed_private' | 'listed_public', formData: FormData) {
 		// Use bibId prop
 		setIsLoading(true)
-		// The server action now takes formData for the privateListingToken
-		const result = await handleToggleListingStatus(bibId, newStatus, formData)
-		setIsLoading(false)
-
-		if (result.error != null) {
-			// More explicit check
-			toast.error(result.error)
-		} else if (result.success) {
-			toast.success(result.message ?? 'Listing status updated!') // nullish coalescing handles message string or undefined
-			if (result.updatedBib) {
-				const newEventId = result.updatedBib.eventId
-				if (typeof newEventId !== 'string') {
-					toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-					return
+		try {
+			const result = await handleToggleListingStatus(bibId, newStatus, formData)
+			// Server action now throws errors.
+			if (result.success) {
+				toast.success(result.message ?? 'Listing status updated!')
+				if (result.updatedBib) {
+					const newEventId = result.updatedBib.eventId
+					if (typeof newEventId !== 'string') {
+						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
+						return // Or handle more gracefully
+					}
+					const nextState: Bib & { expand?: { eventId?: Event } } = {
+						...result.updatedBib,
+						eventId: newEventId,
+						expand: bib?.expand, // Preserve existing expand
+					}
+					setBib(nextState)
 				}
-				const nextState: Bib & { expand?: { eventId?: Event } } = {
-					...result.updatedBib,
-					eventId: newEventId,
-					expand: bib?.expand, // Preserve existing expand
-				}
-				setBib(nextState)
 			}
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : String(e))
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
 	async function handleWithdrawAction() {
 		// Use bibId prop
 		setIsLoading(true)
-		const result = await handleWithdrawBib(bibId)
-		setIsLoading(false)
-
-		if (result.error != null) {
-			// More explicit check
-			toast.error(result.error)
-		} else if (result.success && result.redirectPath != null) {
-			// More explicit check
-			toast.success('Bib withdrawn successfully!') // Message from redirectPath can be used too
-			router.push(result.redirectPath)
+		try {
+			const result = await handleWithdrawBib(bibId)
+			// Server action now throws errors.
+			if (result.success && result.redirectPath != null) {
+				toast.success('Bib withdrawn successfully!')
+				router.push(result.redirectPath)
+			}
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : String(e))
+		} finally {
+			setIsLoading(false)
 		}
 	}
 

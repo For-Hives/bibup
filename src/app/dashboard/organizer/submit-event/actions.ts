@@ -27,15 +27,15 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 	redirectPath?: string
 	success: boolean
 }> {
-	const { userId: clerkId } = await auth() // Added await
+	const { userId: clerkId } = await auth()
 
 	if (!clerkId) {
-		return { error: 'User not authenticated. Please log in.', success: false }
+		throw new Error('You must be logged in to submit an event.')
 	}
 
 	const user = await fetchUserByClerkId(clerkId)
 	if (!user) {
-		return { error: 'Authenticated user not found in database.', success: false }
+		throw new Error('Organizer user record not found.')
 	}
 
 	const dataToValidate = {
@@ -55,7 +55,7 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 				.flat()
 				.join(', ') ??
 			'Validation failed.'
-		return { error: errorMessages, success: false }
+		throw new Error(`Validation failed: ${errorMessages}`)
 	}
 
 	const { description, location, name, date } = validationResult.output
@@ -76,13 +76,13 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 
 	try {
 		const newEvent = await createEvent(eventData as Event) // Cast needed if createEvent expects full Event type
-		if (newEvent) {
-			return { redirectPath: '/dashboard/organizer?success=true', success: true }
-		} else {
-			return { error: 'Failed to create event. Please try again.', success: false }
+		if (!newEvent) {
+			// This case implies createEvent returned null/undefined without throwing.
+			// Based on service refactor, createEvent should throw on failure.
+			throw new Error('Failed to create event after submission.')
 		}
+		return { redirectPath: '/dashboard/organizer?success=true', success: true }
 	} catch (error: unknown) {
-		const errorMessage = error instanceof Error ? error.message : String(error)
-		return { error: `Error creating event: ${errorMessage}`, success: false }
+		throw new Error(`Failed to create event: ${error instanceof Error ? error.message : String(error)}`)
 	}
 }
