@@ -113,9 +113,14 @@ export async function handleUpdateBibDetails(
 	// If they are part of the form, they should be read from formData like other fields.
 	// For this example, we'll assume they are not part of this specific update form or are handled elsewhere.
 	// Fetching the original bib would be safer to get current status and eventId.
-	const currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
+	let currentBib;
+	try {
+		currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id);
+	} catch (error) {
+		return { error: 'Failed to fetch the original bib. Please try again later.', success: false };
+	}
 	if (!currentBib) {
-		return { error: 'Original bib not found.', success: false }
+		return { error: 'Original bib not found.', success: false };
 	}
 
 	const dataToUpdate: Bib = {
