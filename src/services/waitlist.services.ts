@@ -67,7 +67,7 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		}
 		throw new Error(
 			`Error adding user ${userId} to waitlist for event ${eventId}: ` +
-				(error instanceof Error ? error.message : String(error)),
+				(error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -91,8 +91,7 @@ export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { 
 		return records
 	} catch (error: unknown) {
 		throw new Error(
-			`Error fetching waitlists for user ID "${userId}": ` +
-				(error instanceof Error ? error.message : String(error)),
+			`Error fetching waitlists for user ID "${userId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }

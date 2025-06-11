@@ -10,14 +10,14 @@ import { createBib } from '@/services/bib.services'
 import { BibFormSchema } from './schemas'
 
 export async function handleListBibServerAction(formData: FormData): Promise<{
-	success: boolean
 	error?: string
 	redirectPath?: string
+	success: boolean
 }> {
 	const { userId: clerkid } = await auth()
 	if (clerkid == null) {
 		// throw new Error('User not authenticated') // Or return error object
-		return { success: false, error: 'Authentication required.' }
+		return { error: 'Authentication required.', success: false }
 	}
 	const sellerUserIdFromAuth = await fetchUserByClerkId(clerkid)
 		.then(user => user?.id)
@@ -25,7 +25,7 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 
 	if (sellerUserIdFromAuth == null) {
 		// redirect('/dashboard/seller/list-bib?error=User not authenticated')
-		return { success: false, error: 'User not found or authentication failed.' }
+		return { error: 'User not found or authentication failed.', success: false }
 	}
 
 	const isNotListedEvent = formData.get('isNotListedEvent') === 'on'
@@ -53,7 +53,7 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 		const errorMessages = flatErrors.root?.join(', ') ?? 'Validation error'
 		// redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
 		// return
-		return { success: false, error: `Validation failed: ${errorMessages}` }
+		return { error: `Validation failed: ${errorMessages}`, success: false }
 	}
 
 	const validatedData = validationResult.output
@@ -74,10 +74,10 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 
 		if (newBib) {
 			// redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)
-			return { success: true, redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}` }
+			return { redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}`, success: true }
 		} else {
 			// redirect(`/dashboard/seller/list-bib?error=listBibFailed`)
-			return { success: false, error: 'Failed to list bib: Unknown reason.' } // Or a more specific error if available
+			return { error: 'Failed to list bib: Unknown reason.', success: false } // Or a more specific error if available
 		}
 	} catch (error: unknown) {
 		// console.error('Error listing bib:', error)
@@ -87,6 +87,6 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 		// a more complex error handling and localization strategy would be needed here.
 		// redirect(`/dashboard/seller/list-bib?error=unexpected`)
 		const errorMessage = error instanceof Error ? error.message : String(error)
-		return { success: false, error: `Failed to list bib: ${errorMessage}` }
+		return { error: `Failed to list bib: ${errorMessage}`, success: false }
 	}
 }

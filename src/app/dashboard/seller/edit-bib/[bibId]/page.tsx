@@ -1,17 +1,19 @@
+import type { Event } from '@/models/event.model' // Added import for Event model
 import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
+import { getTranslations } from '@/lib/getDictionary' // For translations
 import { auth } from '@clerk/nextjs/server'
+import { getLocale } from '@/lib/getLocale' // For translations
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
+// import Link from 'next/link' // No longer used here
 
 import { fetchBibByIdForSeller } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
+
+import editBibTranslations from './locales.json' // Assuming you have a translations file
 // import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions' // No longer needed here
 import EditBibClient from './EditBibClient' // Import the new client component
-import editBibTranslations from './locales.json' // Assuming you have a translations file
-import { getLocale } from '@/lib/getLocale' // For translations
-import { getTranslations } from '@/lib/getDictionary' // For translations
 
 export type EditBibPageProps = {
 	params: { bibId: string } // params is not a promise here, Next.js resolves it
@@ -44,11 +46,11 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 	const { userId: clerkId } = await auth()
 	const { bibId } = params
 	let initialBibWithEvent: (Bib & { expand?: { eventId?: Event } }) | null = null // Event type from models
-	let errorMessage: string | null = null
+	let errorMessage: null | string = null
 
 	const locale = await getLocale() // For translations
 	// TODO: Define actual translations structure and import it
-	const t = getTranslations(locale, editBibTranslations) as any // Cast as any for now
+	const t = getTranslations(locale, editBibTranslations) // Cast as any for now
 
 	if (clerkId == null || clerkId === '') {
 		// This redirect should ideally happen in middleware or at the very top
@@ -59,15 +61,16 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 	try {
 		const sellerUser = await fetchUserByClerkId(clerkId)
 		if (!sellerUser) {
-			errorMessage = t.userNotFound || 'User not found.' // Use translation
+			errorMessage = t.userNotFound ?? 'User not found.' // Use translation
 		} else {
 			initialBibWithEvent = await fetchBibByIdForSeller(bibId, sellerUser.id)
 			if (!initialBibWithEvent) {
-				errorMessage = t.bibNotFoundOrNoPermission || 'Bib not found or you do not have permission to edit it.' // Use translation
+				errorMessage = t.bibNotFoundOrNoPermission ?? 'Bib not found or you do not have permission to edit it.' // Use translation
 			}
 		}
 	} catch (error: unknown) {
-		errorMessage = error instanceof Error ? error.message : t.errorFetchingBib || 'An error occurred while fetching bib details.' // Use translation
+		errorMessage =
+			error instanceof Error ? error.message : (t.errorFetchingBib ?? 'An error occurred while fetching bib details.') // Use translation
 		initialBibWithEvent = null // Ensure bib is null on error
 	}
 
@@ -80,15 +83,15 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 	// The main JSX is now simply rendering the client component
 	return (
 		<EditBibClient
+			bibId={bibId}
 			initialBibWithEvent={initialBibWithEvent}
 			initialError={errorMessage}
 			translations={t} // Pass all translations
-			bibId={bibId}
 		/>
 	)
 }
 
-export async function generateMetadata({ params }: EditBibPageProps): Promise<Metadata> {
+export function generateMetadata({ params }: EditBibPageProps): Metadata {
 	// const params = await paramsPromise // params is directly available
 	return {
 		title: `Edit Bib ${params.bibId} | Seller Dashboard | Beswib`,
