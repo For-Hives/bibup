@@ -50,7 +50,7 @@ export default function EventListClient({
 
 	if (events.length === 0 && error != null) {
 		// More explicit check
-		return <p>Could not load events. An error occurred.</p>
+		return <p>{t.errorLoadingEvents}</p>
 	}
 
 	return (
