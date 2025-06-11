@@ -1,7 +1,6 @@
 'use server'
 
 import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import { Bib } from '@/models/bib.model'
 import * as v from 'valibot'
 
@@ -10,17 +9,23 @@ import { createBib } from '@/services/bib.services'
 
 import { BibFormSchema } from './schemas'
 
-export async function handleListBibServerAction(formData: FormData) {
+export async function handleListBibServerAction(formData: FormData): Promise<{
+	success: boolean
+	error?: string
+	redirectPath?: string
+}> {
 	const { userId: clerkid } = await auth()
 	if (clerkid == null) {
-		throw new Error('User not authenticated')
+		// throw new Error('User not authenticated') // Or return error object
+		return { success: false, error: 'Authentication required.' }
 	}
 	const sellerUserIdFromAuth = await fetchUserByClerkId(clerkid)
 		.then(user => user?.id)
 		.catch(() => null)
 
 	if (sellerUserIdFromAuth == null) {
-		redirect('/dashboard/seller/list-bib?error=User not authenticated')
+		// redirect('/dashboard/seller/list-bib?error=User not authenticated')
+		return { success: false, error: 'User not found or authentication failed.' }
 	}
 
 	const isNotListedEvent = formData.get('isNotListedEvent') === 'on'
@@ -46,8 +51,9 @@ export async function handleListBibServerAction(formData: FormData) {
 	if (!validationResult.success) {
 		const flatErrors = v.flatten(validationResult.issues)
 		const errorMessages = flatErrors.root?.join(', ') ?? 'Validation error'
-		redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
-		return
+		// redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
+		// return
+		return { success: false, error: `Validation failed: ${errorMessages}` }
 	}
 
 	const validatedData = validationResult.output
@@ -67,16 +73,20 @@ export async function handleListBibServerAction(formData: FormData) {
 		const newBib = await createBib(bibToCreate)
 
 		if (newBib) {
-			redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)
+			// redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)
+			return { success: true, redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}` }
 		} else {
-			redirect(`/dashboard/seller/list-bib?error=listBibFailed`)
+			// redirect(`/dashboard/seller/list-bib?error=listBibFailed`)
+			return { success: false, error: 'Failed to list bib: Unknown reason.' } // Or a more specific error if available
 		}
-	} catch (error) {
-		console.error('Error listing bib:', error)
+	} catch (error: unknown) {
+		// console.error('Error listing bib:', error)
 		// Note: The original code used `error.message` if available.
 		// For a generic unexpected error, we'll use the global key.
 		// If specific error messages from `error.message` should be preserved and internationalized,
 		// a more complex error handling and localization strategy would be needed here.
-		redirect(`/dashboard/seller/list-bib?error=unexpected`)
+		// redirect(`/dashboard/seller/list-bib?error=unexpected`)
+		const errorMessage = error instanceof Error ? error.message : String(error)
+		return { success: false, error: `Failed to list bib: ${errorMessage}` }
 	}
 }

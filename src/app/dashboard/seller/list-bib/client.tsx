@@ -2,8 +2,9 @@
 
 import type { Event } from '@/models/event.model'
 
-import React, { useEffect, useState } from 'react'
-
+import React, { useState } from 'react' // Removed useEffect
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import * as v from 'valibot'
 import Link from 'next/link'
 
@@ -51,14 +52,15 @@ type Translations = {
 export default function ListNewBibClientPage({
 	partneredEvents,
 	translations: t,
-	searchParams,
-}: {
+}: // searchParams, // Removed searchParams
+{
 	partneredEvents: Event[]
-	searchParams?: { [key: string]: string | string[] | undefined }
+	// searchParams?: { [key: string]: string | string[] | undefined } // Removed searchParams
 	translations: Translations
 }) {
+	const router = useRouter() // Added router
 	const [isNotListedEvent, setIsNotListedEvent] = useState(false)
-	const [errorMessage, setErrorMessage] = useState<null | string>(null)
+	// const [errorMessage, setErrorMessage] = useState<null | string>(null) // Removed errorMessage state
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 	const [formData, setFormData] = useState<Partial<BibFormData>>({
 		isNotListedEvent: false,
@@ -68,15 +70,15 @@ export default function ListNewBibClientPage({
 	// This local success state isn't currently used but can be for client-side feedback.
 	// const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-	useEffect(() => {
-		if (searchParams?.error != null && typeof searchParams.error === 'string') {
-			setErrorMessage(decodeURIComponent(searchParams.error))
-		}
-		// If a success message needs to be displayed on *this* page after a redirect back to it:
-		// if (searchParams?.successClient) {
-		//   setSuccessMessage(decodeURIComponent(searchParams.successClient as string));
-		// }
-	}, [searchParams])
+	// useEffect(() => { // Removed useEffect for searchParams
+	// 	if (searchParams?.error != null && typeof searchParams.error === 'string') {
+	// 		setErrorMessage(decodeURIComponent(searchParams.error))
+	// 	}
+	// 	// If a success message needs to be displayed on *this* page after a redirect back to it:
+	// 	// if (searchParams?.successClient) {
+	// 	//   setSuccessMessage(decodeURIComponent(searchParams.successClient as string));
+	// 	// }
+	// }, [searchParams])
 
 	const validateField = (name: string, value: unknown) => {
 		const testData = { ...formData, [name]: value }
@@ -117,13 +119,19 @@ export default function ListNewBibClientPage({
 
 	// Wrapper for the server action to be used in form's action prop.
 	// This is how client components can call server actions.
-	function formActionWrapper(formData: FormData) {
-		setErrorMessage(null) // Clear previous errors on new submission
+	async function formActionWrapper(formData: FormData) {
+		// setErrorMessage(null) // Clear previous errors on new submission // Removed
 		setFieldErrors({}) // Clear field errors
 		// initialAuthUserId is passed from the server component wrapper.
-		handleListBibServerAction(formData).catch(error => {
-			console.error('Error in form action:', error)
-		})
+		// handleListBibServerAction(formData).catch(error => { // Removed catch
+		// 	console.error('Error in form action:', error)
+		// })
+		const result = await handleListBibServerAction(formData)
+		if (result.error) {
+			toast.error(result.error)
+		} else if (result.success && result.redirectPath) {
+			router.push(result.redirectPath)
+		}
 	}
 
 	return (
@@ -132,11 +140,11 @@ export default function ListNewBibClientPage({
 				<h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">{t.title}</h1>
 			</header>
 
-			{errorMessage !== null && errorMessage !== '' && (
+			{/* {errorMessage !== null && errorMessage !== '' && ( // Removed error message p tag
 				<p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
 					{t.noBibsListedError} {errorMessage}
 				</p>
-			)}
+			)} */}
 			{/* {successMessage && <p className="mb-4 rounded border border-green-300 bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">{successMessage}</p>} */}
 
 			<form action={formActionWrapper} className="space-y-6">

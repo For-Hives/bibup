@@ -53,9 +53,9 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		const record = await pb.collection('waitlists').create<Waitlist>(dataToCreate)
 		return record
 	} catch (error: unknown) {
-		console.error(`Error adding user ${userId} to waitlist for event ${eventId}:`, error) // Keep this line
 		if (error != null && typeof error === 'object') {
 			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				// Still log PocketBase specific errors if needed, but re-throw
 				console.error('PocketBase error details:', (error as { message: string }).message)
 			}
 			if ('response' in error) {
@@ -65,7 +65,10 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 				}
 			}
 		}
-		return null // Ensure this is outside the if, at the end of the catch
+		throw new Error(
+			`Error adding user ${userId} to waitlist for event ${eventId}: ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -87,7 +90,9 @@ export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { 
 		})
 		return records
 	} catch (error: unknown) {
-		console.error(`Error fetching waitlists for user ID "${userId}":`, error)
-		return []
+		throw new Error(
+			`Error fetching waitlists for user ID "${userId}": ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { getLocale } from '@/lib/getLocale'
+import { Toaster } from 'sonner'
 
 import Footer from '@/components/global/footer'
 import Navbar from '@/components/global/Navbar'
@@ -51,6 +52,7 @@ export default async function RootLayout({
 					<Navbar />
 					{children}
 					<Footer />
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>

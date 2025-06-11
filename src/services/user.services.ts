@@ -24,11 +24,11 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 		const record = await pb.collection('users').create<User>(newUserRecord)
 		return record
 	} catch (error: unknown) {
-		console.error('Error creating user in PocketBase:', error)
 		// It's good to check for specific PocketBase error types if possible
 		// For example, if it's a unique constraint violation, etc.
 		if (error != null && typeof error === 'object') {
 			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				// Still log PocketBase specific errors if needed, but re-throw
 				console.error('PocketBase error details:', (error as { message: string }).message)
 			}
 			if ('response' in error) {
@@ -38,7 +38,7 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 				}
 			}
 		}
-		return null
+		throw new Error('Error creating user in PocketBase: ' + (error instanceof Error ? error.message : String(error)))
 	}
 }
 
@@ -67,12 +67,14 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 			'status' in error &&
 			(error as { status: unknown }).status === 404
 		) {
+			// Explicitly return null on 404 as this is a "not found" case, not an unexpected error
 			console.warn(`User with Clerk ID ${clerkId} not found in PocketBase.`)
-			return null // Explicitly return null on 404
+			return null
 		}
 		// For other errors, you might want to throw or handle differently
-		console.error(`Error fetching user by Clerk ID "${clerkId}":`, error) // Keep generic error log for other cases
-		return null
+		throw new Error(
+			`Error fetching user by Clerk ID "${clerkId}": ` + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -96,11 +98,14 @@ export async function fetchUserById(userId: string): Promise<null | User> {
 			'status' in error &&
 			(error as { status: unknown }).status === 404
 		) {
+			// Explicitly return null on 404 as this is a "not found" case, not an unexpected error
 			console.warn(`User with PocketBase ID ${userId} not found.`)
-			return null // Explicitly return null on 404
+			return null
 		}
-		console.error(`Error fetching user by PocketBase ID "${userId}":`, error)
-		return null
+		throw new Error(
+			`Error fetching user by PocketBase ID "${userId}": ` +
+				(error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
@@ -145,10 +150,12 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 			'message' in error &&
 			typeof (error as { message: unknown }).message === 'string'
 		) {
+			// Still log PocketBase specific errors if needed, but re-throw
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
-		console.error(`Error updating balance for user ${clerkUserId}:`, error) // Keep generic error log
-		return null
+		throw new Error(
+			`Error updating balance for user ${clerkUserId}: ` + (error instanceof Error ? error.message : String(error)),
+		)
 	}
 }
 
