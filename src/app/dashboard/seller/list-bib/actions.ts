@@ -16,16 +16,19 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 }> {
 	const { userId: clerkid } = await auth()
 	if (clerkid == null) {
-		// throw new Error('User not authenticated') // Or return error object
-		return { error: 'Authentication required.', success: false }
+		throw new Error('Authentication required.')
 	}
 	const sellerUserIdFromAuth = await fetchUserByClerkId(clerkid)
 		.then(user => user?.id)
-		.catch(() => null)
+		.catch(() => {
+			// This catch is for fetchUserByClerkId failing, not for user being null.
+			// If fetchUserByClerkId throws, it will be caught by the outer try-catch if not handled here.
+			// For now, let it return null, to be caught by the check below.
+			return null
+		})
 
 	if (sellerUserIdFromAuth == null) {
-		// redirect('/dashboard/seller/list-bib?error=User not authenticated')
-		return { error: 'User not found or authentication failed.', success: false }
+		throw new Error('User not found or application setup issue.')
 	}
 
 	const isNotListedEvent = formData.get('isNotListedEvent') === 'on'
@@ -50,10 +53,13 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 
 	if (!validationResult.success) {
 		const flatErrors = v.flatten(validationResult.issues)
-		const errorMessages = flatErrors.root?.join(', ') ?? 'Validation error'
-		// redirect(`/dashboard/seller/list-bib?error=${encodeURIComponent(errorMessages)}`)
-		// return
-		return { error: `Validation failed: ${errorMessages}`, success: false }
+		const errorMessages =
+			flatErrors.root?.join(', ') ??
+			Object.values(flatErrors.nested ?? {})
+				.flat()
+				.join(', ') ??
+			'Validation error'
+		throw new Error(`Validation failed: ${errorMessages}`)
 	}
 
 	const validatedData = validationResult.output
@@ -72,21 +78,18 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 	try {
 		const newBib = await createBib(bibToCreate)
 
-		if (newBib) {
-			// redirect(`/dashboard/seller?success=true&bibStatus=${newBib.status}`)
-			return { redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}`, success: true }
-		} else {
-			// redirect(`/dashboard/seller/list-bib?error=listBibFailed`)
-			return { error: 'Failed to list bib: Unknown reason.', success: false } // Or a more specific error if available
+		// If createBib completes without error, newBib should be valid.
+		// The explicit `if (newBib)` check might be redundant if createBib always throws on failure
+		// (which it should, based on previous service refactoring).
+		// However, keeping it for safety or if createBib's contract changes.
+		if (!newBib) {
+			// This case implies createBib returned null/undefined without throwing.
+			throw new Error('Failed to list bib after creation attempt.')
 		}
+		return { redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}`, success: true }
 	} catch (error: unknown) {
-		// console.error('Error listing bib:', error)
-		// Note: The original code used `error.message` if available.
-		// For a generic unexpected error, we'll use the global key.
-		// If specific error messages from `error.message` should be preserved and internationalized,
-		// a more complex error handling and localization strategy would be needed here.
-		// redirect(`/dashboard/seller/list-bib?error=unexpected`)
-		const errorMessage = error instanceof Error ? error.message : String(error)
-		return { error: `Failed to list bib: ${errorMessage}`, success: false }
+		// This will catch errors from createBib, fetchUserByClerkId (if it throws),
+		// or any other unexpected errors in the try block.
+		throw new Error(`Failed to list bib: ${error instanceof Error ? error.message : String(error)}`)
 	}
 }

@@ -121,17 +121,18 @@ export default function ListNewBibClientPage({
 	// Wrapper for the server action to be used in form's action prop.
 	// This is how client components can call server actions.
 	async function formActionWrapper(formData: FormData) {
-		// setErrorMessage(null) // Clear previous errors on new submission // Removed
 		setFieldErrors({}) // Clear field errors
-		// initialAuthUserId is passed from the server component wrapper.
-		// handleListBibServerAction(formData).catch(error => { // Removed catch
-		// 	console.error('Error in form action:', error)
-		// })
-		const result = await handleListBibServerAction(formData)
-		if (result.error) {
-			toast.error(result.error)
-		} else if (result.success && result.redirectPath) {
-			router.push(result.redirectPath)
+		try {
+			const result = await handleListBibServerAction(formData)
+			// The server action now only returns a result object on success.
+			// Errors are thrown and caught by the catch block.
+			if (result.success && result.redirectPath) {
+				router.push(result.redirectPath)
+			}
+			// If there's a success case but no redirectPath (e.g. success message without redirect),
+			// it could be handled here, but current action always provides redirectPath on success.
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : String(e))
 		}
 	}
 

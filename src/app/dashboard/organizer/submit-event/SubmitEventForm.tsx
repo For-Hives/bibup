@@ -33,16 +33,17 @@ export default function SubmitEventForm({ translations: t }: SubmitEventFormProp
 	const router = useRouter()
 
 	async function formActionWrapper(formData: FormData) {
-		const result = await handleSubmitEvent(formData)
-
-		if (result.error != null) {
-			// More explicit check
-			toast.error(result.error)
-		} else if (result.success && result.redirectPath != null) {
-			// More explicit check
-			// Optionally show a success toast before redirecting
-			toast.success('Event submitted successfully!')
-			router.push(result.redirectPath)
+		try {
+			const result = await handleSubmitEvent(formData)
+			// handleSubmitEvent now throws errors, so it only returns on success.
+			if (result.success && result.redirectPath != null) {
+				// Optionally show a success toast before redirecting
+				toast.success('Event submitted successfully!')
+				router.push(result.redirectPath)
+			}
+			// Handle cases where success is true but no redirectPath, if applicable
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : String(e))
 		}
 	}
 
