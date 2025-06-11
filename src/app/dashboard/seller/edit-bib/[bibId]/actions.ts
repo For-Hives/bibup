@@ -180,7 +180,13 @@ export async function handleWithdrawBib(
 		return { error: 'User not found.', success: false }
 	}
 
-	const currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
+	let currentBib: Bib | null = null
+	try {
+		currentBib = await fetchBibByIdForSeller(bibId, sellerUser.id)
+	} catch (e: unknown) {
+		const error = e instanceof Error ? e.message : String(e)
+		return { error: `An error occurred while fetching the bib: ${error}`, success: false }
+	}
 	if (!currentBib) {
 		return { error: 'Bib not found or not owned by user.', success: false }
 	}
