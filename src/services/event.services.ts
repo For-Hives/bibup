@@ -16,8 +16,6 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 	}
 	if (
 		eventData.name === '' ||
-		// Assuming eventData.date is typed as Date and thus non-null.
-		// The instanceof check is also redundant if type is strictly Date.
 		// The primary runtime check needed is for the validity of the date value.
 		isNaN(eventData.date.getTime()) ||
 		eventData.location === ''
