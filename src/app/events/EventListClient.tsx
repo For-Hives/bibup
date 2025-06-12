@@ -4,7 +4,12 @@ import type { Event } from '@/models/event.model'
 
 import { useEffect, useState } from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { toast } from 'sonner'
+
+import eventsTranslations from './locales.json'
+
+type Translations = ReturnType<typeof getTranslations<(typeof eventsTranslations)['en'], 'en'>>
 
 export default function EventListClient({
 	prefetchedEvents,
@@ -13,26 +18,7 @@ export default function EventListClient({
 }: {
 	error?: null | string
 	prefetchedEvents: Event[]
-	translations: {
-		description: string
-		eventCard: {
-			bibsAvailable: string
-			soldOut: string
-			viewDetails: string
-		}
-		eventListTitleClient: string
-		filters: {
-			all: string
-			category: string
-			date: string
-			location: string
-		}
-		loading: string
-		noEvents: string
-		noEventsToDisplay: string
-		searchPlaceholder: string
-		title: string
-	}
+	translations: Translations
 }) {
 	const [events] = useState<Event[]>(prefetchedEvents ?? [])
 
@@ -45,17 +31,17 @@ export default function EventListClient({
 
 	if (events.length === 0 && error == null) {
 		// More explicit check
-		return <p>{t.noEventsToDisplay}</p>
+		return <p>{t.events.noEventsToDisplay}</p>
 	}
 
 	if (events.length === 0 && error != null) {
 		// More explicit check
-		return <p>{t.errorLoadingEvents}</p>
+		return <p>{t.GLOBAL.errors.unexpected}</p>
 	}
 
 	return (
 		<div className="mt-8">
-			<h2 className="mb-4 text-center text-2xl font-bold sm:text-left">{t.eventListTitleClient}</h2>
+			<h2 className="mb-4 text-center text-2xl font-bold sm:text-left">{t.events.eventListTitleClient}</h2>
 			<ul>
 				{events.map(event => (
 					<li
