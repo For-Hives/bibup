@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"dev:debug": "next dev",
-		"build": "NODE_OPTIONS='--disable-warning=DEP0040' next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
 		"prettier": "prettier --write ."
