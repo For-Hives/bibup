@@ -1,10 +1,12 @@
+import type { Event } from './event.model'
+import type { User } from './user.model'
+
 export interface Waitlist {
-	addedAt: Date // Should be DateTime
-	eventId: string
+	addedAt: Date
+	eventId: Event['id']
 	id: string
-	notifiedAt?: Date // Optional, timestamp
-	requestedBibGender?: 'female' | 'male' | 'unisex'
-	requestedBibSize?: string
-	userId: string
-	// Add other relevant waitlist details here
+	mailNotification: boolean
+	notifiedAt?: Date
+	optionPreferences: Record<string, string>
+	userId: User['id']
 }

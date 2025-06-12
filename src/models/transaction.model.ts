@@ -1,14 +1,14 @@
 import type { User } from './user.model'
 
 export interface Transaction {
-	amount: number // Total amount paid by buyer
+	amount: number
 	bibId: string
 	buyerUserId: User['id']
+	createdAt: Date
 	id: string
-	paymentIntentId?: string // For Stripe or other payment processor
+	paymentIntentId?: string
 	platformFee: number
 	sellerUserId: User['id']
 	status: 'claimed' | 'failed' | 'pending' | 'refunded' | 'succeeded'
-	transactionDate: Date // Should be DateTime
-	// Add other relevant transaction details here
+	transactionDate: Date
 }

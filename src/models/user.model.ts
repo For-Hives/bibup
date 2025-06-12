@@ -1,10 +1,11 @@
 export interface User {
-	bibUpBalance: number // Default to 0
-	clerkId: string // For linking to Clerk user
+	bibUpBalance: number
+	clerkId: string
+	createdAt: Date
 	email: string
 	firstName: string
 	id: string
 	lastName: string
-	roles: Array<'admin' | 'buyer' | 'organizer' | 'seller'>
-	// Add other relevant user profile information here
+	role: 'admin' | 'user' // default 'user'
+	updatedAt: Date
 }

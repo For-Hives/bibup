@@ -1,15 +1,26 @@
-import { User } from './user.model'
+import { EventOption } from './eventOption.model'
 
 export interface Event {
-	bibsSold: number // For KPI
-	date: Date // Should be DateTime
+	bibPickupWindows?: { end: Date; start: Date }[]
+	bibsSold: number
+	createdAt: Date
+	date: Date
 	description?: string
+	distanceKm?: number
+	elevationGainM?: number
+	format?: 'relay' | 'solo'
 	id: string
-	isPartnered: boolean // Defaults to false
+	isPartnered: boolean
 	location: string
+	logoUrl?: string
 	name: string
-	organizerId: User['id'] // References a User ID
+	officialPrice?: number
+	options: EventOption[]
+	parcoursUrls?: string[] // GPX files, map links
 	participantCount: number
-	status: 'approved' | 'cancelled' | 'completed' | 'pending_approval' | 'rejected'
-	// Add other relevant event details here
+
+	transferDeadline?: Date // last date for resale
+
+	typeCourse?: 'route' | 'trail' | 'triathlon' | 'ultra'
+	updatedAt: Date
 }
