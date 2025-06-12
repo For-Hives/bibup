@@ -14,21 +14,34 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 		console.error('Organizer ID is required to create an event.')
 		return null
 	}
-	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
-		console.error('Event name, date, and location are required.')
+
+	// Validate eventData.date
+	// Assuming eventData.date is always a Date object due to the Event type.
+	// We check if it holds a valid date value.
+	if (isNaN(eventData.date.getTime())) {
+		console.error('Event date is invalid.')
+		return null
+	}
+
+	if (eventData.name === '' || eventData.location === '') {
+		console.error('Event name and location are required.')
 		return null
 	}
 
 	try {
+		// Ensure date field in dataToCreate is correctly assigned the new Date object.
+		// Cloning the date object is good practice here.
+		const validDate = new Date(eventData.date)
+
 		const dataToCreate: Omit<Event, 'id'> = {
 			participantCount: eventData.participantCount ?? 0,
 			isPartnered: eventData.isPartnered ?? false,
 			description: eventData.description ?? '',
 			organizerId: eventData.organizerId,
-			date: new Date(eventData.date),
 			location: eventData.location,
 			status: 'pending_approval',
 			name: eventData.name,
+			date: validDate,
 			bibsSold: 0,
 		}
 

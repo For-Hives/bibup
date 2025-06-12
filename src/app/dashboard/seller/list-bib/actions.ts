@@ -57,19 +57,24 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 
 	const validatedData = validationResult.output
 
-	const bibToCreate: Omit<Bib, 'id'> = {
+	// Construct the data payload for createBib based on CreateBibData type
+	const dataForCreateBib: Parameters<typeof createBib>[0] = {
+		unlistedEventLocation: validatedData.unlistedEventLocation,
 		registrationNumber: validatedData.registrationNumber,
-		originalPrice: validatedData.originalPrice ?? 0,
-		gender: validatedData.gender ?? undefined,
-		eventId: validatedData.eventId ?? '', // TODO: Creer liste d'attente de vente pour les events non listés
-		sellerUserId: sellerUserIdFromAuth,
-		status: 'pending_validation',
-		price: validatedData.price,
-		size: validatedData.size,
+		// Optional unlisted event fields from the schema
+		unlistedEventDate: validatedData.unlistedEventDate,
+		unlistedEventName: validatedData.unlistedEventName,
+		isNotListedEvent: validatedData.isNotListedEvent, // Schema ensures boolean
+		originalPrice: validatedData.originalPrice, // Schema ensures it's number | undefined
+		gender: validatedData.gender ?? undefined, // Convert null to undefined
+		eventId: validatedData.eventId, // Schema ensures string | undefined
+		price: validatedData.price, // Schema ensures number
+		size: validatedData.size, // Schema ensures string | undefined
 	}
 
 	try {
-		const newBib = await createBib(bibToCreate)
+		// Pass sellerUserIdFromAuth as the second argument
+		const newBib = await createBib(dataForCreateBib, sellerUserIdFromAuth)
 
 		if (!newBib) {
 			throw new Error('Failed to list bib after creation attempt.')

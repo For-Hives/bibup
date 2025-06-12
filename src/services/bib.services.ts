@@ -9,6 +9,8 @@ import { pb } from '@/lib/pocketbaseClient'
 import { fetchUserById, updateUserBalance } from './user.services'
 import { createTransaction } from './transaction.services'
 
+const PLATFORM_FEE_PERCENTAGE = 0.1
+
 export type CreateBibData = Partial<
 	Omit<Bib, 'buyerUserId' | 'eventId' | 'id' | 'privateListingToken' | 'sellerUserId' | 'status'>
 > & {
@@ -28,8 +30,8 @@ export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'pric
  * @param bibData Data for the new bib, including potential unlisted event details.
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
-export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
-	if (bibData.sellerUserId === '') {
+export async function createBib(bibData: CreateBibData, sellerUserId: string): Promise<Bib | null> {
+	if (sellerUserId === '') {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
 	}
@@ -39,14 +41,21 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 	}
 
 	let status: Bib['status'] = 'pending_validation'
-	let finalEventId: string = bibData.eventId
+	// Ensure finalEventId is a valid string. If it's an unlisted event or eventId is not provided,
+	// set it to an empty string, otherwise use the provided eventId.
+	let finalEventId: string = ''
+	if (bibData.isNotListedEvent === true || bibData.eventId === undefined) {
+		finalEventId = ''
+	} else {
+		finalEventId = bibData.eventId
+	}
 
 	try {
 		const dataToCreate: Omit<Bib, 'id'> = {
 			registrationNumber: bibData.registrationNumber,
 			originalPrice: bibData.originalPrice,
-			sellerUserId: bibData.sellerUserId,
 			privateListingToken: undefined,
+			sellerUserId: sellerUserId, // Use the function parameter
 			gender: bibData.gender,
 			buyerUserId: undefined,
 			eventId: finalEventId,
@@ -225,7 +234,7 @@ export async function processBibSale(
 		}
 
 		// 3. Calculate platform fee and seller amount.
-		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic
+		const platformFeeAmount = bib.price * PLATFORM_FEE_PERCENTAGE // TODO: Replace with actual platform fee logic
 		const amountToSeller = bib.price - platformFeeAmount
 
 		// 4. Create the transaction record.
@@ -285,7 +294,7 @@ export async function processBibSale(
  */
 export async function updateBibBySeller(
 	bibId: string,
-	dataToUpdate: Bib, // Allow specific status updates or general data updates
+	dataToUpdate: UpdateBibData, // Allow specific status updates or general data updates
 	sellerUserId: string
 ): Promise<Bib | null> {
 	if (bibId === '' || sellerUserId === '') {
@@ -307,27 +316,10 @@ export async function updateBibBySeller(
 			// Consider throwing an error or returning specific result if update is not allowed.
 		}
 
-		// If 'status' is part of dataToUpdate, ensure it's a valid transition
-		if ('status' in dataToUpdate) {
-			const newStatus = dataToUpdate.status
-			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
-				pending_validation: ['listed_public', 'listed_private', 'withdrawn'],
-				listed_public: ['listed_private', 'withdrawn'],
-				listed_private: ['listed_public', 'withdrawn'],
-				withdrawn: ['listed_public', 'listed_private'],
-				validation_failed: ['withdrawn'],
-				expired: ['withdrawn'],
-				sold: [], // Cannot be changed by seller
-			}
+		// The 'status' field is not part of UpdateBibData, so sellers cannot change it via this function.
+		// Status changes are handled by admin functions or specific lifecycle events.
 
-			const allowedChanges = allowedStatusChanges[currentBib.status]
-			if (!allowedChanges?.includes(newStatus)) {
-				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
-				// Consider throwing an error for invalid transitions.
-			}
-		}
-
-		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
+		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate as Partial<Bib>)
 		return updatedRecord
 	} catch (error: unknown) {
 		throw new Error(`Error updating bib ${bibId}: ` + (error instanceof Error ? error.message : String(error)))
@@ -359,8 +351,8 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 		if (error != null && typeof error === 'object' && 'message' in error) {
 			console.error('PocketBase error details:', (error as { message: string }).message)
 		}
-		throw new Error(
-			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error))
-		)
+		const messageSuffix: string = error instanceof Error ? error.message : String(error)
+		const fullErrorMessage = `Error updating bib ${bibId} status by admin: ${messageSuffix}`
+		throw new Error(fullErrorMessage)
 	}
 }

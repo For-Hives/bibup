@@ -7,17 +7,20 @@ export interface CreateUserDTO {
 	email: string
 	firstName: string
 	lastName: string
+	roles?: Array<'admin' | 'buyer' | 'organizer' | 'seller'>
 }
 
 export async function createUser(userData: CreateUserDTO): Promise<null | User> {
 	try {
+		const roles = userData.roles && userData.roles.length > 0 ? userData.roles : ['buyer']
+
 		const newUserRecord = {
 			firstName: userData.firstName,
 			lastName: userData.lastName,
 			clerkId: userData.clerkId,
 			email: userData.email,
-			roles: ['buyer'],
 			bibUpBalance: 0,
+			roles: roles,
 		}
 
 		const record = await pb.collection('users').create<User>(newUserRecord)
