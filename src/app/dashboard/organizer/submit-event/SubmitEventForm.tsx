@@ -2,30 +2,18 @@
 
 import React from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
+import submitEventTranslations from './locales.json'
 import { handleSubmitEvent } from './actions'
 
 interface SubmitEventFormProps {
-	translations: SubmitEventTranslations
+	translations: Translations
 }
 
-interface SubmitEventTranslations {
-	backToDashboard: string
-	createError: string
-	errorPrefix: string
-	eventDateLabel: string
-	eventDescription: string
-	eventLocation: string
-	eventNameLabel: string
-	loginRequired: string
-	participantCount: string
-	submit: string
-	title: string
-	unknownError: string
-	validationError: string
-}
+type Translations = ReturnType<typeof getTranslations<(typeof submitEventTranslations)['en'], 'en'>>
 
 export default function SubmitEventForm({ translations: t }: SubmitEventFormProps) {
 	const router = useRouter()
