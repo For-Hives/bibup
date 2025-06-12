@@ -1,6 +1,7 @@
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import pageTranslationsData from './locales.json'
@@ -14,7 +15,8 @@ export default async function Navbar() {
 		<header className="flex h-16 items-center justify-between gap-4 p-4">
 			<div>
 				{/* Using global translation for App Name */}
-				<Link href="/">
+				<Link className="flex items-center gap-2 text-[var(--text-dark)] hover:text-[var(--accent-sporty)]" href="/">
+					<Image alt="Beswib Logo" className="mr-2 inline-block" height={80} src="/logo.svg" width={80} />
 					<h1>{t.GLOBAL.appName}</h1>
 				</Link>
 			</div>
