@@ -6,5 +6,13 @@ export interface User {
 	id: string
 	lastName: string
 	roles: Array<'admin' | 'buyer' | 'organizer' | 'seller'>
+	phone?: string // New field
+	address?: { // New field
+		street: string
+		city: string
+		postalCode: string
+		country: string
+	}
+	dateOfBirth?: string // New field (ISO date string e.g., 'YYYY-MM-DD')
 	// Add other relevant user profile information here
 }

@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { Webhook } from 'svix'
 
-import { createUser, CreateUserDTO } from '@/services/user.services' // Adjust path as necessary
+import { createUser, CreateUserDTO, updateUser, UpdateUserDTO, fetchUserByClerkId } from '@/services/user.services'; // Adjust path as necessary
+import { User } from '@/models/user.model'; // If needed for casting or types
 
 // Make sure to set CLERK_WEBHOOK_SECRET in your environment variables
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET
@@ -52,11 +53,11 @@ export async function POST(req: Request) {
 	if (eventType === 'user.created') {
 		const {
 			email_addresses,
-
 			id: clerkId,
 			first_name,
 			last_name,
-		} = evt.data
+			public_metadata, // Access public_metadata
+		} = evt.data;
 
 		if (!clerkId) {
 			console.error('Received user.created event without clerkId')
@@ -70,12 +71,33 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: 'Primary email address missing' }, { status: 400 })
 		}
 
+		// Extract custom attributes
+		const phone = public_metadata?.phone as string | undefined;
+		const dateOfBirth = public_metadata?.dateOfBirth as string | undefined; // Expects YYYY-MM-DD
+		const addressStreet = public_metadata?.addressStreet as string | undefined;
+		const addressCity = public_metadata?.addressCity as string | undefined;
+		const addressPostalCode = public_metadata?.addressPostalCode as string | undefined;
+		const addressCountry = public_metadata?.addressCountry as string | undefined;
+
+		let address: CreateUserDTO['address'] | undefined = undefined;
+		if (addressStreet && addressCity && addressPostalCode && addressCountry) {
+			address = {
+				street: addressStreet,
+				city: addressCity,
+				postalCode: addressPostalCode,
+				country: addressCountry,
+			};
+		}
+
 		const userData: CreateUserDTO = {
 			firstName: first_name ?? '',
 			lastName: last_name ?? '',
-			email: primaryEmail,
+			email: primaryEmail, // primaryEmail is already defined in the existing code
 			clerkId,
-		}
+			phone,         // New
+			dateOfBirth,   // New
+			address,       // New
+		};
 
 		try {
 			// Create user in PocketBase
@@ -105,6 +127,78 @@ export async function POST(req: Request) {
 				errorMessage = error.message
 			}
 			return NextResponse.json({ error: errorMessage }, { status: 500 })
+		}
+	} else if (eventType === 'user.updated') {
+		const {
+			id: clerkId,
+			first_name,
+			last_name,
+			public_metadata,
+		} = evt.data;
+
+		if (!clerkId) {
+			console.error('Received user.updated event without clerkId');
+			return NextResponse.json({ error: 'Missing Clerk User ID in webhook payload' }, { status: 400 });
+		}
+
+		try {
+			const existingUser = await fetchUserByClerkId(clerkId);
+			if (!existingUser || !existingUser.id) {
+				console.warn(`User with Clerk ID ${clerkId} not found in PocketBase. Cannot update.`);
+				// This might happen if user.created failed or was missed.
+				// Optionally, you could attempt to create the user here as a fallback.
+				return NextResponse.json({ error: 'User not found in database for update' }, { status: 404 });
+			}
+
+			const phone = public_metadata?.phone as string | undefined;
+			const dateOfBirth = public_metadata?.dateOfBirth as string | undefined;
+			const addressStreet = public_metadata?.addressStreet as string | undefined;
+			const addressCity = public_metadata?.addressCity as string | undefined;
+			const addressPostalCode = public_metadata?.addressPostalCode as string | undefined;
+			const addressCountry = public_metadata?.addressCountry as string | undefined;
+
+			const updateData: UpdateUserDTO = {};
+
+			if (first_name !== undefined) updateData.firstName = first_name;
+			if (last_name !== undefined) updateData.lastName = last_name;
+			if (phone !== undefined) updateData.phone = phone;
+			if (dateOfBirth !== undefined) updateData.dateOfBirth = dateOfBirth;
+
+			if (addressStreet && addressCity && addressPostalCode && addressCountry) {
+				updateData.address = {
+					street: addressStreet,
+					city: addressCity,
+					postalCode: addressPostalCode,
+					country: addressCountry,
+				};
+			} else if (public_metadata && (public_metadata.addressStreet !== undefined || public_metadata.addressCity !== undefined || public_metadata.addressPostalCode !== undefined || public_metadata.addressCountry !== undefined)) {
+				// Handle partial address updates if needed, or decide if address is all-or-nothing
+				// For now, if any address component is present in metadata but not all, it won't update the address.
+				// To clear an address, one might need a specific mechanism or ensure all fields are empty strings.
+				console.warn(`Partial address data received for user ${clerkId}. Address update skipped unless all parts are present.`);
+			}
+
+
+			if (Object.keys(updateData).length === 0) {
+				return NextResponse.json({ message: 'No updatable data received in webhook for user.updated' }, { status: 200 });
+			}
+
+			const updatedUser = await updateUser(existingUser.id, updateData);
+
+			if (!updatedUser) {
+				console.error(`Failed to update user ${clerkId} (DB ID: ${existingUser.id}) in PocketBase.`);
+				return NextResponse.json({ error: 'Failed to update user in database' }, { status: 500 });
+			}
+
+			return NextResponse.json({ message: 'User updated successfully' }, { status: 200 });
+
+		} catch (error) {
+			console.error(`Error processing user.updated event for ${clerkId}:`, error);
+			let errorMessage = 'Internal server error processing user update.';
+			if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+			return NextResponse.json({ error: errorMessage }, { status: 500 });
 		}
 	} else {
 		return NextResponse.json({ message: `Webhook received: ${eventType}, but no handler configured.` }, { status: 200 })

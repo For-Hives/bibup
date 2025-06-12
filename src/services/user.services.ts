@@ -3,24 +3,47 @@ import type { User } from '@/models/user.model'
 import { pb } from '@/lib/pocketbaseClient'
 
 export interface CreateUserDTO {
-	clerkId: string
-	email: string
-	firstName: string
-	lastName: string
+	clerkId: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	phone?: string; // New
+	address?: { // New
+		street: string;
+		city: string;
+		postalCode: string;
+		country: string;
+	};
+	dateOfBirth?: string; // New (ISO date string)
 }
 
 export async function createUser(userData: CreateUserDTO): Promise<null | User> {
 	try {
 		const newUserRecord = {
-			firstName: userData.firstName,
-			lastName: userData.lastName,
 			clerkId: userData.clerkId,
 			email: userData.email,
-			roles: ['buyer'],
+			firstName: userData.firstName,
+			lastName: userData.lastName,
+			phone: userData.phone, // New
+			address: userData.address, // New
+			dateOfBirth: userData.dateOfBirth, // New
+			roles: ['buyer'], // Default role
 			bibUpBalance: 0,
-		}
+		};
 
-		const record = await pb.collection('users').create<User>(newUserRecord)
+		// Remove undefined fields before sending to PocketBase to avoid errors
+		// if PocketBase expects a field not to be null or undefined explicitly.
+		// Or ensure PocketBase schema allows nulls for these optional fields.
+		// For simplicity here, we assume PocketBase handles undefined fields correctly by omitting them.
+		Object.keys(newUserRecord).forEach(key => {
+			const recordKey = key as keyof typeof newUserRecord;
+			if (newUserRecord[recordKey] === undefined) {
+				delete newUserRecord[recordKey];
+			}
+		});
+
+
+		const record = await pb.collection('users').create<User>(newUserRecord as User); // Cast needed if types mismatch due to optional fields
 		return record
 	} catch (error: unknown) {
 		if (error != null && typeof error === 'object') {
@@ -35,6 +58,67 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 			}
 		}
 		throw new Error('Error creating user in PocketBase: ' + (error instanceof Error ? error.message : String(error)))
+	}
+}
+
+export interface UpdateUserDTO {
+	firstName?: string;
+	lastName?: string;
+	phone?: string;
+	address?: {
+		street: string;
+		city: string;
+		postalCode: string;
+		country: string;
+	};
+	dateOfBirth?: string; // ISO date string e.g., 'YYYY-MM-DD'
+	// Potentially other fields like roles or bibUpBalance if they can be updated through specific events.
+	// For now, focus on the profile fields.
+}
+
+export async function updateUser(userId: string, userData: UpdateUserDTO): Promise<null | User> {
+	if (!userId) {
+		console.error('User ID (PocketBase record ID) is required to update user data.');
+		return null;
+	}
+
+	try {
+		// Construct the data payload carefully, only including fields that are present in userData.
+		// PocketBase's update method might replace the whole record or merge,
+		// so it's safer to be explicit if we only want to update certain fields.
+		// However, for this DTO, it's designed to carry all updatable profile fields.
+		const updatePayload: Partial<User> = {};
+
+		if (userData.firstName !== undefined) updatePayload.firstName = userData.firstName;
+		if (userData.lastName !== undefined) updatePayload.lastName = userData.lastName;
+		if (userData.phone !== undefined) updatePayload.phone = userData.phone;
+		if (userData.address !== undefined) updatePayload.address = userData.address;
+		if (userData.dateOfBirth !== undefined) updatePayload.dateOfBirth = userData.dateOfBirth;
+		// Note: email and clerkId are generally not updated after creation.
+		// Roles and bibUpBalance might be updated by other specific services/events.
+
+
+		if (Object.keys(updatePayload).length === 0) {
+			console.warn(`No data provided to update user ${userId}.`);
+			// Optionally fetch and return the current user record if no actual update is made
+			return fetchUserById(userId);
+		}
+
+		const record = await pb.collection('users').update<User>(userId, updatePayload);
+		return record;
+	} catch (error: unknown) {
+		if (error != null && typeof error === 'object') {
+			if ('message' in error && typeof (error as { message: unknown }).message === 'string') {
+				console.error('PocketBase error details during update:', (error as { message: string }).message);
+			}
+			if ('response' in error) {
+				const response = (error as { response: unknown }).response;
+				if (response != null && typeof response === 'object' && 'data' in response) {
+					console.error('PocketBase response data during update:', (response as { data: unknown }).data);
+				}
+			}
+		}
+		throw new Error(`Error updating user ${userId} in PocketBase: ` + (error instanceof Error ? error.message : String(error)));
 	}
 }
 

@@ -21,18 +21,39 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 
 	try {
 		const dataToCreate: Omit<Event, 'id'> = {
-			participantCount: eventData.participantCount ?? 0,
-			isPartnered: eventData.isPartnered ?? false,
+			// Existing fields
+			name: eventData.name,
+			date: new Date(eventData.date), // Ensure date is correctly handled
+			location: eventData.location,
 			description: eventData.description ?? '',
 			organizerId: eventData.organizerId,
-			date: new Date(eventData.date),
-			location: eventData.location,
-			status: 'pending_approval',
-			name: eventData.name,
-			bibsSold: 0,
-		}
+			participantCount: eventData.participantCount ?? 0,
+			isPartnered: eventData.isPartnered ?? false, // Default to false if not provided
+			status: 'pending_approval', // Default status
+			bibsSold: 0, // Default bibsSold
 
-		const record = await pb.collection('events').create<Event>(dataToCreate)
+			// New fields from eventData (add these)
+			raceType: eventData.raceType,
+			distance: eventData.distance,
+			elevationGain: eventData.elevationGain,
+			raceFormat: eventData.raceFormat,
+			logoUrl: eventData.logoUrl,
+			bibPickupDetails: eventData.bibPickupDetails,
+			registrationOpenDate: eventData.registrationOpenDate, // Assuming it's already a string 'YYYY-MM-DD'
+			referencePrice: eventData.referencePrice,
+		};
+
+		// Optional: Clean undefined new fields if PocketBase has strict schema requirements
+		// (though it usually just omits them if they are undefined in the object)
+		// Example of explicit cleaning if needed:
+		// Object.keys(dataToCreate).forEach(key => {
+		//   const recordKey = key as keyof typeof dataToCreate;
+		//   if (dataToCreate[recordKey] === undefined) {
+		//     delete dataToCreate[recordKey];
+		//   }
+		// });
+
+		const record = await pb.collection('events').create<Event>(dataToCreate);
 		return record
 	} catch (error: unknown) {
 		throw new Error('Error creating event: ' + (error instanceof Error ? error.message : String(error)))
