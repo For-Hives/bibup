@@ -18,16 +18,15 @@ type Translations = ReturnType<typeof getTranslations<(typeof submitEventTransla
 export default function SubmitEventForm({ translations: t }: SubmitEventFormProps) {
 	const router = useRouter()
 
-	async function formActionWrapper(formData: FormData) {
-		try {
-			const result = await handleSubmitEvent(formData)
-			if (result.success && result.redirectPath != null) {
+	function formActionWrapper(formData: FormData) {
+		handleSubmitEvent(formData)
+			.then(() => {
 				toast.success('Event submitted successfully!')
-				router.push(result.redirectPath)
-			}
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : String(e))
-		}
+				router.push('/dashboard/organizer?success=true')
+			})
+			.catch((error: unknown) => {
+				toast.error(error instanceof Error ? error.message : String(error))
+			})
 	}
 
 	return (

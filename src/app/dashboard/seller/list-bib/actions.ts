@@ -9,11 +9,7 @@ import { createBib } from '@/services/bib.services'
 
 import { BibFormSchema } from './schemas'
 
-export async function handleListBibServerAction(formData: FormData): Promise<{
-	error?: string
-	redirectPath?: string
-	success: boolean
-}> {
+export async function handleListBibServerAction(formData: FormData): Promise<Bib['status']> {
 	const { userId: clerkid } = await auth()
 	if (clerkid == null) {
 		throw new Error('Authentication required.')
@@ -78,7 +74,7 @@ export async function handleListBibServerAction(formData: FormData): Promise<{
 		if (!newBib) {
 			throw new Error('Failed to list bib after creation attempt.')
 		}
-		return { redirectPath: `/dashboard/seller?success=true&bibStatus=${newBib.status}`, success: true }
+		return newBib.status
 	} catch (error: unknown) {
 		throw new Error(`Failed to list bib: ${error instanceof Error ? error.message : String(error)}`)
 	}

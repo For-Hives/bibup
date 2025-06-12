@@ -19,11 +19,7 @@ const EventFormSchema = v.object({
 	description: v.optional(v.string(), ''),
 })
 
-export async function handleSubmitEvent(formData: FormData): Promise<{
-	error?: string
-	redirectPath?: string
-	success: boolean
-}> {
+export async function handleSubmitEvent(formData: FormData): Promise<void> {
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null) {
@@ -72,7 +68,6 @@ export async function handleSubmitEvent(formData: FormData): Promise<{
 		if (!newEvent) {
 			throw new Error('Failed to create event after submission.')
 		}
-		return { redirectPath: '/dashboard/organizer?success=true', success: true }
 	} catch (error: unknown) {
 		throw new Error(`Failed to create event: ${error instanceof Error ? error.message : String(error)}`)
 	}

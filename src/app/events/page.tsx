@@ -19,6 +19,7 @@ export default async function EventsPage() {
 		events = await fetchApprovedPublicEvents()
 	} catch (e: unknown) {
 		error = e instanceof Error ? e.message : String(e)
+		console.error('Error fetching events:', error)
 	}
 
 	return (

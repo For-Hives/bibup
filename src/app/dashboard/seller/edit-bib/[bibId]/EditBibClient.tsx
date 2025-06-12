@@ -38,73 +38,60 @@ export default function EditBibClient({
 		}
 	}, [initialError])
 
-	async function handleUpdateDetailsAction(formData: FormData) {
+	function handleUpdateDetailsAction(formData: FormData) {
 		setIsLoading(true)
-		try {
-			const result = await handleUpdateBibDetails(bibId, formData)
-			if (result.success) {
-				toast.success(result.message ?? 'Details updated successfully!')
-				if (result.updatedBib) {
-					const newEventId = result.updatedBib.eventId
-					if (typeof newEventId !== 'string') {
-						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-						return
-					}
-					const nextState: Bib & { expand?: { eventId?: Event } } = {
-						...result.updatedBib,
-						eventId: newEventId,
-						expand: bib?.expand,
-					}
-					setBib(nextState)
+
+		handleUpdateBibDetails(bibId, formData)
+			.then(updatedBib => {
+				toast.success('Details updated successfully!')
+				const newEventId = updatedBib.eventId
+
+				const nextState: Bib & { expand?: { eventId?: Event } } = {
+					...updatedBib,
+					eventId: newEventId,
+					expand: bib?.expand,
 				}
-			}
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : String(e))
-		} finally {
-			setIsLoading(false)
-		}
+				setBib(nextState)
+				setIsLoading(false)
+			})
+			.catch((error: unknown) => {
+				toast.error(error instanceof Error ? error.message : String(error))
+				setIsLoading(false)
+			})
 	}
 
-	async function handleToggleListingStatusAction(newStatus: 'listed_private' | 'listed_public', formData: FormData) {
+	function handleToggleListingStatusAction(newStatus: 'listed_private' | 'listed_public', formData: FormData) {
 		setIsLoading(true)
-		try {
-			const result = await handleToggleListingStatus(bibId, newStatus, formData)
-			if (result.success) {
-				toast.success(result.message ?? 'Listing status updated!')
-				if (result.updatedBib) {
-					const newEventId = result.updatedBib.eventId
-					if (typeof newEventId !== 'string') {
-						toast.error('Data integrity issue: eventId is missing or not a string in updated bib data.')
-						return
-					}
-					const nextState: Bib & { expand?: { eventId?: Event } } = {
-						...result.updatedBib,
-						eventId: newEventId,
-						expand: bib?.expand,
-					}
-					setBib(nextState)
+
+		handleToggleListingStatus(bibId, newStatus, formData)
+			.then(updatedBib => {
+				toast.success('Listing status updated successfully!')
+				const newEventId = updatedBib.eventId
+				const nextState: Bib & { expand?: { eventId?: Event } } = {
+					...updatedBib,
+					eventId: newEventId,
+					expand: bib?.expand,
 				}
-			}
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : String(e))
-		} finally {
-			setIsLoading(false)
-		}
+				setBib(nextState)
+				setIsLoading(false)
+			})
+			.catch((error: unknown) => {
+				toast.error(error instanceof Error ? error.message : String(error))
+				setIsLoading(false)
+			})
 	}
 
-	async function handleWithdrawAction() {
+	function handleWithdrawAction() {
 		setIsLoading(true)
-		try {
-			const result = await handleWithdrawBib(bibId)
-			if (result.success && result.redirectPath != null) {
+		handleWithdrawBib(bibId)
+			.then(() => {
 				toast.success('Bib withdrawn successfully!')
-				router.push(result.redirectPath)
-			}
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : String(e))
-		} finally {
-			setIsLoading(false)
-		}
+				router.push('/dashboard/seller?success=Bib+listing+withdrawn')
+			})
+			.catch((error: unknown) => {
+				toast.error(error instanceof Error ? error.message : String(error))
+				setIsLoading(false)
+			})
 	}
 
 	if (bib == null && initialError == null) {
