@@ -1,10 +1,10 @@
-import Link from 'next/link'
-
 import type { Event } from '@/models/event.model' // Adjust path as necessary
 
-import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+import Link from 'next/link'
+
+import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
 
 import calendarTranslations from './locales.json'
 
@@ -37,63 +37,31 @@ export default async function CalendarPage() {
 	})
 
 	return (
-		<div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-			<header style={{ textAlign: 'center', marginBottom: '30px' }}>
+		<div className="p-5 font-sans">
+			<header className="mb-8 text-center">
 				<h1>{t.calendar.title}</h1>
 				<p>{t.calendar.description}</p>
 			</header>
 
-			<main style={{ maxWidth: '900px', margin: '0 auto' }}>
+			<main className="mx-auto max-w-4xl">
 				{sortedMonthKeys.length > 0 ? (
 					sortedMonthKeys.map(monthKey => (
-						<section key={monthKey} style={{ marginBottom: '30px' }}>
-							<h2
-								style={{
-									paddingBottom: '10px',
-									marginBottom: '20px',
-									fontSize: '1.8em',
-									borderBottom: '2px solid #eee',
-								}}
-							>
-								{monthKey}
-							</h2>
-							<ul style={{ padding: 0, listStyle: 'none' }}>
+						<section className="mb-8" key={monthKey}>
+							<h2 className="mb-5 border-b-2 border-gray-200 pb-2.5 text-2xl">{monthKey}</h2>
+							<ul className="list-none p-0">
 								{groupedEvents[monthKey].map(event => (
-									<li
-										key={event.id}
-										style={{
-											padding: '10px',
-											marginBottom: '15px',
-											borderRadius: '5px',
-											border: '1px solid #ddd',
-											background: '#f9f9f9',
-										}}
-									>
-										<Link
-											href={`/events/${event.id}`}
-											style={{
-												textDecoration: 'none',
-												fontWeight: 'bold',
-												fontSize: '1.2em',
-												color: '#0056b3',
-											}}
-										>
+									<li className="mb-4 rounded-md border border-gray-300 bg-gray-100 p-2.5" key={event.id}>
+										<Link className="text-lg font-bold text-blue-700 no-underline" href={`/events/${event.id}`}>
 											{event.name}
 										</Link>
-										<p style={{ margin: '5px 0 0' }}>
+										<p className="mt-1">
 											<strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
 										</p>
-										<p style={{ margin: '5px 0 0' }}>
+										<p className="mt-1">
 											<strong>Location:</strong> {event.location}
 										</p>
 										{event.description != null && event.description !== '' && (
-											<p
-												style={{
-													margin: '5px 0 0',
-													fontSize: '0.9em',
-													color: '#555',
-												}}
-											>
+											<p className="mt-1 text-sm text-gray-600">
 												{event.description.substring(0, 100)}
 												{event.description.length > 100 ? '...' : ''}
 											</p>
@@ -104,7 +72,7 @@ export default async function CalendarPage() {
 						</section>
 					))
 				) : (
-					<p style={{ textAlign: 'center', fontSize: '1.2em' }}>{t.calendar.noEvents}</p>
+					<p className="text-center text-lg">{t.calendar.noEvents}</p>
 				)}
 			</main>
 		</div>

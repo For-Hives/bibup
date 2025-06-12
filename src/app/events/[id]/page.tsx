@@ -1,11 +1,10 @@
+import type { Event } from '@/models/event.model'
+import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { notFound, redirect } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
-
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
 
 import { fetchPubliclyListedBibsForEvent } from '@/services/bib.services'
 import { addToWaitlist } from '@/services/waitlist.services'

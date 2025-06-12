@@ -1,16 +1,15 @@
+import type { Event } from '@/models/event.model'
+import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { notFound, redirect } from 'next/navigation'
+import { getLocale } from '@/lib/getLocale'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
-
 import { fetchBibById, processBibSale } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 
 import translations from './locales.json'
 
@@ -187,9 +186,9 @@ export async function generateMetadata({ params: paramsPromise }: BibPurchasePag
 	}
 	const eventName = (bib as Bib & { expand?: { eventId: Event } }).expand?.eventId?.name ?? 'Event'
 	return {
-		title: t.purchase.metadata.titleTemplate.replace('{eventName}', eventName),
 		description: t.purchase.metadata.descriptionTemplate
 			.replace('{eventName}', eventName)
 			.replace('{price}', bib.price.toFixed(2)),
+		title: t.purchase.metadata.titleTemplate.replace('{eventName}', eventName),
 	}
 }

@@ -1,11 +1,11 @@
 'use server'
 
 import { auth } from '@clerk/nextjs/server'
+import { Bib } from '@/models/bib.model'
 import * as v from 'valibot'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { createBib } from '@/services/bib.services'
-import { Bib } from '@/models/bib.model'
 
 import { BibFormSchema } from './schemas'
 
@@ -30,16 +30,16 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 	const gender = formData.get('gender') == '' ? undefined : (formData.get('gender') as 'female' | 'male' | 'unisex')
 
 	const formDataToValidate = {
-		unlistedEventName: (formData.get('unlistedEventName') as string) ?? undefined,
 		unlistedEventLocation: (formData.get('unlistedEventLocation') as string) ?? undefined,
-		unlistedEventDate: (formData.get('unlistedEventDate') as string) ?? undefined,
 		size: formData.get('size') == '' ? undefined : (formData.get('size') as string),
+		unlistedEventName: (formData.get('unlistedEventName') as string) ?? undefined,
+		unlistedEventDate: (formData.get('unlistedEventDate') as string) ?? undefined,
+		originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
 		registrationNumber: formData.get('registrationNumber') as string,
 		price: priceStr ? parseFloat(priceStr) : undefined,
-		originalPrice: originalPriceStr ? parseFloat(originalPriceStr) : undefined,
+		eventId: formData.get('eventId') as string,
 		isNotListedEvent: isNotListedEvent,
 		gender: gender,
-		eventId: formData.get('eventId') as string,
 	}
 
 	const validationResult = v.safeParse(BibFormSchema, formDataToValidate)
@@ -58,14 +58,14 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 	const validatedData = validationResult.output
 
 	const bibToCreate: Omit<Bib, 'id'> = {
-		status: 'pending_validation',
-		size: validatedData.size,
-		sellerUserId: sellerUserIdFromAuth,
 		registrationNumber: validatedData.registrationNumber,
-		price: validatedData.price,
 		originalPrice: validatedData.originalPrice ?? 0,
 		gender: validatedData.gender ?? undefined,
 		eventId: validatedData.eventId ?? '', // TODO: Creer liste d'attente de vente pour les events non listés
+		sellerUserId: sellerUserIdFromAuth,
+		status: 'pending_validation',
+		price: validatedData.price,
+		size: validatedData.size,
 	}
 
 	try {
