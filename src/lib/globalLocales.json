@@ -2,6 +2,7 @@
 	"en": {
 		"GLOBAL": {
 			"appName": "My Awesome App",
+			"logoAltText": "My Awesome App Logo",
 			"welcomeMessage": "Welcome!",
 			"errors": {
 				"unexpected": "An unexpected error occurred."
@@ -11,6 +12,7 @@
 	"fr": {
 		"GLOBAL": {
 			"appName": "Mon Application Incroyable",
+			"logoAltText": "Logo de Mon Application Incroyable",
 			"welcomeMessage": "Bienvenue !",
 			"errors": {
 				"unexpected": "Une erreur inattendue s'est produite."
@@ -20,6 +22,7 @@
 	"ko": {
 		"GLOBAL": {
 			"appName": "내 멋진 앱",
+			"logoAltText": "내 멋진 앱 로고",
 			"welcomeMessage": "환영합니다!",
 			"errors": {
 				"unexpected": "예상치 못한 오류가 발생했습니다."
