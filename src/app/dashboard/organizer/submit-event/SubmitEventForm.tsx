@@ -2,10 +2,9 @@
 
 import React from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-
-import { getTranslations } from '@/lib/getDictionary'
 
 import submitEventTranslations from './locales.json'
 import { handleSubmitEvent } from './actions'

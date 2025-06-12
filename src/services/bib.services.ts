@@ -43,16 +43,16 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 
 	try {
 		const dataToCreate: Omit<Bib, 'id'> = {
-			status: status,
-			size: bibData.size,
-			sellerUserId: bibData.sellerUserId,
 			registrationNumber: bibData.registrationNumber,
-			privateListingToken: undefined,
-			price: bibData.price,
 			originalPrice: bibData.originalPrice,
+			sellerUserId: bibData.sellerUserId,
+			privateListingToken: undefined,
 			gender: bibData.gender,
-			eventId: finalEventId,
 			buyerUserId: undefined,
+			eventId: finalEventId,
+			price: bibData.price,
+			size: bibData.size,
+			status: status,
 		}
 
 		const record = await pb.collection('bibs').create<Bib>(dataToCreate)
@@ -126,9 +126,9 @@ export async function fetchBibsByBuyer(buyerUserId: string): Promise<(Bib & { ex
 
 	try {
 		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
-			sort: '-updated',
 			filter: `buyerUserId = "${buyerUserId}" && status = 'sold'`,
 			expand: 'eventId',
+			sort: '-updated',
 		})
 		return records
 	} catch (error: unknown) {
@@ -151,8 +151,8 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 
 	try {
 		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event } }>({
-			sort: '-created',
 			filter: `sellerUserId = "${sellerUserId}"`,
+			sort: '-created',
 		})
 
 		return records
@@ -174,8 +174,8 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 	}
 	try {
 		const records = await pb.collection('bibs').getFullList<Bib>({
-			sort: 'price',
 			filter: `eventId = "${eventId}" && status = 'listed_public'`,
+			sort: 'price',
 		})
 		return records
 	} catch (error: unknown) {
@@ -197,31 +197,31 @@ export async function processBibSale(
 	buyerUserId: string
 ): Promise<{ error?: string; success: boolean; transaction?: Transaction }> {
 	if (bibId === '' || buyerUserId === '') {
-		return { success: false, error: 'Bib ID and Buyer User ID are required.' }
+		return { error: 'Bib ID and Buyer User ID are required.', success: false }
 	}
 
 	try {
 		const bib = await pb.collection('bibs').getOne<Bib>(bibId)
 		if (bib == null) {
-			return { success: false, error: `Bib with ID ${bibId} not found.` }
+			return { error: `Bib with ID ${bibId} not found.`, success: false }
 		}
 		if (bib.status !== 'listed_public') {
 			return {
-				success: false,
 				error: `Bib is not available for sale. Current status: ${bib.status}.`,
+				success: false,
 			}
 		}
 		if (bib.sellerUserId === buyerUserId) {
-			return { success: false, error: 'Seller cannot buy their own bib.' }
+			return { error: 'Seller cannot buy their own bib.', success: false }
 		}
 
 		// 2. Fetch the Seller User to get their Clerk ID for balance update.
 		const sellerUser = await fetchUserById(bib.sellerUserId)
 		if (sellerUser == null) {
-			return { success: false, error: `Seller user with PocketBase ID ${bib.sellerUserId} not found.` }
+			return { error: `Seller user with PocketBase ID ${bib.sellerUserId} not found.`, success: false }
 		}
 		if (sellerUser.clerkId == null || sellerUser.clerkId === '') {
-			return { success: false, error: `Clerk ID not found for seller user ${bib.sellerUserId}.` }
+			return { error: `Clerk ID not found for seller user ${bib.sellerUserId}.`, success: false }
 		}
 
 		// 3. Calculate platform fee and seller amount.
@@ -230,16 +230,16 @@ export async function processBibSale(
 
 		// 4. Create the transaction record.
 		const transaction = await createTransaction({
-			status: 'succeeded',
 			sellerUserId: bib.sellerUserId,
 			platformFee: platformFeeAmount,
 			buyerUserId: buyerUserId,
-			bibId: bib.id,
+			status: 'succeeded',
 			amount: bib.price,
+			bibId: bib.id,
 		})
 
 		if (transaction == null) {
-			return { success: false, error: 'Failed to create transaction record.' }
+			return { error: 'Failed to create transaction record.', success: false }
 		}
 
 		// 5. Update seller's balance.
@@ -247,29 +247,29 @@ export async function processBibSale(
 		if (sellerBalanceUpdated == null) {
 			// This is a critical error that needs monitoring/manual intervention.
 			await pb.collection('transactions').update(transaction.id, {
-				status: 'failed',
 				notes: 'Seller balance update failed after fund capture.',
+				status: 'failed',
 			})
 			console.error(
 				`CRITICAL: Failed to update seller ${sellerUser.clerkId} balance for transaction ${transaction.id}.`
 			)
 			return {
-				success: false,
 				error: "Failed to update seller's balance. Transaction recorded but needs attention.",
+				success: false,
 			}
 		}
 
 		// 6. Update the Bib status to 'sold' and set buyerUserId.
 		await pb.collection('bibs').update<Bib>(bibId, {
-			status: 'sold',
 			buyerUserId: buyerUserId,
+			status: 'sold',
 		})
 
 		// 7. Initiate Organizer Notification (Conceptual placeholder)
 		// Example: if (updatedBibRecordFromPreviousLine != null) { ... }
 		// Since updatedBib is not used, this conceptual part would need adjustment if re-enabled.
 
-		return { transaction, success: true }
+		return { success: true, transaction }
 	} catch (error: unknown) {
 		throw new Error(
 			`Error processing bib sale for bib ID ${bibId}: ` + (error instanceof Error ? error.message : String(error))
@@ -311,13 +311,13 @@ export async function updateBibBySeller(
 		if ('status' in dataToUpdate) {
 			const newStatus = dataToUpdate.status
 			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
-				withdrawn: ['listed_public', 'listed_private'],
-				validation_failed: ['withdrawn'],
-				sold: [], // Cannot be changed by seller
 				pending_validation: ['listed_public', 'listed_private', 'withdrawn'],
 				listed_public: ['listed_private', 'withdrawn'],
 				listed_private: ['listed_public', 'withdrawn'],
+				withdrawn: ['listed_public', 'listed_private'],
+				validation_failed: ['withdrawn'],
 				expired: ['withdrawn'],
+				sold: [], // Cannot be changed by seller
 			}
 
 			const allowedChanges = allowedStatusChanges[currentBib.status]

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 
-import { fetchPartneredApprovedEvents } from '@/services/event.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+
+import { fetchPartneredApprovedEvents } from '@/services/event.services'
 
 import ListNewBibClientPage from './client'
 import translations from './locales.json'
@@ -12,8 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
 	const t = getTranslations(locale, translations)
 
 	return {
-		title: t.metadataTitle,
 		description: t.metadataDescription,
+		title: t.metadataTitle,
 	}
 }
 

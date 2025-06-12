@@ -1,15 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import Link from 'next/link'
-
 import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
+import React, { useEffect, useState } from 'react'
+
 import { getTranslations } from '@/lib/getDictionary'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import Link from 'next/link'
 
 import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions'
 import editBibTranslations from './locales.json'
@@ -24,9 +23,9 @@ interface EditBibClientProps {
 type Translations = ReturnType<typeof getTranslations<(typeof editBibTranslations)['en'], 'en'>>
 
 export default function EditBibClient({
+	initialBibWithEvent,
 	translations: t,
 	initialError,
-	initialBibWithEvent,
 	bibId,
 }: EditBibClientProps) {
 	const router = useRouter()
@@ -49,8 +48,8 @@ export default function EditBibClient({
 
 				const nextState: Bib & { expand?: { eventId?: Event } } = {
 					...updatedBib,
-					expand: bib?.expand,
 					eventId: newEventId,
+					expand: bib?.expand,
 				}
 				setBib(nextState)
 				setIsLoading(false)
@@ -70,8 +69,8 @@ export default function EditBibClient({
 				const newEventId = updatedBib.eventId
 				const nextState: Bib & { expand?: { eventId?: Event } } = {
 					...updatedBib,
-					expand: bib?.expand,
 					eventId: newEventId,
+					expand: bib?.expand,
 				}
 				setBib(nextState)
 				setIsLoading(false)

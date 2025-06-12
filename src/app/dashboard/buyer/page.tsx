@@ -1,65 +1,20 @@
-import type { Metadata } from 'next'
-
-import { auth, currentUser } from '@clerk/nextjs/server'
-import Link from 'next/link'
-
 import type { Waitlist } from '@/models/waitlist.model'
 import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
+import type { Metadata } from 'next'
+
+import { auth, currentUser } from '@clerk/nextjs/server'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
+import Link from 'next/link'
 
 import { fetchUserWaitlists } from '@/services/waitlist.services' // Import waitlist service
 import { fetchBibsByBuyer } from '@/services/bib.services'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 
 import buyerTranslations from './locales.json'
 
 export const metadata: Metadata = {
 	title: 'Buyer Dashboard | Beswib',
-}
-
-// Basic styling (can be refactored)
-const styles = {
-	welcomeMessage: { marginBottom: '20px', fontSize: '1.5em' },
-	successMessage: {
-		padding: '15px',
-		marginBottom: '20px',
-		fontSize: '1.1em',
-		color: '#155724',
-		borderRadius: '5px',
-		border: '1px solid #c3e6cb',
-		backgroundColor: '#d4edda',
-	},
-	sectionTitle: { marginBottom: '15px', fontSize: '1.4em', color: '#333' },
-	section: {
-		padding: '20px',
-		marginBottom: '30px',
-		borderRadius: '8px',
-		border: '1px solid #eee',
-		backgroundColor: '#f9f9f9',
-	},
-	listItem: {
-		padding: '15px',
-		marginBottom: '10px',
-		borderRadius: '5px',
-		border: '1px solid #ddd',
-		backgroundColor: '#fff',
-	},
-	list: { padding: 0, listStyle: 'none' as const }, // Generic list style
-	link: { textDecoration: 'underline', color: '#0070f3' },
-	itemName: {
-		fontWeight: 'bold' as const,
-		fontSize: '1.1em',
-		color: '#0056b3',
-	}, // Generic item name style
-	itemDetail: { margin: '4px 0', fontSize: '0.9em', color: '#555' }, // Generic item detail style
-	header: { textAlign: 'center' as const, marginBottom: '30px' },
-	container: {
-		padding: '20px',
-		maxWidth: '900px',
-		margin: '0 auto',
-		fontFamily: 'Arial, sans-serif',
-	},
 }
 
 export default async function BuyerDashboardPage({
@@ -75,7 +30,7 @@ export default async function BuyerDashboardPage({
 	const searchParams = await searchParamsPromise
 
 	if (clerkUserId == null || !clerkUser) {
-		return <p style={styles.container}>{t.pleaseSignIn}</p>
+		return <p className="mx-auto max-w-4xl p-5 font-sans">{t.pleaseSignIn}</p>
 	}
 
 	const buyerName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
@@ -94,38 +49,38 @@ export default async function BuyerDashboardPage({
 
 	const showSuccessMessage = purchaseSuccess && Boolean(eventNameForSuccessMsg)
 	const successDisplay = showSuccessMessage ? (
-		<div style={styles.successMessage}>
+		<div className="mb-5 rounded-md border border-green-300 bg-green-100 p-4 text-lg text-green-800">
 			{t.purchaseSuccess} <strong>{eventNameForSuccessMsg}</strong>. {t.purchaseSuccessDetails}
 		</div>
 	) : null
 
 	return (
-		<div style={styles.container}>
-			<header style={styles.header}>
+		<div className="mx-auto max-w-4xl p-5 font-sans">
+			<header className="mb-8 text-center">
 				<h1>{t.title}</h1>
 			</header>
-			<p style={styles.welcomeMessage}>
+			<p className="mb-5 text-2xl">
 				{t.welcome}, {buyerName}!
 			</p>
 
 			{successDisplay}
 
-			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>{t.myPurchases}</h2>
+			<section className="mb-8 rounded-lg border border-gray-200 bg-gray-100 p-5">
+				<h2 className="mb-4 text-xl text-gray-800">{t.myPurchases}</h2>
 				{purchasedBibs.length > 0 ? (
-					<ul style={styles.list}>
+					<ul className="list-none p-0">
 						{purchasedBibs.map(bib => (
-							<li key={bib.id} style={styles.listItem}>
-								<div style={styles.itemName}>
+							<li className="mb-2.5 rounded-md border border-gray-300 bg-white p-4" key={bib.id}>
+								<div className="text-lg font-bold text-blue-700">
 									{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 								</div>
-								<p style={styles.itemDetail}>
+								<p className="my-1 text-sm text-gray-600">
 									{t.dateOfEvent} {bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'}
 								</p>
-								<p style={styles.itemDetail}>
+								<p className="my-1 text-sm text-gray-600">
 									{t.pricePaid} ${bib.price.toFixed(2)}
 								</p>
-								<p style={styles.itemDetail}>
+								<p className="my-1 text-sm text-gray-600">
 									{t.registrationNumber} {bib.registrationNumber} {t.keepRecords}
 								</p>
 							</li>
@@ -134,7 +89,7 @@ export default async function BuyerDashboardPage({
 				) : (
 					<p>
 						{t.noPurchases}{' '}
-						<Link href="/events" style={styles.link}>
+						<Link className="text-blue-600 underline" href="/events">
 							{t.browseEvents}
 						</Link>{' '}
 						to find bibs for sale!
@@ -142,22 +97,22 @@ export default async function BuyerDashboardPage({
 				)}
 			</section>
 
-			<section style={styles.section}>
-				<h2 style={styles.sectionTitle}>{t.waitlistEntries}</h2>
+			<section className="mb-8 rounded-lg border border-gray-200 bg-gray-100 p-5">
+				<h2 className="mb-4 text-xl text-gray-800">{t.waitlistEntries}</h2>
 				{userWaitlists.length > 0 ? (
-					<ul style={styles.list}>
+					<ul className="list-none p-0">
 						{userWaitlists.map(waitlistEntry => (
-							<li key={waitlistEntry.id} style={styles.listItem}>
-								<div style={styles.itemName}>
+							<li className="mb-2.5 rounded-md border border-gray-300 bg-white p-4" key={waitlistEntry.id}>
+								<div className="text-lg font-bold text-blue-700">
 									{t.eventLabel}{' '}
-									<Link href={`/events/${waitlistEntry.eventId}`} style={styles.link}>
+									<Link className="text-blue-600 underline" href={`/events/${waitlistEntry.eventId}`}>
 										{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
 									</Link>
 								</div>
-								<p style={styles.itemDetail}>
+								<p className="my-1 text-sm text-gray-600">
 									{t.dateAddedToWaitlist} {new Date(waitlistEntry.addedAt).toLocaleDateString()}
 								</p>
-								<p style={styles.itemDetail}>
+								<p className="my-1 text-sm text-gray-600">
 									{t.status}{' '}
 									{waitlistEntry.notifiedAt
 										? t.notifiedOn + ' ' + new Date(waitlistEntry.notifiedAt).toLocaleDateString()
@@ -169,7 +124,7 @@ export default async function BuyerDashboardPage({
 				) : (
 					<p>
 						{t.noWaitlistEntries}{' '}
-						<Link href="/events" style={styles.link}>
+						<Link className="text-blue-600 underline" href="/events">
 							{t.browseEventsWaitlist}
 						</Link>{' '}
 						{t.waitlistJoinText}

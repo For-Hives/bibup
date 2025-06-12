@@ -1,15 +1,14 @@
 'use client'
 
+import type { Event } from '@/models/event.model'
+
 import React, { useState } from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import * as v from 'valibot'
 import Link from 'next/link'
-
-import type { Event } from '@/models/event.model'
-
-import { getTranslations } from '@/lib/getDictionary'
 
 import { type BibFormData, BibFormSchema } from './schemas'
 import { handleListBibServerAction } from './actions'
@@ -18,8 +17,8 @@ import translations from './locales.json'
 type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
 export default function ListNewBibClientPage({
-	translations: t,
 	partneredEvents,
+	translations: t,
 }: {
 	partneredEvents: Event[]
 	translations: Translations
@@ -28,8 +27,8 @@ export default function ListNewBibClientPage({
 	const [isNotListedEvent, setIsNotListedEvent] = useState(false)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 	const [formData, setFormData] = useState<Partial<BibFormData>>({
-		price: 0,
 		isNotListedEvent: false,
+		price: 0,
 	})
 
 	const validateField = (name: string, value: unknown) => {

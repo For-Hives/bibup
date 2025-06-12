@@ -51,11 +51,11 @@ export async function POST(req: Request) {
 
 	if (eventType === 'user.created') {
 		const {
-			last_name,
+			email_addresses,
 
 			id: clerkId,
 			first_name,
-			email_addresses,
+			last_name,
 		} = evt.data
 
 		if (!clerkId) {
@@ -71,8 +71,8 @@ export async function POST(req: Request) {
 		}
 
 		const userData: CreateUserDTO = {
-			lastName: last_name ?? '',
 			firstName: first_name ?? '',
+			lastName: last_name ?? '',
 			email: primaryEmail,
 			clerkId,
 		}

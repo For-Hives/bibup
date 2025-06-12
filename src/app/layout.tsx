@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 
 import { Geist, Geist_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
+import { getLocale } from '@/lib/getLocale'
 import { Toaster } from 'sonner'
 
 import Footer from '@/components/global/footer'
 import Navbar from '@/components/global/Navbar'
-import { getLocale } from '@/lib/getLocale'
 
 import './globals.css'
 
@@ -21,21 +21,21 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-	title: 'Beswib - Application in development',
 	robots: {
-		nocache: true,
-		index: false,
 		googleBot: {
-			noimageindex: true,
-			'max-video-preview': -1,
-			'max-snippet': -1,
 			'max-image-preview': 'none',
-			index: false,
+			'max-video-preview': -1,
+			noimageindex: true,
+			'max-snippet': -1,
 			follow: false,
+			index: false,
 		},
 		follow: false,
+		nocache: true,
+		index: false,
 	},
 	description: 'Application in development - Not accessible to the public',
+	title: 'Beswib - Application in development',
 }
 
 export default async function RootLayout({

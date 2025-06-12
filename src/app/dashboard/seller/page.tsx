@@ -1,16 +1,15 @@
-import type { Metadata } from 'next'
-
-import { auth, currentUser } from '@clerk/nextjs/server'
-import Link from 'next/link'
-
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
+import type { Metadata } from 'next'
+
+import { auth, currentUser } from '@clerk/nextjs/server'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
+import Link from 'next/link'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { fetchBibsBySeller } from '@/services/bib.services'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 
 import sellerTranslations from './locales.json'
 

@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 
-import Link from 'next/link'
-
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
+import Link from 'next/link'
 
 import submitEventTranslations from './locales.json'
 import SubmitEventForm from './SubmitEventForm'

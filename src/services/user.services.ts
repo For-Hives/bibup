@@ -12,11 +12,11 @@ export interface CreateUserDTO {
 export async function createUser(userData: CreateUserDTO): Promise<null | User> {
 	try {
 		const newUserRecord = {
-			roles: ['buyer'],
-			lastName: userData.lastName,
 			firstName: userData.firstName,
-			email: userData.email,
+			lastName: userData.lastName,
 			clerkId: userData.clerkId,
+			email: userData.email,
+			roles: ['buyer'],
 			bibUpBalance: 0,
 		}
 
