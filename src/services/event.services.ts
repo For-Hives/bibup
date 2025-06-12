@@ -18,8 +18,8 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 	// Validate eventData.date
 	// Assuming eventData.date is always a Date object due to the Event type.
 	// We check if it holds a valid date value.
-	if (isNaN(eventData.date.getTime())) {
-		console.error('Event date is invalid.')
+	if (!(eventData.date instanceof Date) || isNaN(eventData.date.getTime())) {
+		console.error('Event date is invalid or not a valid Date object.')
 		return null
 	}
 
