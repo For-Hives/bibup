@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
+
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import dashboardTranslations from './locales.json'
 

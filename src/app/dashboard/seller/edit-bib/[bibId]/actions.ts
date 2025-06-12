@@ -1,8 +1,8 @@
 'use server'
 
-import type { Bib } from '@/models/bib.model'
-
 import { auth } from '@clerk/nextjs/server'
+
+import type { Bib } from '@/models/bib.model'
 
 import { fetchBibByIdForSeller, updateBibBySeller } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
@@ -39,8 +39,8 @@ export async function handleToggleListingStatus(
 	try {
 		const newBibData: Bib = {
 			...bibWithEvent,
-			privateListingToken: newStatus === 'listed_private' ? (formData.get('privateListingToken') as string) : undefined,
 			status: newStatus,
+			privateListingToken: newStatus === 'listed_private' ? (formData.get('privateListingToken') as string) : undefined,
 		}
 		if (
 			newStatus === 'listed_private' &&
@@ -155,8 +155,8 @@ export async function handleWithdrawBib(bibId: string): Promise<void> {
 
 	try {
 		const bibDataToUpdate: Partial<Bib> = {
-			buyerUserId: undefined,
 			status: 'withdrawn',
+			buyerUserId: undefined,
 		}
 
 		const updatedBib = await updateBibBySeller(bibId, { ...currentBib, ...bibDataToUpdate }, sellerUser.id)

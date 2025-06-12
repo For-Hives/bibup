@@ -1,22 +1,22 @@
 'use server'
 
-import type { Event } from '@/models/event.model'
-
 import { auth } from '@clerk/nextjs/server'
 import * as v from 'valibot'
+
+import type { Event } from '@/models/event.model'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { createEvent } from '@/services/event.services'
 
 const EventFormSchema = v.object({
+	name: v.pipe(v.string(), v.minLength(1, 'Event name is required.')),
+	location: v.pipe(v.string(), v.minLength(1, 'Event location is required.')),
+	description: v.optional(v.string(), ''),
 	date: v.pipe(
 		v.string(),
 		v.minLength(1, 'Event date is required.'),
 		v.transform(value => new Date(value))
 	),
-	location: v.pipe(v.string(), v.minLength(1, 'Event location is required.')),
-	name: v.pipe(v.string(), v.minLength(1, 'Event name is required.')),
-	description: v.optional(v.string(), ''),
 })
 
 export async function handleSubmitEvent(formData: FormData): Promise<void> {
@@ -33,9 +33,9 @@ export async function handleSubmitEvent(formData: FormData): Promise<void> {
 	}
 
 	const dataToValidate = {
-		description: formData.get('description') as string,
-		location: formData.get('location') as string,
 		name: formData.get('name') as string,
+		location: formData.get('location') as string,
+		description: formData.get('description') as string,
 		date: formData.get('date') as string,
 	}
 
@@ -52,14 +52,14 @@ export async function handleSubmitEvent(formData: FormData): Promise<void> {
 		throw new Error(`Validation failed: ${errorMessages}`)
 	}
 
-	const { description, location, name, date } = validationResult.output
+	const { name, location, description, date } = validationResult.output
 
 	const eventData: Omit<Event, 'bibsSold' | 'id' | 'isPartnered' | 'participantCount' | 'status'> &
 		Partial<Pick<Event, 'isPartnered' | 'participantCount'>> = {
-		description: description ?? '',
 		organizerId: user.id,
-		location,
 		name,
+		location,
+		description: description ?? '',
 		date,
 	}
 

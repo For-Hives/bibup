@@ -1,10 +1,10 @@
-import type { Event } from '@/models/event.model' // Adjust path as necessary
-
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
+import type { Event } from '@/models/event.model' // Adjust path as necessary
+
 import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import calendarTranslations from './locales.json'
 
