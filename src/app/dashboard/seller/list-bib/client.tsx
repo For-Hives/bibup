@@ -4,6 +4,7 @@ import type { Event } from '@/models/event.model'
 
 import React, { useState } from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import * as v from 'valibot'
@@ -11,44 +12,9 @@ import Link from 'next/link'
 
 import { type BibFormData, BibFormSchema } from './schemas'
 import { handleListBibServerAction } from './actions'
+import translations from './locales.json'
 
-type Translations = {
-	backToDashboard: string
-	form: {
-		eventSelect: string
-		eventSelectPlaceholder: string
-		gender: string
-		genderPlaceholder: string
-		notes: string
-		notesPlaceholder: string
-		notListedEvent: string
-		originalPrice: string
-		price: string
-		pricePlaceholder: string
-		registrationNumber: string
-		registrationNumberPlaceholder: string
-		size: string
-		sizePlaceholder: string
-		submit: string
-		unlistedEventDate: string
-		unlistedEventLocation: string
-		unlistedEventName: string
-		unlistedEventNamePlaceholder: string
-	}
-	genderOptions: {
-		female: string
-		male: string
-		unisex: string
-	}
-	legalNotice: string
-	loginRequired: string
-	metadataDescription: string
-	metadataTitle: string
-	noBibsListedError: string
-	partneredEventsEmpty: string
-	title: string
-	unlistedEventInfo: string
-}
+type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
 export default function ListNewBibClientPage({
 	partneredEvents,
