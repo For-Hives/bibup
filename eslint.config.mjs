@@ -53,7 +53,7 @@ const perfectionistRules = {
 					react: 'react',
 				},
 			},
-			internalPattern: ['@/components/.*', '@/services/.*', '@/constants/.*', '@/helpers/.*', '@/app/actions.*'],
+			internalPattern: ['@/app/.*', '@/components/.*', '@/lib/.*', '@/models/.*', '@/services/.*', '@/constants/.*'],
 			newlinesBetween: 'always',
 			type: 'line-length',
 			order: 'desc',
@@ -62,14 +62,14 @@ const perfectionistRules = {
 	'perfectionist/sort-objects': [
 		'warn',
 		{
-			type: 'line-length',
+			type: 'natural',
 			order: 'desc',
 		},
 	],
 	'perfectionist/sort-enums': [
 		'error',
 		{
-			type: 'line-length',
+			type: 'natural',
 			order: 'desc',
 		},
 	],

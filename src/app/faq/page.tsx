@@ -7,29 +7,30 @@ import { getLocale } from '@/lib/getLocale'
 import faqTranslations from './locales.json'
 
 export const metadata: Metadata = {
-	description: 'Frequently Asked Questions about buying, selling, and organizing events on Beswib.',
 	title: 'FAQ | Beswib',
+	description: 'Frequently Asked Questions about buying, selling, and organizing events on Beswib.',
 }
 
 const faqStyles = {
 	sectionTitle: {
-		borderBottom: '2px solid #eee',
 		paddingBottom: '10px',
-		marginBottom: '15px',
 		marginTop: '30px',
+		marginBottom: '15px',
 		fontSize: '2em',
-	},
-	container: {
-		fontFamily: 'Arial, sans-serif',
-		maxWidth: '800px',
-		margin: '0 auto',
-		padding: '20px',
+		borderBottom: '2px solid #eee',
 	},
 	question: {
-		fontWeight: 'bold' as const,
 		marginBottom: '8px',
+		fontWeight: 'bold' as const,
 		fontSize: '1.2em',
 		color: '#333',
+	},
+	header: { textAlign: 'center' as const, marginBottom: '30px' },
+	container: {
+		padding: '20px',
+		maxWidth: '800px',
+		margin: '0 auto',
+		fontFamily: 'Arial, sans-serif',
 	},
 	answer: {
 		marginBottom: '20px',
@@ -37,7 +38,6 @@ const faqStyles = {
 		fontSize: '1em',
 		color: '#555',
 	},
-	header: { textAlign: 'center' as const, marginBottom: '30px' },
 }
 
 export default async function FAQPage() {

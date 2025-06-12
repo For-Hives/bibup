@@ -1,10 +1,10 @@
-import type { Event } from '@/models/event.model'
-
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
+import type { Event } from '@/models/event.model'
+
 import { fetchApprovedPublicEvents } from '@/services/event.services'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import homeTranslations from './locales.json'
 

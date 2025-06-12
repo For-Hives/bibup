@@ -1,15 +1,16 @@
-import type { Waitlist } from '@/models/waitlist.model'
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
+
+import type { Waitlist } from '@/models/waitlist.model'
+import type { Event } from '@/models/event.model'
+import type { Bib } from '@/models/bib.model'
 
 import { fetchUserWaitlists } from '@/services/waitlist.services' // Import waitlist service
 import { fetchBibsByBuyer } from '@/services/bib.services'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import buyerTranslations from './locales.json'
 
@@ -19,46 +20,46 @@ export const metadata: Metadata = {
 
 // Basic styling (can be refactored)
 const styles = {
+	welcomeMessage: { marginBottom: '20px', fontSize: '1.5em' },
 	successMessage: {
-		border: '1px solid #c3e6cb',
-		backgroundColor: '#d4edda',
+		padding: '15px',
 		marginBottom: '20px',
-		borderRadius: '5px',
 		fontSize: '1.1em',
 		color: '#155724',
-		padding: '15px',
+		borderRadius: '5px',
+		border: '1px solid #c3e6cb',
+		backgroundColor: '#d4edda',
 	},
+	sectionTitle: { marginBottom: '15px', fontSize: '1.4em', color: '#333' },
 	section: {
-		backgroundColor: '#f9f9f9',
-		border: '1px solid #eee',
+		padding: '20px',
 		marginBottom: '30px',
 		borderRadius: '8px',
-		padding: '20px',
+		border: '1px solid #eee',
+		backgroundColor: '#f9f9f9',
 	},
 	listItem: {
-		border: '1px solid #ddd',
-		backgroundColor: '#fff',
+		padding: '15px',
 		marginBottom: '10px',
 		borderRadius: '5px',
-		padding: '15px',
+		border: '1px solid #ddd',
+		backgroundColor: '#fff',
 	},
-	container: {
-		fontFamily: 'Arial, sans-serif',
-		maxWidth: '900px',
-		margin: '0 auto',
-		padding: '20px',
-	},
+	list: { padding: 0, listStyle: 'none' as const }, // Generic list style
+	link: { textDecoration: 'underline', color: '#0070f3' },
 	itemName: {
 		fontWeight: 'bold' as const,
 		fontSize: '1.1em',
 		color: '#0056b3',
 	}, // Generic item name style
-	sectionTitle: { marginBottom: '15px', fontSize: '1.4em', color: '#333' },
-	itemDetail: { fontSize: '0.9em', margin: '4px 0', color: '#555' }, // Generic item detail style
+	itemDetail: { margin: '4px 0', fontSize: '0.9em', color: '#555' }, // Generic item detail style
 	header: { textAlign: 'center' as const, marginBottom: '30px' },
-	welcomeMessage: { marginBottom: '20px', fontSize: '1.5em' },
-	link: { textDecoration: 'underline', color: '#0070f3' },
-	list: { listStyle: 'none' as const, padding: 0 }, // Generic list style
+	container: {
+		padding: '20px',
+		maxWidth: '900px',
+		margin: '0 auto',
+		fontFamily: 'Arial, sans-serif',
+	},
 }
 
 export default async function BuyerDashboardPage({

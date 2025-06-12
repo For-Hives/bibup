@@ -1,19 +1,20 @@
 'use client'
 
-import type { Event } from '@/models/event.model'
-
 import { useEffect, useState } from 'react'
 
-import { getTranslations } from '@/lib/getDictionary'
 import { toast } from 'sonner'
+
+import type { Event } from '@/models/event.model'
+
+import { getTranslations } from '@/lib/getDictionary'
 
 import eventsTranslations from './locales.json'
 
 type Translations = ReturnType<typeof getTranslations<(typeof eventsTranslations)['en'], 'en'>>
 
 export default function EventListClient({
-	prefetchedEvents,
 	translations: t,
+	prefetchedEvents,
 	error,
 }: {
 	error?: null | string
