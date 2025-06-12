@@ -1,14 +1,15 @@
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
-import { getTranslations } from '@/lib/getDictionary'
 import { auth } from '@clerk/nextjs/server'
-import { getLocale } from '@/lib/getLocale'
 import { redirect } from 'next/navigation'
+
+import type { Event } from '@/models/event.model'
+import type { Bib } from '@/models/bib.model'
 
 import { fetchBibByIdForSeller } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import editBibTranslations from './locales.json'
 import EditBibClient from './EditBibClient'

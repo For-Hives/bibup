@@ -1,7 +1,7 @@
 // src/lib/pocketbaseClient.ts
 import PocketBase from 'pocketbase'
 
-const { NEXT_PUBLIC_POCKETBASE_URL, POCKETBASE_TOKEN } = process.env
+const { POCKETBASE_TOKEN, NEXT_PUBLIC_POCKETBASE_URL } = process.env
 
 if (NEXT_PUBLIC_POCKETBASE_URL == null || NEXT_PUBLIC_POCKETBASE_URL === '') {
 	throw new Error('NEXT_PUBLIC_POCKETBASE_URL environment variable is required')

@@ -1,9 +1,8 @@
 import type { Event } from '@/models/event.model'
 
+import { fetchApprovedPublicEvents } from '@/services/event.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
-
-import { fetchApprovedPublicEvents } from '@/services/event.services'
 
 import EventListClient from './EventListClient'
 import eventsTranslations from './locales.json'

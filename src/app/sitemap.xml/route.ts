@@ -8,8 +8,8 @@ export function GET() {
 
 	return new NextResponse(sitemap, {
 		headers: {
-			'Content-Type': 'application/xml',
 			'X-Robots-Tag': 'noindex',
+			'Content-Type': 'application/xml',
 		},
 	})
 }

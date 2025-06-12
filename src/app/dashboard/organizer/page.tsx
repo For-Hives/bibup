@@ -1,12 +1,13 @@
-import type { Event } from '@/models/event.model'
 import type { Metadata } from 'next'
 
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
+import type { Event } from '@/models/event.model'
+
 import { fetchEventsByOrganizer } from '@/services/event.services'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import organizerTranslations from './locales.json'
 

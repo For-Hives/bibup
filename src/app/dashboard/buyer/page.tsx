@@ -1,15 +1,16 @@
-import type { Waitlist } from '@/models/waitlist.model'
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
 import type { Metadata } from 'next'
 
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
+
+import type { Waitlist } from '@/models/waitlist.model'
+import type { Event } from '@/models/event.model'
+import type { Bib } from '@/models/bib.model'
 
 import { fetchUserWaitlists } from '@/services/waitlist.services' // Import waitlist service
 import { fetchBibsByBuyer } from '@/services/bib.services'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import buyerTranslations from './locales.json'
 

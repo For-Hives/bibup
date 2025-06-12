@@ -2,16 +2,16 @@ import * as v from 'valibot'
 
 export const BibFormSchema = v.pipe(
 	v.object({
+		unlistedEventName: v.optional(v.string()),
+		unlistedEventLocation: v.optional(v.string()),
+		unlistedEventDate: v.optional(v.string()),
+		size: v.optional(v.string()),
 		registrationNumber: v.pipe(v.string(), v.minLength(1, 'The registration number is required')), // TODO: use localized error message
 		price: v.pipe(v.number(), v.minValue(0.01, 'The price must be greater than 0')),
-		gender: v.optional(v.nullable(v.picklist(['female', 'male', 'unisex']))),
-		isNotListedEvent: v.optional(v.boolean(), false),
-		unlistedEventLocation: v.optional(v.string()),
-		unlistedEventName: v.optional(v.string()),
-		unlistedEventDate: v.optional(v.string()),
 		originalPrice: v.optional(v.number()),
+		isNotListedEvent: v.optional(v.boolean(), false),
+		gender: v.optional(v.nullable(v.picklist(['female', 'male', 'unisex']))),
 		eventId: v.optional(v.string()),
-		size: v.optional(v.string()),
 	}),
 	v.check(data => {
 		if (data.isNotListedEvent) {
