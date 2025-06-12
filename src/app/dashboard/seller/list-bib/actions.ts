@@ -58,7 +58,7 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 	const validatedData = validationResult.output
 
 	// Construct the data payload for createBib based on CreateBibData type
-	const dataForCreateBib: Parameters<typeof createBib>[0] = {
+	const dataForCreateBib: CreateBibData = {
 		unlistedEventLocation: validatedData.unlistedEventLocation,
 		registrationNumber: validatedData.registrationNumber,
 		// Optional unlisted event fields from the schema
