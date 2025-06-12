@@ -12,7 +12,7 @@ export interface CreateUserDTO {
 
 export async function createUser(userData: CreateUserDTO): Promise<null | User> {
 	try {
-		const roles = userData.roles && userData.roles.length > 0 ? userData.roles : ['buyer']
+		const roles = userData.roles?.length ? userData.roles : ['buyer']
 
 		const newUserRecord = {
 			firstName: userData.firstName,
