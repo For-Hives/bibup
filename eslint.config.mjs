@@ -13,23 +13,34 @@ import * as espree from 'espree'
 
 // Configuration commune des règles
 const baseRules = {
-	'no-console': ['error', { allow: ['warn', 'error', 'info', 'debug'] }],
-	'no-only-tests/no-only-tests': 'error',
 	'react-hooks/exhaustive-deps': 'off',
-	'@next/next/no-img-element': 'off',
 	'prettier/prettier': 'error',
+	'no-only-tests/no-only-tests': 'error',
+	'no-console': ['error', { allow: ['warn', 'error', 'info', 'debug'] }],
+	'@next/next/no-img-element': 'off',
 	...nextPlugin.configs.recommended.rules,
 	...nextPlugin.configs['core-web-vitals'].rules,
-	'jsx-a11y/anchor-has-content': 'off',
 	'promise/always-return': 'off',
+	'jsx-a11y/anchor-has-content': 'off',
 	'jsx-a11y/alt-text': 'off',
 }
 
 // Configuration commune des règles perfectionist
 const perfectionistRules = {
+	'perfectionist/sort-objects': [
+		'warn',
+		{
+			type: 'natural',
+			order: 'desc',
+		},
+	],
 	'perfectionist/sort-imports': [
 		'error',
 		{
+			type: 'line-length',
+			order: 'desc',
+			newlinesBetween: 'always',
+			internalPattern: ['@/app/.*', '@/components/.*', '@/lib/.*', '@/models/.*', '@/services/.*', '@/constants/.*'],
 			groups: [
 				'type',
 				'react',
@@ -46,24 +57,13 @@ const perfectionistRules = {
 			],
 			customGroups: {
 				value: {
-					nanostores: '@nanostores/.*',
 					react: ['react', 'react-*'],
+					nanostores: '@nanostores/.*',
 				},
 				type: {
 					react: 'react',
 				},
 			},
-			internalPattern: ['@/app/.*', '@/components/.*', '@/lib/.*', '@/models/.*', '@/services/.*', '@/constants/.*'],
-			newlinesBetween: 'always',
-			type: 'line-length',
-			order: 'desc',
-		},
-	],
-	'perfectionist/sort-objects': [
-		'warn',
-		{
-			type: 'natural',
-			order: 'desc',
 		},
 	],
 	'perfectionist/sort-enums': [
@@ -77,17 +77,17 @@ const perfectionistRules = {
 
 // Plugins communs
 const basePlugins = {
-	'no-only-tests': noOnlyTestsPlugin,
 	'react-hooks': reactHooksPlugin,
+	'no-only-tests': noOnlyTestsPlugin,
 	'jsx-a11y': jsxA11yPlugin,
 	'@next/next': nextPlugin,
 }
 
 // Options communes du parser
 const baseParserOptions = {
-	ecmaFeatures: { jsx: true },
-	ecmaVersion: 'latest',
 	sourceType: 'module',
+	ecmaVersion: 'latest',
+	ecmaFeatures: { jsx: true },
 }
 
 export default [
@@ -98,16 +98,16 @@ export default [
 
 	// Configuration pour JavaScript
 	{
-		languageOptions: {
-			parserOptions: baseParserOptions,
-			parser: espree,
-		},
 		rules: {
 			...baseRules,
 			...perfectionistRules,
 		},
-		files: ['**/*.{js,jsx,mjs,cjs}'],
 		plugins: basePlugins,
+		languageOptions: {
+			parserOptions: baseParserOptions,
+			parser: espree,
+		},
+		files: ['**/*.{js,jsx,mjs,cjs}'],
 	},
 
 	// Configuration pour TypeScript
@@ -118,15 +118,19 @@ export default [
 			// Règles TypeScript spécifiques
 			...tsPlugin.configs.recommended.rules,
 			...tsPlugin.configs['recommended-type-checked'].rules,
-			'@typescript-eslint/no-unnecessary-type-assertion': 'error',
 			'@typescript-eslint/strict-boolean-expressions': 'warn',
-			'@typescript-eslint/prefer-nullish-coalescing': 'error',
-			'@typescript-eslint/no-unsafe-member-access': 'warn',
 			'@typescript-eslint/prefer-optional-chain': 'error',
+			'@typescript-eslint/prefer-nullish-coalescing': 'error',
+			'@typescript-eslint/no-unused-vars': 'error',
+			'@typescript-eslint/no-unsafe-member-access': 'warn',
 			'@typescript-eslint/no-unsafe-assignment': 'warn',
 			'@typescript-eslint/no-unsafe-argument': 'warn',
-			'@typescript-eslint/no-unused-vars': 'error',
+			'@typescript-eslint/no-unnecessary-type-assertion': 'error',
 			'@typescript-eslint/no-explicit-any': 'warn',
+		},
+		plugins: {
+			'@typescript-eslint': tsPlugin,
+			...basePlugins,
 		},
 		languageOptions: {
 			parserOptions: {
@@ -134,10 +138,6 @@ export default [
 				project: './tsconfig.json',
 			},
 			parser: tsParser,
-		},
-		plugins: {
-			'@typescript-eslint': tsPlugin,
-			...basePlugins,
 		},
 		files: ['**/*.{ts,tsx}'],
 	},
