@@ -24,18 +24,15 @@ export default function EventListClient({
 
 	useEffect(() => {
 		if (error != null) {
-			// More explicit check
 			toast.error(error)
 		}
 	}, [error])
 
 	if (events.length === 0 && error == null) {
-		// More explicit check
 		return <p>{t.events.noEventsToDisplay}</p>
 	}
 
 	if (events.length === 0 && error != null) {
-		// More explicit check
 		return <p>{t.GLOBAL.errors.unexpected}</p>
 	}
 

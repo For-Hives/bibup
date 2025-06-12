@@ -37,12 +37,11 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 		} else {
 			initialBibWithEvent = await fetchBibByIdForSeller(bibId, sellerUser.id)
 			if (!initialBibWithEvent) {
-				errorMessage = t.bibNotFoundOrNoPermission ?? 'Bib not found or you do not have permission to edit it.'
+				errorMessage = t.bibNotFoundOrNoPermission
 			}
 		}
 	} catch (error: unknown) {
-		errorMessage =
-			error instanceof Error ? error.message : (t.errorFetchingBib ?? 'An error occurred while fetching bib details.')
+		errorMessage = error instanceof Error ? error.message : t.errorFetchingBib
 		initialBibWithEvent = null
 	}
 

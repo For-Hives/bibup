@@ -11,7 +11,7 @@ export async function handleToggleListingStatus(
 	bibId: string,
 	newStatus: 'listed_private' | 'listed_public',
 	formData: FormData
-): Promise<{ error?: string; message?: string; success: boolean; updatedBib?: Bib }> {
+): Promise<Bib> {
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
@@ -57,21 +57,14 @@ export async function handleToggleListingStatus(
 		if (!fullUpdatedBib) {
 			throw new Error('Failed to retrieve full bib details after status change.')
 		}
-		return {
-			message: `Bib status changed to ${newStatus.replace('_', ' ')}.`,
-			updatedBib: fullUpdatedBib,
-			success: true,
-		}
+		return fullUpdatedBib as Bib
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
 		throw new Error(`An error occurred while changing the bib status: ${error}`)
 	}
 }
 
-export async function handleUpdateBibDetails(
-	bibId: string,
-	formData: FormData
-): Promise<{ error?: string; message?: string; success: boolean; updatedBib?: Bib }> {
+export async function handleUpdateBibDetails(bibId: string, formData: FormData): Promise<Bib> {
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
@@ -133,16 +126,14 @@ export async function handleUpdateBibDetails(
 		if (!fullUpdatedBib) {
 			throw new Error('Failed to retrieve full bib details after update.')
 		}
-		return { message: 'Bib details updated successfully!', updatedBib: fullUpdatedBib, success: true }
+		return fullUpdatedBib as Bib
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
 		throw new Error(`An error occurred while updating the bib: ${error}`)
 	}
 }
 
-export async function handleWithdrawBib(
-	bibId: string
-): Promise<{ error?: string; redirectPath?: string; success: boolean }> {
+export async function handleWithdrawBib(bibId: string): Promise<void> {
 	const { userId: clerkId } = await auth()
 
 	if (clerkId == null || clerkId === '') {
@@ -173,7 +164,6 @@ export async function handleWithdrawBib(
 		if (!updatedBib) {
 			throw new Error('Failed to withdraw bib.')
 		}
-		return { redirectPath: '/dashboard/seller?success=Bib+listing+withdrawn', success: true }
 	} catch (e: unknown) {
 		const error = e instanceof Error ? e.message : String(e)
 		throw new Error(`An error occurred while withdrawing the bib: ${error}`)

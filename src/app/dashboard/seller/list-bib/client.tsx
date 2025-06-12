@@ -67,17 +67,16 @@ export default function ListNewBibClientPage({
 		}
 	}
 
-	async function formActionWrapper(formData: FormData) {
+	function formActionWrapper(formData: FormData) {
 		setFieldErrors({})
-		try {
-			const result = await handleListBibServerAction(formData)
-			if (result.success && result.redirectPath != null) {
-				// More explicit check
-				router.push(result.redirectPath)
-			}
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : String(e))
-		}
+
+		handleListBibServerAction(formData)
+			.then(status => {
+				router.push(`/dashboard/seller?success=true&bibStatus=${status}`)
+			})
+			.catch((error: unknown) => {
+				toast.error(error instanceof Error ? error.message : String(error))
+			})
 	}
 
 	return (
