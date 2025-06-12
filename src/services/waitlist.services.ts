@@ -43,9 +43,9 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		const dataToCreate: Omit<Waitlist, 'addedAt' | 'id' | 'notifiedAt'> & {
 			addedAt: Date
 		} = {
-			addedAt: new Date(),
-			eventId: eventId,
 			userId: userId,
+			eventId: eventId,
+			addedAt: new Date(),
 		}
 
 		const record = await pb.collection('waitlists').create<Waitlist>(dataToCreate)
@@ -81,9 +81,9 @@ export async function fetchUserWaitlists(userId: string): Promise<(Waitlist & { 
 
 	try {
 		const records = await pb.collection('waitlists').getFullList<Waitlist & { expand?: { eventId: Event } }>({
+			sort: '-addedAt',
 			filter: `userId = "${userId}"`,
 			expand: 'eventId',
-			sort: '-addedAt',
 		})
 		return records
 	} catch (error: unknown) {

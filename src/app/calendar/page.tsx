@@ -1,10 +1,10 @@
-import type { Event } from '@/models/event.model' // Adjust path as necessary
-
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import Link from 'next/link'
 
+import type { Event } from '@/models/event.model' // Adjust path as necessary
+
 import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
 import calendarTranslations from './locales.json'
 
@@ -37,8 +37,8 @@ export default async function CalendarPage() {
 	})
 
 	return (
-		<div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
-			<header style={{ marginBottom: '30px', textAlign: 'center' }}>
+		<div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+			<header style={{ textAlign: 'center', marginBottom: '30px' }}>
 				<h1>{t.calendar.title}</h1>
 				<p>{t.calendar.description}</p>
 			</header>
@@ -49,24 +49,24 @@ export default async function CalendarPage() {
 						<section key={monthKey} style={{ marginBottom: '30px' }}>
 							<h2
 								style={{
-									borderBottom: '2px solid #eee',
 									paddingBottom: '10px',
 									marginBottom: '20px',
 									fontSize: '1.8em',
+									borderBottom: '2px solid #eee',
 								}}
 							>
 								{monthKey}
 							</h2>
-							<ul style={{ listStyle: 'none', padding: 0 }}>
+							<ul style={{ padding: 0, listStyle: 'none' }}>
 								{groupedEvents[monthKey].map(event => (
 									<li
 										key={event.id}
 										style={{
-											border: '1px solid #ddd',
-											background: '#f9f9f9',
+											padding: '10px',
 											marginBottom: '15px',
 											borderRadius: '5px',
-											padding: '10px',
+											border: '1px solid #ddd',
+											background: '#f9f9f9',
 										}}
 									>
 										<Link
