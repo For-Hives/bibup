@@ -319,7 +319,7 @@ export async function updateBibBySeller(
 		// The 'status' field is not part of UpdateBibData, so sellers cannot change it via this function.
 		// Status changes are handled by admin functions or specific lifecycle events.
 
-		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate as Partial<Bib>)
+		const updatedRecord = await pb.collection('bibs').update<Bib>(bibId, dataToUpdate)
 		return updatedRecord
 	} catch (error: unknown) {
 		throw new Error(`Error updating bib ${bibId}: ` + (error instanceof Error ? error.message : String(error)))
