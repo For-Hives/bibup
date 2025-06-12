@@ -1,17 +1,20 @@
 {
 	"en": {
 		"navbar": {
-			"homeLink": "Home"
+			"homeLink": "Home",
+			"dashboardLink": "Dashboard"
 		}
 	},
 	"fr": {
 		"navbar": {
-			"homeLink": "Accueil"
+			"homeLink": "Accueil",
+			"dashboardLink": "Tableau de bord"
 		}
 	},
 	"ko": {
 		"navbar": {
-			"homeLink": "홈"
+			"homeLink": "홈",
+			"dashboardLink": "대시보드"
 		}
 	}
 }

@@ -16,7 +16,13 @@ export default async function Navbar() {
 			<div>
 				{/* Using global translation for App Name */}
 				<Link className="flex items-center gap-2 text-[var(--text-dark)] hover:text-[var(--accent-sporty)]" href="/">
-					<Image alt="Beswib Logo" className="mr-2 inline-block" height={80} src="/logo.svg" width={80} />
+					<Image
+						alt={String(t.GLOBAL.logoAltText)}
+						className="mr-2 inline-block"
+						height={80}
+						src="/logo.svg"
+						width={80}
+					/>
 					<h1>{t.GLOBAL.appName}</h1>
 				</Link>
 			</div>
@@ -27,7 +33,7 @@ export default async function Navbar() {
 				</Link>
 				<SignedIn>
 					<Link href="/dashboard">
-						<button>Dashboard</button>
+						<button>{t.navbar.dashboardLink}</button>
 					</Link>
 					<UserButton />
 				</SignedIn>
