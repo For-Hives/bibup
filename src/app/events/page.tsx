@@ -26,7 +26,7 @@ export default async function EventsPage() {
 			<main style={{ maxWidth: '800px', margin: '0 auto' }}>
 				<h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '2em' }}>{t.events.title}</h1>
 				<p style={{ marginBottom: '30px', textAlign: 'center', color: '#666' }}>{t.events.description}</p>
-				<EventListClient error={error} prefetchedEvents={events} translations={t.events} />
+				<EventListClient error={error} prefetchedEvents={events} translations={t} />
 			</main>
 		</div>
 	)

@@ -5,52 +5,22 @@ import type { Bib } from '@/models/bib.model'
 
 import React, { useEffect, useState } from 'react'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
 import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions'
+import editBibTranslations from './locales.json'
 
 interface EditBibClientProps {
 	bibId: string
 	initialBibWithEvent: (Bib & { expand?: { eventId?: Event } }) | null
 	initialError?: null | string
-	translations: EditBibTranslations
+	translations: Translations
 }
 
-interface EditBibTranslations {
-	actions: string
-	backToDashboard: string
-	bibDetails: string
-	bibNotFound: string
-	bibNotFoundOrNoPermission: string
-	confirmWithdraw: string
-	currentStatus: string
-	errorFetchingBib: string
-	eventDate: string
-	eventDetails: string
-	eventLocation: string
-	eventName: string
-	gender: string
-	genderOptions: {
-		female: string
-		male: string
-		placeholder: string
-		unisex: string
-	}
-	listingStatus: string
-	makePrivate: string
-	makePublic: string
-	originalPrice: string
-	price: string
-	privateListingToken: string
-	registrationNumber: string
-	size: string
-	title: string
-	updateDetails: string
-	userNotFound: string
-	withdrawListing: string
-}
+type Translations = ReturnType<typeof getTranslations<(typeof editBibTranslations)['en'], 'en'>>
 
 export default function EditBibClient({
 	initialBibWithEvent,
