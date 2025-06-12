@@ -22,6 +22,7 @@ interface EditBibClientProps {
 
 type Translations = ReturnType<typeof getTranslations<(typeof editBibTranslations)['en'], 'en'>>
 
+// TODO: create loading.tsx skeleton for this page
 export default function EditBibClient({
 	initialBibWithEvent,
 	translations: t,
