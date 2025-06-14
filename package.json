@@ -11,7 +11,7 @@
 		"prettier": "prettier --write ."
 	},
 	"dependencies": {
-		"@clerk/nextjs": "6.21.0",
+		"@clerk/nextjs": "6.22.0",
 		"@formatjs/intl-localematcher": "0.6.1",
 		"@next/eslint-plugin-next": "15.3.3",
 		"@tanstack/eslint-plugin-query": "5.78.0",
