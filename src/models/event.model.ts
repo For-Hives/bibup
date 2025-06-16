@@ -1,10 +1,12 @@
 import { EventOption } from './eventOption.model'
 
 export interface Event {
-	bibPickupDate: Date
 	bibPickupLocation?: string
 
-	description?: string
+	bibPickupWindowBeginDate: Date
+	bibPickupWindowEndDate: Date
+
+	description: string
 
 	distanceKm?: number
 	elevationGainM?: number
