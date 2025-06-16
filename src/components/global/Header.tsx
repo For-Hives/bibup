@@ -35,7 +35,7 @@ export default async function Header() {
 					<div className="flex items-center">
 						<div className="shrink-0">
 							<Link href="/">
-								<Image alt="Beswib" className="h-20 w-auto" height={32} src="/beswib.svg" width={32} />
+								<Image alt="Beswib" className="h-8 w-auto" height={32} src="/beswib.svg" width={32} />
 							</Link>
 						</div>
 						<div className="hidden sm:ml-6 sm:block">

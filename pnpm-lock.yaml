@@ -14,10 +14,10 @@ importers:
         specifier: 0.6.1
         version: 0.6.1
       '@headlessui/react':
-        specifier: ^2.2.4
+        specifier: 2.2.4
         version: 2.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@heroicons/react':
-        specifier: ^2.2.0
+        specifier: 2.2.0
         version: 2.2.0(react@19.1.0)
       '@next/eslint-plugin-next':
         specifier: 15.3.3
@@ -25,11 +25,14 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: 5.78.0
         version: 5.78.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      '@types/luxon':
+        specifier: ^3.6.2
+        version: 3.6.2
       class-variance-authority:
-        specifier: ^0.7.1
+        specifier: 0.7.1
         version: 0.7.1
       clsx:
-        specifier: ^2.1.1
+        specifier: 2.1.1
         version: 2.1.1
       eslint-config-prettier:
         specifier: 10.1.5
@@ -59,8 +62,11 @@ importers:
         specifier: 9.1.7
         version: 9.1.7
       lucide-react:
-        specifier: ^0.515.0
-        version: 0.515.0(react@19.1.0)
+        specifier: 0.516.0
+        version: 0.516.0(react@19.1.0)
+      luxon:
+        specifier: 3.6.1
+        version: 3.6.1
       negotiator:
         specifier: 1.0.0
         version: 1.0.0
@@ -89,7 +95,7 @@ importers:
         specifier: 1.67.0
         version: 1.67.0
       tailwind-merge:
-        specifier: ^3.3.1
+        specifier: 3.3.1
         version: 3.3.1
       valibot:
         specifier: 1.1.0
@@ -126,7 +132,7 @@ importers:
         specifier: 4.1.10
         version: 4.1.10
       tw-animate-css:
-        specifier: ^1.3.4
+        specifier: 1.3.4
         version: 1.3.4
       typescript:
         specifier: 5.8.3
@@ -768,6 +774,10 @@ packages:
   '@types/json5@0.0.29':
     resolution:
       { integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ== }
+
+  '@types/luxon@3.6.2':
+    resolution:
+      { integrity: sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw== }
 
   '@types/node@22.15.31':
     resolution:
@@ -2006,11 +2016,16 @@ packages:
     resolution:
       { integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg== }
 
-  lucide-react@0.515.0:
+  lucide-react@0.516.0:
     resolution:
-      { integrity: sha512-Sy7bY0MeicRm2pzrnoHm2h6C1iVoeHyBU2fjdQDsXGP51fhkhau1/ZV/dzrcxEmAKsxYb6bGaIsMnGHuQ5s0dw== }
+      { integrity: sha512-aybBJzLHcw1CIn3rUcRkztB37dsJATtpffLNX+0/w+ws2p21nYIlOwX/B5fqxq8F/BjqVemnJX8chKwRidvROg== }
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  luxon@3.6.1:
+    resolution:
+      { integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ== }
+    engines: { node: '>=12' }
 
   magic-string@0.30.17:
     resolution:
@@ -3269,7 +3284,9 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/node@22.15.32':
+  '@types/luxon@3.6.2': {}
+
+  '@types/node@22.15.31':
     dependencies:
       undici-types: 6.21.0
 
@@ -4458,9 +4475,11 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  lucide-react@0.515.0(react@19.1.0):
+  lucide-react@0.516.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+
+  luxon@3.6.1: {}
 
   magic-string@0.30.17:
     dependencies:
