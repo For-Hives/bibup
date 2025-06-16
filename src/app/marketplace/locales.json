@@ -1,0 +1,17 @@
+{
+	"en": {
+		"title": "Marketplace",
+		"description": "Browse and buy race bibs from our marketplace",
+		"comingSoon": "Marketplace coming soon! For now, please visit the Events page to browse available bibs."
+	},
+	"fr": {
+		"title": "Marché",
+		"description": "Parcourez et achetez des dossards de course sur notre marché",
+		"comingSoon": "Marché bientôt disponible ! Pour l'instant, veuillez visiter la page Événements pour parcourir les dossards disponibles."
+	},
+	"ko": {
+		"title": "마켓플레이스",
+		"description": "마켓플레이스에서 레이스 빕을 찾아보고 구매하세요",
+		"comingSoon": "마켓플레이스가 곧 출시됩니다! 현재는 이벤트 페이지를 방문하여 사용 가능한 빕을 찾아보세요."
+	}
+}
