@@ -4,6 +4,7 @@ import type { Waitlist } from '@/models/waitlist.model'
 import type { Event } from '@/models/event.model'
 
 import { pb } from '@/lib/pocketbaseClient'
+
 import { fetchUserByClerkId } from './user.services'
 
 /**
