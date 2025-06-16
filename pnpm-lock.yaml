@@ -44,6 +44,9 @@ importers:
       espree:
         specifier: 10.4.0
         version: 10.4.0
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       negotiator:
         specifier: 1.0.0
         version: 1.0.0
@@ -82,8 +85,8 @@ importers:
         specifier: 4.1.10
         version: 4.1.10
       '@types/node':
-        specifier: 22.15.32
-        version: 22.15.32
+        specifier: 24.0.3
+        version: 24.0.3
       '@types/react':
         specifier: 19.1.8
         version: 19.1.8
@@ -561,6 +564,9 @@ packages:
 
   '@types/node@22.15.32':
     resolution: {integrity: sha512-3jigKqgSjsH6gYZv2nEsqdXfZqIFGAV36XYYjf9KGZ3PSG+IhLecqPnI310RvjutyMwifE2hhhNEklOUrvx/wA==}
+
+  '@types/node@24.0.3':
+    resolution: {integrity: sha512-R4I/kzCYAdRLzfiCabn9hxWfbuHS573x+r0dJMkkzThEa7pbrcDWK+9zu3e7aBOouf+rQAciqPFMnxwr0aWgKg==}
 
   '@types/react-dom@19.1.6':
     resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
@@ -1298,6 +1304,11 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -2112,6 +2123,9 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
+  undici-types@7.8.0:
+    resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
+
   unrs-resolver@1.7.13:
     resolution: {integrity: sha512-QUjCYKAgrdJpf3wA73zWjOrO7ra19lfnwQ8HRkNOLah5AVDqOS38UunnyhzsSL8AE+2/AGnAHxlr8cGshCP35A==}
 
@@ -2570,6 +2584,10 @@ snapshots:
   '@types/node@22.15.32':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/node@24.0.3':
+    dependencies:
+      undici-types: 7.8.0
 
   '@types/react-dom@19.1.6(@types/react@19.1.8)':
     dependencies:
@@ -3499,6 +3517,8 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
+  husky@9.1.7: {}
+
   ignore@5.3.2: {}
 
   ignore@7.0.5: {}
@@ -4322,6 +4342,8 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   undici-types@6.21.0: {}
+
+  undici-types@7.8.0: {}
 
   unrs-resolver@1.7.13:
     dependencies:
