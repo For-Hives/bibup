@@ -1,23 +1,8 @@
+import { CardsProps } from '@/models/marketplace.model'
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-export default function CountComponent() {
-	const races = [
-		{
-			image: '/placeholder.svg?height=200&width=300',
-			name: 'Marathon de Paris',
-			participants: '45,000',
-			date: '14 Avril 2024',
-			originalPrice: '120€',
-			seller: 'Marie L.',
-			location: 'Paris',
-			distance: '42km',
-			sport: 'Running',
-			verified: true,
-			price: '85€',
-			id: 1,
-		},
-	]
-
+export default function CountRaceComponent({ races }: CardsProps) {
 	return (
 		<div className="mb-6 flex items-center justify-between">
 			<p className="text-slate-300">{races.length} dossards disponibles</p>

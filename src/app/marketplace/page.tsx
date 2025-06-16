@@ -1,47 +1,62 @@
 'use client'
 
-import LoadMoreComponent from '@/components/marketplace/loadMoreComponent'
-import SearchComponent from '@/components/marketplace/searchComponent'
-import CountComponent from '@/components/marketplace/countComponent'
-import Cards from '@/components/marketplace/cards'
+import { Race } from '@/models/marketplace.model'
+
+import CountRaceComponent from '@/components/marketplace/countRace.component'
+import LoadMoreComponent from '@/components/marketplace/loadMore.component'
+import SearchComponent from '@/components/marketplace/search.component'
+import CardsComponent from '@/components/marketplace/cards.component'
+import Header from '@/components/global/Header'
 
 export default function Marketplace() {
-	// const [selectedFilters, setSelectedFilters] = useState({
-	// 	distance: ['Marathon', 'Semi-Marathon', '10km'],
-	// 	geography: ['Paris', 'Lyon', 'Nice'],
-	// 	sport: ['Running', 'Trail'],
-	// 	price: [0, 200],
-	// })
-	//
-	// const [showFilters, setShowFilters] = useState(false)
-	//
-	// const races = [
-	// 	{
-	// 		image: '/placeholder.svg?height=200&width=300',
-	// 		name: 'Marathon de Paris',
-	// 		participants: '45,000',
-	// 		date: '14 Avril 2024',
-	// 		originalPrice: '120€',
-	// 		seller: 'Marie L.',
-	// 		location: 'Paris',
-	// 		distance: '42km',
-	// 		sport: 'Running',
-	// 		verified: true,
-	// 		price: '85€',
-	// 		id: 1,
-	// 	},
-	// ]
-	//
-	// const removeFilter = (category: keyof typeof selectedFilters, value: string) => {
-	// 	setSelectedFilters(prev => ({
-	// 		...prev,
-	// 		[category]: (prev[category] as string[]).filter((item: string) => item !== value),
-	// 	}))
-	// }
+	const races: Race[] = [
+		{
+			image: '/placeholder.svg?height=200&width=300',
+			name: 'Marathon de Paris',
+			participants: '45,000',
+			date: '14 Avril 2024',
+			originalPrice: '120€',
+			seller: 'Marie L.',
+			location: 'Paris',
+			distance: '42km',
+			sport: 'Running',
+			verified: true,
+			price: '85€',
+			id: 1,
+		},
+		{
+			image: '/placeholder.svg?height=200&width=300',
+			name: 'Trail des Templiers',
+			date: '20 Octobre 2024',
+			participants: '8,000',
+			originalPrice: '85€',
+			seller: 'Thomas M.',
+			location: 'Millau',
+			distance: '56km',
+			sport: 'Trail',
+			verified: true,
+			price: '65€',
+			id: 2,
+		},
+		{
+			image: '/placeholder.svg?height=200&width=300',
+			name: 'Semi-Marathon de Lyon',
+			date: '15 Septembre 2024',
+			participants: '15,000',
+			originalPrice: '50€',
+			seller: 'Julie R.',
+			location: 'Lyon',
+			distance: '21km',
+			sport: 'Running',
+			verified: false,
+			price: '35€',
+			id: 3,
+		},
+	]
 
 	return (
 		<div className="min-h-screen bg-gray-900 text-white">
-			{/*<Header />*/}
+			<Header />
 
 			<div className="container mx-auto px-4 py-8">
 				{/* Page Title */}
@@ -54,12 +69,10 @@ export default function Marketplace() {
 				<SearchComponent />
 
 				{/* Results Count component */}
-				{/*todo: Use parameters to display all cards instead of json in the card file*/}
-				<CountComponent />
+				<CountRaceComponent races={races} />
 
-				{/*Cards components*/}
-				{/*todo: Use parameters to display all cards instead of json in the card file*/}
-				<Cards />
+				{/*CardsComponent components*/}
+				<CardsComponent races={races} />
 
 				{/* Load More Component */}
 				<LoadMoreComponent />
