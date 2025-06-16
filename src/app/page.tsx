@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import CardMarket from '@/components/marketplace/card-market'
+
 export default function Home() {
 	return (
 		<div className="flex min-h-screen flex-col">
@@ -28,6 +30,11 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
+			<div className="flex flex-col gap-4 p-10">
+				<div className="flex w-full justify-center">
+					<CardMarket />
+				</div>
+			</div>
 
 			{/* Features Section */}
 			<section className="bg-muted/40 px-4 py-16">
