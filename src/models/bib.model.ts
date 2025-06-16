@@ -3,7 +3,7 @@ import { User } from './user.model'
 
 export interface Bib {
 	buyerUserId?: User['id']
-	createdAt: Date
+
 	eventId: Event['id']
 	id: string
 
@@ -19,6 +19,5 @@ export interface Bib {
 
 	status: 'available' | 'expired' | 'sold' | 'validation_failed' | 'withdrawn'
 
-	updatedAt: Date
 	validated: boolean
 }
