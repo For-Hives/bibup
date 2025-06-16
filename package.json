@@ -16,8 +16,12 @@
 	"dependencies": {
 		"@clerk/nextjs": "6.22.0",
 		"@formatjs/intl-localematcher": "0.6.1",
+		"@headlessui/react": "^2.2.4",
+		"@heroicons/react": "^2.2.0",
 		"@next/eslint-plugin-next": "15.3.3",
 		"@tanstack/eslint-plugin-query": "5.78.0",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
 		"eslint-config-prettier": "10.1.5",
 		"eslint-plugin-jsx-a11y": "6.10.2",
 		"eslint-plugin-no-only-tests": "3.3.0",
@@ -27,6 +31,7 @@
 		"eslint-plugin-react-hooks": "5.2.0",
 		"espree": "10.4.0",
 		"husky": "9.1.7",
+		"lucide-react": "^0.515.0",
 		"negotiator": "1.0.0",
 		"next": "15.3.3",
 		"pocketbase": "0.26.1",
@@ -36,6 +41,7 @@
 		"react-dom": "19.1.0",
 		"sonner": "2.0.5",
 		"svix": "1.67.0",
+		"tailwind-merge": "^3.3.1",
 		"valibot": "1.1.0"
 	},
 	"devDependencies": {
@@ -49,6 +55,7 @@
 		"eslint": "9.29.0",
 		"eslint-config-next": "15.3.3",
 		"tailwindcss": "4.1.10",
+		"tw-animate-css": "^1.3.4",
 		"typescript": "5.8.3"
 	}
 }
