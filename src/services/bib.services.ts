@@ -9,20 +9,6 @@ import { pb } from '@/lib/pocketbaseClient'
 import { fetchUserById, updateUserBalance } from './user.services'
 import { createTransaction } from './transaction.services'
 
-export type CreateBibData = Partial<
-	Omit<Bib, 'buyerUserId' | 'eventId' | 'id' | 'privateListingToken' | 'sellerUserId' | 'status'>
-> & {
-	eventId?: string
-	isNotListedEvent?: boolean
-	price: number
-	registrationNumber: string
-	unlistedEventDate?: string
-	unlistedEventLocation?: string
-	unlistedEventName?: string
-}
-
-export type UpdateBibData = Partial<Pick<Bib, 'gender' | 'originalPrice' | 'price' | 'size'>>
-
 /**
  * Creates a new bib listing. Handles both partnered and unlisted events.
  * @param bibData Data for the new bib, including potential unlisted event details.
@@ -38,20 +24,25 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 		return null
 	}
 
-	let status: Bib['status'] = 'pending_validation'
+	let status: Bib['status'] = 'available'
 	let finalEventId: string = bibData.eventId
 
 	try {
 		const dataToCreate: Omit<Bib, 'id'> = {
+			validated: false,
+
+			updatedAt: new Date(),
 			status: status,
-			size: bibData.size,
 			sellerUserId: bibData.sellerUserId,
 			registrationNumber: bibData.registrationNumber,
 			privateListingToken: undefined,
+
 			price: bibData.price,
 			originalPrice: bibData.originalPrice,
-			gender: bibData.gender,
+			optionValues: bibData.optionValues || {},
+			listed: null,
 			eventId: finalEventId,
+			createdAt: new Date(),
 			buyerUserId: undefined,
 		}
 
@@ -205,7 +196,8 @@ export async function processBibSale(
 		if (bib == null) {
 			return { success: false, error: `Bib with ID ${bibId} not found.` }
 		}
-		if (bib.status !== 'listed_public') {
+		if (bib.status !== 'available') {
+			//TODO: fix this to check for 'listed_public' or 'listed_private' if needed
 			return {
 				success: false,
 				error: `Bib is not available for sale. Current status: ${bib.status}.`,
@@ -233,6 +225,7 @@ export async function processBibSale(
 			status: 'succeeded',
 			sellerUserId: bib.sellerUserId,
 			platformFee: platformFeeAmount,
+			createdAt: new Date(),
 			buyerUserId: buyerUserId,
 			bibId: bib.id,
 			amount: bib.price,
@@ -311,13 +304,11 @@ export async function updateBibBySeller(
 		if ('status' in dataToUpdate) {
 			const newStatus = dataToUpdate.status
 			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
-				withdrawn: ['listed_public', 'listed_private'],
+				withdrawn: ['available'],
 				validation_failed: ['withdrawn'],
 				sold: [], // Cannot be changed by seller
-				pending_validation: ['listed_public', 'listed_private', 'withdrawn'],
-				listed_public: ['listed_private', 'withdrawn'],
-				listed_private: ['listed_public', 'withdrawn'],
 				expired: ['withdrawn'],
+				available: ['sold', 'withdrawn', 'expired'],
 			}
 
 			const allowedChanges = allowedStatusChanges[currentBib.status]

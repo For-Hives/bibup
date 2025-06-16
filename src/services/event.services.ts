@@ -10,10 +10,6 @@ import { pb } from '@/lib/pocketbaseClient'
  * @param organizerId The ID of the user (organizer) creating the event.
  */
 export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (!eventData.organizerId) {
-		console.error('Organizer ID is required to create an event.')
-		return null
-	}
 	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
 		console.error('Event name, date, and location are required.')
 		return null
@@ -21,14 +17,15 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 
 	try {
 		const dataToCreate: Omit<Event, 'id'> = {
-			status: 'pending_approval',
+			updatedAt: new Date(),
 			participantCount: eventData.participantCount ?? 0,
-			organizerId: eventData.organizerId,
+			options: [],
 			name: eventData.name,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
 			description: eventData.description ?? '',
 			date: new Date(eventData.date),
+			createdAt: new Date(),
 			bibsSold: 0,
 		}
 
