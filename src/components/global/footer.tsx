@@ -1,6 +1,4 @@
-import { SignedIn } from '@clerk/nextjs' // Import Clerk components
-import Image from 'next/image'
-import Link from 'next/link' // Import Link for internal navigation
+import Link from 'next/link'
 
 export default function Footer() {
 	return (
