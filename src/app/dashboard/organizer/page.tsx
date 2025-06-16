@@ -97,7 +97,7 @@ export default async function OrganizerDashboardPage({
 									<p className="mt-1 text-sm">
 										{t.status}{' '}
 										<span className={`status-badge ${getEventStatusClass(event.isPartnered)}`}>
-											{event.isPartnered ? 'Approved' : 'Expired'}
+											{event.isPartnered ? 'Partner' : 'Not Partnered'}
 										</span>
 									</p>
 

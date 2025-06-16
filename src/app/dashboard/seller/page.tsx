@@ -133,12 +133,12 @@ export default async function SellerDashboardPage({
 												{t.originalPrice} ${bib.originalPrice.toFixed(2)}
 											</p>
 										)}
-										{bib.optionValues.size != null && bib.optionValues.size !== '' && (
+										{bib.optionValues != null && bib.optionValues.size !== '' && (
 											<p className="text-xs text-gray-500">
 												{t.size} {bib.optionValues.size}
 											</p>
 										)}
-										{bib.optionValues.gender != null && (
+										{bib.optionValues != null && (
 											<p className="text-xs text-gray-500">
 												{t.gender} {bib.optionValues.gender}
 											</p>
