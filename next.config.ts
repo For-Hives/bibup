@@ -8,12 +8,12 @@ const nextConfig: NextConfig = {
 				source: '/(.*)',
 				headers: [
 					{
-						key: 'X-Robots-Tag',
 						value: 'noindex, nofollow, noarchive, nosnippet, noimageindex, nocache',
+						key: 'X-Robots-Tag',
 					},
 					{
-						key: 'X-Content-Type-Options',
 						value: 'nosniff',
+						key: 'X-Content-Type-Options',
 					},
 				],
 			},
