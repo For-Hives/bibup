@@ -21,7 +21,7 @@ type EventDetailPageProps = {
 export default async function EventDetailPage({ searchParams, params }: EventDetailPageProps) {
 	const { id: eventId } = await params
 	const resolvedSearchParams = await searchParams
-	const { userId } = await auth()
+	const { userId: clerkId } = await auth()
 
 	const event: Event | null = await fetchEventById(eventId)
 
@@ -33,13 +33,13 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 
 	async function handleJoinWaitlist(formData: FormData) {
 		'use server'
-		if (userId == null) {
+		if (clerkId == null) {
 			redirect(`/sign-in?redirect_url=/events/${eventId}`)
 			return
 		}
 
 		const eventIdFromForm = formData.get('eventId') as string
-		const result = await addToWaitlist(eventIdFromForm, userId)
+		const result = await addToWaitlist(eventIdFromForm, clerkId)
 
 		if (result && result.error === 'already_on_waitlist') {
 			redirect(`/events/${eventIdFromForm}?waitlist_error=already_added`)

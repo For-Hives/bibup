@@ -42,8 +42,7 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 	try {
 		const records = await pb.collection('events').getFullList<Event>({
-			sort: 'date',
-			filter: "status = 'approved'",
+			sort: 'eventDate',
 		})
 
 		return records
@@ -77,10 +76,8 @@ export async function fetchEventsByOrganizer(organizerId: string): Promise<Event
 		return []
 	}
 	try {
-		const filter = pb.filter('organizerId = {:organizerId}', { organizerId })
 		const records = await pb.collection('events').getFullList<Event>({
 			sort: '-created',
-			filter,
 		})
 		return records
 	} catch (error: unknown) {
@@ -98,8 +95,8 @@ export async function fetchEventsByOrganizer(organizerId: string): Promise<Event
 export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 	try {
 		const records = await pb.collection('events').getFullList<Event>({
-			sort: 'date',
-			filter: "status = 'approved' && isPartnered = true",
+			sort: 'eventDate',
+			filter: 'isPartnered = true',
 		})
 		return records
 	} catch (error: unknown) {

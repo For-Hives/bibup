@@ -4,18 +4,25 @@ import type { Waitlist } from '@/models/waitlist.model'
 import type { Event } from '@/models/event.model'
 
 import { pb } from '@/lib/pocketbaseClient'
+import { fetchUserByClerkId } from './user.services'
 
 /**
  * Adds a user to the waitlist for a specific event.
  * Prevents duplicate entries.
  * @param eventId The ID of the event.
- * @param userId The ID of the user joining the waitlist.
+ * @param clerkId The ID of the user joining the waitlist.
  * @returns The created waitlist entry, the existing entry if already added, or null on error.
  *          Returns an object with `error: 'already_on_waitlist'` for duplicates.
  */
-export async function addToWaitlist(eventId: string, userId: string): Promise<null | (Waitlist & { error?: string })> {
-	if (eventId === '' || userId === '') {
+export async function addToWaitlist(eventId: string, clerkId: string): Promise<null | (Waitlist & { error?: string })> {
+	if (eventId === '' || clerkId === '') {
 		console.error('Event ID and User ID are required to join a waitlist.')
+		return null
+	}
+
+	const user = await fetchUserByClerkId(clerkId)
+	if (user == null) {
+		console.error(`User with ID ${clerkId} not found. Cannot add to waitlist.`)
 		return null
 	}
 
@@ -24,7 +31,7 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		try {
 			const existingEntry = await pb
 				.collection('waitlists')
-				.getFirstListItem<Waitlist>(`userId = "${userId}" && eventId = "${eventId}"`)
+				.getFirstListItem<Waitlist>(`userId = "${user.id}" && eventId = "${eventId}"`)
 			return { ...existingEntry, error: 'already_on_waitlist' }
 		} catch (error: unknown) {
 			// PocketBase's getFirstListItem throws a 404 error if no record is found,
@@ -43,7 +50,7 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 		const dataToCreate: Omit<Waitlist, 'addedAt' | 'id' | 'notifiedAt'> & {
 			addedAt: Date
 		} = {
-			userId: userId,
+			userId: user.id,
 			optionPreferences: {},
 			mailNotification: false,
 			eventId: eventId,
@@ -65,7 +72,7 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 			}
 		}
 		throw new Error(
-			`Error adding user ${userId} to waitlist for event ${eventId}: ` +
+			`Error adding user ${user.id} to waitlist for event ${eventId}: ` +
 				(error instanceof Error ? error.message : String(error))
 		)
 	}
