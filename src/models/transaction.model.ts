@@ -1,10 +1,11 @@
 import type { User } from './user.model'
+import type { Bib } from './bib.model'
 
 export interface Transaction {
 	amount: number
-	bibId: string
+	bibId: Bib['id']
 	buyerUserId: User['id']
-	createdAt: Date
+
 	id: string
 	paymentIntentId?: string
 	platformFee: number
