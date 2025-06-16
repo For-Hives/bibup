@@ -32,7 +32,29 @@ export default function Home() {
 			</section>
 			<div className="flex flex-col gap-4 p-10">
 				<div className="flex w-full justify-center">
-					<CardMarket />
+					<CardMarket
+						bibSale={{
+							user: {
+								lastName: 'Doe',
+								id: '1',
+								firstName: 'John',
+							},
+							status: 'available',
+							price: 79.99,
+							originalPrice: 100,
+							id: '1',
+							event: {
+								type: 'running',
+								participantCount: 10000,
+								name: 'Paris Marathon',
+								location: 'Paris',
+								id: '1',
+								distanceUnit: 'km',
+								distance: 100,
+								date: new Date(),
+							},
+						}}
+					/>
 				</div>
 			</div>
 

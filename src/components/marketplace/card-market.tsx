@@ -1,51 +1,186 @@
 'use client'
 
-import React from 'react'
+import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 
-export default function CardMarket() {
+import { DateTime } from 'luxon'
+import Image from 'next/image'
+import Link from 'next/link'
+import clsx from 'clsx'
+
+import { cn } from '@/lib/utils'
+
+export interface BibSale {
+	event: {
+		date: Date
+		distance: number
+		distanceUnit: 'km' | 'mi'
+		id: string
+		location: string
+		name: string
+		participantCount: number
+		type: 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon'
+	}
+	id: string
+	originalPrice: number
+	price: number
+	status: 'available' | 'sold'
+	user: {
+		firstName: string
+		id: string
+		lastName: string
+	}
+}
+
+export default function CardMarket({ bibSale }: { bibSale: BibSale }) {
 	return (
-		<>
-			<div className="w-full max-w-xs">
-				<div className="bg-card/80 border-border relative flex flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md">
-					<div className="relative flex justify-center p-4">
-						<div className="from-primary/10 via-accent/10 to-secondary/10 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-48 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
-							<div className="absolute inset-0 opacity-10">
-								<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
-							</div>
+		<div className="w-full max-w-xs">
+			<div className="bg-card/80 border-border relative flex flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
+				<div
+					className={cn(
+						'absolute inset-0 -z-20 opacity-50',
+						'[background-size:20px_20px]',
+						'[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]',
+						'dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]'
+					)}
+				/>
+				<div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-25 dark:bg-black"></div>
+				<div className="relative flex justify-center px-4 pt-4">
+					<div className="from-primary/20 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
+						<Image
+							alt="template-run"
+							className="cover -z-10 rounded-2xl p-3"
+							fill
+							sizes="100vw"
+							src="/template-run-2.png"
+						/>
+						<div className="absolute inset-0 z-10 opacity-10">
+							<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
 						</div>
-					</div>
-					<div className="via-border h-px w-full bg-gradient-to-r from-transparent to-transparent" />
-					<div className="p-4">
-						<span className="border-border bg-accent/20 text-accent-foreground mb-3 inline-block rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-md">
-							Database
-						</span>
-						<h3 className="text-foreground mb-2 text-lg font-medium">Schema Management</h3>
-						<p className="text-muted-foreground mb-4 text-xs leading-relaxed">
-							Design, optimize and maintain your database structure with powerful schema tools.
-						</p>
-						<div className="flex items-center justify-between">
-							<a
-								className="border-border bg-accent/20 text-accent-foreground hover:bg-accent/30 hover:text-foreground flex items-center rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-md transition"
-								href="#"
+						{/* type of event */}
+						<div className="absolute inset-0 top-0 left-0 z-20 m-2">
+							<span
+								className={clsx(
+									'mb-3 inline-block rounded-full border px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-md',
+									bgFromType(bibSale.event.type)
+								)}
 							>
-								Manage
-								<svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24">
-									<path
-										d="M5 12H19M19 12L12 5M19 12L12 19"
-										stroke="currentColor"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-									/>
-								</svg>
-							</a>
-							<span className="border-border bg-muted/20 text-muted-foreground rounded-full border px-2 py-1 text-xs backdrop-blur-md">
-								Live
+								{bibSale.event.type.charAt(0).toUpperCase() + bibSale.event.type.slice(1)}
 							</span>
 						</div>
+						{/* Calc of the discount - red if more than 10% off */}
+						{((bibSale.originalPrice - bibSale.price) / bibSale.originalPrice) * 100 > 10 && (
+							<div className="absolute top-0 right-0 z-20 m-2 flex justify-center">
+								<span
+									className={clsx('text-xs', {
+										'mb-2 rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md':
+											((bibSale.originalPrice - bibSale.price) / bibSale.originalPrice) * 100 > 10,
+									})}
+								>
+									{(-((bibSale.originalPrice - bibSale.price) / bibSale.originalPrice) * 100).toFixed(0)}%
+								</span>
+							</div>
+						)}
+					</div>
+				</div>
+				<div className="flex w-full items-center justify-center py-2">
+					<div className="flex w-full items-center justify-center">
+						<p className="text-muted-foreground text-xs leading-relaxed italic">
+							vendu par {bibSale.user.firstName} {bibSale.user.lastName}
+						</p>
+					</div>
+				</div>
+				<div className="via-border h-px w-full bg-gradient-to-r from-transparent to-transparent" />
+				<div className="flex flex-col gap-2 px-4 py-2">
+					<div className="flex w-full justify-between">
+						<h3 className="text-foreground text-lg font-bold">{bibSale.event.name}</h3>
+						<div className="relative flex flex-col items-center gap-2">
+							<p className="text-2xl font-bold text-white">{bibSale.price}€</p>
+							<p className="absolute top-8 right-0 text-sm italic line-through">{bibSale.originalPrice}€</p>
+						</div>
+					</div>
+					<div className="flex items-center gap-3">
+						<Calendar className="h-5 w-5" />
+						<p className="text-muted-foreground text-xs leading-relaxed">{formatDateWithLocale(bibSale.event.date)}</p>
+					</div>
+					<div className="flex items-center gap-3">
+						<MapPinned className="h-5 w-5" />
+						<div className="flex items-center gap-1">
+							<p className="text-muted-foreground text-xs leading-relaxed">{bibSale.event.location}</p>
+							<span className="text-muted-foreground text-xs leading-relaxed">•</span>
+							<p className="text-muted-foreground text-xs leading-relaxed">
+								{bibSale.event.distance}
+								<span className="text-muted-foreground text-xs leading-relaxed italic">
+									{bibSale.event.distanceUnit}
+								</span>
+							</p>
+						</div>
+					</div>
+					<div className="flex items-center gap-2">
+						<User className="h-5 w-5" />
+						<p className="text-muted-foreground text-xs leading-relaxed">
+							{formatParticipantCount(bibSale.event.participantCount)} participants
+						</p>
+					</div>
+					<div className="flex items-center justify-center py-2">
+						<Link
+							className="border-border bg-accent/20 text-accent-foreground hover:bg-accent/30 hover:text-foreground flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-md transition"
+							href={`/marketplace/${bibSale.id}`}
+						>
+							<ShoppingCart className="h-5 w-5" />I want this bib
+						</Link>
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	)
+}
+
+function bgFromType(type: BibSale['event']['type']) {
+	switch (type) {
+		case 'cycling':
+			return 'bg-cyan-500/15 border-cyan-500/50'
+		case 'other':
+			return 'bg-gray-500/15 border-gray-500/50'
+		case 'running':
+			return 'bg-green-500/15 border-green-500/50'
+		case 'swimming':
+			return 'bg-blue-500/15 border-blue-500/50'
+		case 'trail':
+			return 'bg-yellow-500/15 border-yellow-500/50'
+		case 'triathlon':
+			return 'bg-purple-500/15 border-purple-500/50'
+	}
+}
+
+// Helper function to format date with Luxon safely
+function formatDateWithLocale(date: Date, locale?: null | string): string {
+	try {
+		const dt = DateTime.fromJSDate(date)
+		if (!dt.isValid) {
+			return new Date(date).toLocaleDateString()
+		}
+
+		// Use provided locale, or automatically detect browser locale
+		const targetLocale = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
+		const dateTime = dt.setLocale(targetLocale)
+
+		// Check if locale is valid after configuration
+		if (!dateTime.isValid) {
+			// If locale is not supported, use default locale
+			return dt.toLocaleString(DateTime.DATE_MED)
+		}
+
+		return dateTime.toLocaleString(DateTime.DATE_MED)
+	} catch {
+		// Fallback to native JavaScript Date formatting
+		return new Date(date).toLocaleDateString()
+	}
+}
+
+function formatParticipantCount(participantCount: number) {
+	// format the number, to display it with ',' and ' '
+	return participantCount.toLocaleString('fr-FR', {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
+	})
 }
