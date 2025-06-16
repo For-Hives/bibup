@@ -39,7 +39,7 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 
 			price: bibData.price,
 			originalPrice: bibData.originalPrice,
-			optionValues: bibData.optionValues || {},
+			optionValues: bibData.optionValues,
 			listed: null,
 			eventId: finalEventId,
 			createdAt: new Date(),

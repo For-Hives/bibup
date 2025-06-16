@@ -39,8 +39,8 @@ export async function handleToggleListingStatus(
 	try {
 		const newBibData: Bib = {
 			...bibWithEvent,
-			listed: newListed,
 			privateListingToken: newListed === 'private' ? (formData.get('privateListingToken') as string) : undefined,
+			listed: newListed,
 		}
 		if (
 			newListed === 'private' &&
