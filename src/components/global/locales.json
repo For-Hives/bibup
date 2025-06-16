@@ -2,19 +2,34 @@
 	"en": {
 		"navbar": {
 			"homeLink": "Home",
-			"dashboardLink": "Dashboard"
+			"dashboardLink": "Dashboard",
+			"racesLink": "Races",
+			"calendarLink": "Calendar",
+			"marketplaceLink": "Marketplace",
+			"faqLink": "FAQ",
+			"contactLink": "Contact"
 		}
 	},
 	"fr": {
 		"navbar": {
 			"homeLink": "Accueil",
-			"dashboardLink": "Tableau de bord"
+			"dashboardLink": "Tableau de bord",
+			"racesLink": "Courses",
+			"calendarLink": "Calendrier",
+			"marketplaceLink": "Marché",
+			"faqLink": "FAQ",
+			"contactLink": "Contact"
 		}
 	},
 	"ko": {
 		"navbar": {
 			"homeLink": "홈",
-			"dashboardLink": "대시보드"
+			"dashboardLink": "대시보드",
+			"racesLink": "레이스",
+			"calendarLink": "캘린더",
+			"marketplaceLink": "마켓플레이스",
+			"faqLink": "FAQ",
+			"contactLink": "연락처"
 		}
 	}
 }

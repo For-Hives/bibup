@@ -5,7 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from 'sonner'
 
 import Footer from '@/components/global/footer'
-import Navbar from '@/components/global/Navbar'
+import Header from '@/components/global/Header'
 import { getLocale } from '@/lib/getLocale'
 
 import './globals.css'
@@ -49,7 +49,7 @@ export default async function RootLayout({
 		<ClerkProvider>
 			<html lang={locale}>
 				<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-					<Navbar />
+					<Header />
 					{children}
 					<Footer />
 					<Toaster />
