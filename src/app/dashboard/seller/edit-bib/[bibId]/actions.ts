@@ -9,7 +9,7 @@ import { fetchUserByClerkId } from '@/services/user.services'
 
 export async function handleToggleListingStatus(
 	bibId: string,
-	newStatus: 'listed_private' | 'listed_public',
+	newListed: 'private' | 'public',
 	formData: FormData
 ): Promise<Bib> {
 	const { userId: clerkId } = await auth()
@@ -28,7 +28,7 @@ export async function handleToggleListingStatus(
 		throw new Error('Bib not found.')
 	}
 
-	if (bibWithEvent.status === 'validation_failed' && newStatus === 'listed_public') {
+	if (bibWithEvent.status === 'validation_failed' && newListed === 'public') {
 		throw new Error('Cannot make public until event details are verified by admin.')
 	}
 
@@ -39,11 +39,11 @@ export async function handleToggleListingStatus(
 	try {
 		const newBibData: Bib = {
 			...bibWithEvent,
-			status: newStatus,
-			privateListingToken: newStatus === 'listed_private' ? (formData.get('privateListingToken') as string) : undefined,
+			listed: newListed,
+			privateListingToken: newListed === 'private' ? (formData.get('privateListingToken') as string) : undefined,
 		}
 		if (
-			newStatus === 'listed_private' &&
+			newListed === 'private' &&
 			(newBibData.privateListingToken == null || newBibData.privateListingToken.trim() === '')
 		) {
 			throw new Error('Private listing token is required for private listings.')
@@ -78,8 +78,7 @@ export async function handleUpdateBibDetails(bibId: string, formData: FormData):
 
 	const priceValue = formData.get('price') as string
 	const originalPriceValue = formData.get('originalPrice') as string
-	const size = formData.get('size') as null | string
-	const gender = formData.get('gender') as null | string
+
 	const registrationNumber = formData.get('registrationNumber') as null | string
 
 	if (registrationNumber == null || registrationNumber.trim() === '') {
@@ -112,9 +111,6 @@ export async function handleUpdateBibDetails(bibId: string, formData: FormData):
 	} else {
 		dataToUpdate.originalPrice = undefined
 	}
-
-	dataToUpdate.size = size != null && size.trim() !== '' ? size.trim() : undefined
-	dataToUpdate.gender = gender != null && gender.trim() !== '' ? (gender as Bib['gender']) : undefined
 
 	try {
 		const partialUpdatedBib = await updateBibBySeller(bibId, dataToUpdate, sellerUser.id)

@@ -94,11 +94,11 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 											Original Price: ${bib.originalPrice.toFixed(2)}
 										</p>
 									)}
-									{bib.size != null && bib.size !== '' && (
-										<p className="text-sm text-gray-600 dark:text-gray-300">Size: {bib.size}</p>
+									{bib.optionValues.size != null && bib.optionValues.size !== '' && (
+										<p className="text-sm text-gray-600 dark:text-gray-300">Size: {bib.optionValues.size}</p>
 									)}
-									{bib.gender != null && (
-										<p className="text-sm text-gray-600 dark:text-gray-300">Gender: {bib.gender}</p>
+									{bib.optionValues.gender != null && (
+										<p className="text-sm text-gray-600 dark:text-gray-300">Gender: {bib.optionValues.gender}</p>
 									)}
 								</div>
 								<Link className="btn btn-primary mt-3 sm:mt-0" href={`/purchase/${bib.id}`}>
