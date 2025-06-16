@@ -19,7 +19,7 @@ export default async function Home() {
 	try {
 		const events: Event[] = await fetchApprovedPublicEvents()
 		totalEvents = events.length
-		totalBibsSold = events.reduce((sum, event) => sum + (event.bibsSold ?? 0), 0)
+		totalBibsSold = 69 // TODO: recalculate this based on actual bib sales data (no precalculed data available)
 	} catch (error) {
 		console.error('Failed to fetch event data for KPIs:', error)
 	}

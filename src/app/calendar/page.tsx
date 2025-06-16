@@ -19,7 +19,7 @@ export default async function CalendarPage() {
 	const events: Event[] = await fetchApprovedPublicEvents()
 
 	const groupedEvents = events.reduce((acc, event) => {
-		const date = new Date(event.date)
+		const date = new Date(event.eventDate)
 		const yearMonth = date.toLocaleString('default', {
 			year: 'numeric',
 			month: 'long',
@@ -55,7 +55,7 @@ export default async function CalendarPage() {
 											{event.name}
 										</Link>
 										<p className="mt-1">
-											<strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
+											<strong>Date:</strong> {new Date(event.eventDate).toLocaleDateString()}
 										</p>
 										<p className="mt-1">
 											<strong>Location:</strong> {event.location}

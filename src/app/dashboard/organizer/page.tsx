@@ -89,7 +89,7 @@ export default async function OrganizerDashboardPage({
 								>
 									<div className="font-semibold text-[var(--primary-pastel)]">{event.name}</div>
 									<p className="text-sm">
-										{t.eventDate} {new Date(event.date).toLocaleDateString()}
+										{t.eventDate} {new Date(event.eventDate).toLocaleDateString()}
 									</p>
 									<p className="text-sm">
 										{t.location} {event.location}

@@ -6,7 +6,7 @@ export interface Waitlist {
 	eventId: Event['id']
 	id: string
 	mailNotification: boolean
-	notifiedAt?: Date
+
 	optionPreferences: Record<string, string>
 	userId: User['id']
 }

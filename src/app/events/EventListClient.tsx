@@ -50,7 +50,7 @@ export default function EventListClient({
 							{event.name}
 						</a>
 						<p className="text-xs text-gray-600">
-							{event.location} - {new Date(event.date).toLocaleDateString()}
+							{event.location} - {new Date(event.eventDate).toLocaleDateString()}
 						</p>
 					</li>
 				))}

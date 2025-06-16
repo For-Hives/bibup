@@ -60,7 +60,6 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 	const bibToCreate: Omit<Bib, 'id'> = {
 		validated: false,
 
-		updatedAt: new Date(),
 		status: 'available',
 		sellerUserId: sellerUserIdFromAuth,
 		registrationNumber: validatedData.registrationNumber,
@@ -69,7 +68,6 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 		optionValues: {},
 		listed: null,
 		eventId: validatedData.eventId ?? '',
-		createdAt: new Date(),
 	}
 
 	try {
