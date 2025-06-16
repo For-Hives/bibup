@@ -26,7 +26,10 @@ export default async function Header() {
 	]
 
 	return (
-		<Disclosure as="nav" className="">
+		<Disclosure
+			as="nav"
+			className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur"
+		>
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="flex h-16 items-center justify-between">
 					<div className="flex items-center">
@@ -39,8 +42,10 @@ export default async function Header() {
 							<div className="flex space-x-4">
 								{navigationLinks.map(link => (
 									<Link
-										className={`rounded-md px-3 py-2 text-sm font-medium ${
-											link.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+										className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+											link.current
+												? 'bg-accent text-accent-foreground'
+												: 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
 										}`}
 										href={link.href}
 										key={link.href}
@@ -52,23 +57,25 @@ export default async function Header() {
 						</div>
 					</div>
 					<div className="hidden sm:ml-6 sm:block">
-						<div className="flex items-center text-white">
+						<div className="text-foreground flex items-center">
 							<div className="flex items-center gap-4">
 								{/* Using page-specific translation for a navigation link */}
 								<SignedIn>
 									<Link href="/dashboard">
-										<button>{t.navbar.dashboardLink}</button>
+										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
+											{t.navbar.dashboardLink}
+										</button>
 									</Link>
 									<UserButton />
 								</SignedIn>
 								<SignedOut>
 									<SignInButton>
-										<button className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
 											Sign In
 										</button>
 									</SignInButton>
 									<SignUpButton>
-										<button className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+										<button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-2 text-sm font-medium transition-colors">
 											Sign Up
 										</button>
 									</SignUpButton>
@@ -78,7 +85,7 @@ export default async function Header() {
 					</div>
 					<div className="-mr-2 flex sm:hidden">
 						{/* Mobile menu button */}
-						<DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
+						<DisclosureButton className="group text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-ring relative inline-flex items-center justify-center rounded-md p-2 transition-colors focus:ring-2 focus:outline-none focus:ring-inset">
 							<span className="absolute -inset-0.5" />
 							<span className="sr-only">Open main menu</span>
 							<Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
@@ -88,13 +95,15 @@ export default async function Header() {
 				</div>
 			</div>
 
-			<DisclosurePanel className="border-b-2 border-gray-500 sm:hidden">
+			<DisclosurePanel className="border-border bg-background border-b sm:hidden">
 				<div className="space-y-1 px-2 pt-2 pb-3">
 					{navigationLinks.map(link => (
 						<DisclosureButton
 							as={Link}
-							className={`block rounded-md px-3 py-2 text-base font-medium ${
-								link.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+							className={`block rounded-md px-3 py-2 text-base font-medium transition-colors ${
+								link.current
+									? 'bg-accent text-accent-foreground'
+									: 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
 							}`}
 							href={link.href}
 							key={link.href}
@@ -104,12 +113,12 @@ export default async function Header() {
 					))}
 
 					{/* Mobile auth buttons */}
-					<div className="border-t border-gray-700 pt-4 pb-3">
+					<div className="border-border border-t pt-4 pb-3">
 						<div className="flex flex-col space-y-2 px-2">
 							<SignedIn>
 								<DisclosureButton
 									as={Link}
-									className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
 									href="/dashboard"
 								>
 									{t.navbar.dashboardLink}
@@ -120,12 +129,12 @@ export default async function Header() {
 							</SignedIn>
 							<SignedOut>
 								<SignInButton>
-									<button className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+									<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block w-full rounded-md px-3 py-2 text-left text-base font-medium transition-colors">
 										Sign In
 									</button>
 								</SignInButton>
 								<SignUpButton>
-									<button className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+									<button className="bg-primary text-primary-foreground hover:bg-primary/90 block w-full rounded-md px-3 py-2 text-left text-base font-medium transition-colors">
 										Sign Up
 									</button>
 								</SignUpButton>

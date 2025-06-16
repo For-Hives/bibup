@@ -47,8 +47,8 @@ export default async function RootLayout({
 
 	return (
 		<ClerkProvider>
-			<html lang={locale}>
-				<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+			<html className="dark" lang={locale}>
+				<body className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}>
 					<Header />
 					{children}
 					<Footer />

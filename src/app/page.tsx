@@ -1,42 +1,71 @@
 import Link from 'next/link'
 
-import type { Event } from '@/models/event.model'
-
-import { fetchApprovedPublicEvents } from '@/services/event.services'
-import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
-
-import homeTranslations from './locales.json'
-
-export default async function Home() {
-	let totalEvents = 0
-	let totalBibsSold = 0
-
-	// Get locale and translations with automatic type inference
-	const locale = await getLocale()
-	const t = getTranslations(locale, homeTranslations) // No manual type assertion needed!
-
-	try {
-		const events: Event[] = await fetchApprovedPublicEvents()
-		totalEvents = events.length
-		totalBibsSold = 69 // TODO: recalculate this based on actual bib sales data (no precalculed data available)
-	} catch (error) {
-		console.error('Failed to fetch event data for KPIs:', error)
-	}
-
+export default function Home() {
 	return (
-		<div>hi</div>
-		// TODO: Implement full landing page with translations
-		// <div className="font-[family-name:var(--font-geist-sans)] text-[var(--text-dark)]">
-		// 	{/* Hero Section */}
-		// 	<section className="bg-[var(--primary-pastel)] px-4 py-16 text-center md:py-24">
-		// 		<h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">{t.home.hero.title}</h1>
-		// 		<p className="mb-8 text-lg text-white/90 md:text-xl">{t.home.hero.subtitle}</p>
-		// 		<Link className="btn btn-primary px-8 py-3 text-lg" href="/events">
-		// 			{t.home.hero.browseEventsButton}
-		// 		</Link>
-		// 	</section>
-		// 	{/* More sections... */}
-		// </div>
+		<div className="flex min-h-screen flex-col">
+			{/* Hero Section */}
+			<section className="from-background to-muted/20 flex flex-1 items-center justify-center bg-gradient-to-b px-4 py-16 text-center">
+				<div className="mx-auto max-w-4xl space-y-6">
+					<h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-6xl">
+						Bienvenue sur <span className="text-primary">Beswib</span>
+					</h1>
+					<p className="text-muted-foreground text-xl sm:text-2xl">
+						La plateforme pour acheter et vendre des dossards de course
+					</p>
+					<div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+						<Link
+							className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+							href="/events"
+						>
+							Découvrir les événements
+						</Link>
+						<Link
+							className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+							href="/marketplace"
+						>
+							Parcourir le marché
+						</Link>
+					</div>
+				</div>
+			</section>
+
+			{/* Features Section */}
+			<section className="bg-muted/40 px-4 py-16">
+				<div className="mx-auto max-w-6xl">
+					<h2 className="text-foreground mb-12 text-center text-3xl font-bold tracking-tight">
+						Pourquoi choisir Beswib ?
+					</h2>
+					<div className="grid gap-8 md:grid-cols-3">
+						<div className="text-center">
+							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+								<span className="text-primary text-xl">🏃</span>
+							</div>
+							<h3 className="text-foreground mb-2 text-xl font-semibold">Courses</h3>
+							<p className="text-muted-foreground">
+								Découvrez une large sélection d'événements sportifs et trouvez votre prochaine course
+							</p>
+						</div>
+						<div className="text-center">
+							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+								<span className="text-primary text-xl">🛒</span>
+							</div>
+							<h3 className="text-foreground mb-2 text-xl font-semibold">Marché</h3>
+							<p className="text-muted-foreground">
+								Achetez et vendez des dossards en toute sécurité avec notre plateforme de confiance
+							</p>
+						</div>
+						<div className="text-center">
+							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+								<span className="text-primary text-xl">📅</span>
+							</div>
+							<h3 className="text-foreground mb-2 text-xl font-semibold">Calendrier</h3>
+							<p className="text-muted-foreground">
+								Organisez vos événements et ne manquez jamais une course importante
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	)
 }
