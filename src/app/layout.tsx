@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from 'sonner'
-import Script from 'next/script'
 
 import Footer from '@/components/global/footer'
 import Header from '@/components/global/Header'
@@ -36,7 +35,24 @@ export const metadata: Metadata = {
 		},
 		follow: false,
 	},
+	manifest: '/site.webmanifest',
+	icons: {
+		shortcut: '/favicon.ico',
+		icon: [
+			{ url: '/favicon.ico', sizes: 'any' },
+			{ url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+			{ url: '/favicon.svg', type: 'image/svg+xml' },
+		],
+		apple: {
+			url: '/apple-touch-icon.png',
+			type: 'image/png',
+			sizes: '180x180',
+		},
+	},
 	description: 'Application in development - Not accessible to the public',
+	appleWebApp: {
+		title: 'BeSwib',
+	},
 }
 
 export default async function RootLayout({
@@ -48,12 +64,6 @@ export default async function RootLayout({
 
 	return (
 		<ClerkProvider>
-			{/* <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="BeSwib" />
-<link rel="manifest" href="/site.webmanifest" /> */}
 			<html className="dark" lang={locale}>
 				<body className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}>
 					<Header />
