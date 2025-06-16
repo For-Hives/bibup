@@ -31,7 +31,6 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 		const dataToCreate: Omit<Bib, 'id'> = {
 			validated: false,
 
-			updatedAt: new Date(),
 			status: status,
 			sellerUserId: bibData.sellerUserId,
 			registrationNumber: bibData.registrationNumber,
@@ -42,7 +41,7 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 			optionValues: bibData.optionValues,
 			listed: null,
 			eventId: finalEventId,
-			createdAt: new Date(),
+
 			buyerUserId: undefined,
 		}
 
@@ -225,7 +224,7 @@ export async function processBibSale(
 			status: 'succeeded',
 			sellerUserId: bib.sellerUserId,
 			platformFee: platformFeeAmount,
-			createdAt: new Date(),
+
 			buyerUserId: buyerUserId,
 			bibId: bib.id,
 			amount: bib.price,

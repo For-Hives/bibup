@@ -76,7 +76,8 @@ export default async function BuyerDashboardPage({
 									{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 								</div>
 								<p className="my-1 text-sm text-gray-600">
-									{t.dateOfEvent} {bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'}
+									{t.dateOfEvent}{' '}
+									{bib.expand?.eventId ? new Date(bib.expand.eventId.eventDate).toLocaleDateString() : 'N/A'}
 								</p>
 								<p className="my-1 text-sm text-gray-600">
 									{t.pricePaid} ${bib.price.toFixed(2)}
@@ -112,12 +113,6 @@ export default async function BuyerDashboardPage({
 								</div>
 								<p className="my-1 text-sm text-gray-600">
 									{t.dateAddedToWaitlist} {new Date(waitlistEntry.addedAt).toLocaleDateString()}
-								</p>
-								<p className="my-1 text-sm text-gray-600">
-									{t.status}{' '}
-									{waitlistEntry.notifiedAt
-										? t.notifiedOn + ' ' + new Date(waitlistEntry.notifiedAt).toLocaleDateString()
-										: t.waitingForNotification}
 								</p>
 							</li>
 						))}

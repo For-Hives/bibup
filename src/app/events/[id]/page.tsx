@@ -58,7 +58,7 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 			<header className="mb-6 border-b border-[var(--border-color)] pb-6">
 				<h1 className="mb-2 text-3xl font-bold text-[var(--primary-pastel)] md:text-4xl">{event.name}</h1>
 				<p className="text-md text-gray-600 dark:text-gray-400">
-					<strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
+					<strong>Date:</strong> {new Date(event.eventDate).toLocaleDateString()}
 				</p>
 				<p className="text-md text-gray-600 dark:text-gray-400">
 					<strong>Location:</strong> {event.location}

@@ -117,7 +117,8 @@ export default function EditBibClient({
 
 	const currentStatusDisplay = typeof bib.status === 'string' ? bib.status.replace('_', ' ') : 'N/A'
 	const eventName = bib.expand?.eventId?.name ?? 'N/A'
-	const eventDate = bib.expand?.eventId?.date != null ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'
+	const eventDate =
+		bib.expand?.eventId?.eventDate != null ? new Date(bib.expand.eventId.eventDate).toLocaleDateString() : 'N/A'
 	const eventLocation = bib.expand?.eventId?.location ?? 'N/A'
 
 	return (

@@ -120,7 +120,7 @@ export default function ListNewBibClientPage({
 							<option value="">{t.form.eventSelectPlaceholder}</option>
 							{partneredEvents.map(event => (
 								<option key={event.id} value={event.id}>
-									{event.name} ({new Date(event.date).toLocaleDateString()})
+									{event.name} ({new Date(event.eventDate).toLocaleDateString()})
 								</option>
 							))}
 						</select>

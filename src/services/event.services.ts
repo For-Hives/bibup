@@ -10,23 +10,23 @@ import { pb } from '@/lib/pocketbaseClient'
  * @param organizerId The ID of the user (organizer) creating the event.
  */
 export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (eventData.name === '' || isNaN(eventData.date.getTime()) || eventData.location === '') {
+	if (eventData.name === '' || isNaN(eventData.eventDate.getTime()) || eventData.location === '') {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
 
 	try {
 		const dataToCreate: Omit<Event, 'id'> = {
-			updatedAt: new Date(),
+			typeCourse: eventData.typeCourse ?? 'route',
 			participantCount: eventData.participantCount ?? 0,
 			options: [],
 			name: eventData.name,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
+			eventDate: new Date(eventData.eventDate),
 			description: eventData.description ?? '',
-			date: new Date(eventData.date),
-			createdAt: new Date(),
-			bibsSold: 0,
+			bibPickupWindowEndDate: eventData.bibPickupWindowEndDate ?? new Date(),
+			bibPickupWindowBeginDate: eventData.bibPickupWindowBeginDate ?? new Date(),
 		}
 
 		const record = await pb.collection('events').create<Event>(dataToCreate)

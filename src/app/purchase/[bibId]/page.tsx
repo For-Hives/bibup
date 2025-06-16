@@ -80,7 +80,7 @@ export default async function BibPurchasePage({
 	}
 
 	const eventName = bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`
-	const eventDate = bib.expand?.eventId ? new Date(bib.expand.eventId.date).toLocaleDateString() : 'N/A'
+	const eventDate = bib.expand?.eventId ? new Date(bib.expand.eventId.eventDate).toLocaleDateString() : 'N/A'
 
 	async function handleConfirmPurchase() {
 		'use server'

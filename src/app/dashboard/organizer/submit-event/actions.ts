@@ -64,16 +64,16 @@ export async function handleSubmitEvent(formData: FormData): Promise<void> {
 	// }
 
 	const eventData: Omit<Event, 'id'> = {
-		updatedAt: new Date(),
+		typeCourse: 'route',
 		participantCount: 0,
 		options: [],
 		name,
 		location,
 		isPartnered: false,
+		eventDate: date,
 		description: description ?? '',
-		date,
-		createdAt: new Date(),
-		bibsSold: 0,
+		bibPickupWindowEndDate: new Date(date),
+		bibPickupWindowBeginDate: new Date(date),
 	}
 
 	try {
