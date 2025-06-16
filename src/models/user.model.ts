@@ -7,5 +7,4 @@ export interface User {
 	id: string
 	lastName: string
 	role: 'admin' | 'user' // default 'user'
-	updatedAt: Date
 }
