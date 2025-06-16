@@ -21,20 +21,10 @@ export const metadata: Metadata = {
 // Helper to get status class string from globals.css
 const getBibStatusClass = (status: Bib['status']): string => {
 	switch (status) {
+		case 'available':
+			return 'status-approved' // Using approved for available but could be different
 		case 'expired':
 			return 'status-expired'
-		case 'listed_private':
-			return 'status-approved' // Using approved for listed_private but could be different
-		case 'listed_public':
-			return 'status-approved' // Using approved for listed_public
-		case 'pending_validation':
-			return 'status-pending'
-		case 'sold':
-			return 'status-sold'
-		case 'validation_failed':
-			return 'status-rejected' // Using rejected for validation_failed
-		case 'withdrawn':
-			return 'status-withdrawn'
 		default:
 			return 'bg-gray-200 text-gray-800' // Default fallback
 	}
@@ -143,14 +133,14 @@ export default async function SellerDashboardPage({
 												{t.originalPrice} ${bib.originalPrice.toFixed(2)}
 											</p>
 										)}
-										{bib.size != null && bib.size !== '' && (
+										{bib.optionValues.size != null && bib.optionValues.size !== '' && (
 											<p className="text-xs text-gray-500">
-												{t.size} {bib.size}
+												{t.size} {bib.optionValues.size}
 											</p>
 										)}
-										{bib.gender != null && (
+										{bib.optionValues.gender != null && (
 											<p className="text-xs text-gray-500">
-												{t.gender} {bib.gender}
+												{t.gender} {bib.optionValues.gender}
 											</p>
 										)}
 										<p className="mt-1 text-sm">
@@ -159,11 +149,11 @@ export default async function SellerDashboardPage({
 												{bib.status.replace(/_/g, ' ').toUpperCase()}
 											</span>
 										</p>
-										{(bib.status === 'pending_validation' ||
-											bib.status === 'listed_public' ||
-											bib.status === 'listed_private' ||
-											bib.status === 'withdrawn' ||
-											bib.status === 'validation_failed') && (
+										{(bib.status === 'available' ||
+											bib.status === 'expired' ||
+											bib.status === 'sold' ||
+											bib.status === 'validation_failed' ||
+											bib.status === 'withdrawn') && (
 											<Link
 												className="btn btn-secondary mt-2 inline-block px-3 py-1 text-xs"
 												href={`/dashboard/seller/edit-bib/${bib.id}`}

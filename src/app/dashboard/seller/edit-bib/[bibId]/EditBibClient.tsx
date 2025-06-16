@@ -62,10 +62,10 @@ export default function EditBibClient({
 			})
 	}
 
-	function handleToggleListingStatusAction(newStatus: 'listed_private' | 'listed_public', formData: FormData) {
+	function handleToggleListingStatusAction(newListed: 'private' | 'public', formData: FormData) {
 		setIsLoading(true)
 
-		handleToggleListingStatus(bibId, newStatus, formData)
+		handleToggleListingStatus(bibId, newListed, formData)
 			.then(updatedBib => {
 				toast.success('Listing status updated successfully!')
 				const newEventId = updatedBib.eventId
@@ -192,36 +192,7 @@ export default function EditBibClient({
 							type="number"
 						/>
 					</div>
-					<div>
-						<label className="block text-sm font-medium" htmlFor="size">
-							{t.size}
-						</label>
-						<input
-							className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:border-neutral-600 dark:bg-neutral-700"
-							defaultValue={bib.size ?? ''}
-							disabled={isLoading}
-							id="size"
-							name="size"
-							type="text"
-						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium" htmlFor="gender">
-							{t.gender}
-						</label>
-						<select
-							className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:border-neutral-600 dark:bg-neutral-700"
-							defaultValue={bib.gender ?? ''}
-							disabled={isLoading}
-							id="gender"
-							name="gender"
-						>
-							<option value="">{t.genderOptions?.placeholder ?? 'Select gender'}</option>
-							<option value="male">{t.genderOptions?.male ?? 'Male'}</option>
-							<option value="female">{t.genderOptions?.female ?? 'Female'}</option>
-							<option value="unisex">{t.genderOptions?.unisex ?? 'Unisex'}</option>
-						</select>
-					</div>
+
 					<button
 						className="btn btn-primary w-full sm:w-auto"
 						disabled={isLoading || bib.status === 'sold' || bib.status === 'expired' || bib.status === 'withdrawn'}
@@ -235,17 +206,14 @@ export default function EditBibClient({
 			{bib.status !== 'sold' && bib.status !== 'expired' && bib.status !== 'withdrawn' && (
 				<section className="mb-8 rounded-lg border bg-white p-6 shadow-md dark:border-neutral-700 dark:bg-neutral-800">
 					<h2 className="mb-4 text-xl font-semibold">{t.listingStatus}</h2>
-					{bib.status === 'listed_public' || bib.status === 'listed_private' ? (
+					{bib.listed === 'public' || bib.listed === 'private' ? (
 						<form
 							action={formData =>
-								handleToggleListingStatusAction(
-									bib.status === 'listed_public' ? 'listed_private' : 'listed_public',
-									formData
-								)
+								handleToggleListingStatusAction(bib.listed === 'public' ? 'private' : 'public', formData)
 							}
 							className="space-y-4"
 						>
-							{bib.status === 'listed_public' && (
+							{bib.listed === 'public' && (
 								<div>
 									<label className="block text-sm font-medium" htmlFor="privateListingToken">
 										{t.privateListingToken} (Required for private listing)
@@ -260,17 +228,17 @@ export default function EditBibClient({
 								</div>
 							)}
 							<button className="btn btn-secondary" disabled={isLoading} type="submit">
-								{bib.status === 'listed_public' ? t.makePrivate : t.makePublic}
+								{bib.listed === 'public' ? t.makePrivate : t.makePublic}
 							</button>
 						</form>
 					) : (
 						<div className="space-y-4">
-							<form action={formData => handleToggleListingStatusAction('listed_public', formData)}>
+							<form action={formData => handleToggleListingStatusAction('public', formData)}>
 								<button className="btn btn-primary mr-2" disabled={isLoading} type="submit">
 									{t.makePublic}
 								</button>
 							</form>
-							<form action={formData => handleToggleListingStatusAction('listed_private', formData)}>
+							<form action={formData => handleToggleListingStatusAction('private', formData)}>
 								<div>
 									<label className="block text-sm font-medium" htmlFor="privateListingTokenToggle">
 										{t.privateListingToken} (Required for private listing)

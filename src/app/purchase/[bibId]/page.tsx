@@ -52,7 +52,7 @@ export default async function BibPurchasePage({
 	const errorMessage =
 		errorParam != null && typeof errorParam === 'string' && errorParam !== '' ? decodeURIComponent(errorParam) : null
 
-	if (bib.status !== 'listed_public') {
+	if (bib.listed !== 'public') {
 		return (
 			<div className="mx-auto max-w-lg p-4 text-center text-[var(--text-dark)] md:p-8">
 				<p className="mb-6 rounded-lg border border-red-300 bg-[var(--error-bg)] p-4 text-[var(--error-text)]">
@@ -143,14 +143,14 @@ export default async function BibPurchasePage({
 					<span className="font-semibold">{t.purchase.details.registrationNumber}:</span>{' '}
 					{t.purchase.details.registrationNumberNote}
 				</p>
-				{bib.size != null && bib.size !== '' && (
+				{bib.optionValues.size != null && bib.optionValues.size !== '' && (
 					<p>
-						<span className="font-semibold">{t.purchase.details.size}:</span> {bib.size}
+						<span className="font-semibold">{t.purchase.details.size}:</span> {bib.optionValues.size ?? 'N/A'}
 					</p>
 				)}
-				{bib.gender != null && (
+				{bib.optionValues.gender != null && (
 					<p>
-						<span className="font-semibold">{t.purchase.details.gender}:</span> {bib.gender}
+						<span className="font-semibold">{t.purchase.details.gender}:</span> {bib.optionValues.gender}
 					</p>
 				)}
 

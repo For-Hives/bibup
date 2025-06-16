@@ -16,18 +16,12 @@ export const metadata: Metadata = {
 }
 
 // Helper to get status class string from globals.css
-const getEventStatusClass = (status: Event['status']): string => {
+const getEventStatusClass = (status: Event['isPartnered']): string => {
 	switch (status) {
-		case 'approved':
+		case false:
+			return 'status-expired'
+		case true:
 			return 'status-approved'
-		case 'cancelled':
-			return 'status-expired' // Using 'expired' style for cancelled
-		case 'completed':
-			return 'status-sold' // Using 'sold' style for completed
-		case 'pending_approval':
-			return 'status-pending'
-		case 'rejected':
-			return 'status-rejected'
 		default:
 			return 'bg-gray-200 text-gray-800' // Default fallback
 	}
@@ -102,19 +96,17 @@ export default async function OrganizerDashboardPage({
 									</p>
 									<p className="mt-1 text-sm">
 										{t.status}{' '}
-										<span className={`status-badge ${getEventStatusClass(event.status)}`}>
-											{event.status.replace(/_/g, ' ').toUpperCase()}
+										<span className={`status-badge ${getEventStatusClass(event.isPartnered)}`}>
+											{event.isPartnered ? 'Approved' : 'Expired'}
 										</span>
 									</p>
-									{/* Optional: Link to public page if approved */}
-									{event.status === 'approved' && (
-										<Link
-											className="mt-1 inline-block text-xs text-[var(--accent-sporty)] hover:underline"
-											href={`/events/${event.id}`}
-										>
-											{t.viewPublicPage}
-										</Link>
-									)}
+
+									<Link
+										className="mt-1 inline-block text-xs text-[var(--accent-sporty)] hover:underline"
+										href={`/events/${event.id}`}
+									>
+										{t.viewPublicPage}
+									</Link>
 								</li>
 							))}
 						</ul>

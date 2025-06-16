@@ -54,13 +54,26 @@ export async function handleSubmitEvent(formData: FormData): Promise<void> {
 
 	const { name, location, description, date } = validationResult.output
 
-	const eventData: Omit<Event, 'bibsSold' | 'id' | 'isPartnered' | 'participantCount' | 'status'> &
-		Partial<Pick<Event, 'isPartnered' | 'participantCount'>> = {
-		organizerId: user.id,
+	// const eventData: Omit<Event, 'bibsSold' | 'id' | 'isPartnered' | 'participantCount' | 'status'> &
+	// 	Partial<Pick<Event, 'isPartnered' | 'participantCount'>> = {
+	// 	organizerId: user.id,
+	// 	name,
+	// 	location,
+	// 	description: description ?? '',
+	// 	date,
+	// }
+
+	const eventData: Omit<Event, 'id'> = {
+		updatedAt: new Date(),
+		participantCount: 0,
+		options: [],
 		name,
 		location,
+		isPartnered: false,
 		description: description ?? '',
 		date,
+		createdAt: new Date(),
+		bibsSold: 0,
 	}
 
 	try {

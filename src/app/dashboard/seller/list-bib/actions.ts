@@ -58,14 +58,18 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 	const validatedData = validationResult.output
 
 	const bibToCreate: Omit<Bib, 'id'> = {
-		status: 'pending_validation',
-		size: validatedData.size,
+		validated: false,
+
+		updatedAt: new Date(),
+		status: 'available',
 		sellerUserId: sellerUserIdFromAuth,
 		registrationNumber: validatedData.registrationNumber,
 		price: validatedData.price,
 		originalPrice: validatedData.originalPrice ?? 0,
-		gender: validatedData.gender ?? undefined,
-		eventId: validatedData.eventId ?? '', // TODO: Creer liste d'attente de vente pour les events non listés
+		optionValues: {},
+		listed: null,
+		eventId: validatedData.eventId ?? '',
+		createdAt: new Date(),
 	}
 
 	try {
