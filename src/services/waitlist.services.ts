@@ -44,6 +44,8 @@ export async function addToWaitlist(eventId: string, userId: string): Promise<nu
 			addedAt: Date
 		} = {
 			userId: userId,
+			optionPreferences: {},
+			mailNotification: false,
 			eventId: eventId,
 			addedAt: new Date(),
 		}
