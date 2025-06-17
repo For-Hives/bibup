@@ -8,6 +8,7 @@ import MarketplaceGrid from '@/components/landing/MarketplaceGrid'
 import SecurityProcess from '@/components/landing/SecurityProcess'
 import JourneyTabs from '@/components/landing/JourneyTabs'
 import FeaturesBento from '@/components/landing/Features'
+import BibUpCTA from '@/components/landing/CTASection'
 import BibStats from '@/components/landing/BibStats'
 
 const runs = [
@@ -136,6 +137,8 @@ export default function Home() {
 			<FeaturesBento />
 			{/* Security Process Section */}
 			<SecurityProcess />
+			{/* CTA Section */}
+			<BibUpCTA />
 			{/* Marketplace grid */}
 			<MarketplaceGrid />
 
