@@ -56,7 +56,7 @@ const securityProcessData = [
 		id: 4,
 		icon: CheckCircle,
 		energy: 100,
-		date: 'Step 4',
+		date: 'Step 5',
 		content: 'Final validation with all parties and registration confirmation notifications.',
 		category: 'Confirmation',
 	},
