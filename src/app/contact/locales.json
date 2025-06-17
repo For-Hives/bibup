@@ -1,29 +1,20 @@
 {
 	"en": {
 		"title": "Contact Us",
-		"description": "Get in touch with the Beswib team",
+		"description": "Get in touch with the Beswib team for any questions or inquiries.",
 		"getInTouch": "Get in Touch",
-		"contactDescription": "Have questions, suggestions, or need support? We'd love to hear from you!",
-		"email": "General Contact",
-		"support": "Technical Support",
-		"partnerships": "Partnerships & Events"
+		"contactDescription": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+		"email": "General Inquiries",
+		"support": "Customer Support",
+		"partnerships": "Business Partnerships"
 	},
 	"fr": {
-		"title": "Nous Contacter",
-		"description": "Contactez l'équipe Beswib",
-		"getInTouch": "Nous Contacter",
-		"contactDescription": "Vous avez des questions, des suggestions ou besoin d'aide ? Nous serions ravis de vous entendre !",
-		"email": "Contact Général",
-		"support": "Support Technique",
-		"partnerships": "Partenariats & Événements"
-	},
-	"ko": {
-		"title": "연락처",
-		"description": "Beswib 팀에 연락하기",
-		"getInTouch": "연락하기",
-		"contactDescription": "질문, 제안 또는 지원이 필요하신가요? 연락 주시면 기쁘게 도와드리겠습니다!",
-		"email": "일반 연락처",
-		"support": "기술 지원",
-		"partnerships": "파트너십 & 이벤트"
+		"title": "Contactez-nous",
+		"description": "Entrez en contact avec l'équipe Beswib pour toute question ou demande.",
+		"getInTouch": "Entrez en Contact",
+		"contactDescription": "Nous aimerions avoir de vos nouvelles. Envoyez-nous un message et nous vous répondrons dès que possible.",
+		"email": "Demandes Générales",
+		"support": "Support Client",
+		"partnerships": "Partenariats Commerciaux"
 	}
 }
