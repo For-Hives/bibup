@@ -71,9 +71,6 @@ importers:
       espree:
         specifier: 10.4.0
         version: 10.4.0
-      framer-motion:
-        specifier: ^12.18.1
-        version: 12.18.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       husky:
         specifier: 9.1.7
         version: 9.1.7
