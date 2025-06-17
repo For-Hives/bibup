@@ -64,7 +64,7 @@ const securityProcessData = [
 
 export default function SecurityProcess() {
 	return (
-		<section className="">
+		<section className="pt-16 pb-32">
 			{/* Header Section */}
 			<div className="mx-auto max-w-7xl px-6 py-16">
 				<h2 className="text-foreground mb-4 text-center text-4xl font-bold">Maximum Security</h2>
