@@ -62,18 +62,30 @@ export default function BentoGrid({ t }: Props) {
 							lister votre course sur BibUp, ce formulaire est fait pour vous.
 						</p>
 						<br />
-						<p className="text-gray-300">Notre équipe vous répond rapidement — que ce soit pour :</p>
-						<ul className="mt-2 list-inside list-disc space-y-1 text-gray-300">
-							<li>Comprendre comment fonctionne la plateforme</li>
-							<li>Vous voulez vendre un dossard mais la course n'est pas sur Bibup ?</li>
-							<li>Vous êtes organisateur et vous voulez autoriser la vente de dossard</li>
-							<li>Ou tout simplement discuter d'un partenariat</li>
-						</ul>
-						<p className="mt-4 text-gray-300">👉 Remplissez le formulaire et on revient vers vous sous 24h.</p>
+
+						<div className="flex justify-between space-x-4">
+							<div>
+								<p className="text-gray-300">Notre équipe vous répond rapidement — que ce soit pour :</p>
+								<ul className="mt-2 list-inside list-disc space-y-1 text-gray-300">
+									<li>Comprendre comment fonctionne la plateforme</li>
+									<li>Vous voulez vendre un dossard mais la course n'est pas sur Bibup ?</li>
+									<li>Vous êtes organisateur et vous voulez autoriser la vente de dossard</li>
+									<li>Ou tout simplement discuter d'un partenariat</li>
+								</ul>
+								<p className="mt-4 text-gray-300">👉 Remplissez le formulaire et on revient vers vous sous 24h.</p>
+							</div>
+							<div className="flex w-1/3 items-center justify-center">
+								<div className="rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+									<MessageCircle className="h-18 w-18 text-white" />
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
 				{/* Background decoration */}
+				<div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
 				<div className="absolute top-0 right-0 h-40 w-40 rounded-bl-full bg-gradient-to-bl from-yellow-400/20 to-transparent"></div>
 				<div className="absolute bottom-0 left-0 h-32 w-32 rounded-tr-full bg-gradient-to-tr from-purple-500/20 to-transparent"></div>
 			</motion.div>
@@ -90,7 +102,7 @@ export default function BentoGrid({ t }: Props) {
 					<h2 className="mb-6 text-2xl font-bold">{t.getInTouch}</h2>
 					<ContactForm />
 				</div>
-				<div className="absolute right-0 bottom-0 h-40 w-40 rounded-tl-full bg-gradient-to-tl from-purple-500/20 to-transparent"></div>
+				<div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-tl-full bg-gradient-to-tl from-purple-500/20 to-transparent"></div>
 			</motion.div>
 
 			{/* Email card with hover effect */}

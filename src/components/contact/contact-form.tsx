@@ -54,23 +54,23 @@ export default function ContactForm() {
 	return (
 		<form className="h-full space-y-4" onSubmit={handleSubmit}>
 			<div>
-				<label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
 					Your name
 				</label>
 				<Input
+					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					id="name"
-					className="border-slate-200 bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					placeholder="Your name"
 					required
 				/>
 			</div>
 			<div>
-				<label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="email">
 					Your email
 				</label>
 				<Input
+					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50 dark:focus:ring-slate-700"
 					id="email"
-					className="border-slate-200 bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					placeholder="Your email"
 					required
 					type="email"
@@ -78,7 +78,7 @@ export default function ContactForm() {
 			</div>
 			<div className="flex-1">
 				<Textarea
-					className="h-[120px] resize-none border-slate-200 bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
+					className="h-[120px] resize-none border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					placeholder="Your message"
 					required
 				/>
