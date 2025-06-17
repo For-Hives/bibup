@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { HeroAnimation } from '@/components/landing/hero-animation'
+import BibStats from '@/components/landing/BibStats'
 
 const runs = [
 	{
@@ -121,8 +122,9 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-
-			{/* Features Section */}
+			{/* Stats Section */}
+			<BibStats />
+			{/* Features Section
 			<section className="bg-muted/40 px-4 py-16">
 				<div className="mx-auto max-w-6xl">
 					<h2 className="text-foreground mb-12 text-center text-3xl font-bold tracking-tight">
@@ -158,7 +160,7 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-			</section>
+			</section> */}
 		</div>
 	)
 }
