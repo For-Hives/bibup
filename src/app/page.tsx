@@ -75,10 +75,10 @@ export default function Home() {
 	return (
 		<div className="">
 			{/* Hero Section */}
-			<section className="relative pt-32">
+			<section className="relative pt-40">
 				<Image
 					alt="template-run"
-					className="-z-10 -scale-x-100 overflow-hidden object-cover opacity-30"
+					className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-30"
 					fill
 					sizes="100vw"
 					src={'/TRV_Ultra_AlexDiaz.jpg'}

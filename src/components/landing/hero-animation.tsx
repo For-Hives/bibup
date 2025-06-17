@@ -32,7 +32,7 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 		return Math.floor(Math.random() * 21) - 10
 	}
 	return (
-		<div className="relative w-full pb-32">
+		<div className="relative w-full pb-40">
 			<div>
 				<div className="relative h-116 w-full translate-x-1/3">
 					<AnimatePresence>
