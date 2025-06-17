@@ -1,19 +1,44 @@
 import {
-	IconBolt,
 	IconCalendar,
+	IconChartBar,
 	IconCreditCard,
-	IconLock,
-	IconShield,
-	IconTrendingUp,
+	IconGlobe,
+	IconMail,
+	IconSearch,
+	IconStar,
 	IconUsers,
 } from '@tabler/icons-react'
 import React from 'react'
 
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid'
 
+const ImagePlaceholder = ({
+	icon: Icon,
+	gradient,
+	decorations,
+}: {
+	decorations?: React.ReactNode
+	gradient: string
+	icon: React.ComponentType<{ className?: string }>
+}) => (
+	<div className={`relative h-32 w-full rounded-lg ${gradient} overflow-hidden`}>
+		{decorations}
+		<div className="absolute inset-0 flex items-center justify-center">
+			<Icon className="h-12 w-12 text-white/80" />
+		</div>
+		<div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+	</div>
+)
+
+const CircleDecoration = ({ className }: { className: string }) => (
+	<div className={`absolute rounded-full ${className}`} />
+)
+
+const SquareDecoration = ({ className }: { className: string }) => <div className={`absolute rounded ${className}`} />
+
 export default function FeaturesBento() {
 	return (
-		<section className="bg-muted/40 px-4 py-24">
+		<section className="bg-muted border-t border-neutral-200/10 px-4 py-24">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
 					<h2 className="mb-6 text-4xl font-bold tracking-tight">Pourquoi choisir BibUp ?</h2>
@@ -25,9 +50,9 @@ export default function FeaturesBento() {
 				<BentoGrid className="max-w-7xl">
 					{items.map((item, i) => (
 						<BentoGridItem
-							className={i === 0 || i === 6 ? 'md:col-span-2' : ''}
+							className={item.className}
 							description={item.description}
-							icon={item.icon}
+							header={item.header}
 							key={i}
 							title={item.title}
 						/>
@@ -41,12 +66,24 @@ export default function FeaturesBento() {
 const items = [
 	{
 		title: 'Organisateurs : Sécurité & Croissance',
-		icon: <IconCalendar className="text-primary h-5 w-5" />,
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<CircleDecoration className="top-4 left-4 h-8 w-8 bg-white/20" />
+						<CircleDecoration className="top-8 right-8 h-4 w-4 bg-white/30" />
+						<SquareDecoration className="bottom-6 left-8 h-6 w-6 bg-white/10" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-slate-600/30 to-slate-800/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconCalendar}
+			/>
+		),
 		description: (
-			<div className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+			<div className="mt-3 grid grid-cols-1 gap-6 lg:grid-cols-2">
 				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🛡️ Sécurité & Conformité</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
+					<h4 className="text-foreground mb-3 text-base font-semibold">🛡️ Sécurité & Conformité</h4>
+					<ul className="text-muted-foreground space-y-2 text-sm">
 						<li>• Couverture réglementaire et juridique complète</li>
 						<li>• Réduction des fraudes et faux dossards</li>
 						<li>• Traçabilité totale des transferts</li>
@@ -54,146 +91,234 @@ const items = [
 					</ul>
 				</div>
 				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">📈 Visibilité & Croissance</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
+					<h4 className="text-foreground mb-3 text-base font-semibold">📈 Visibilité & Croissance</h4>
+					<ul className="text-muted-foreground space-y-2 text-sm">
 						<li>• Effet communautaire : trafic vers votre course</li>
 						<li>• Nouvelles inscriptions indirectes</li>
 						<li>• Réduisez drastiquement le nombre de non-partants</li>
 						<li>• Moins de gaspillages aux ravitaillements</li>
 					</ul>
 				</div>
-				<div className="lg:col-span-2">
-					<h4 className="text-foreground mb-2 text-sm font-semibold">⚡ Simplicité Opérationnelle</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>
-							• Aucune charge technique • Centralisation des demandes de transfert • Réduction drastique des emails/SAV
-						</li>
-					</ul>
+			</div>
+		),
+		className: 'md:col-span-6',
+	},
+	{
+		title: 'Acheteurs : Confiance Total',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<CircleDecoration className="top-2 right-4 h-6 w-6 bg-white/25" />
+						<CircleDecoration className="bottom-4 left-6 h-3 w-3 bg-white/40" />
+						<div className="absolute top-6 left-2 h-1 w-12 rounded bg-white/20" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-blue-500/30 to-cyan-500/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconUsers}
+			/>
+		),
+		description: (
+			<div className="mt-3 space-y-3">
+				<div>
+					<h4 className="text-foreground mb-2 text-sm font-semibold">🔒 Protection Garantie</h4>
+					<p className="text-muted-foreground text-xs">
+						Profils vérifiés, aucun risque de fraude, nouveau dossard à votre nom
+					</p>
+				</div>
+				<div>
+					<h4 className="text-foreground mb-2 text-sm font-semibold">⚡ Simplicité</h4>
+					<p className="text-muted-foreground text-xs">Paiement sécurisé, processus automatisé</p>
 				</div>
 			</div>
 		),
+		className: 'md:col-span-3',
 	},
 	{
-		title: 'Simplicité Opérationnelle',
-		icon: <IconBolt className="text-primary h-5 w-5" />,
+		title: 'Recherche Intelligente',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<CircleDecoration className="top-4 right-6 h-10 w-10 bg-white/15" />
+						<CircleDecoration className="bottom-8 left-4 h-3 w-3 bg-white/40" />
+						<div className="absolute top-8 left-8 h-6 w-6 rounded-full border-2 border-white/25" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-purple-500/30 to-violet-600/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconSearch}
+			/>
+		),
 		description: (
-			<div className="mt-2">
-				<h4 className="text-foreground mb-2 text-sm font-semibold">⚡ Zéro Charge Technique</h4>
+			<div className="mt-3">
+				<p className="text-muted-foreground mb-2 text-sm">Trouvez votre course idéale en quelques clics</p>
 				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Aucune charge technique</li>
-					<li>• Centralisation des demandes de transfert</li>
-					<li>• Réduction drastique des emails/SAV</li>
-					<li>• Aucun flux financier à gérer</li>
+					<li>• Filtres avancés par distance, date, lieu</li>
+					<li>• Suggestions personnalisées</li>
+					<li>• Alertes pour vos courses favorites</li>
 				</ul>
 			</div>
 		),
+		className: 'md:col-span-3',
 	},
 	{
-		title: 'Acheteurs : Confiance & Simplicité',
-		icon: <IconUsers className="text-primary h-5 w-5" />,
-		description: (
-			<div className="mt-2 grid grid-cols-1 gap-3">
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🔒 Confiance & Transparence</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Profils vendeurs vérifiés</li>
-						<li>• Aucun risque de faux dossard</li>
-						<li>• Nouveau dossard à votre nom</li>
-						<li>• Assurance garantie le jour J</li>
-					</ul>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🎯 Simplicité & Confort</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Fini les négociations sur les réseaux sociaux</li>
-						<li>• Paiement 100% sécurisé</li>
-						<li>• Processus rapide et automatisé</li>
-						<li>• Confirmation immédiate par email</li>
-					</ul>
-				</div>
-			</div>
+		title: 'Vendeurs : Rentabilité',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<SquareDecoration className="top-3 left-3 h-4 w-4 rotate-45 bg-white/30" />
+						<CircleDecoration className="right-4 bottom-6 h-5 w-5 bg-white/20" />
+						<div className="absolute bottom-2 left-2 h-8 w-8 rounded-full border border-white/30" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-emerald-500/30 to-teal-600/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconCreditCard}
+			/>
 		),
-	},
-	{
-		title: 'Sécurité Avant Tout',
-		icon: <IconShield className="text-primary h-5 w-5" />,
 		description: (
-			<div className="mt-2">
-				<p className="text-muted-foreground mb-2 text-xs">
-					Sécurité de bout en bout avec transactions vérifiées, prévention des fraudes et conformité légale complète
-					pour tous les transferts.
+			<div className="mt-3">
+				<p className="text-muted-foreground mb-3 text-sm">
+					Revente dernière minute, prix libre, réception immédiate des fonds
 				</p>
+				<div className="text-muted-foreground flex items-center space-x-2 text-xs">
+					<span className="bg-primary/10 text-primary rounded px-2 py-1">Public</span>
+					<span className="bg-primary/10 text-primary rounded px-2 py-1">Privé</span>
+				</div>
+			</div>
+		),
+		className: 'md:col-span-5',
+	},
+
+	{
+		title: 'Analytics & Insights',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<div className="absolute bottom-4 left-4 flex space-x-1">
+							<div className="h-6 w-2 rounded-sm bg-white/30" />
+							<div className="h-4 w-2 rounded-sm bg-white/40" />
+							<div className="h-8 w-2 rounded-sm bg-white/50" />
+						</div>
+						<CircleDecoration className="top-6 right-6 h-4 w-4 bg-white/25" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-orange-500/30 to-red-500/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconChartBar}
+			/>
+		),
+		description: (
+			<div className="mt-3">
+				<p className="text-muted-foreground mb-2 text-sm">Suivez les tendances du marché en temps réel</p>
 				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Protection anti-fraude</li>
-					<li>• Vérification d'identité</li>
-					<li>• Conformité réglementaire</li>
+					<li>• Prix moyens par événement</li>
+					<li>• Taux de demande</li>
+					<li>• Prévisions de popularité</li>
 				</ul>
 			</div>
 		),
+		className: 'md:col-span-3',
 	},
 	{
-		title: 'Traitement Instantané',
-		icon: <IconTrendingUp className="text-primary h-5 w-5" />,
+		title: 'Communauté Globale',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<div className="absolute top-6 left-6 h-8 w-8 rounded-full border border-white/30" />
+						<CircleDecoration className="top-8 right-8 h-3 w-3 bg-white/50" />
+						<CircleDecoration className="bottom-6 left-8 h-2 w-2 bg-white/40" />
+						<CircleDecoration className="right-4 bottom-8 h-4 w-4 bg-white/20" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-pink-500/30 to-rose-500/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconGlobe}
+			/>
+		),
 		description: (
-			<div className="mt-2">
-				<p className="text-muted-foreground mb-2 text-xs">
-					Traitement automatisé et rapide avec confirmation immédiate. Pas d'attente, pas de tracas, juste des
-					transactions fluides.
-				</p>
+			<div className="mt-3">
+				<p className="text-muted-foreground mb-2 text-sm">Connectez-vous avec des runners du monde entier</p>
+				<div className="flex items-center space-x-2">
+					<span className="text-primary text-2xl font-bold">12K+</span>
+					<span className="text-muted-foreground text-xs">utilisateurs actifs</span>
+				</div>
+			</div>
+		),
+		className: 'md:col-span-4',
+	},
+	{
+		title: 'Notifications Smart',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<SquareDecoration className="top-4 left-4 h-6 w-6 rounded-md bg-white/20" />
+						<CircleDecoration className="top-2 right-6 h-3 w-3 bg-white/40" />
+						<div className="absolute right-4 bottom-4 flex space-x-1">
+							<div className="h-1 w-1 rounded-full bg-white/50" />
+							<div className="h-1 w-1 rounded-full bg-white/50" />
+							<div className="h-1 w-1 rounded-full bg-white/50" />
+						</div>
+					</>
+				}
+				gradient="bg-gradient-to-br from-indigo-500/30 to-blue-600/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconMail}
+			/>
+		),
+		description: (
+			<div className="mt-3">
+				<p className="text-muted-foreground mb-2 text-sm">Restez informé au bon moment</p>
 				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Automatisation complète</li>
-					<li>• Confirmation en temps réel</li>
-					<li>• Interface intuitive</li>
+					<li>• Nouveaux dossards disponibles</li>
+					<li>• Baisse de prix</li>
+					<li>• Rappels importants</li>
 				</ul>
 			</div>
 		),
+		className: 'md:col-span-4',
 	},
 	{
-		title: 'Vendeurs : Flexibilité & Rentabilité',
-		icon: <IconCreditCard className="text-primary h-5 w-5" />,
-		description: (
-			<div className="mt-2 grid grid-cols-2 gap-3">
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">💰 Rentabilisation</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Revente dernière minute</li>
-						<li>• Prix défini par le vendeur</li>
-						<li>• Réception des fonds immédiat</li>
-					</ul>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🔄 Flexibilité</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Vente publique ou privée</li>
-						<li>• Mise en vente rapide</li>
-						<li>• Gestion simplifiée</li>
-					</ul>
-				</div>
-			</div>
+		title: 'Support Premium 24/7',
+		header: (
+			<ImagePlaceholder
+				decorations={
+					<>
+						<div className="absolute top-4 left-4">
+							<div className="h-6 w-6 animate-pulse rounded-full border-2 border-white/30" />
+							<div className="absolute top-1 left-1 h-4 w-4 rounded-full bg-white/20" />
+						</div>
+						<CircleDecoration className="top-8 right-12 h-4 w-4 bg-white/25" />
+						<CircleDecoration className="bottom-6 left-12 h-3 w-3 bg-white/35" />
+						<SquareDecoration className="right-6 bottom-4 h-5 w-5 rotate-12 bg-white/15" />
+					</>
+				}
+				gradient="bg-gradient-to-br from-yellow-500/30 via-orange-500/30 to-red-500/30 backdrop-blur-sm mix-blend-hard-light"
+				icon={IconStar}
+			/>
 		),
-	},
-	{
-		title: "Tranquillité d'Esprit Complète",
-		icon: <IconLock className="text-primary h-5 w-5" />,
 		description: (
-			<div className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+			<div className="mt-3 grid grid-cols-1 gap-6 lg:grid-cols-2">
 				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🛡️ Protection Garantie</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Assurance garantie le jour de la course</li>
-						<li>• Traçabilité complète des transactions</li>
-						<li>• Partenariats organisateurs vérifiés</li>
-					</ul>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🎯 Support & Assistance</h4>
-					<ul className="text-muted-foreground space-y-1 text-xs">
-						<li>• Support client 24/7</li>
-						<li>• Protection complète contre la fraude</li>
+					<h4 className="text-foreground mb-3 text-base font-semibold">🎯 Assistance Dédiée</h4>
+					<ul className="text-muted-foreground space-y-2 text-sm">
+						<li>• Support client 24/7 en français</li>
 						<li>• Résolution rapide des problèmes</li>
+						<li>• Chat en temps réel</li>
+						<li>• Suivi personnalisé</li>
+					</ul>
+				</div>
+				<div>
+					<h4 className="text-foreground mb-3 text-base font-semibold">🛡️ Garanties Premium</h4>
+					<ul className="text-muted-foreground space-y-2 text-sm">
+						<li>• Protection complète contre la fraude</li>
+						<li>• Assurance le jour de la course</li>
+						<li>• Remboursement garanti</li>
+						<li>• Médiation en cas de litige</li>
 					</ul>
 				</div>
 			</div>
 		),
+		className: 'md:col-span-8',
 	},
 ]
