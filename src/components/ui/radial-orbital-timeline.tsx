@@ -209,7 +209,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 								<div
 									className={`absolute top-14 text-center text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 ${isExpanded ? 'text-foreground scale-125' : 'text-muted-foreground'}`}
 								>
-									({item.id + 1}) - {item.title}
+									{item.title}
 								</div>
 
 								{/* Expanded Card */}
