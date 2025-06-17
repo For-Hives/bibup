@@ -22,7 +22,7 @@ interface FeatureStepsProps {
 	title?: string
 }
 
-export function FeatureSteps({ features, className, autoPlayInterval = 4000 }: FeatureStepsProps) {
+export function FeatureSteps({ features, className, autoPlayInterval = 100 }: FeatureStepsProps) {
 	const [currentFeature, setCurrentFeature] = useState(0)
 	const [progress, setProgress] = useState(0)
 
@@ -94,8 +94,8 @@ export function FeatureSteps({ features, className, autoPlayInterval = 4000 }: F
 										<motion.div
 											animate={{ y: 0, rotateX: 0, opacity: 1 }}
 											className="absolute inset-0 overflow-hidden rounded-lg"
-											exit={{ y: -100, rotateX: 10, opacity: 0 }}
-											initial={{ y: 100, rotateX: -10, opacity: 0 }}
+											exit={{ rotateX: 10, opacity: 0 }}
+											initial={{ rotateX: -10, opacity: 0 }}
 											key={index}
 											transition={{ ease: 'easeInOut', duration: 0.6 }}
 										>
@@ -112,28 +112,6 @@ export function FeatureSteps({ features, className, autoPlayInterval = 4000 }: F
 									)
 							)}
 						</AnimatePresence>
-
-						{/* Progress indicator */}
-						<div className="absolute right-4 bottom-4 left-4">
-							<div className="flex space-x-2">
-								{features.map((_, index) => (
-									<div
-										className={cn(
-											'h-1 rounded-full transition-all duration-300',
-											index === currentFeature ? 'flex-1 bg-white' : 'w-8 bg-white/30'
-										)}
-										key={index}
-									>
-										{index === currentFeature && (
-											<div
-												className="bg-primary h-full rounded-full transition-all duration-100"
-												style={{ width: `${progress}%` }}
-											/>
-										)}
-									</div>
-								))}
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
