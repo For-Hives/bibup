@@ -1,3 +1,5 @@
+import { TrafficCone } from 'lucide-react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -75,7 +77,7 @@ const runs = [
 
 export default function Home() {
 	return (
-		<div className="">
+		<div className="relative">
 			{/* Hero Section */}
 			<section className="relative pt-40">
 				<Image
@@ -127,6 +129,10 @@ export default function Home() {
 			<BibStats />
 			{/* Features Section */}
 			<FeaturesBento />
+			<div className="fixed right-0 bottom-0 z-50 m-8 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
+				<TrafficCone className="h-4 w-4" />
+				<p className="text-sm">Work in progress</p>
+			</div>
 		</div>
 	)
 }
