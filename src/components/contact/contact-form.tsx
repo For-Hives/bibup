@@ -1,10 +1,9 @@
 'use client'
 
 import { Loader2, Send } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
-
-import { motion } from 'framer-motion'
 
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
