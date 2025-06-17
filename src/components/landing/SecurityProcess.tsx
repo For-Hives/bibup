@@ -6,15 +6,15 @@ import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
 
 const securityProcessData = [
 	{
-		title: 'Partenariat',
+		title: 'Partnership',
 		status: 'completed' as const,
 		relatedIds: [1],
 		id: 0,
 		icon: Handshake,
 		energy: 100,
-		date: 'Étape 0',
-		content: 'Partenariat avec les organisateurs des courses et autorisation avec eux pour assurer la légitimité.',
-		category: 'Partenariat',
+		date: 'Step 0',
+		content: 'Partnership with race organizers and authorization to ensure legitimacy.',
+		category: 'Partnership',
 	},
 	{
 		title: 'Certification',
@@ -23,31 +23,31 @@ const securityProcessData = [
 		id: 1,
 		icon: Shield,
 		energy: 95,
-		date: 'Étape 1',
-		content: "Vérification de la validité de l'inscription du vendeur et certification du dossard en vente.",
+		date: 'Step 1',
+		content: 'Verification of seller registration validity and bib certification for sale.',
 		category: 'Certification',
 	},
 	{
-		title: 'Transfert',
+		title: 'Transfer',
 		status: 'in-progress' as const,
 		relatedIds: [1, 3],
 		id: 2,
 		icon: RefreshCcw,
 		energy: 80,
-		date: 'Étape 2',
-		content: "Collecte des données d'inscription du nouveau coureur et transfert de propriété du dossard.",
-		category: 'Transfert',
+		date: 'Step 2',
+		content: 'Collection of new runner registration data and bib ownership transfer.',
+		category: 'Transfer',
 	},
 	{
-		title: 'Mise à jour',
+		title: 'Update',
 		status: 'pending' as const,
 		relatedIds: [2, 4],
 		id: 3,
 		icon: FileCheck,
 		energy: 60,
-		date: 'Étape 3',
-		content: "Modification des données coureur auprès de l'organisateur et mise à jour des informations.",
-		category: 'Mise à jour',
+		date: 'Step 3',
+		content: 'Runner data modification with organizer and information update.',
+		category: 'Update',
 	},
 	{
 		title: 'Confirmation',
@@ -56,25 +56,30 @@ const securityProcessData = [
 		id: 4,
 		icon: CheckCircle,
 		energy: 100,
-		date: 'Étape 4',
-		content: "Validation finale auprès de toutes les parties et notifications de confirmation d'inscription.",
+		date: 'Step 4',
+		content: 'Final validation with all parties and registration confirmation notifications.',
 		category: 'Confirmation',
 	},
 ]
 
 export default function SecurityProcess() {
 	return (
-		<section className="">
+		<section className="from-background via-primary/10 to-background bg-gradient-to-br">
 			{/* Header Section */}
-			<div className="mx-auto max-w-7xl">
-				<h2 className="mb-4 text-center text-4xl font-bold text-white">Sécurité Maximale</h2>
-				<p className="mx-auto max-w-2xl text-lg text-blue-200">
-					Chaque transaction est traitée automatiquement avec la plus haute sécurité
+			<div className="mx-auto max-w-7xl px-6 py-16">
+				<h2 className="text-foreground mb-4 text-center text-4xl font-bold">Maximum Security</h2>
+				<p className="text-muted-foreground mx-auto max-w-2xl text-center text-lg">
+					Every transaction is processed automatically with the highest security standards
 				</p>
 			</div>
 
 			{/* Timeline Component */}
 			<RadialOrbitalTimeline timelineData={securityProcessData} />
+
+			{/* Footer info */}
+			<div className="pb-16 text-center">
+				<p className="text-muted-foreground text-sm">Click on a step to explore the security process</p>
+			</div>
 		</section>
 	)
 }
