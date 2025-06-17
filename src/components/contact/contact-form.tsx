@@ -9,7 +9,25 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export default function ContactForm() {
+interface ContactFormProps {
+	t: {
+		form: {
+			messageResponse: string
+			messageSent: string
+			sendAnotherMessage: string
+			sending: string
+			sendMessage: string
+			yourEmail: string
+			yourEmailPlaceholder: string
+			yourMessage: string
+			yourMessagePlaceholder: string
+			yourName: string
+			yourNamePlaceholder: string
+		}
+	}
+}
+
+export default function ContactForm({ t }: ContactFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -42,10 +60,10 @@ export default function ContactForm() {
 						<path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
 					</svg>
 				</div>
-				<h3 className="mb-2 text-xl font-bold">Message Sent!</h3>
-				<p className="text-slate-600 dark:text-slate-300">We'll get back to you as soon as possible.</p>
+				<h3 className="mb-2 text-xl font-bold">{t.form.messageSent}</h3>
+				<p className="text-slate-600 dark:text-slate-300">{t.form.messageResponse}</p>
 				<Button className="mt-4" onClick={() => setIsSubmitted(false)} variant="outline">
-					Send another message
+					{t.form.sendAnotherMessage}
 				</Button>
 			</motion.div>
 		)
@@ -55,31 +73,35 @@ export default function ContactForm() {
 		<form className="h-full space-y-4" onSubmit={handleSubmit}>
 			<div>
 				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
-					Your name
+					{t.form.yourName}
 				</label>
 				<Input
 					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					id="name"
-					placeholder="Your name"
+					placeholder={t.form.yourNamePlaceholder}
 					required
 				/>
 			</div>
 			<div>
 				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="email">
-					Your email
+					{t.form.yourEmail}
 				</label>
 				<Input
 					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50 dark:focus:ring-slate-700"
 					id="email"
-					placeholder="Your email"
+					placeholder={t.form.yourEmailPlaceholder}
 					required
 					type="email"
 				/>
 			</div>
 			<div className="flex-1">
+				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="message">
+					{t.form.yourMessage}
+				</label>
 				<Textarea
 					className="h-[120px] resize-none border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
-					placeholder="Your message"
+					id="message"
+					placeholder={t.form.yourMessagePlaceholder}
 					required
 				/>
 			</div>
@@ -91,12 +113,12 @@ export default function ContactForm() {
 				{isSubmitting ? (
 					<>
 						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-						Sending...
+						{t.form.sending}
 					</>
 				) : (
 					<>
 						<Send className="mr-2 h-4 w-4" />
-						Send Message
+						{t.form.sendMessage}
 					</>
 				)}
 			</Button>

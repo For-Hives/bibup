@@ -54,25 +54,23 @@ export default function BentoGrid({ t }: Props) {
 				whileHover={{ scale: 1.01 }}
 			>
 				<div className="relative z-10">
-					<h1 className="mb-6 text-4xl font-bold text-white">Utilisez le formulaire de contact pour nous joindre !</h1>
+					<h1 className="mb-6 text-4xl font-bold text-white">{t.discussTogether}</h1>
+					<p className="mb-8 text-gray-300">{t.useContactForm}</p>
 
 					<div className="mb-2">
-						<p className="text-gray-300">
-							Que vous soyez coureur avec une question sur la revente d'un dossard, ou organisateur intéressé pour
-							lister votre course sur BibUp, ce formulaire est fait pour vous.
-						</p>
+						<p className="text-gray-300">{t.runnerOrganizer}</p>
 						<br />
 
 						<div className="flex justify-between space-x-4">
 							<div>
-								<p className="text-gray-300">Notre équipe vous répond rapidement — que ce soit pour :</p>
+								<p className="text-gray-300">{t.ourTeamResponds}</p>
 								<ul className="mt-2 list-inside list-disc space-y-1 text-gray-300">
-									<li>Comprendre comment fonctionne la plateforme</li>
-									<li>Vous voulez vendre un dossard mais la course n'est pas sur Bibup ?</li>
-									<li>Vous êtes organisateur et vous voulez autoriser la vente de dossard</li>
-									<li>Ou tout simplement discuter d'un partenariat</li>
+									<li>{t.understandPlatform}</li>
+									<li>{t.sellBibNotListed}</li>
+									<li>{t.organizerAuthorize}</li>
+									<li>{t.discussPartnership}</li>
 								</ul>
-								<p className="mt-4 text-gray-300">👉 Remplissez le formulaire et on revient vers vous sous 24h.</p>
+								<p className="mt-4 text-gray-300">{t.fillFormResponse}</p>
 							</div>
 							<div className="flex w-1/3 items-center justify-center">
 								<div className="rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-4">
@@ -100,7 +98,7 @@ export default function BentoGrid({ t }: Props) {
 				<div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-violet-600/60 to-transparent"></div>
 				<div className="p-8">
 					<h2 className="mb-6 text-2xl font-bold">{t.getInTouch}</h2>
-					<ContactForm />
+					<ContactForm t={t} />
 				</div>
 				<div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-tl-full bg-gradient-to-tl from-purple-500/20 to-transparent"></div>
 			</motion.div>
@@ -158,8 +156,8 @@ export default function BentoGrid({ t }: Props) {
 			>
 				<div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
 				<MousePointer2 className="mb-3 h-8 w-8 text-purple-600 dark:text-purple-400" />
-				<h3 className="mb-2 text-lg font-semibold">Interactive Experience</h3>
-				<p className="text-sm text-slate-600 dark:text-slate-300">Click to discover more about our social presence</p>
+				<h3 className="mb-2 text-lg font-semibold">{t.interactiveExperience}</h3>
+				<p className="text-sm text-slate-600 dark:text-slate-300">{t.interactiveDescription}</p>
 				<div className="absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-pink-300/20 blur-xl dark:bg-pink-700/20"></div>
 			</motion.div>
 		</div>
