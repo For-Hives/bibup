@@ -12,6 +12,7 @@ export interface BibSaleSimplified {
 		date: Date
 		distance: number
 		distanceUnit: string
+		image: string
 		location: string
 		name: string
 		participantCount: number
@@ -34,16 +35,21 @@ export default function CardMarketSimplified({ bibSaleSimplified }: { bibSaleSim
 				/>
 				<div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-25 dark:bg-black"></div>
 				<div className="relative flex justify-center px-4 pt-4">
-					<div className="from-primary/20 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
+					<div
+						className={cn(
+							'from-primary/10 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5'
+						)}
+					>
 						<Image
 							alt="template-run"
-							className="cover -z-10 rounded-2xl p-3"
+							className="cover z-20 overflow-hidden rounded-2xl p-3"
 							fill
 							sizes="100vw"
-							src="/template-run-2.png"
+							src={bibSaleSimplified.event.image}
 						/>
+						<div className="absolute inset-0 z-10 h-full w-full bg-black/50 bg-blend-color-burn"></div>
 						<div className="absolute inset-0 z-10 opacity-10">
-							<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
+							<div className="isolate h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
 						</div>
 					</div>
 				</div>

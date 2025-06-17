@@ -44,20 +44,19 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 									y: isActive(index) ? [0, -80, 0] : 0,
 									scale: isActive(index) ? 1 : 0.95,
 									rotate: isActive(index) ? 0 : randomRotateY(),
-									opacity: isActive(index) ? 1 : 0.7,
 								}}
 								className="absolute inset-0 origin-bottom"
 								exit={{
 									z: 100,
 									scale: 0.9,
 									rotate: randomRotateY(),
-									opacity: 0,
+									opacity: 1,
 								}}
 								initial={{
 									z: -100,
 									scale: 0.9,
 									rotate: randomRotateY(),
-									opacity: 0,
+									opacity: 1,
 								}}
 								key={index}
 								transition={{
