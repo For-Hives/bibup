@@ -1,324 +1,186 @@
-import {
-	IconCalendar,
-	IconChartBar,
-	IconCreditCard,
-	IconGlobe,
-	IconMail,
-	IconSearch,
-	IconStar,
-	IconUsers,
-} from '@tabler/icons-react'
-import React from 'react'
+import { Calendar, ChartBar, CreditCard, Globe, Mail, Search, Star, Users } from 'lucide-react'
 
-import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid'
-
-const ImagePlaceholder = ({
-	icon: Icon,
-	gradient,
-	decorations,
-}: {
-	decorations?: React.ReactNode
-	gradient: string
-	icon: React.ComponentType<{ className?: string }>
-}) => (
-	<div className={`relative h-32 w-full rounded-lg ${gradient} overflow-hidden`}>
-		{decorations}
-		<div className="absolute inset-0 flex items-center justify-center">
-			<Icon className="h-12 w-12 text-white/80" />
-		</div>
-		<div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-	</div>
-)
-
-const CircleDecoration = ({ className }: { className: string }) => (
-	<div className={`absolute rounded-full ${className}`} />
-)
-
-const SquareDecoration = ({ className }: { className: string }) => <div className={`absolute rounded ${className}`} />
+import { cn } from '@/lib/utils'
 
 export default function FeaturesBento() {
+	const features = [
+		{
+			title: 'Sécurité & Conformité',
+			icon: <Star />,
+			hoverColor: 'yellow',
+			description: 'Couverture réglementaire complète, réduction des fraudes et traçabilité totale des transferts.',
+		},
+		{
+			title: 'Confiance Totale',
+			icon: <Users />,
+			hoverColor: 'blue',
+			description: 'Profils vérifiés, protection garantie contre les fraudes et processus automatisé sécurisé.',
+		},
+		{
+			title: 'Recherche Intelligente',
+			icon: <Search />,
+			hoverColor: 'purple',
+			description: 'Filtres avancés par distance, date et lieu avec suggestions personnalisées et alertes.',
+		},
+		{
+			title: 'Rentabilité Maximum',
+			icon: <CreditCard />,
+			hoverColor: 'green',
+			description: 'Revente dernière minute à prix libre avec réception immédiate des fonds.',
+		},
+		{
+			title: 'Analytics & Insights',
+			icon: <ChartBar />,
+			hoverColor: 'orange',
+			description: 'Suivez les tendances du marché en temps réel avec prix moyens et prévisions.',
+		},
+		{
+			title: 'Communauté Globale',
+			icon: <Globe />,
+			hoverColor: 'pink',
+			description: 'Connectez-vous avec plus de 12 000 runners actifs du monde entier.',
+		},
+		{
+			title: 'Notifications Smart',
+			icon: <Mail />,
+			hoverColor: 'indigo',
+			description: 'Alertes intelligentes pour nouveaux dossards, baisses de prix et rappels importants.',
+		},
+		{
+			title: 'Support Premium 24/7',
+			icon: <Calendar />,
+			hoverColor: 'red',
+			description: 'Assistance dédiée en français avec garanties premium et résolution rapide.',
+		},
+	]
+
 	return (
 		<section className="bg-muted border-t border-neutral-200/10 px-4 py-24">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
-					<h2 className="mb-6 text-4xl font-bold tracking-tight">Pourquoi choisir BibUp ?</h2>
+					<h2 className="mb-6 text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+						Pourquoi choisir BibUp ?
+					</h2>
 					<p className="text-muted-foreground mx-auto max-w-3xl text-xl">
 						Des avantages concrets pour chaque acteur de l'écosystème running
 					</p>
 				</div>
 
-				<BentoGrid className="max-w-7xl">
-					{items.map((item, i) => (
-						<BentoGridItem
-							className={item.className}
-							description={item.description}
-							header={item.header}
-							key={i}
-							title={item.title}
-						/>
-					))}
-				</BentoGrid>
+				<FeaturesSectionWithHoverEffects features={features} />
 			</div>
 		</section>
 	)
 }
 
-const items = [
-	{
-		title: 'Organisateurs : Sécurité & Croissance',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<CircleDecoration className="top-4 left-4 h-8 w-8 bg-white/20" />
-						<CircleDecoration className="top-8 right-8 h-4 w-4 bg-white/30" />
-						<SquareDecoration className="bottom-6 left-8 h-6 w-6 bg-white/10" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-slate-600/30 to-slate-800/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconCalendar}
-			/>
-		),
-		description: (
-			<div className="mt-3 grid grid-cols-1 gap-6 lg:grid-cols-2">
-				<div>
-					<h4 className="text-foreground mb-3 text-base font-semibold">🛡️ Sécurité & Conformité</h4>
-					<ul className="text-muted-foreground space-y-2 text-sm">
-						<li>• Couverture réglementaire et juridique complète</li>
-						<li>• Réduction des fraudes et faux dossards</li>
-						<li>• Traçabilité totale des transferts</li>
-						<li>• Aucun flux financier à gérer</li>
-					</ul>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-3 text-base font-semibold">📈 Visibilité & Croissance</h4>
-					<ul className="text-muted-foreground space-y-2 text-sm">
-						<li>• Effet communautaire : trafic vers votre course</li>
-						<li>• Nouvelles inscriptions indirectes</li>
-						<li>• Réduisez drastiquement le nombre de non-partants</li>
-						<li>• Moins de gaspillages aux ravitaillements</li>
-					</ul>
-				</div>
-			</div>
-		),
-		className: 'md:col-span-6',
-	},
-	{
-		title: 'Acheteurs : Confiance Total',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<CircleDecoration className="top-2 right-4 h-6 w-6 bg-white/25" />
-						<CircleDecoration className="bottom-4 left-6 h-3 w-3 bg-white/40" />
-						<div className="absolute top-6 left-2 h-1 w-12 rounded bg-white/20" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-blue-500/30 to-cyan-500/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconUsers}
-			/>
-		),
-		description: (
-			<div className="mt-3 space-y-3">
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">🔒 Protection Garantie</h4>
-					<p className="text-muted-foreground text-xs">
-						Profils vérifiés, aucun risque de fraude, nouveau dossard à votre nom
-					</p>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-2 text-sm font-semibold">⚡ Simplicité</h4>
-					<p className="text-muted-foreground text-xs">Paiement sécurisé, processus automatisé</p>
-				</div>
-			</div>
-		),
-		className: 'md:col-span-3',
-	},
-	{
-		title: 'Recherche Intelligente',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<CircleDecoration className="top-4 right-6 h-10 w-10 bg-white/15" />
-						<CircleDecoration className="bottom-8 left-4 h-3 w-3 bg-white/40" />
-						<div className="absolute top-8 left-8 h-6 w-6 rounded-full border-2 border-white/25" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-purple-500/30 to-violet-600/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconSearch}
-			/>
-		),
-		description: (
-			<div className="mt-3">
-				<p className="text-muted-foreground mb-2 text-sm">Trouvez votre course idéale en quelques clics</p>
-				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Filtres avancés par distance, date, lieu</li>
-					<li>• Suggestions personnalisées</li>
-					<li>• Alertes pour vos courses favorites</li>
-				</ul>
-			</div>
-		),
-		className: 'md:col-span-3',
-	},
-	{
-		title: 'Vendeurs : Rentabilité',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<SquareDecoration className="top-3 left-3 h-4 w-4 rotate-45 bg-white/30" />
-						<CircleDecoration className="right-4 bottom-6 h-5 w-5 bg-white/20" />
-						<div className="absolute bottom-2 left-2 h-8 w-8 rounded-full border border-white/30" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-emerald-500/30 to-teal-600/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconCreditCard}
-			/>
-		),
-		description: (
-			<div className="mt-3">
-				<p className="text-muted-foreground mb-3 text-sm">
-					Revente dernière minute, prix libre, réception immédiate des fonds
-				</p>
-				<div className="text-muted-foreground flex items-center space-x-2 text-xs">
-					<span className="bg-primary/10 text-primary rounded px-2 py-1">Public</span>
-					<span className="bg-primary/10 text-primary rounded px-2 py-1">Privé</span>
-				</div>
-			</div>
-		),
-		className: 'md:col-span-5',
-	},
+function FeaturesSectionWithHoverEffects({
+	features,
+}: {
+	features: Array<{ description: string; hoverColor: string; icon: React.ReactNode; title: string }>
+}) {
+	return (
+		<div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 py-10 md:grid-cols-2 lg:grid-cols-4">
+			{features.map((feature, index) => (
+				<Feature key={feature.title} {...feature} index={index} />
+			))}
+		</div>
+	)
+}
 
-	{
-		title: 'Analytics & Insights',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<div className="absolute bottom-4 left-4 flex space-x-1">
-							<div className="h-6 w-2 rounded-sm bg-white/30" />
-							<div className="h-4 w-2 rounded-sm bg-white/40" />
-							<div className="h-8 w-2 rounded-sm bg-white/50" />
-						</div>
-						<CircleDecoration className="top-6 right-6 h-4 w-4 bg-white/25" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-orange-500/30 to-red-500/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconChartBar}
+const Feature = ({
+	title,
+	index,
+	icon,
+	hoverColor,
+	description,
+}: {
+	description: string
+	hoverColor: string
+	icon: React.ReactNode
+	index: number
+	title: string
+}) => {
+	const getColorClasses = (color: string) => {
+		const colorMap = {
+			yellow: {
+				icon: 'group-hover/feature:text-yellow-600 dark:group-hover/feature:text-yellow-400',
+				gradient: 'group-hover/feature:from-yellow-100/50 dark:group-hover/feature:from-yellow-900/10',
+				border: 'group-hover/feature:bg-yellow-500/50',
+			},
+			red: {
+				icon: 'group-hover/feature:text-red-600 dark:group-hover/feature:text-red-400',
+				gradient: 'group-hover/feature:from-red-100/50 dark:group-hover/feature:from-red-900/10',
+				border: 'group-hover/feature:bg-red-500/50',
+			},
+			purple: {
+				icon: 'group-hover/feature:text-purple-600 dark:group-hover/feature:text-purple-400',
+				gradient: 'group-hover/feature:from-purple-100/50 dark:group-hover/feature:from-purple-900/10',
+				border: 'group-hover/feature:bg-purple-500/50',
+			},
+			pink: {
+				icon: 'group-hover/feature:text-pink-600 dark:group-hover/feature:text-pink-400',
+				gradient: 'group-hover/feature:from-pink-100/50 dark:group-hover/feature:from-pink-900/10',
+				border: 'group-hover/feature:bg-pink-500/50',
+			},
+			orange: {
+				icon: 'group-hover/feature:text-orange-600 dark:group-hover/feature:text-orange-400',
+				gradient: 'group-hover/feature:from-orange-100/50 dark:group-hover/feature:from-orange-900/10',
+				border: 'group-hover/feature:bg-orange-500/50',
+			},
+			indigo: {
+				icon: 'group-hover/feature:text-indigo-600 dark:group-hover/feature:text-indigo-400',
+				gradient: 'group-hover/feature:from-indigo-100/50 dark:group-hover/feature:from-indigo-900/10',
+				border: 'group-hover/feature:bg-indigo-500/50',
+			},
+			green: {
+				icon: 'group-hover/feature:text-green-600 dark:group-hover/feature:text-green-400',
+				gradient: 'group-hover/feature:from-green-100/50 dark:group-hover/feature:from-green-900/10',
+				border: 'group-hover/feature:bg-green-500/50',
+			},
+			blue: {
+				icon: 'group-hover/feature:text-blue-600 dark:group-hover/feature:text-blue-400',
+				gradient: 'group-hover/feature:from-blue-100/50 dark:group-hover/feature:from-blue-900/10',
+				border: 'group-hover/feature:bg-blue-500/50',
+			},
+		}
+		return colorMap[color as keyof typeof colorMap] || colorMap.blue
+	}
+
+	const colors = getColorClasses(hoverColor)
+	return (
+		<div
+			className={cn(
+				'group/feature relative flex flex-col border-neutral-200 py-10 lg:border-r dark:border-neutral-800',
+				(index === 0 || index === 4) && 'border-neutral-200 lg:border-l dark:border-neutral-800',
+				index < 4 && 'border-neutral-200 lg:border-b dark:border-neutral-800'
+			)}
+		>
+			<div
+				className={cn(
+					'pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100 to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800',
+					colors.gradient
+				)}
 			/>
-		),
-		description: (
-			<div className="mt-3">
-				<p className="text-muted-foreground mb-2 text-sm">Suivez les tendances du marché en temps réel</p>
-				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Prix moyens par événement</li>
-					<li>• Taux de demande</li>
-					<li>• Prévisions de popularité</li>
-				</ul>
+			<div
+				className={cn(
+					'relative z-10 mb-4 px-10 text-neutral-600 transition-colors duration-200 dark:text-neutral-400',
+					colors.icon
+				)}
+			>
+				{icon}
 			</div>
-		),
-		className: 'md:col-span-3',
-	},
-	{
-		title: 'Communauté Globale',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<div className="absolute top-6 left-6 h-8 w-8 rounded-full border border-white/30" />
-						<CircleDecoration className="top-8 right-8 h-3 w-3 bg-white/50" />
-						<CircleDecoration className="bottom-6 left-8 h-2 w-2 bg-white/40" />
-						<CircleDecoration className="right-4 bottom-8 h-4 w-4 bg-white/20" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-pink-500/30 to-rose-500/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconGlobe}
-			/>
-		),
-		description: (
-			<div className="mt-3">
-				<p className="text-muted-foreground mb-2 text-sm">Connectez-vous avec des runners du monde entier</p>
-				<div className="flex items-center space-x-2">
-					<span className="text-primary text-2xl font-bold">12K+</span>
-					<span className="text-muted-foreground text-xs">utilisateurs actifs</span>
-				</div>
+			<div className="relative z-10 mb-2 px-10 text-lg font-bold">
+				<div
+					className={cn(
+						'absolute inset-y-0 left-0 h-6 w-1 origin-center rounded-tr-full rounded-br-full bg-neutral-300 transition-all duration-200 group-hover/feature:h-8 dark:bg-neutral-700',
+						colors.border,
+						'group-hover/feature:bg-blue-500/50'
+					)}
+				/>
+				<span className="inline-block text-neutral-800 transition duration-200 group-hover/feature:translate-x-2 dark:text-neutral-100">
+					{title}
+				</span>
 			</div>
-		),
-		className: 'md:col-span-4',
-	},
-	{
-		title: 'Notifications Smart',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<SquareDecoration className="top-4 left-4 h-6 w-6 rounded-md bg-white/20" />
-						<CircleDecoration className="top-2 right-6 h-3 w-3 bg-white/40" />
-						<div className="absolute right-4 bottom-4 flex space-x-1">
-							<div className="h-1 w-1 rounded-full bg-white/50" />
-							<div className="h-1 w-1 rounded-full bg-white/50" />
-							<div className="h-1 w-1 rounded-full bg-white/50" />
-						</div>
-					</>
-				}
-				gradient="bg-gradient-to-br from-indigo-500/30 to-blue-600/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconMail}
-			/>
-		),
-		description: (
-			<div className="mt-3">
-				<p className="text-muted-foreground mb-2 text-sm">Restez informé au bon moment</p>
-				<ul className="text-muted-foreground space-y-1 text-xs">
-					<li>• Nouveaux dossards disponibles</li>
-					<li>• Baisse de prix</li>
-					<li>• Rappels importants</li>
-				</ul>
-			</div>
-		),
-		className: 'md:col-span-4',
-	},
-	{
-		title: 'Support Premium 24/7',
-		header: (
-			<ImagePlaceholder
-				decorations={
-					<>
-						<div className="absolute top-4 left-4">
-							<div className="h-6 w-6 animate-pulse rounded-full border-2 border-white/30" />
-							<div className="absolute top-1 left-1 h-4 w-4 rounded-full bg-white/20" />
-						</div>
-						<CircleDecoration className="top-8 right-12 h-4 w-4 bg-white/25" />
-						<CircleDecoration className="bottom-6 left-12 h-3 w-3 bg-white/35" />
-						<SquareDecoration className="right-6 bottom-4 h-5 w-5 rotate-12 bg-white/15" />
-					</>
-				}
-				gradient="bg-gradient-to-br from-yellow-500/30 via-orange-500/30 to-red-500/30 backdrop-blur-sm mix-blend-hard-light"
-				icon={IconStar}
-			/>
-		),
-		description: (
-			<div className="mt-3 grid grid-cols-1 gap-6 lg:grid-cols-2">
-				<div>
-					<h4 className="text-foreground mb-3 text-base font-semibold">🎯 Assistance Dédiée</h4>
-					<ul className="text-muted-foreground space-y-2 text-sm">
-						<li>• Support client 24/7 en français</li>
-						<li>• Résolution rapide des problèmes</li>
-						<li>• Chat en temps réel</li>
-						<li>• Suivi personnalisé</li>
-					</ul>
-				</div>
-				<div>
-					<h4 className="text-foreground mb-3 text-base font-semibold">🛡️ Garanties Premium</h4>
-					<ul className="text-muted-foreground space-y-2 text-sm">
-						<li>• Protection complète contre la fraude</li>
-						<li>• Assurance le jour de la course</li>
-						<li>• Remboursement garanti</li>
-						<li>• Médiation en cas de litige</li>
-					</ul>
-				</div>
-			</div>
-		),
-		className: 'md:col-span-8',
-	},
-]
+			<p className="relative z-10 max-w-xs px-10 text-sm text-neutral-600 dark:text-neutral-300">{description}</p>
+		</div>
+	)
+}
