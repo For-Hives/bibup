@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { HeroAnimation } from '@/components/landing/hero-animation'
+import FeaturesBento from '@/components/landing/features-bento'
 import BibStats from '@/components/landing/BibStats'
 
 const runs = [
@@ -124,43 +125,8 @@ export default function Home() {
 			</section>
 			{/* Stats Section */}
 			<BibStats />
-			{/* Features Section
-			<section className="bg-muted/40 px-4 py-16">
-				<div className="mx-auto max-w-6xl">
-					<h2 className="text-foreground mb-12 text-center text-3xl font-bold tracking-tight">
-						Pourquoi choisir Beswib ?
-					</h2>
-					<div className="grid gap-8 md:grid-cols-3">
-						<div className="text-center">
-							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-								<span className="text-primary text-xl">🏃</span>
-							</div>
-							<h3 className="text-foreground mb-2 text-xl font-semibold">Courses</h3>
-							<p className="text-muted-foreground">
-								Découvrez une large sélection d'événements sportifs et trouvez votre prochaine course
-							</p>
-						</div>
-						<div className="text-center">
-							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-								<span className="text-primary text-xl">🛒</span>
-							</div>
-							<h3 className="text-foreground mb-2 text-xl font-semibold">Marché</h3>
-							<p className="text-muted-foreground">
-								Achetez et vendez des dossards en toute sécurité avec notre plateforme de confiance
-							</p>
-						</div>
-						<div className="text-center">
-							<div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-								<span className="text-primary text-xl">📅</span>
-							</div>
-							<h3 className="text-foreground mb-2 text-xl font-semibold">Calendrier</h3>
-							<p className="text-muted-foreground">
-								Organisez vos événements et ne manquez jamais une course importante
-							</p>
-						</div>
-					</div>
-				</div>
-			</section> */}
+			{/* Features Section */}
+			<FeaturesBento />
 		</div>
 	)
 }
