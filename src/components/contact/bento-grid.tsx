@@ -1,15 +1,14 @@
 'use client'
 
 import { ArrowRight, Handshake, Mail, MousePointer2, Users } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
 
-import { motion } from 'framer-motion'
-
+import ContactTranslations from '@/app/contact/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-
-import ContactForm from './contact-form'
 
 type BentoCardProps = {
 	className?: string
@@ -25,9 +24,13 @@ type BentoCardProps = {
 	title: string
 }
 
+import ContactForm from './contact-form'
+
 type Props = {
-	t: any
+	t: Translations
 }
+
+type Translations = ReturnType<typeof getTranslations<(typeof ContactTranslations)['en'], 'en'>>
 
 export default function BentoGrid({ t }: Props) {
 	const [activeCard, setActiveCard] = useState<null | string>(null)
@@ -105,7 +108,7 @@ export default function BentoGrid({ t }: Props) {
 				animate={{ y: 0, opacity: 1 }}
 				className="relative col-span-1 flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 to-pink-100 p-6 text-center shadow-xl dark:from-purple-900/30 dark:to-pink-900/30"
 				initial={{ y: 20, opacity: 0 }}
-				onClick={() => window.open('https://twitter.com/beswib', '_blank')}
+				onClick={() => window.open('https://twitter.com/beswib', '_blank', 'noopener,noreferrer')}
 				transition={{ delay: 0.5 }}
 				whileHover={{ scale: 1.05 }}
 			>

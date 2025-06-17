@@ -14,7 +14,6 @@ export default function ContactPageClient({ t }: { t: Translations }) {
 				<header className="mb-12 text-center">
 					<div className="mb-3 inline-block">
 						<div className="relative inline-block">
-							<div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-pink-600 to-purple-600 opacity-75 blur"></div>
 							<h1 className="relative rounded-lg bg-white px-6 py-2 text-4xl font-bold md:text-5xl dark:bg-slate-900">
 								{t.title}
 							</h1>
