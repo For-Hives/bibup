@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowRight, Handshake, Mail, MousePointer2, Users } from 'lucide-react'
+import { ArrowRight, Handshake, Mail, MessageCircle, MousePointer2, Users } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
@@ -45,6 +45,38 @@ export default function BentoGrid({ t }: Props) {
 
 	return (
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+			{/* Information card - spans full width */}
+			<motion.div
+				animate={{ y: 0, opacity: 1 }}
+				className="relative col-span-1 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-8 shadow-xl md:col-span-3 dark:from-slate-800 dark:to-slate-700"
+				initial={{ y: 20, opacity: 0 }}
+				transition={{ delay: 0.6 }}
+				whileHover={{ scale: 1.01 }}
+			>
+				<div className="relative z-10">
+					<h1 className="mb-6 text-4xl font-bold text-white">Utilisez le formulaire de contact pour nous joindre !</h1>
+
+					<div className="mb-2">
+						<p className="text-gray-300">
+							Que vous soyez coureur avec une question sur la revente d'un dossard, ou organisateur intéressé pour
+							lister votre course sur BibUp, ce formulaire est fait pour vous.
+						</p>
+						<br />
+						<p className="text-gray-300">Notre équipe vous répond rapidement — que ce soit pour :</p>
+						<ul className="mt-2 list-inside list-disc space-y-1 text-gray-300">
+							<li>Comprendre comment fonctionne la plateforme</li>
+							<li>Vous voulez vendre un dossard mais la course n'est pas sur Bibup ?</li>
+							<li>Vous êtes organisateur et vous voulez autoriser la vente de dossard</li>
+							<li>Ou tout simplement discuter d'un partenariat</li>
+						</ul>
+						<p className="mt-4 text-gray-300">👉 Remplissez le formulaire et on revient vers vous sous 24h.</p>
+					</div>
+				</div>
+
+				{/* Background decoration */}
+				<div className="absolute top-0 right-0 h-40 w-40 rounded-bl-full bg-gradient-to-bl from-yellow-400/20 to-transparent"></div>
+				<div className="absolute bottom-0 left-0 h-32 w-32 rounded-tr-full bg-gradient-to-tr from-purple-500/20 to-transparent"></div>
+			</motion.div>
 			{/* Main contact form - spans 2 rows */}
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
@@ -53,7 +85,7 @@ export default function BentoGrid({ t }: Props) {
 				transition={{ delay: 0.1 }}
 				whileHover={{ scale: 1.02 }}
 			>
-				<div className="absolute top-0 left-0 h-2 w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600"></div>
+				<div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-violet-600/60 to-transparent"></div>
 				<div className="p-8">
 					<h2 className="mb-6 text-2xl font-bold">{t.getInTouch}</h2>
 					<ContactForm />
@@ -164,16 +196,13 @@ function BentoCard({
 				<h3 className="mb-1 text-lg font-semibold">{title}</h3>
 				<p className="text-slate-600 dark:text-slate-300">{content}</p>
 			</div>
-
 			<Button className="group mt-4" size="sm" variant="ghost">
 				Contact <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
 			</Button>
-
 			{/* Dynamic background effects based on hover state */}
 			{hoverEffect === 'glow' && isActive && (
 				<div className="absolute inset-0 bg-blue-400/10 transition-opacity duration-300 dark:bg-blue-400/5"></div>
 			)}
-
 			{hoverEffect === 'float' && (
 				<div
 					className={cn(
@@ -182,7 +211,6 @@ function BentoCard({
 					)}
 				></div>
 			)}
-
 			{hoverEffect === 'pulse' && isActive && (
 				<motion.div
 					animate={{ opacity: [0.5, 0.2, 0.5] }}
@@ -190,8 +218,7 @@ function BentoCard({
 					transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
 				></motion.div>
 			)}
-
-			<div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+			<div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>{' '}
 		</motion.a>
 	)
 }
