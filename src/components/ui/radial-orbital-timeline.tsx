@@ -1,11 +1,10 @@
 'use client'
 
-import { ArrowRight, Link, Zap } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+import Image from 'next/image'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 
 interface RadialOrbitalTimelineProps {
 	timelineData: TimelineItem[]
@@ -130,19 +129,6 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 		return relatedItems.includes(itemId)
 	}
 
-	const getStatusStyles = (status: TimelineItem['status']): string => {
-		switch (status) {
-			case 'completed':
-				return 'text-white bg-green-600 border-green-500'
-			case 'in-progress':
-				return 'text-white bg-blue-600 border-blue-500'
-			case 'pending':
-				return 'text-white bg-gray-600 border-gray-500'
-			default:
-				return 'text-white bg-gray-600 border-gray-500'
-		}
-	}
-
 	return (
 		<div
 			className="bg-background z-40 flex min-h-128 w-full flex-col items-center justify-center"
@@ -158,10 +144,10 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 					}}
 				>
 					{/* Orbital Center */}
-					<div className="from-primary via-chart-2 to-chart-3 z-10 flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-gradient-to-br">
-						<div className="border-primary/20 absolute h-24 w-24 animate-ping rounded-full border opacity-70"></div>
-						<div className="border-primary/10 absolute h-28 w-28 animate-ping rounded-full border opacity-50"></div>
-						<div className="bg-primary-foreground/90 h-10 w-10 rounded-full backdrop-blur-md"></div>
+					<div className="z-10 flex h-20 w-20 items-center justify-center rounded-full">
+						<Image alt="logo" height={100} src="/beswib.svg" width={100} />
+						<div className="border-primary-foreground/20 absolute h-24 w-24 animate-[ping_2s_ease-in-out_infinite] rounded-full border opacity-70"></div>
+						<div className="border-primary-foreground/10 absolute h-28 w-28 animate-[ping_2s_ease-in-out_infinite] rounded-full border opacity-50"></div>
 					</div>
 
 					{/* Orbit Ring */}
@@ -210,7 +196,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 								<div
 									className={`flex h-12 w-12 transform items-center justify-center rounded-full border-2 transition-all duration-300 ${
 										isExpanded
-											? 'border-primary bg-primary text-primary-foreground shadow-primary/50 scale-150 shadow-lg'
+											? 'border-primary bg-primary/70 text-primary-foreground shadow-primary/50 scale-115 shadow-lg'
 											: isRelated
 												? 'border-primary bg-primary/70 text-primary-foreground animate-pulse'
 												: 'border-muted bg-card/90 text-muted-foreground'
@@ -221,9 +207,9 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 
 								{/* Node Title */}
 								<div
-									className={`absolute top-14 text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 ${isExpanded ? 'text-foreground scale-125' : 'text-muted-foreground'}`}
+									className={`absolute top-14 text-center text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 ${isExpanded ? 'text-foreground scale-125' : 'text-muted-foreground'}`}
 								>
-									{item.title}
+									({item.id + 1}) - {item.title}
 								</div>
 
 								{/* Expanded Card */}
@@ -232,68 +218,12 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 										<div className="bg-primary/50 absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2"></div>
 										<CardHeader className="pb-2">
 											<div className="flex items-center justify-between">
-												<Badge className={`text-xs ${getStatusStyles(item.status)}`}>
-													{item.status === 'completed'
-														? 'COMPLETED'
-														: item.status === 'in-progress'
-															? 'IN PROGRESS'
-															: 'PENDING'}
-												</Badge>
+												<CardTitle className="text-foreground mt-2 text-sm">{item.title}</CardTitle>
 												<span className="text-muted-foreground font-mono text-xs">{item.date}</span>
 											</div>
-											<CardTitle className="text-foreground mt-2 text-sm">{item.title}</CardTitle>
 										</CardHeader>
 										<CardContent className="text-muted-foreground text-xs">
 											<p>{item.content}</p>
-
-											{/* Security Level */}
-											<div className="border-border mt-4 border-t pt-3">
-												<div className="mb-1 flex items-center justify-between text-xs">
-													<span className="flex items-center">
-														<Zap className="text-primary mr-1" size={10} />
-														Security Level
-													</span>
-													<span className="text-foreground font-mono">{item.energy}%</span>
-												</div>
-												<div className="bg-muted h-1 w-full overflow-hidden rounded-full">
-													<div
-														className="from-primary to-chart-3 h-full bg-gradient-to-r"
-														style={{ width: `${item.energy}%` }}
-													></div>
-												</div>
-											</div>
-
-											{/* Connected Nodes */}
-											{item.relatedIds.length > 0 && (
-												<div className="border-border mt-4 border-t pt-3">
-													<div className="mb-2 flex items-center">
-														<Link className="text-primary mr-1" size={10} />
-														<h4 className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-															Connected Steps
-														</h4>
-													</div>
-													<div className="flex flex-wrap gap-1">
-														{item.relatedIds.map(relatedId => {
-															const relatedItem = timelineData.find(i => i.id === relatedId)
-															return (
-																<Button
-																	className="border-primary/20 text-muted-foreground hover:bg-primary/20 hover:text-foreground flex h-6 items-center rounded-sm bg-transparent px-2 py-0 text-xs transition-all"
-																	key={relatedId}
-																	onClick={e => {
-																		e.stopPropagation()
-																		toggleItem(relatedId)
-																	}}
-																	size="sm"
-																	variant="outline"
-																>
-																	{relatedItem?.title}
-																	<ArrowRight className="text-primary/60 ml-1" size={8} />
-																</Button>
-															)
-														})}
-													</div>
-												</div>
-											)}
 										</CardContent>
 									</Card>
 								)}

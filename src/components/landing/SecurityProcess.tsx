@@ -12,7 +12,7 @@ const securityProcessData = [
 		id: 0,
 		icon: Handshake,
 		energy: 100,
-		date: 'Step 0',
+		date: 'Step 1',
 		content: 'Partnership with race organizers and authorization to ensure legitimacy.',
 		category: 'Partnership',
 	},
@@ -23,7 +23,7 @@ const securityProcessData = [
 		id: 1,
 		icon: Shield,
 		energy: 95,
-		date: 'Step 1',
+		date: 'Step 2',
 		content: 'Verification of seller registration validity and bib certification for sale.',
 		category: 'Certification',
 	},
@@ -34,7 +34,7 @@ const securityProcessData = [
 		id: 2,
 		icon: RefreshCcw,
 		energy: 80,
-		date: 'Step 2',
+		date: 'Step 3',
 		content: 'Collection of new runner registration data and bib ownership transfer.',
 		category: 'Transfer',
 	},
@@ -45,7 +45,7 @@ const securityProcessData = [
 		id: 3,
 		icon: FileCheck,
 		energy: 60,
-		date: 'Step 3',
+		date: 'Step 4',
 		content: 'Runner data modification with organizer and information update.',
 		category: 'Update',
 	},
@@ -64,7 +64,7 @@ const securityProcessData = [
 
 export default function SecurityProcess() {
 	return (
-		<section className="from-background via-primary/10 to-background bg-gradient-to-br">
+		<section className="">
 			{/* Header Section */}
 			<div className="mx-auto max-w-7xl px-6 py-16">
 				<h2 className="text-foreground mb-4 text-center text-4xl font-bold">Maximum Security</h2>
@@ -75,11 +75,6 @@ export default function SecurityProcess() {
 
 			{/* Timeline Component */}
 			<RadialOrbitalTimeline timelineData={securityProcessData} />
-
-			{/* Footer info */}
-			<div className="pb-16 text-center">
-				<p className="text-muted-foreground text-sm">Click on a step to explore the security process</p>
-			</div>
 		</section>
 	)
 }
