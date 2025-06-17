@@ -54,14 +54,22 @@ export default function ContactForm() {
 	return (
 		<form className="h-full space-y-4" onSubmit={handleSubmit}>
 			<div>
+				<label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					Your name
+				</label>
 				<Input
+					id="name"
 					className="border-slate-200 bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					placeholder="Your name"
 					required
 				/>
 			</div>
 			<div>
+				<label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					Your email
+				</label>
 				<Input
+					id="email"
 					className="border-slate-200 bg-white/50 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
 					placeholder="Your email"
 					required
