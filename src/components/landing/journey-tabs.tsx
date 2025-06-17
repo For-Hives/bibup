@@ -91,22 +91,22 @@ export default function JourneyTabs() {
 
 				<Tabs className="w-full" defaultValue="seller">
 					<TabsList className="mx-auto mb-8 grid w-full max-w-md grid-cols-2">
-						<TabsTrigger className="flex items-center gap-2" value="seller">
+						<TabsTrigger className="flex cursor-pointer items-center gap-2" value="seller">
 							<DollarSign className="h-4 w-4" />
 							Parcours Vendeur
 						</TabsTrigger>
-						<TabsTrigger className="flex items-center gap-2" value="buyer">
+						<TabsTrigger className="flex cursor-pointer items-center gap-2" value="buyer">
 							<ShoppingCart className="h-4 w-4" />
 							Parcours Acheteur
 						</TabsTrigger>
 					</TabsList>
 
 					<TabsContent className="mt-0" value="seller">
-						<FeatureSteps autoPlayInterval={5000} features={sellerJourney} />
+						<FeatureSteps autoPlayInterval={3000} features={sellerJourney} />
 					</TabsContent>
 
 					<TabsContent className="mt-0" value="buyer">
-						<FeatureSteps autoPlayInterval={5000} features={buyerJourney} />
+						<FeatureSteps autoPlayInterval={3000} features={buyerJourney} />
 					</TabsContent>
 				</Tabs>
 			</div>
