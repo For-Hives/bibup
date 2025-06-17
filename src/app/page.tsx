@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { HeroAnimation } from '@/components/landing/hero-animation'
 import FeaturesBento from '@/components/landing/features-bento'
+import JourneyTabs from '@/components/landing/journey-tabs'
 import BibStats from '@/components/landing/BibStats'
 
 const runs = [
@@ -127,6 +128,8 @@ export default function Home() {
 			</section>
 			{/* Stats Section */}
 			<BibStats />
+			{/* Journey Section */}
+			<JourneyTabs />
 			{/* Features Section */}
 			<FeaturesBento />
 			<div className="fixed right-0 bottom-0 z-50 m-8 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
