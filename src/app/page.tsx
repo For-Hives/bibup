@@ -3,9 +3,10 @@ import { TrafficCone } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { HeroAnimation } from '@/components/landing/hero-animation'
-import FeaturesBento from '@/components/landing/features-bento'
-import JourneyTabs from '@/components/landing/journey-tabs'
+import { HeroAnimation } from '@/components/landing/HeroAnimation'
+import MarketplaceGrid from '@/components/landing/MarketplaceGrid'
+import JourneyTabs from '@/components/landing/JourneyTabs'
+import FeaturesBento from '@/components/landing/Features'
 import BibStats from '@/components/landing/BibStats'
 
 const runs = [
@@ -86,7 +87,7 @@ export default function Home() {
 					className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-30"
 					fill
 					sizes="100vw"
-					src={'/TRV_Ultra_AlexDiaz.jpg'}
+					src={'/landing/background.jpg'}
 				/>
 				<div className="from-background/100 to-background/100 absolute inset-0 -z-10 bg-gradient-to-r via-zinc-900/60"></div>
 				<div className="z-20 mx-auto max-w-7xl">
@@ -132,6 +133,9 @@ export default function Home() {
 			<JourneyTabs />
 			{/* Features Section */}
 			<FeaturesBento />
+			{/* Marketplace grid */}
+			<MarketplaceGrid />
+
 			<div className="fixed right-0 bottom-0 z-50 m-8 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
 				<TrafficCone className="h-4 w-4" />
 				<p className="text-sm">Work in progress</p>
