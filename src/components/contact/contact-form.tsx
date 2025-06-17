@@ -37,7 +37,7 @@ export default function ContactForm({ t }: ContactFormProps) {
 
 		// Simulate form submission
 		setTimeout(() => {
-			setIsSubmitting(false)
+			setIsSubmitting(false) // TODO: implement actual form submission logic here
 			setIsSubmitted(true)
 		}, 1500)
 	}
