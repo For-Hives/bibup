@@ -8,6 +8,8 @@ import CardMarketSimplified, { BibSaleSimplified } from './card-market-simplifie
 
 export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; runs: BibSaleSimplified[] }) => {
 	const [active, setActive] = useState(0)
+	const [isMounted, setIsMounted] = useState(false)
+	const [randomRotations, setRandomRotations] = useState<number[]>([])
 
 	const handleNext = () => {
 		setActive(prev => (prev + 1) % runs.length)
@@ -21,16 +23,40 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 		return index === active
 	}
 
+	// Generate random rotation for each card client-side only
+	const generateRandomRotations = () => {
+		return runs.map(() => Math.floor(Math.random() * 21) - 10)
+	}
+
+	const getRotationForIndex = (index: number) => {
+		// Use random rotations if available, otherwise fall back to 0
+		return randomRotations[index] ?? 0
+	}
+
 	useEffect(() => {
+		setIsMounted(true)
+		// Generate random rotations only on client-side
+		setRandomRotations(generateRandomRotations())
+
 		if (autoplay) {
 			const interval = setInterval(handleNext, 5000)
 			return () => clearInterval(interval)
 		}
 	}, [autoplay])
 
-	const randomRotateY = () => {
-		return Math.floor(Math.random() * 21) - 10
+	// Don't render the animation on the server to prevent hydration mismatch
+	if (!isMounted) {
+		return (
+			<div className="relative w-full pb-40">
+				<div className="relative h-116 w-full translate-x-1/3">
+					<div className="absolute inset-0 origin-bottom">
+						<CardMarketSimplified bibSaleSimplified={runs[0]} />
+					</div>
+				</div>
+			</div>
+		)
 	}
+
 	return (
 		<div className="relative w-full pb-40">
 			<div>
@@ -43,19 +69,19 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 									z: isActive(index) ? 0 : -100,
 									y: isActive(index) ? [0, -80, 0] : 0,
 									scale: isActive(index) ? 1 : 0.95,
-									rotate: isActive(index) ? 0 : randomRotateY(),
+									rotate: isActive(index) ? 0 : getRotationForIndex(index),
 								}}
 								className="absolute inset-0 origin-bottom"
 								exit={{
 									z: 100,
 									scale: 0.9,
-									rotate: randomRotateY(),
+									rotate: getRotationForIndex(index),
 									opacity: 1,
 								}}
 								initial={{
 									z: -100,
 									scale: 0.9,
-									rotate: randomRotateY(),
+									rotate: getRotationForIndex(index),
 									opacity: 1,
 								}}
 								key={index}
