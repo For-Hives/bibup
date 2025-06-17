@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import MarketplaceGrid from '@/components/landing/MarketplaceGrid'
+import SecurityProcess from '@/components/landing/SecurityProcess'
 import JourneyTabs from '@/components/landing/JourneyTabs'
 import FeaturesBento from '@/components/landing/Features'
 import BibStats from '@/components/landing/BibStats'
@@ -133,6 +134,8 @@ export default function Home() {
 			<JourneyTabs />
 			{/* Features Section */}
 			<FeaturesBento />
+			{/* Security Process Section */}
+			<SecurityProcess />
 			{/* Marketplace grid */}
 			<MarketplaceGrid />
 
