@@ -1,7 +1,7 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import NumberFlow from '@number-flow/react'
-import { useEffect, useState } from 'react'
 
 interface StatItem {
 	label: string
@@ -29,15 +29,39 @@ const stats: StatItem[] = [
 
 export default function BibStats() {
 	const [baseValue] = useState(0)
-	const [isLoading, setIsLoading] = useState(true)
+	const [isVisible, setIsVisible] = useState(false)
+	const [hasAnimated, setHasAnimated] = useState(false)
+	const sectionRef = useRef<HTMLElement>(null)
+
 	useEffect(() => {
-		setTimeout(() => {
-			setIsLoading(false)
-		})
-	}, [])
+		const currentSection = sectionRef.current
+		if (!currentSection) return
+
+		const observer = new IntersectionObserver(
+			entries => {
+				entries.forEach(entry => {
+					// Trigger animation when component is fully visible (100% in viewport)
+					if (entry.isIntersecting && entry.intersectionRatio >= 0.8 && !hasAnimated) {
+						setIsVisible(true)
+						setHasAnimated(true) // Prevent re-triggering
+					}
+				})
+			},
+			{
+				threshold: 0.8, // Trigger when 80% of the component is visible
+				rootMargin: '0px',
+			}
+		)
+
+		observer.observe(currentSection)
+
+		return () => {
+			observer.disconnect()
+		}
+	}, [hasAnimated])
 
 	return (
-		<section className="bg-card/50 border-border border-t py-16">
+		<section className="bg-card/50 border-border border-t py-16" ref={sectionRef}>
 			<div className="mx-auto max-w-6xl px-4">
 				<div className="grid gap-8 md:grid-cols-3">
 					{stats.map((stat, index) => (
@@ -46,9 +70,9 @@ export default function BibStats() {
 								<NumberFlow
 									transformTiming={{
 										easing: 'ease-in-out',
-										duration: 1000,
+										duration: 1500,
 									}}
-									value={Number(isLoading ? baseValue : stat.value)}
+									value={Number(isVisible ? stat.value : baseValue)}
 								/>
 								{stat.suffix}
 							</div>
