@@ -1629,8 +1629,9 @@ packages:
       eslint: '>=8.45.0'
 
   eslint-plugin-prettier@5.5.0:
-    resolution: {integrity: sha512-8qsOYwkkGrahrgoUv76NZi23koqXOGiiEzXMrT8Q7VcYaUISR+5MorIUxfWqYXN0fN/31WbSrxCxFkVQ43wwrA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
+    resolution:
+      { integrity: sha512-8qsOYwkkGrahrgoUv76NZi23koqXOGiiEzXMrT8Q7VcYaUISR+5MorIUxfWqYXN0fN/31WbSrxCxFkVQ43wwrA== }
+    engines: { node: ^14.18.0 || >=16.0.0 }
     peerDependencies:
       '@types/eslint': '>=8.0.0'
       eslint: '>=8.0.0'
