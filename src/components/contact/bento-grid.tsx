@@ -100,7 +100,7 @@ export default function BentoGrid({ t }: Props) {
 					<h2 className="mb-6 text-2xl font-bold">{t.getInTouch}</h2>
 					<ContactForm t={t} />
 				</div>
-				<div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-tl-full bg-gradient-to-tl from-purple-500/20 to-transparent"></div>
+				<div className="pointer-events-none absolute right-0 bottom-0 h-45 w-45 rounded-tl-full bg-gradient-to-tl from-purple-500/30 via-purple-500/5 to-transparent"></div>
 			</motion.div>
 
 			{/* Email card with hover effect */}
