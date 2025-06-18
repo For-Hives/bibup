@@ -79,7 +79,7 @@ export default async function Hero() {
 	})
 
 	return (
-		<section className="relative px-4 pt-20 md:px-0 xl:pt-40">
+		<section className="relative px-4 pt-20 xl:px-0 xl:pt-40">
 			<Image
 				alt="template-run"
 				className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-75"
