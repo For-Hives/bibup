@@ -10,10 +10,16 @@ interface CTAProps {
 		variant?: 'default' | 'outline' | 'secondary'
 	}>
 	className?: string
+	translations?: {
+		ctaSection: {
+			description: string
+			title: string
+		}
+	}
 	withGlow?: boolean
 }
 
-export function CTASection({ withGlow = true, className, actions }: CTAProps) {
+export function CTASection({ withGlow = true, translations, className, actions }: CTAProps) {
 	return (
 		<section
 			className={cn(
@@ -24,14 +30,19 @@ export function CTASection({ withGlow = true, className, actions }: CTAProps) {
 			<div className="relative mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 py-12 text-center sm:gap-8 md:py-24">
 				{/* Title */}
 				<h2 className="animate-fade-in-up text-3xl font-semibold opacity-0 delay-200 sm:text-4xl">
-					Beswib transforme la gestion des transferts de dossards en solution gagnante pour tous
+					{translations?.ctaSection.title ??
+						'Beswib transforme la gestion des transferts de dossards en solution gagnante pour tous'}
 				</h2>
 
 				{/* Description */}
-				<p className="animate-fade-in-up text-muted-foreground max-w-4xl text-lg opacity-0 delay-300">
-					Organisateurs : réduisez vos risques et votre charge administrative <br />
-					Coureurs : achetez et vendez en toute sécurité, sans négociation ni stress
-				</p>
+				<p
+					className="animate-fade-in-up text-muted-foreground max-w-4xl text-lg opacity-0 delay-300"
+					dangerouslySetInnerHTML={{
+						__html:
+							translations?.ctaSection.description ??
+							'Organisateurs : réduisez vos risques et votre charge administrative <br />Coureurs : achetez et vendez en toute sécurité, sans négociation ni stress',
+					}}
+				/>
 
 				{/* Action Buttons */}
 				<div className="animate-fade-in-up flex flex-col gap-4 opacity-0 delay-500 sm:flex-row">

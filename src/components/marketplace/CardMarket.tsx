@@ -32,7 +32,16 @@ export interface BibSale {
 	}
 }
 
-export default function CardMarket({ bibSale }: { bibSale: BibSale }) {
+interface CardMarketProps {
+	bibSale: BibSale
+	translations?: {
+		participants: string
+		soldBy: string
+		wantThisBib: string
+	}
+}
+
+export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 	return (
 		<div className="h-full w-full max-w-xs">
 			<div className="bg-card/80 border-border relative flex h-full flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
@@ -86,7 +95,7 @@ export default function CardMarket({ bibSale }: { bibSale: BibSale }) {
 				<div className="flex w-full items-center justify-center py-2">
 					<div className="flex w-full items-center justify-center">
 						<p className="text-muted-foreground text-xs leading-relaxed italic">
-							vendu par {bibSale.user.firstName} {bibSale.user.lastName}
+							{translations?.soldBy ?? 'vendu par'} {bibSale.user.firstName} {bibSale.user.lastName}
 						</p>
 					</div>
 				</div>
@@ -119,7 +128,7 @@ export default function CardMarket({ bibSale }: { bibSale: BibSale }) {
 					<div className="flex items-center gap-2">
 						<User className="h-5 w-5" />
 						<p className="text-muted-foreground text-xs leading-relaxed">
-							{formatParticipantCount(bibSale.event.participantCount)} participants
+							{formatParticipantCount(bibSale.event.participantCount)} {translations?.participants ?? 'participants'}
 						</p>
 					</div>
 					<div className="flex h-full items-end justify-center py-2">
@@ -127,7 +136,8 @@ export default function CardMarket({ bibSale }: { bibSale: BibSale }) {
 							className="border-border bg-accent/20 text-accent-foreground hover:bg-accent/30 hover:text-foreground flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-md transition"
 							href={`/marketplace/${bibSale.id}`}
 						>
-							<ShoppingCart className="h-5 w-5" />I want this bib
+							<ShoppingCart className="h-5 w-5" />
+							{translations?.wantThisBib ?? 'I want this bib'}
 						</Link>
 					</div>
 				</div>

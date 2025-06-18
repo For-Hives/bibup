@@ -6,7 +6,17 @@ import { useEffect, useState } from 'react'
 
 import CardMarketSimplified, { BibSaleSimplified } from './CardMarketSimplified'
 
-export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; runs: BibSaleSimplified[] }) => {
+export const HeroAnimation = ({
+	translations,
+	runs,
+	autoplay = true,
+}: {
+	autoplay?: boolean
+	runs: BibSaleSimplified[]
+	translations?: {
+		participants: string
+	}
+}) => {
 	const [active, setActive] = useState(0)
 	const [isMounted, setIsMounted] = useState(false)
 	const [randomRotations, setRandomRotations] = useState<number[]>([])
@@ -50,7 +60,7 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 			<div className="relative w-full pb-40">
 				<div className="relative h-116 w-full translate-x-1/3">
 					<div className="absolute inset-0 origin-bottom">
-						<CardMarketSimplified bibSaleSimplified={runs[0]} />
+						<CardMarketSimplified bibSaleSimplified={runs[0]} translations={translations} />
 					</div>
 				</div>
 			</div>
@@ -90,7 +100,7 @@ export const HeroAnimation = ({ runs, autoplay = true }: { autoplay?: boolean; r
 									duration: 0.4,
 								}}
 							>
-								<CardMarketSimplified bibSaleSimplified={run} />
+								<CardMarketSimplified bibSaleSimplified={run} translations={translations} />
 							</motion.div>
 						))}
 					</AnimatePresence>

@@ -95,6 +95,18 @@
 				}
 			}
 		},
+		"ctaSection": {
+			"title": "Beswib transforms bib transfer management into a win-win solution for everyone",
+			"description": "Organizers: reduce your risks and administrative burden <br />Runners: buy and sell safely, without negotiation or stress"
+		},
+		"marketplace": {
+			"soldBy": "sold by",
+			"participants": "participants",
+			"wantThisBib": "I want this bib"
+		},
+		"steps": {
+			"step": "Step"
+		},
 		"security": {
 			"title": "Maximum Security",
 			"subtitle": "Every transaction is processed automatically with the highest security standards",
@@ -216,6 +228,18 @@
 				}
 			}
 		},
+		"ctaSection": {
+			"title": "Beswib transforme la gestion des transferts de dossards en solution gagnante pour tous",
+			"description": "Organisateurs : réduisez vos risques et votre charge administrative <br />Coureurs : achetez et vendez en toute sécurité, sans négociation ni stress"
+		},
+		"marketplace": {
+			"soldBy": "vendu par",
+			"participants": "participants",
+			"wantThisBib": "Je veux ce dossard"
+		},
+		"steps": {
+			"step": "Étape"
+		},
 		"security": {
 			"title": "Maximum Security",
 			"subtitle": "Every transaction is processed automatically with the highest security standards",
@@ -336,6 +360,18 @@
 					"content": "Beswib 계정으로 자금 수령 후 은행 계좌로 인출"
 				}
 			}
+		},
+		"ctaSection": {
+			"title": "Beswib은 빕 전송 관리를 모든 사람을 위한 윈-윈 솔루션으로 변환합니다",
+			"description": "주최자: 위험과 관리 부담을 줄이세요 <br />러너: 협상이나 스트레스 없이 안전하게 구매 및 판매하세요"
+		},
+		"marketplace": {
+			"soldBy": "판매자",
+			"participants": "참가자",
+			"wantThisBib": "이 빕을 원합니다"
+		},
+		"steps": {
+			"step": "단계"
 		},
 		"security": {
 			"title": "최대 보안",

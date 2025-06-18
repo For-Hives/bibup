@@ -22,6 +22,7 @@ export default async function BesWibCTA() {
 					href: '/marketplace',
 				},
 			]}
+			translations={t}
 			withGlow={true}
 		/>
 	)
