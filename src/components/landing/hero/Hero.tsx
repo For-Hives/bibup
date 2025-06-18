@@ -80,7 +80,7 @@ export default async function Hero() {
 		<section className="relative pt-20 xl:pt-40">
 			<Image
 				alt="template-run"
-				className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-30"
+				className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-40"
 				fill
 				sizes="100vw"
 				src={'/landing/background.jpg'}
