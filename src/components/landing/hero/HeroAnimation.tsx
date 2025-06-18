@@ -4,7 +4,7 @@ import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-import CardMarketSimplified, { BibSaleSimplified } from './CardMarketSimplified'
+import CardMarketSimplified, { BibSaleSimplified } from '../CardMarketSimplified'
 
 export const HeroAnimation = ({
 	translations,

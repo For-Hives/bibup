@@ -1,0 +1,116 @@
+{
+	"en": {
+		"features": {
+			"title": "Why choose Beswib?",
+			"subtitle": "Concrete benefits for every actor in the running ecosystem",
+			"security": {
+				"title": "Security & Compliance",
+				"description": "Complete regulatory coverage, fraud reduction and total transfer traceability."
+			},
+			"trust": {
+				"title": "Total Trust",
+				"description": "Verified profiles, guaranteed fraud protection and secure automated process."
+			},
+			"search": {
+				"title": "Smart Search",
+				"description": "Advanced filters by distance, date and location with personalized suggestions and alerts."
+			},
+			"profitability": {
+				"title": "Maximum Profitability",
+				"description": "Last-minute resale at free price with immediate fund reception."
+			},
+			"analytics": {
+				"title": "Analytics & Insights",
+				"description": "Track market trends in real time with average prices and forecasts."
+			},
+			"community": {
+				"title": "Global Community",
+				"description": "Connect with over 12,000 active runners worldwide."
+			},
+			"notifications": {
+				"title": "Smart Notifications",
+				"description": "Smart alerts for new bibs, price drops and important reminders."
+			},
+			"support": {
+				"title": "Premium Support 24/7",
+				"description": "Dedicated assistance in English with premium guarantees and quick resolution."
+			}
+		}
+	},
+	"fr": {
+		"features": {
+			"title": "Pourquoi choisir Beswib ?",
+			"subtitle": "Des avantages concrets pour chaque acteur de l'écosystème running",
+			"security": {
+				"title": "Sécurité & Conformité",
+				"description": "Couverture réglementaire complète, réduction des fraudes et traçabilité totale des transferts."
+			},
+			"trust": {
+				"title": "Confiance Totale",
+				"description": "Profils vérifiés, protection garantie contre les fraudes et processus automatisé sécurisé."
+			},
+			"search": {
+				"title": "Recherche Intelligente",
+				"description": "Filtres avancés par distance, date et lieu avec suggestions personnalisées et alertes."
+			},
+			"profitability": {
+				"title": "Rentabilité Maximum",
+				"description": "Revente dernière minute à prix libre avec réception immédiate des fonds."
+			},
+			"analytics": {
+				"title": "Analytics & Insights",
+				"description": "Suivez les tendances du marché en temps réel avec prix moyens et prévisions."
+			},
+			"community": {
+				"title": "Communauté Globale",
+				"description": "Connectez-vous avec plus de 12 000 runners actifs du monde entier."
+			},
+			"notifications": {
+				"title": "Notifications Smart",
+				"description": "Alertes intelligentes pour nouveaux dossards, baisses de prix et rappels importants."
+			},
+			"support": {
+				"title": "Support Premium 24/7",
+				"description": "Assistance dédiée en français avec garanties premium et résolution rapide."
+			}
+		}
+	},
+	"ko": {
+		"features": {
+			"title": "Beswib을 선택하는 이유는?",
+			"subtitle": "러닝 생태계의 모든 참여자를 위한 구체적인 혜택",
+			"security": {
+				"title": "보안 및 규정 준수",
+				"description": "완전한 규제 적용, 사기 감소 및 전체 전송 추적 가능성."
+			},
+			"trust": {
+				"title": "완전한 신뢰",
+				"description": "검증된 프로필, 사기에 대한 보장된 보호 및 안전한 자동화 프로세스."
+			},
+			"search": {
+				"title": "스마트 검색",
+				"description": "개인화된 제안 및 알림과 함께 거리, 날짜 및 위치별 고급 필터."
+			},
+			"profitability": {
+				"title": "최대 수익성",
+				"description": "자유 가격으로 막판 재판매 및 즉시 자금 수령."
+			},
+			"analytics": {
+				"title": "분석 및 통찰력",
+				"description": "평균 가격 및 예측과 함께 실시간으로 시장 동향을 추적하세요."
+			},
+			"community": {
+				"title": "글로벌 커뮤니티",
+				"description": "전 세계 12,000명 이상의 활성 러너와 연결하세요."
+			},
+			"notifications": {
+				"title": "스마트 알림",
+				"description": "새로운 빕, 가격 하락 및 중요한 알림을 위한 스마트 알림."
+			},
+			"support": {
+				"title": "프리미엄 지원 24/7",
+				"description": "프리미엄 보장 및 빠른 해결을 갖춘 한국어 전용 지원."
+			}
+		}
+	}
+}
