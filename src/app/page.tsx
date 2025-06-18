@@ -145,7 +145,7 @@ export default async function Home() {
 			<BesWibCTA />
 			{/* <MarketplaceGrid />  */}
 
-			<div className="fixed right-0 bottom-0 z-50 m-8 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
+			<div className="fixed right-0 bottom-0 z-50 m-8 mb-24 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
 				<TrafficCone className="h-4 w-4" />
 				<p className="text-sm">{t.home.hero.workInProgress}</p>
 			</div>
