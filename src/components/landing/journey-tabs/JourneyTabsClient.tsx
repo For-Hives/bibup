@@ -103,8 +103,8 @@ export default function JourneyTabsClient({ translations }: JourneyTabsClientPro
 	]
 
 	return (
-		<section className="bg-muted/30 py-16 md:py-24">
-			<div className="mx-auto max-w-7xl px-4">
+		<section className="bg-muted/30 px-4 py-16 md:py-24 xl:px-0">
+			<div className="mx-auto max-w-7xl">
 				<div className="mb-12 text-center">
 					<h2 className="text-foreground mb-6 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
 						{t.journey.title}

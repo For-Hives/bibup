@@ -21,10 +21,10 @@ interface CTAProps {
 
 export function CTASection({ withGlow = true, translations, className, actions }: CTAProps) {
 	return (
-		<div className="px-3">
+		<div className="px-4 xl:px-0">
 			<section
 				className={cn(
-					'from-background via-primary/15 to-background mx-auto my-24 max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br pt-0 md:pt-0',
+					'from-background via-primary/15 to-background mx-auto my-12 max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br pt-0 md:pt-0',
 					className
 				)}
 			>

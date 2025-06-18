@@ -30,10 +30,10 @@ export default async function Header() {
 			as="nav"
 			className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur"
 		>
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+			<div className="mx-auto max-w-7xl px-4 xl:px-0">
 				<div className="flex h-16 items-center justify-between">
 					<div className="flex items-center">
-						<div className="shrink-0">
+						<div className="">
 							<Link href="/">
 								<Image alt="Beswib" className="h-8 w-auto" height={32} src="/beswib.svg" width={32} />
 							</Link>

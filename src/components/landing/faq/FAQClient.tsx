@@ -31,8 +31,8 @@ export default function FAQClient({ translations }: FAQClientProps) {
 	const { faq } = translations
 
 	return (
-		<div className="w-full py-20 lg:py-40">
-			<div className="container mx-auto">
+		<div className="w-full px-4 py-12 md:py-24 xl:px-0">
+			<div className="container mx-auto max-w-7xl">
 				<div className="grid gap-10 lg:grid-cols-2">
 					{/* Left Column - Intro */}
 					<div className="flex flex-col gap-10">

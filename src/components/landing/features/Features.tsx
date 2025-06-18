@@ -62,7 +62,7 @@ export default async function FeaturesBento() {
 	]
 
 	return (
-		<section className="bg-muted border-t border-neutral-200/10 px-4 py-24">
+		<section className="bg-muted border-t border-neutral-200/10 py-24">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
 					<h2 className="mb-6 text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
@@ -107,44 +107,60 @@ const Feature = ({
 	const getColorClasses = (color: string) => {
 		const colorMap = {
 			yellow: {
-				icon: 'group-hover/feature:text-yellow-600 dark:group-hover/feature:text-yellow-400',
-				gradient: 'group-hover/feature:from-yellow-100/50 dark:group-hover/feature:from-yellow-900/10',
-				border: 'group-hover/feature:bg-yellow-500/50',
+				icon: 'text-yellow-600 dark:text-yellow-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-yellow-600 dark:xl:group-hover/feature:text-yellow-400',
+				gradient:
+					'from-yellow-100/50 dark:from-yellow-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-yellow-100/50 dark:xl:group-hover/feature:from-yellow-900/10',
+				border:
+					'bg-yellow-500/50 dark:bg-yellow-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-yellow-500/50 xl:group-hover/feature:dark:bg-yellow-500/50',
 			},
 			red: {
-				icon: 'group-hover/feature:text-red-600 dark:group-hover/feature:text-red-400',
-				gradient: 'group-hover/feature:from-red-100/50 dark:group-hover/feature:from-red-900/10',
-				border: 'group-hover/feature:bg-red-500/50',
+				icon: 'text-red-600 dark:text-red-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-red-600 dark:xl:group-hover/feature:text-red-400',
+				gradient:
+					'from-red-100/50 dark:from-red-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-red-100/50 dark:xl:group-hover/feature:from-red-900/10',
+				border:
+					'bg-red-500/50 dark:bg-red-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-red-500/50 xl:group-hover/feature:dark:bg-red-500/50',
 			},
 			purple: {
-				icon: 'group-hover/feature:text-purple-600 dark:group-hover/feature:text-purple-400',
-				gradient: 'group-hover/feature:from-purple-100/50 dark:group-hover/feature:from-purple-900/10',
-				border: 'group-hover/feature:bg-purple-500/50',
+				icon: 'text-purple-600 dark:text-purple-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-purple-600 dark:xl:group-hover/feature:text-purple-400',
+				gradient:
+					'from-purple-100/50 dark:from-purple-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-purple-100/50 dark:xl:group-hover/feature:from-purple-900/10',
+				border:
+					'bg-purple-500/50 dark:bg-purple-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-purple-500/50 xl:group-hover/feature:dark:bg-purple-500/50',
 			},
 			pink: {
-				icon: 'group-hover/feature:text-pink-600 dark:group-hover/feature:text-pink-400',
-				gradient: 'group-hover/feature:from-pink-100/50 dark:group-hover/feature:from-pink-900/10',
-				border: 'group-hover/feature:bg-pink-500/50',
+				icon: 'text-pink-600 dark:text-pink-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-pink-600 dark:xl:group-hover/feature:text-pink-400',
+				gradient:
+					'from-pink-100/50 dark:from-pink-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-pink-100/50 dark:xl:group-hover/feature:from-pink-900/10',
+				border:
+					'bg-pink-500/50 dark:bg-pink-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-pink-500/50 xl:group-hover/feature:dark:bg-pink-500/50',
 			},
 			orange: {
-				icon: 'group-hover/feature:text-orange-600 dark:group-hover/feature:text-orange-400',
-				gradient: 'group-hover/feature:from-orange-100/50 dark:group-hover/feature:from-orange-900/10',
-				border: 'group-hover/feature:bg-orange-500/50',
+				icon: 'text-orange-600 dark:text-orange-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-orange-600 dark:xl:group-hover/feature:text-orange-400',
+				gradient:
+					'from-orange-100/50 dark:from-orange-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-orange-100/50 dark:xl:group-hover/feature:from-orange-900/10',
+				border:
+					'bg-orange-500/50 dark:bg-orange-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-orange-500/50 xl:group-hover/feature:dark:bg-orange-500/50',
 			},
 			indigo: {
-				icon: 'group-hover/feature:text-indigo-600 dark:group-hover/feature:text-indigo-400',
-				gradient: 'group-hover/feature:from-indigo-100/50 dark:group-hover/feature:from-indigo-900/10',
-				border: 'group-hover/feature:bg-indigo-500/50',
+				icon: 'text-indigo-600 dark:text-indigo-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-indigo-600 dark:xl:group-hover/feature:text-indigo-400',
+				gradient:
+					'from-indigo-100/50 dark:from-indigo-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-indigo-100/50 dark:xl:group-hover/feature:from-indigo-900/10',
+				border:
+					'bg-indigo-500/50 dark:bg-indigo-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-indigo-500/50 xl:group-hover/feature:dark:bg-indigo-500/50',
 			},
 			green: {
-				icon: 'group-hover/feature:text-green-600 dark:group-hover/feature:text-green-400',
-				gradient: 'group-hover/feature:from-green-100/50 dark:group-hover/feature:from-green-900/10',
-				border: 'group-hover/feature:bg-green-500/50',
+				icon: 'text-green-600 dark:text-green-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-green-600 dark:xl:group-hover/feature:text-green-400',
+				gradient:
+					'from-green-100/50 dark:from-green-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-green-100/50 dark:xl:group-hover/feature:from-green-900/10',
+				border:
+					'bg-green-500/50 dark:bg-green-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-green-500/50 xl:group-hover/feature:dark:bg-green-500/50',
 			},
 			blue: {
-				icon: 'group-hover/feature:text-blue-600 dark:group-hover/feature:text-blue-400',
-				gradient: 'group-hover/feature:from-blue-100/50 dark:group-hover/feature:from-blue-900/10',
-				border: 'group-hover/feature:bg-blue-500/50',
+				icon: 'text-blue-600 dark:text-blue-400 xl:text-neutral-600 dark:xl:text-neutral-400 xl:group-hover/feature:text-blue-600 dark:xl:group-hover/feature:text-blue-400',
+				gradient:
+					'from-blue-100/50 dark:from-blue-900/10 xl:from-neutral-100/50 dark:xl:from-neutral-900/10 xl:group-hover/feature:from-blue-100/50 dark:xl:group-hover/feature:from-blue-900/10',
+				border:
+					'bg-blue-500/50 dark:bg-blue-500/50 xl:bg-neutral-300 xl:dark:bg-neutral-300 xl:group-hover/feature:bg-blue-500/50 xl:group-hover/feature:dark:bg-blue-500/50',
 			},
 		}
 		return colorMap[color as keyof typeof colorMap] ?? colorMap.blue
@@ -177,8 +193,7 @@ const Feature = ({
 				<div
 					className={cn(
 						'absolute inset-y-0 left-0 h-6 w-1 origin-center rounded-tr-full rounded-br-full bg-neutral-300 transition-all duration-200 group-hover/feature:h-8 dark:bg-neutral-700',
-						colors.border,
-						'group-hover/feature:bg-blue-500/50'
+						colors.border
 					)}
 				/>
 				<span className="inline-block text-neutral-800 transition duration-200 group-hover/feature:translate-x-2 dark:text-neutral-100">
