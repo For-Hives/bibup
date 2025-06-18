@@ -21,7 +21,14 @@ export interface BibSaleSimplified {
 	price: number
 }
 
-export default function CardMarketSimplified({ bibSaleSimplified }: { bibSaleSimplified: BibSaleSimplified }) {
+interface CardMarketSimplifiedProps {
+	bibSaleSimplified: BibSaleSimplified
+	translations?: {
+		participants: string
+	}
+}
+
+export default function CardMarketSimplified({ translations, bibSaleSimplified }: CardMarketSimplifiedProps) {
 	return (
 		<div className="w-full max-w-xs">
 			<div className="bg-card/80 border-border relative flex flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
@@ -85,7 +92,8 @@ export default function CardMarketSimplified({ bibSaleSimplified }: { bibSaleSim
 					<div className="flex items-center gap-2 pb-2">
 						<User className="h-5 w-5" />
 						<p className="text-muted-foreground text-xs leading-relaxed">
-							{formatParticipantCount(bibSaleSimplified.event.participantCount)} participants
+							{formatParticipantCount(bibSaleSimplified.event.participantCount)}{' '}
+							{translations?.participants ?? 'participants'}
 						</p>
 					</div>
 				</div>

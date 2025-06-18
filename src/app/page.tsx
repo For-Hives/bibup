@@ -3,6 +3,7 @@ import { TrafficCone } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import landingTranslations from '@/components/landing/locales.json'
 import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import SecurityProcess from '@/components/landing/SecurityProcess'
 import JourneyTabs from '@/components/landing/JourneyTabs'
@@ -85,6 +86,7 @@ const runs = [
 export default async function Home() {
 	const locale = await getLocale()
 	const t = getTranslations(locale, translations)
+	const landingT = getTranslations(locale, landingTranslations)
 
 	return (
 		<div className="relative">
@@ -126,7 +128,7 @@ export default async function Home() {
 							</div>
 						</div>
 						<div className="col-span-7">
-							<HeroAnimation runs={runs} />
+							<HeroAnimation runs={runs} translations={landingT.marketplace} />
 						</div>
 					</div>
 				</div>

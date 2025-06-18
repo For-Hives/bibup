@@ -1,0 +1,17 @@
+{
+	"en": {
+		"soldBy": "sold by",
+		"participants": "participants",
+		"wantThisBib": "I want this bib"
+	},
+	"fr": {
+		"soldBy": "vendu par",
+		"participants": "participants",
+		"wantThisBib": "Je veux ce dossard"
+	},
+	"ko": {
+		"soldBy": "판매자",
+		"participants": "참가자",
+		"wantThisBib": "이 빕을 원합니다"
+	}
+}

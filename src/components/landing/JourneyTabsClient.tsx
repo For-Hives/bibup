@@ -27,6 +27,9 @@ interface JourneyTabsClientProps {
 			subtitle: string
 			title: string
 		}
+		steps: {
+			step: string
+		}
 	}
 }
 
@@ -36,31 +39,31 @@ export default function JourneyTabsClient({ translations }: JourneyTabsClientPro
 	const sellerJourney = [
 		{
 			title: t.journey.seller.step1.title,
-			step: 'Étape 1',
+			step: `${t.steps.step} 1`,
 			image: '/landing/how-it-works/inscription.jpg',
 			content: t.journey.seller.step1.content,
 		},
 		{
 			title: t.journey.seller.step2.title,
-			step: 'Étape 2',
+			step: `${t.steps.step} 2`,
 			image: '/landing/how-it-works/saisie.jpg',
 			content: t.journey.seller.step2.content,
 		},
 		{
 			title: t.journey.seller.step3.title,
-			step: 'Étape 3',
+			step: `${t.steps.step} 3`,
 			image: '/landing/how-it-works/validation.jpg',
 			content: t.journey.seller.step3.content,
 		},
 		{
 			title: t.journey.seller.step4.title,
-			step: 'Étape 4',
+			step: `${t.steps.step} 4`,
 			image: '/landing/how-it-works/marketplace.jpg',
 			content: t.journey.seller.step4.content,
 		},
 		{
 			title: t.journey.seller.step5.title,
-			step: 'Étape 5',
+			step: `${t.steps.step} 5`,
 			image: '/landing/how-it-works/run.jpg',
 			content: t.journey.seller.step5.content,
 		},
@@ -69,31 +72,31 @@ export default function JourneyTabsClient({ translations }: JourneyTabsClientPro
 	const buyerJourney = [
 		{
 			title: t.journey.buyer.step1.title,
-			step: 'Étape 1',
+			step: `${t.steps.step} 1`,
 			image: '/landing/how-it-works/inscription.jpg',
 			content: t.journey.buyer.step1.content,
 		},
 		{
 			title: t.journey.buyer.step2.title,
-			step: 'Étape 2',
+			step: `${t.steps.step} 2`,
 			image: '/landing/how-it-works/search-buy.jpg',
 			content: t.journey.buyer.step2.content,
 		},
 		{
 			title: t.journey.buyer.step3.title,
-			step: 'Étape 3',
+			step: `${t.steps.step} 3`,
 			image: '/landing/how-it-works/marketplace.jpg',
 			content: t.journey.buyer.step3.content,
 		},
 		{
 			title: t.journey.buyer.step4.title,
-			step: 'Étape 4',
+			step: `${t.steps.step} 4`,
 			image: '/landing/how-it-works/confirmation.jpg',
 			content: t.journey.buyer.step4.content,
 		},
 		{
 			title: t.journey.buyer.step5.title,
-			step: 'Étape 5',
+			step: `${t.steps.step} 5`,
 			image: '/landing/how-it-works/run.jpg',
 			content: t.journey.buyer.step5.content,
 		},

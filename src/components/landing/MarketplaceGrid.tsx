@@ -1,3 +1,7 @@
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
+
+import marketplaceTranslations from '../marketplace/locales.json'
 import CardMarket, { BibSale } from '../marketplace/CardMarket'
 
 const runsExample: BibSale[] = [
@@ -114,11 +118,14 @@ const runsExample: BibSale[] = [
 ]
 
 // export default function MarketplaceGrid({ runs }: { runs: BibSale[] }) {
-export default function MarketplaceGrid() {
+export default async function MarketplaceGrid() {
+	const locale = await getLocale()
+	const t = getTranslations(locale, marketplaceTranslations)
+
 	return (
 		<div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 py-32 md:grid-cols-2 lg:grid-cols-4">
 			{runsExample.map((run, index) => (
-				<CardMarket bibSale={run} key={index} />
+				<CardMarket bibSale={run} key={index} translations={t} />
 			))}
 		</div>
 	)
