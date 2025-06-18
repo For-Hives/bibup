@@ -1,4 +1,4 @@
-import { CTASection } from '@/components/landing/cta-with-rectangle'
+import { CTASection } from '@/components/landing/cta/CTAWithRectangle'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 

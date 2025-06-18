@@ -1,0 +1,167 @@
+{
+	"en": {
+		"journey": {
+			"title": "How does it work?",
+			"subtitle": "Discover the simple and secure process to sell or buy bibs on Beswib",
+			"buyerTab": "Buyer Journey",
+			"sellerTab": "Seller Journey",
+			"buyer": {
+				"step1": {
+					"title": "Account Creation",
+					"content": "Registration and email confirmation"
+				},
+				"step2": {
+					"title": "Race Search",
+					"content": "Browse available races and bibs"
+				},
+				"step3": {
+					"title": "Purchase",
+					"content": "Enter runner information and secure payment"
+				},
+				"step4": {
+					"title": "Confirmation",
+					"content": "Immediate purchase confirmation email"
+				},
+				"step5": {
+					"title": "Race Integration",
+					"content": "Registration confirmation with organizer"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "Account Creation",
+					"content": "Quick registration and email confirmation"
+				},
+				"step2": {
+					"title": "Bib Registration",
+					"content": "Enter registration number and registration data"
+				},
+				"step3": {
+					"title": "Validation",
+					"content": "Verification with organizer"
+				},
+				"step4": {
+					"title": "Listing",
+					"content": "Set price and publish your public or private offer"
+				},
+				"step5": {
+					"title": "Payment",
+					"content": "Receive funds on your Beswib account then withdraw money to your bank account"
+				}
+			}
+		},
+		"steps": {
+			"step": "Step"
+		}
+	},
+	"fr": {
+		"journey": {
+			"title": "Comment ça marche ?",
+			"subtitle": "Découvrez le processus simple et sécurisé pour vendre ou acheter des dossards sur Beswib",
+			"buyerTab": "Parcours Acheteur",
+			"sellerTab": "Parcours Vendeur",
+			"buyer": {
+				"step1": {
+					"title": "Création de compte",
+					"content": "Inscription et confirmation par email"
+				},
+				"step2": {
+					"title": "Recherche de course",
+					"content": "Navigation dans les courses et dossards disponibles"
+				},
+				"step3": {
+					"title": "Achat",
+					"content": "Saisie des informations coureur et paiement sécurisé"
+				},
+				"step4": {
+					"title": "Confirmation",
+					"content": "Email de confirmation d'achat immédiat"
+				},
+				"step5": {
+					"title": "Intégration course",
+					"content": "Confirmation d'inscription auprès de l'organisateur"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "Création de compte",
+					"content": "Inscription rapide et confirmation par email"
+				},
+				"step2": {
+					"title": "Enregistrement du dossard",
+					"content": "Saisie du numéro d'inscription et données d'inscription"
+				},
+				"step3": {
+					"title": "Validation",
+					"content": "Vérification auprès de l'organisateur"
+				},
+				"step4": {
+					"title": "Mise en vente",
+					"content": "Définition du prix et publication de votre offre publique ou privée"
+				},
+				"step5": {
+					"title": "Paiement",
+					"content": "Réception des fonds sur votre compte Beswib puis retirer l'argent sur votre compte bancaire"
+				}
+			}
+		},
+		"steps": {
+			"step": "Étape"
+		}
+	},
+	"ko": {
+		"journey": {
+			"title": "어떻게 작동하나요?",
+			"subtitle": "Beswib에서 빕을 판매하거나 구매하는 간단하고 안전한 프로세스를 발견하세요",
+			"buyerTab": "구매자 여정",
+			"sellerTab": "판매자 여정",
+			"buyer": {
+				"step1": {
+					"title": "계정 생성",
+					"content": "등록 및 이메일 확인"
+				},
+				"step2": {
+					"title": "레이스 검색",
+					"content": "사용 가능한 레이스 및 빕 탐색"
+				},
+				"step3": {
+					"title": "구매",
+					"content": "러너 정보 입력 및 안전한 결제"
+				},
+				"step4": {
+					"title": "확인",
+					"content": "즉시 구매 확인 이메일"
+				},
+				"step5": {
+					"title": "레이스 통합",
+					"content": "주최자와의 등록 확인"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "계정 생성",
+					"content": "빠른 등록 및 이메일 확인"
+				},
+				"step2": {
+					"title": "빕 등록",
+					"content": "등록 번호 및 등록 데이터 입력"
+				},
+				"step3": {
+					"title": "검증",
+					"content": "주최자와의 확인"
+				},
+				"step4": {
+					"title": "목록",
+					"content": "가격 설정 및 공개 또는 비공개 제안 게시"
+				},
+				"step5": {
+					"title": "결제",
+					"content": "Beswib 계정으로 자금 수령 후 은행 계좌로 인출"
+				}
+			}
+		},
+		"steps": {
+			"step": "단계"
+		}
+	}
+}

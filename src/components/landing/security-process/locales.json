@@ -1,0 +1,89 @@
+{
+	"en": {
+		"security": {
+			"title": "Maximum Security",
+			"subtitle": "Every transaction is processed automatically with the highest security standards",
+			"partnership": {
+				"title": "Partnership",
+				"content": "Partnership with race organizers and authorization to ensure legitimacy."
+			},
+			"certification": {
+				"title": "Certification",
+				"content": "Verification of seller registration validity and bib certification for sale."
+			},
+			"transfer": {
+				"title": "Transfer",
+				"content": "Collection of new runner registration data and bib ownership transfer."
+			},
+			"update": {
+				"title": "Update",
+				"content": "Runner data modification with organizer and information update."
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"content": "Final validation with all parties and registration confirmation notifications."
+			}
+		},
+		"steps": {
+			"step": "Step"
+		}
+	},
+	"fr": {
+		"security": {
+			"title": "Sécurité Maximum",
+			"subtitle": "Chaque transaction est traitée automatiquement avec les standards de sécurité les plus élevés",
+			"partnership": {
+				"title": "Partenariat",
+				"content": "Partenariat avec les organisateurs de course et autorisation pour garantir la légitimité."
+			},
+			"certification": {
+				"title": "Certification",
+				"content": "Vérification de la validité de l'inscription du vendeur et certification du dossard pour la vente."
+			},
+			"transfer": {
+				"title": "Transfert",
+				"content": "Collecte des données d'inscription du nouveau coureur et transfert de propriété du dossard."
+			},
+			"update": {
+				"title": "Mise à jour",
+				"content": "Modification des données du coureur avec l'organisateur et mise à jour des informations."
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"content": "Validation finale avec toutes les parties et notifications de confirmation d'inscription."
+			}
+		},
+		"steps": {
+			"step": "Étape"
+		}
+	},
+	"ko": {
+		"security": {
+			"title": "최대 보안",
+			"subtitle": "모든 거래는 최고 보안 표준으로 자동 처리됩니다",
+			"partnership": {
+				"title": "파트너십",
+				"content": "합법성을 보장하기 위한 레이스 주최자와의 파트너십 및 승인."
+			},
+			"certification": {
+				"title": "인증",
+				"content": "판매자 등록 유효성 확인 및 판매용 빕 인증."
+			},
+			"transfer": {
+				"title": "전송",
+				"content": "새로운 러너 등록 데이터 수집 및 빕 소유권 이전."
+			},
+			"update": {
+				"title": "업데이트",
+				"content": "주최자와의 러너 데이터 수정 및 정보 업데이트."
+			},
+			"confirmation": {
+				"title": "확인",
+				"content": "모든 당사자와의 최종 검증 및 등록 확인 알림."
+			}
+		},
+		"steps": {
+			"step": "단계"
+		}
+	}
+}

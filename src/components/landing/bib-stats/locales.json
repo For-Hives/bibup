@@ -1,0 +1,23 @@
+{
+	"en": {
+		"stats": {
+			"bibsSold": "Bibs sold",
+			"partnerRaces": "Partner races",
+			"satisfactionRate": "Satisfaction rate"
+		}
+	},
+	"fr": {
+		"stats": {
+			"bibsSold": "Dossards vendus",
+			"partnerRaces": "Courses partenaires",
+			"satisfactionRate": "Taux de satisfaction"
+		}
+	},
+	"ko": {
+		"stats": {
+			"bibsSold": "판매된 빕",
+			"partnerRaces": "파트너 레이스",
+			"satisfactionRate": "만족도"
+		}
+	}
+}
