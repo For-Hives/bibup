@@ -2,9 +2,11 @@
 	"en": {
 		"home": {
 			"hero": {
-				"title": "Welcome to Beswib!",
-				"subtitle": "Your platform for buying and selling race bibs.",
-				"browseEventsButton": "Browse Events"
+				"title": "An unexpected event?<br />Transfer your bib!",
+				"description": "Whether you're into running, trail, triathlon or cycling, find your favorite race or sell your bib with confidence.",
+				"organizerButton": "Organizer? List your race",
+				"consultRacesButton": "Browse races",
+				"workInProgress": "Work in progress"
 			},
 			"impact": {
 				"title": "Our Impact",
@@ -21,9 +23,11 @@
 	"fr": {
 		"home": {
 			"hero": {
-				"title": "Bienvenue sur Beswib !",
-				"subtitle": "Votre plateforme pour acheter et vendre des dossards de course.",
-				"browseEventsButton": "Parcourir les événements"
+				"title": "Un imprévu ?<br />Transfert ton dossard !",
+				"description": "Que vous soyez plutôt running, trail, triathlon ou encore cyclisme Trouvez votre course favorite ou vendez votre dossard en toute confiance.",
+				"organizerButton": "Organisateur ? Liste ta course",
+				"consultRacesButton": "Consulter les courses",
+				"workInProgress": "Work in progress"
 			},
 			"impact": {
 				"title": "Notre Impact",
@@ -40,9 +44,11 @@
 	"ko": {
 		"home": {
 			"hero": {
-				"title": "Beswib에 오신 것을 환영합니다!",
-				"subtitle": "레이스 참가권 구매 및 판매 플랫폼입니다.",
-				"browseEventsButton": "이벤트 찾아보기"
+				"title": "예상치 못한 일이?<br />빕을 전송하세요!",
+				"description": "러닝, 트레일, 철인 3종 경기 또는 사이클링을 좋아하든 상관없이 좋아하는 레이스를 찾거나 자신 있게 빕을 판매하세요.",
+				"organizerButton": "주최자? 레이스 등록",
+				"consultRacesButton": "레이스 보기",
+				"workInProgress": "작업 진행 중"
 			},
 			"impact": {
 				"title": "우리의 영향력",

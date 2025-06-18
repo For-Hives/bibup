@@ -48,21 +48,21 @@ export default async function SellerDashboardPage({
 
 	const sellerName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Seller'
 
-	let bibUpUser: null | User = null
+	let beswibUser: null | User = null
 	let listedBibs: (Bib & { expand?: { eventId: Event } })[] = []
 
 	if (clerkUserId) {
-		bibUpUser = await fetchUserByClerkId(clerkUserId)
-		if (bibUpUser == null) {
+		beswibUser = await fetchUserByClerkId(clerkUserId)
+		if (beswibUser == null) {
 			return <div className="mx-auto max-w-4xl p-4 md:p-8">not found</div>
 		}
 		// Fetch bibs listed by this seller
-		listedBibs = (await fetchBibsBySeller(bibUpUser.id)) as (Bib & {
+		listedBibs = (await fetchBibsBySeller(beswibUser.id)) as (Bib & {
 			expand?: { eventId: Event }
 		})[] //TODO: use a proper client component for this
 	}
 
-	const bibUpBalance = bibUpUser?.bibUpBalance ?? 0
+	const beswibBalance = beswibUser?.beswibBalance ?? 0
 
 	const bibStatusFromQuery = searchParams?.bibStatus as string
 	const successMessage =
@@ -100,7 +100,7 @@ export default async function SellerDashboardPage({
 				{/* Balance Box */}
 				<div className="bento-box flex flex-col items-center justify-center md:col-span-1">
 					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">{t.yourBeswibBalance}</h2>
-					<p className="text-3xl font-bold text-[var(--accent-sporty)]">${bibUpBalance.toFixed(2)}</p>
+					<p className="text-3xl font-bold text-[var(--accent-sporty)]">${beswibBalance.toFixed(2)}</p>
 				</div>
 				{/* Manage Bib Listings Box (takes more space) */}
 				<div className="bento-box md:col-span-2">

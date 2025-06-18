@@ -24,7 +24,7 @@ export function CTASection({ withGlow = true, className, actions }: CTAProps) {
 			<div className="relative mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 py-12 text-center sm:gap-8 md:py-24">
 				{/* Title */}
 				<h2 className="animate-fade-in-up text-3xl font-semibold opacity-0 delay-200 sm:text-4xl">
-					BibUp transforme la gestion des transferts de dossards en solution gagnante pour tous
+					Beswib transforme la gestion des transferts de dossards en solution gagnante pour tous
 				</h2>
 
 				{/* Description */}

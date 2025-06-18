@@ -7,8 +7,12 @@ import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import SecurityProcess from '@/components/landing/SecurityProcess'
 import JourneyTabs from '@/components/landing/JourneyTabs'
 import FeaturesBento from '@/components/landing/Features'
-import BibUpCTA from '@/components/landing/CTASection'
+import BesWibCTA from '@/components/landing/CTASection'
+import { getTranslations } from '@/lib/getDictionary'
 import BibStats from '@/components/landing/BibStats'
+import { getLocale } from '@/lib/getLocale'
+
+import translations from './locales.json'
 
 const runs = [
 	{
@@ -78,7 +82,10 @@ const runs = [
 	},
 ]
 
-export default function Home() {
+export default async function Home() {
+	const locale = await getLocale()
+	const t = getTranslations(locale, translations)
+
 	return (
 		<div className="relative">
 			{/* Hero Section */}
@@ -94,22 +101,18 @@ export default function Home() {
 				<div className="z-20 mx-auto max-w-7xl">
 					<div className="grid grid-cols-12 gap-4">
 						<div className="col-span-5 flex flex-col justify-center gap-6 pb-32">
-							<h1 className="text-foreground text-5xl font-bold tracking-tight">
-								Un imprévu ?
-								<br />
-								Transfert ton dossard !
-							</h1>
-							<p className="text-muted-foreground text-lg">
-								Que vous soyez plutôt running, trail, triathlon ou encore cyclisme Trouvez votre course favorite ou
-								vendez votre dossard en toute confiance.
-							</p>
+							<h1
+								className="text-foreground text-5xl font-bold tracking-tight"
+								dangerouslySetInnerHTML={{ __html: t.home.hero.title }}
+							></h1>
+							<p className="text-muted-foreground text-lg">{t.home.hero.description}</p>
 							<div className="flex flex-row gap-4">
 								<div>
 									<Link
 										className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 										href="/marketplace"
 									>
-										Organisateur ? Liste ta course
+										{t.home.hero.organizerButton}
 									</Link>
 								</div>
 								<div>
@@ -117,7 +120,7 @@ export default function Home() {
 										className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 										href="/events"
 									>
-										Consulter les courses
+										{t.home.hero.consultRacesButton}
 									</Link>
 								</div>
 							</div>
@@ -137,12 +140,12 @@ export default function Home() {
 			{/* Security Process Section */}
 			<SecurityProcess />
 			{/* CTA Section */}
-			<BibUpCTA />
+			<BesWibCTA />
 			{/* <MarketplaceGrid />  */}
 
 			<div className="fixed right-0 bottom-0 z-50 m-8 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
 				<TrafficCone className="h-4 w-4" />
-				<p className="text-sm">Work in progress</p>
+				<p className="text-sm">{t.home.hero.workInProgress}</p>
 			</div>
 		</div>
 	)

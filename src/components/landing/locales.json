@@ -1,0 +1,365 @@
+{
+	"en": {
+		"cta": {
+			"organizerButton": "Become a partner organizer",
+			"webAppButton": "Access the WebApp"
+		},
+		"stats": {
+			"bibsSold": "Bibs sold",
+			"partnerRaces": "Partner races",
+			"satisfactionRate": "Satisfaction rate"
+		},
+		"features": {
+			"title": "Why choose Beswib?",
+			"subtitle": "Concrete benefits for every actor in the running ecosystem",
+			"security": {
+				"title": "Security & Compliance",
+				"description": "Complete regulatory coverage, fraud reduction and total transfer traceability."
+			},
+			"trust": {
+				"title": "Total Trust",
+				"description": "Verified profiles, guaranteed fraud protection and secure automated process."
+			},
+			"search": {
+				"title": "Smart Search",
+				"description": "Advanced filters by distance, date and location with personalized suggestions and alerts."
+			},
+			"profitability": {
+				"title": "Maximum Profitability",
+				"description": "Last-minute resale at free price with immediate fund reception."
+			},
+			"analytics": {
+				"title": "Analytics & Insights",
+				"description": "Track market trends in real time with average prices and forecasts."
+			},
+			"community": {
+				"title": "Global Community",
+				"description": "Connect with over 12,000 active runners worldwide."
+			},
+			"notifications": {
+				"title": "Smart Notifications",
+				"description": "Smart alerts for new bibs, price drops and important reminders."
+			},
+			"support": {
+				"title": "Premium Support 24/7",
+				"description": "Dedicated assistance in English with premium guarantees and quick resolution."
+			}
+		},
+		"journey": {
+			"title": "How does it work?",
+			"subtitle": "Discover the simple and secure process to sell or buy bibs on Beswib",
+			"buyerTab": "Buyer Journey",
+			"sellerTab": "Seller Journey",
+			"buyer": {
+				"step1": {
+					"title": "Account Creation",
+					"content": "Registration and email confirmation"
+				},
+				"step2": {
+					"title": "Race Search",
+					"content": "Browse available races and bibs"
+				},
+				"step3": {
+					"title": "Purchase",
+					"content": "Enter runner information and secure payment"
+				},
+				"step4": {
+					"title": "Confirmation",
+					"content": "Immediate purchase confirmation email"
+				},
+				"step5": {
+					"title": "Race Integration",
+					"content": "Registration confirmation with organizer"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "Account Creation",
+					"content": "Quick registration and email confirmation"
+				},
+				"step2": {
+					"title": "Bib Registration",
+					"content": "Enter registration number and registration data"
+				},
+				"step3": {
+					"title": "Validation",
+					"content": "Verification with organizer"
+				},
+				"step4": {
+					"title": "Listing",
+					"content": "Set price and publish your public or private offer"
+				},
+				"step5": {
+					"title": "Payment",
+					"content": "Receive funds on your Beswib account then withdraw money to your bank account"
+				}
+			}
+		},
+		"security": {
+			"title": "Maximum Security",
+			"subtitle": "Every transaction is processed automatically with the highest security standards",
+			"partnership": {
+				"title": "Partnership",
+				"content": "Partnership with race organizers and authorization to ensure legitimacy."
+			},
+			"certification": {
+				"title": "Certification",
+				"content": "Verification of seller registration validity and bib certification for sale."
+			},
+			"transfer": {
+				"title": "Transfer",
+				"content": "Collection of new runner registration data and bib ownership transfer."
+			},
+			"update": {
+				"title": "Update",
+				"content": "Runner data modification with organizer and information update."
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"content": "Final validation with all parties and registration confirmation notifications."
+			}
+		}
+	},
+	"fr": {
+		"cta": {
+			"organizerButton": "Devenir organisateur partenaire",
+			"webAppButton": "Accéder à la WebApp"
+		},
+		"stats": {
+			"bibsSold": "Dossards vendus",
+			"partnerRaces": "Courses partenaires",
+			"satisfactionRate": "Taux de satisfaction"
+		},
+		"features": {
+			"title": "Pourquoi choisir Beswib ?",
+			"subtitle": "Des avantages concrets pour chaque acteur de l'écosystème running",
+			"security": {
+				"title": "Sécurité & Conformité",
+				"description": "Couverture réglementaire complète, réduction des fraudes et traçabilité totale des transferts."
+			},
+			"trust": {
+				"title": "Confiance Totale",
+				"description": "Profils vérifiés, protection garantie contre les fraudes et processus automatisé sécurisé."
+			},
+			"search": {
+				"title": "Recherche Intelligente",
+				"description": "Filtres avancés par distance, date et lieu avec suggestions personnalisées et alertes."
+			},
+			"profitability": {
+				"title": "Rentabilité Maximum",
+				"description": "Revente dernière minute à prix libre avec réception immédiate des fonds."
+			},
+			"analytics": {
+				"title": "Analytics & Insights",
+				"description": "Suivez les tendances du marché en temps réel avec prix moyens et prévisions."
+			},
+			"community": {
+				"title": "Communauté Globale",
+				"description": "Connectez-vous avec plus de 12 000 runners actifs du monde entier."
+			},
+			"notifications": {
+				"title": "Notifications Smart",
+				"description": "Alertes intelligentes pour nouveaux dossards, baisses de prix et rappels importants."
+			},
+			"support": {
+				"title": "Support Premium 24/7",
+				"description": "Assistance dédiée en français avec garanties premium et résolution rapide."
+			}
+		},
+		"journey": {
+			"title": "Comment ça marche ?",
+			"subtitle": "Découvrez le processus simple et sécurisé pour vendre ou acheter des dossards sur Beswib",
+			"buyerTab": "Parcours Acheteur",
+			"sellerTab": "Parcours Vendeur",
+			"buyer": {
+				"step1": {
+					"title": "Création de compte",
+					"content": "Inscription et confirmation par email"
+				},
+				"step2": {
+					"title": "Recherche de course",
+					"content": "Navigation dans les courses et dossards disponibles"
+				},
+				"step3": {
+					"title": "Achat",
+					"content": "Saisie des informations coureur et paiement sécurisé"
+				},
+				"step4": {
+					"title": "Confirmation",
+					"content": "Email de confirmation d'achat immédiat"
+				},
+				"step5": {
+					"title": "Intégration course",
+					"content": "Confirmation d'inscription auprès de l'organisateur"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "Création de compte",
+					"content": "Inscription rapide et confirmation par email"
+				},
+				"step2": {
+					"title": "Enregistrement du dossard",
+					"content": "Saisie du numéro d'inscription et données d'inscription"
+				},
+				"step3": {
+					"title": "Validation",
+					"content": "Vérification auprès de l'organisateur"
+				},
+				"step4": {
+					"title": "Mise en vente",
+					"content": "Définition du prix et publication de votre offre publique ou privée"
+				},
+				"step5": {
+					"title": "Paiement",
+					"content": "Réception des fonds sur votre compte Beswib puis retirer l'argent sur votre compte bancaire"
+				}
+			}
+		},
+		"security": {
+			"title": "Maximum Security",
+			"subtitle": "Every transaction is processed automatically with the highest security standards",
+			"partnership": {
+				"title": "Partnership",
+				"content": "Partnership with race organizers and authorization to ensure legitimacy."
+			},
+			"certification": {
+				"title": "Certification",
+				"content": "Verification of seller registration validity and bib certification for sale."
+			},
+			"transfer": {
+				"title": "Transfer",
+				"content": "Collection of new runner registration data and bib ownership transfer."
+			},
+			"update": {
+				"title": "Update",
+				"content": "Runner data modification with organizer and information update."
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"content": "Final validation with all parties and registration confirmation notifications."
+			}
+		}
+	},
+	"ko": {
+		"cta": {
+			"organizerButton": "파트너 주최자 되기",
+			"webAppButton": "웹앱 접속"
+		},
+		"stats": {
+			"bibsSold": "판매된 빕",
+			"partnerRaces": "파트너 레이스",
+			"satisfactionRate": "만족도"
+		},
+		"features": {
+			"title": "Beswib을 선택하는 이유는?",
+			"subtitle": "러닝 생태계의 모든 참여자를 위한 구체적인 혜택",
+			"security": {
+				"title": "보안 및 규정 준수",
+				"description": "완전한 규제 적용, 사기 감소 및 전체 전송 추적 가능성."
+			},
+			"trust": {
+				"title": "완전한 신뢰",
+				"description": "검증된 프로필, 사기에 대한 보장된 보호 및 안전한 자동화 프로세스."
+			},
+			"search": {
+				"title": "스마트 검색",
+				"description": "개인화된 제안 및 알림과 함께 거리, 날짜 및 위치별 고급 필터."
+			},
+			"profitability": {
+				"title": "최대 수익성",
+				"description": "자유 가격으로 막판 재판매 및 즉시 자금 수령."
+			},
+			"analytics": {
+				"title": "분석 및 통찰력",
+				"description": "평균 가격 및 예측과 함께 실시간으로 시장 동향을 추적하세요."
+			},
+			"community": {
+				"title": "글로벌 커뮤니티",
+				"description": "전 세계 12,000명 이상의 활성 러너와 연결하세요."
+			},
+			"notifications": {
+				"title": "스마트 알림",
+				"description": "새로운 빕, 가격 하락 및 중요한 알림을 위한 스마트 알림."
+			},
+			"support": {
+				"title": "프리미엄 지원 24/7",
+				"description": "프리미엄 보장 및 빠른 해결을 갖춘 한국어 전용 지원."
+			}
+		},
+		"journey": {
+			"title": "어떻게 작동하나요?",
+			"subtitle": "Beswib에서 빕을 판매하거나 구매하는 간단하고 안전한 프로세스를 발견하세요",
+			"buyerTab": "구매자 여정",
+			"sellerTab": "판매자 여정",
+			"buyer": {
+				"step1": {
+					"title": "계정 생성",
+					"content": "등록 및 이메일 확인"
+				},
+				"step2": {
+					"title": "레이스 검색",
+					"content": "사용 가능한 레이스 및 빕 탐색"
+				},
+				"step3": {
+					"title": "구매",
+					"content": "러너 정보 입력 및 안전한 결제"
+				},
+				"step4": {
+					"title": "확인",
+					"content": "즉시 구매 확인 이메일"
+				},
+				"step5": {
+					"title": "레이스 통합",
+					"content": "주최자와의 등록 확인"
+				}
+			},
+			"seller": {
+				"step1": {
+					"title": "계정 생성",
+					"content": "빠른 등록 및 이메일 확인"
+				},
+				"step2": {
+					"title": "빕 등록",
+					"content": "등록 번호 및 등록 데이터 입력"
+				},
+				"step3": {
+					"title": "검증",
+					"content": "주최자와의 확인"
+				},
+				"step4": {
+					"title": "목록",
+					"content": "가격 설정 및 공개 또는 비공개 제안 게시"
+				},
+				"step5": {
+					"title": "결제",
+					"content": "Beswib 계정으로 자금 수령 후 은행 계좌로 인출"
+				}
+			}
+		},
+		"security": {
+			"title": "최대 보안",
+			"subtitle": "모든 거래는 최고 보안 표준으로 자동 처리됩니다",
+			"partnership": {
+				"title": "파트너십",
+				"content": "합법성을 보장하기 위한 레이스 주최자와의 파트너십 및 승인."
+			},
+			"certification": {
+				"title": "인증",
+				"content": "판매자 등록 유효성 확인 및 판매용 빕 인증."
+			},
+			"transfer": {
+				"title": "전송",
+				"content": "새로운 러너 등록 데이터 수집 및 빕 소유권 이전."
+			},
+			"update": {
+				"title": "업데이트",
+				"content": "주최자와의 러너 데이터 수정 및 정보 업데이트."
+			},
+			"confirmation": {
+				"title": "확인",
+				"content": "모든 당사자와의 최종 검증 및 등록 확인 알림."
+			}
+		}
+	}
+}

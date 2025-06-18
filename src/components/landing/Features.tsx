@@ -1,56 +1,63 @@
 import { Calendar, ChartBar, CreditCard, Globe, Mail, Search, Star, Users } from 'lucide-react'
 
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 import { cn } from '@/lib/utils'
 
-export default function FeaturesBento() {
+import translations from './locales.json'
+
+export default async function FeaturesBento() {
+	const locale = await getLocale()
+	const t = getTranslations(locale, translations)
+
 	const features = [
 		{
-			title: 'Sécurité & Conformité',
+			title: t.features.security.title,
 			icon: <Star />,
 			hoverColor: 'yellow',
-			description: 'Couverture réglementaire complète, réduction des fraudes et traçabilité totale des transferts.',
+			description: t.features.security.description,
 		},
 		{
-			title: 'Confiance Totale',
+			title: t.features.trust.title,
 			icon: <Users />,
 			hoverColor: 'blue',
-			description: 'Profils vérifiés, protection garantie contre les fraudes et processus automatisé sécurisé.',
+			description: t.features.trust.description,
 		},
 		{
-			title: 'Recherche Intelligente',
+			title: t.features.search.title,
 			icon: <Search />,
 			hoverColor: 'purple',
-			description: 'Filtres avancés par distance, date et lieu avec suggestions personnalisées et alertes.',
+			description: t.features.search.description,
 		},
 		{
-			title: 'Rentabilité Maximum',
+			title: t.features.profitability.title,
 			icon: <CreditCard />,
 			hoverColor: 'green',
-			description: 'Revente dernière minute à prix libre avec réception immédiate des fonds.',
+			description: t.features.profitability.description,
 		},
 		{
-			title: 'Analytics & Insights',
+			title: t.features.analytics.title,
 			icon: <ChartBar />,
 			hoverColor: 'orange',
-			description: 'Suivez les tendances du marché en temps réel avec prix moyens et prévisions.',
+			description: t.features.analytics.description,
 		},
 		{
-			title: 'Communauté Globale',
+			title: t.features.community.title,
 			icon: <Globe />,
 			hoverColor: 'pink',
-			description: 'Connectez-vous avec plus de 12 000 runners actifs du monde entier.',
+			description: t.features.community.description,
 		},
 		{
-			title: 'Notifications Smart',
+			title: t.features.notifications.title,
 			icon: <Mail />,
 			hoverColor: 'indigo',
-			description: 'Alertes intelligentes pour nouveaux dossards, baisses de prix et rappels importants.',
+			description: t.features.notifications.description,
 		},
 		{
-			title: 'Support Premium 24/7',
+			title: t.features.support.title,
 			icon: <Calendar />,
 			hoverColor: 'red',
-			description: 'Assistance dédiée en français avec garanties premium et résolution rapide.',
+			description: t.features.support.description,
 		},
 	]
 
@@ -59,11 +66,9 @@ export default function FeaturesBento() {
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
 					<h2 className="mb-6 text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-						Pourquoi choisir BibUp ?
+						{t.features.title}
 					</h2>
-					<p className="text-muted-foreground mx-auto max-w-3xl text-xl">
-						Des avantages concrets pour chaque acteur de l'écosystème running
-					</p>
+					<p className="text-muted-foreground mx-auto max-w-3xl text-xl">{t.features.subtitle}</p>
 				</div>
 
 				<FeaturesSectionWithHoverEffects features={features} />
@@ -142,7 +147,7 @@ const Feature = ({
 				border: 'group-hover/feature:bg-blue-500/50',
 			},
 		}
-		return colorMap[color as keyof typeof colorMap] || colorMap.blue
+		return colorMap[color as keyof typeof colorMap] ?? colorMap.blue
 	}
 
 	const colors = getColorClasses(hoverColor)
