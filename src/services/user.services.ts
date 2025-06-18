@@ -17,7 +17,7 @@ export async function createUser(userData: CreateUserDTO): Promise<null | User> 
 			firstName: userData.firstName,
 			email: userData.email,
 			clerkId: userData.clerkId,
-			bibUpBalance: 0,
+			beswibBalance: 0,
 		}
 
 		const record = await pb.collection('users').create<User>(newUserRecord)
@@ -121,11 +121,11 @@ export async function updateUserBalance(clerkUserId: string, amountToAdd: number
 			return null // Or throw new Error('User not found, cannot update balance.')
 		}
 
-		const currentBalance = user.bibUpBalance ?? 0
+		const currentBalance = user.beswibBalance ?? 0
 		const newBalance = currentBalance + amountToAdd
 
 		const updatedRecord = await pb.collection('users').update<User>(user.id, {
-			bibUpBalance: newBalance,
+			beswibBalance: newBalance,
 		})
 
 		return updatedRecord

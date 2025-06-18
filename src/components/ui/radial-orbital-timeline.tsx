@@ -87,9 +87,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 		}
 
 		return () => {
-			if (rotationTimer) {
-				clearInterval(rotationTimer)
-			}
+			clearInterval(rotationTimer)
 		}
 	}, [autoRotate])
 
@@ -158,7 +156,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 						const position = calculateNodePosition(index, timelineData.length)
 						const isExpanded = expandedItems[item.id]
 						const isRelated = isRelatedToActive(item.id)
-						const isPulsing = pulseEffect[item.id] ?? false
+						const isPulsing = Boolean(pulseEffect[item.id])
 						const Icon = item.icon
 
 						const nodeStyle = {

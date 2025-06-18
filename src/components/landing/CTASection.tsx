@@ -1,19 +1,24 @@
-'use client'
+import { CTASection } from '@/components/landing/cta-with-rectangle'
+import { getTranslations } from '@/lib/getDictionary'
+import { getLocale } from '@/lib/getLocale'
 
-import { CTASection } from '@/components/ui/cta-with-rectangle'
+import translations from './locales.json'
 
-export default function BibUpCTA() {
+export default async function BesWibCTA() {
+	const locale = await getLocale()
+	const t = getTranslations(locale, translations)
+
 	return (
 		<CTASection
 			actions={[
 				{
 					variant: 'outline',
-					text: 'Devenir organisateur partenaire',
+					text: t.cta.organizerButton,
 					href: '/dashboard/organizer',
 				},
 				{
 					variant: 'default',
-					text: 'Accéder à la WebApp',
+					text: t.cta.webAppButton,
 					href: '/marketplace',
 				},
 			]}

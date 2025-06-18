@@ -1,5 +1,5 @@
 export interface User {
-	bibUpBalance: number
+	beswibBalance: number
 	clerkId: string
 	createdAt: Date
 	email: string
