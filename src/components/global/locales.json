@@ -21,6 +21,10 @@
 			"faq": {
 				"title": "FAQ | Beswib",
 				"description": "Frequently Asked Questions about buying, selling, and organizing events on Beswib."
+			},
+			"contact": {
+				"title": "Contact | Beswib",
+				"description": "Get in touch with the Beswib team for any questions or inquiries."
 			}
 		}
 	},
@@ -46,6 +50,10 @@
 			"faq": {
 				"title": "FAQ | Beswib",
 				"description": "Questions fréquemment posées sur l'achat, la vente et l'organisation d'événements sur Beswib."
+			},
+			"contact": {
+				"title": "Contact | Beswib",
+				"description": "Entrez en contact avec l'équipe Beswib pour toute question ou demande."
 			}
 		}
 	},
@@ -71,6 +79,10 @@
 			"faq": {
 				"title": "FAQ | Beswib",
 				"description": "Beswib에서 이벤트 구매, 판매 및 조직에 대한 자주 묻는 질문입니다."
+			},
+			"contact": {
+				"title": "Contact | Beswib",
+				"description": "질문이나 문의사항이 있으시면 Beswib 팀에 연락해 주세요."
 			}
 		}
 	}
