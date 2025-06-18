@@ -68,14 +68,18 @@ export default async function Home() {
 	]
 
 	// Merge translated data with static data
-	const runs = runStaticData.map((run, index) => ({
-		...run,
-		event: {
+	const runs = runStaticData.map((run, index) => {
+		const translatedRuns = t.runs as Array<{ location: string; name: string }> | undefined
+		const translatedRun = translatedRuns?.[index]
+		return {
 			...run,
-			name: t.runs[index]?.name || `Event ${index + 1}`,
-			location: t.runs[index]?.location || 'Unknown',
-		},
-	}))
+			event: {
+				...run,
+				name: translatedRun?.name ?? `Event ${index + 1}`,
+				location: translatedRun?.location ?? 'Unknown',
+			},
+		}
+	})
 
 	return (
 		<div className="relative">
@@ -91,7 +95,7 @@ export default async function Home() {
 				<div className="from-background/100 to-background/100 absolute inset-0 -z-10 bg-gradient-to-r via-zinc-900/60"></div>
 				<div className="z-20 mx-auto max-w-7xl px-4 xl:px-0">
 					<div className="grid grid-cols-12 gap-4">
-						<div className="col-span-5 flex flex-col justify-center gap-6 pb-32">
+						<div className="col-span-12 flex flex-col justify-center gap-6 pb-32 md:col-span-5">
 							<h1
 								className="text-foreground text-5xl font-bold tracking-tight"
 								dangerouslySetInnerHTML={{ __html: t.home.hero.title }}
@@ -100,7 +104,7 @@ export default async function Home() {
 							<div className="flex flex-row gap-4">
 								<div>
 									<Link
-										className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+										className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:px-8"
 										href="/marketplace"
 									>
 										{t.home.hero.organizerButton}
@@ -108,7 +112,7 @@ export default async function Home() {
 								</div>
 								<div>
 									<Link
-										className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+										className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-11 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:px-8"
 										href="/events"
 									>
 										{t.home.hero.consultRacesButton}
@@ -116,7 +120,7 @@ export default async function Home() {
 								</div>
 							</div>
 						</div>
-						<div className="col-span-7">
+						<div className="col-span-12 md:col-span-7">
 							<HeroAnimation runs={runs} translations={landingT.marketplace} />
 						</div>
 					</div>

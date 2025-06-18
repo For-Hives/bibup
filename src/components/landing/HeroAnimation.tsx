@@ -57,8 +57,8 @@ export const HeroAnimation = ({
 	// Don't render the animation on the server to prevent hydration mismatch
 	if (!isMounted) {
 		return (
-			<div className="relative w-full pb-40">
-				<div className="relative h-116 w-full translate-x-1/3">
+			<div className="relative w-full pb-32 md:pb-40">
+				<div className="relative h-116 w-full md:translate-x-1/3">
 					<div className="absolute inset-0 origin-bottom">
 						<CardMarketSimplified bibSaleSimplified={runs[0]} translations={translations} />
 					</div>
@@ -68,9 +68,9 @@ export const HeroAnimation = ({
 	}
 
 	return (
-		<div className="relative w-full pb-40">
+		<div className="relative w-full pb-32 md:pb-40">
 			<div>
-				<div className="relative h-116 w-full translate-x-1/3">
+				<div className="relative h-116 w-full translate-x-4 md:translate-x-1/3">
 					<AnimatePresence>
 						{runs.map((run, index) => (
 							<motion.div
