@@ -8,7 +8,7 @@ import { getLocale } from '@/lib/getLocale'
 
 export default function FAQPage() {
 	return (
-		<div className="relative px-4 md:px-0">
+		<div className="relative">
 			<FAQ />
 			<BesWibCTA />
 		</div>
