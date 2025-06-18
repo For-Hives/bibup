@@ -23,7 +23,7 @@ export function CTASection({ withGlow = true, translations, className, actions }
 	return (
 		<section
 			className={cn(
-				'from-background via-primary/5 to-background mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br pt-0 md:pt-0',
+				'from-background via-primary/5 to-background mx-auto my-24 max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br pt-0 md:pt-0',
 				className
 			)}
 		>
