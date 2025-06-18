@@ -73,8 +73,8 @@ export default function BibStatsClient({ translations }: BibStatsClientProps) {
 	}, [hasAnimated])
 
 	return (
-		<section className="bg-card/50 border-border border-t py-16" ref={sectionRef}>
-			<div className="mx-auto max-w-6xl px-4">
+		<section className="bg-card/50 border-border border-t px-4 py-12 md:py-24 xl:px-0" ref={sectionRef}>
+			<div className="mx-auto max-w-7xl">
 				<div className="grid gap-8 md:grid-cols-3">
 					{stats.map((stat, index) => (
 						<div className="text-center" key={index}>

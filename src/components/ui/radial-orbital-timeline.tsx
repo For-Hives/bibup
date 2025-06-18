@@ -147,7 +147,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 
 	return (
 		<div
-			className="bg-background z-40 flex min-h-128 w-full flex-col items-center justify-center"
+			className="bg-background z-40 flex min-h-128 w-full -translate-x-2 flex-col items-center justify-center md:translate-x-0"
 			onClick={handleContainerClick}
 			ref={containerRef}
 		>

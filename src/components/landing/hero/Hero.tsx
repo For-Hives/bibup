@@ -79,7 +79,7 @@ export default async function Hero() {
 	})
 
 	return (
-		<section className="relative pt-20 xl:pt-40">
+		<section className="relative px-4 pt-20 md:px-0 xl:pt-40">
 			<Image
 				alt="template-run"
 				className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-75"
@@ -88,7 +88,7 @@ export default async function Hero() {
 				src={'/landing/background.jpg'}
 			/>
 			<div className="from-background/100 to-background/100 absolute inset-0 -z-10 bg-gradient-to-r via-zinc-900/60"></div>
-			<div className="z-20 mx-auto max-w-7xl px-4 xl:px-0">
+			<div className="z-20 mx-auto max-w-7xl">
 				<div className="grid grid-cols-12 gap-4">
 					<div className="col-span-12 flex flex-col justify-center gap-6 pb-32 md:col-span-5">
 						<h1
