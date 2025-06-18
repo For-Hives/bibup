@@ -91,7 +91,7 @@ export default async function Home() {
 	return (
 		<div className="relative">
 			{/* Hero Section */}
-			<section className="relative pt-40">
+			<section className="relative pt-20 xl:pt-40">
 				<Image
 					alt="template-run"
 					className="-z-10 -scale-x-100 overflow-hidden object-cover object-center opacity-30"
@@ -100,7 +100,7 @@ export default async function Home() {
 					src={'/landing/background.jpg'}
 				/>
 				<div className="from-background/100 to-background/100 absolute inset-0 -z-10 bg-gradient-to-r via-zinc-900/60"></div>
-				<div className="z-20 mx-auto max-w-7xl">
+				<div className="z-20 mx-auto max-w-7xl px-4 xl:px-0">
 					<div className="grid grid-cols-12 gap-4">
 						<div className="col-span-5 flex flex-col justify-center gap-6 pb-32">
 							<h1
@@ -144,11 +144,11 @@ export default async function Home() {
 			{/* CTA Section */}
 			<BesWibCTA />
 			{/* <MarketplaceGrid />  */}
-
+			{/* 
 			<div className="fixed right-0 bottom-0 z-50 m-8 mb-24 flex items-center gap-2 rounded-3xl border border-amber-500 bg-white p-2 text-amber-500">
 				<TrafficCone className="h-4 w-4" />
 				<p className="text-sm">{t.home.hero.workInProgress}</p>
-			</div>
+			</div> */}
 		</div>
 	)
 }
