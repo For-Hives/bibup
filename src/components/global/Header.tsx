@@ -71,12 +71,12 @@ export default async function Header() {
 								<SignedOut>
 									<SignInButton>
 										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
-											Sign In
+											{t.navbar.signIn}
 										</button>
 									</SignInButton>
 									<SignUpButton>
 										<button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-2 text-sm font-medium transition-colors">
-											Sign Up
+											{t.navbar.signUp}
 										</button>
 									</SignUpButton>
 								</SignedOut>
@@ -130,12 +130,12 @@ export default async function Header() {
 							<SignedOut>
 								<SignInButton>
 									<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block w-full rounded-md px-3 py-2 text-left text-base font-medium transition-colors">
-										Sign In
+										{t.navbar.signIn}
 									</button>
 								</SignInButton>
 								<SignUpButton>
 									<button className="bg-primary text-primary-foreground hover:bg-primary/90 block w-full rounded-md px-3 py-2 text-left text-base font-medium transition-colors">
-										Sign Up
+										{t.navbar.signUp}
 									</button>
 								</SignUpButton>
 							</SignedOut>
