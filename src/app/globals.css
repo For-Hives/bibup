@@ -256,13 +256,13 @@
 }
 
 ::-moz-selection {
-	background: var(--background);
-	color: var(--foreground);
+	background: var(--foreground);
+	color: var(--background);
 }
 
 ::selection {
-	background: var(--background);
-	color: var(--foreground);
+	background: var(--foreground);
+	color: var(--background);
 }
 
 html {
