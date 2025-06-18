@@ -167,7 +167,9 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 					</div>
 
 					{/* Orbit Ring */}
-					<div className="border-border/30 absolute h-72 w-72 rounded-full border"></div>
+					<div
+						className={`border-border/30 absolute rounded-full border ${isMobile ? 'h-72 w-72' : 'h-96 w-96'}`}
+					></div>
 
 					{/* Timeline Nodes */}
 					{timelineData.map((item, index) => {
