@@ -6,7 +6,11 @@ import FAQ from '@/components/landing/faq/FAQ'
 import { getLocale } from '@/lib/getLocale'
 
 export default function FAQPage() {
-	return <FAQ />
+	return (
+		<div className="relative px-4 md:px-0">
+			<FAQ />
+		</div>
+	)
 }
 
 export async function generateMetadata(): Promise<Metadata> {
