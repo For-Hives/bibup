@@ -4,7 +4,7 @@ import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 import { cn } from '@/lib/utils'
 
-import translations from '../locales.json'
+import translations from './locales.json'
 
 export default async function FeaturesBento() {
 	const locale = await getLocale()
