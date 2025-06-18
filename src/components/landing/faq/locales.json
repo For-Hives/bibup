@@ -1,0 +1,164 @@
+{
+	"en": {
+		"faq": {
+			"title": "Frequently asked questions",
+			"description": "Everything you need to know about Beswib. Can't find the answer you're looking for? Feel free to contact our support team.",
+			"items": [
+				{
+					"id": "what-is-beswib",
+					"question": "What is Beswib?",
+					"answer": "Beswib is a secure marketplace that allows runners to legally sell and buy race bibs. We work directly with race organizers to guarantee official and secure transfers."
+				},
+				{
+					"id": "how-to-sell",
+					"question": "How do I sell my bib?",
+					"answer": "Create an account, add your bib with registration information, wait for organizer validation, then set your price. Once sold, the transfer is done automatically and you receive your payment."
+				},
+				{
+					"id": "is-it-legal",
+					"question": "Is it legal to resell a bib?",
+					"answer": "Yes, but only for Beswib partner races. We only list events that officially authorize bib transfers, ensuring the legality of each transaction."
+				},
+				{
+					"id": "how-to-buy",
+					"question": "How do I buy a bib?",
+					"answer": "Browse available bibs, select the one you want, make a secure payment and provide your information. The bib will be transferred to your name with the organizer."
+				},
+				{
+					"id": "payment-security",
+					"question": "Are payments secure?",
+					"answer": "Absolutely. We use encrypted payment systems and funds are secured until complete transfer validation. Sellers receive payment only after transfer confirmation."
+				},
+				{
+					"id": "organizer-benefits",
+					"question": "What are the benefits for organizers?",
+					"answer": "Fraud reduction, decreased customer service, complete participant traceability, no technical burden, and increased event visibility through our runner community."
+				},
+				{
+					"id": "fees",
+					"question": "Are there any fees?",
+					"answer": "We take a modest commission on each successful sale to cover transaction fees and maintain the platform. Fee details are transparent and displayed before each transaction."
+				},
+				{
+					"id": "cancellation",
+					"question": "What happens if the race is cancelled?",
+					"answer": "In case of cancellation, we follow the organizer's refund policy. We will keep you informed and facilitate the refund process according to the event conditions."
+				}
+			],
+			"support": {
+				"heading": "Still have questions?",
+				"description": "Can't find the answer you're looking for? Our support team is here to help with any technical questions or concerns.",
+				"buttonText": "Contact Support",
+				"buttonUrl": "/contact"
+			}
+		}
+	},
+	"fr": {
+		"faq": {
+			"title": "Questions fréquemment posées",
+			"description": "Tout ce que vous devez savoir sur Beswib. Vous ne trouvez pas la réponse que vous cherchez ? N'hésitez pas à contacter notre équipe de support.",
+			"items": [
+				{
+					"id": "what-is-beswib",
+					"question": "Qu'est-ce que Beswib ?",
+					"answer": "Beswib est une marketplace sécurisée qui permet aux coureurs de vendre et d'acheter des dossards de course en toute légalité. Nous travaillons directement avec les organisateurs pour garantir des transferts officiels et sécurisés."
+				},
+				{
+					"id": "how-to-sell",
+					"question": "Comment vendre mon dossard ?",
+					"answer": "Créez un compte, ajoutez votre dossard avec les informations d'inscription, attendez la validation de l'organisateur, puis fixez votre prix. Une fois vendu, le transfert est effectué automatiquement et vous recevez votre paiement."
+				},
+				{
+					"id": "is-it-legal",
+					"question": "Est-ce légal de revendre un dossard ?",
+					"answer": "Oui, mais seulement pour les courses partenaires de Beswib. Nous ne listons que les événements qui autorisent officiellement les transferts de dossards, garantissant ainsi la légalité de chaque transaction."
+				},
+				{
+					"id": "how-to-buy",
+					"question": "Comment acheter un dossard ?",
+					"answer": "Parcourez les dossards disponibles, sélectionnez celui qui vous intéresse, effectuez le paiement sécurisé et fournissez vos informations. Le dossard sera transféré à votre nom auprès de l'organisateur."
+				},
+				{
+					"id": "payment-security",
+					"question": "Les paiements sont-ils sécurisés ?",
+					"answer": "Absolument. Nous utilisons des systèmes de paiement cryptés et les fonds sont sécurisés jusqu'à la validation complète du transfert. Les vendeurs reçoivent leur paiement uniquement après confirmation du transfert."
+				},
+				{
+					"id": "organizer-benefits",
+					"question": "Quels sont les avantages pour les organisateurs ?",
+					"answer": "Réduction des fraudes, diminution du SAV, traçabilité complète des participants, aucune charge technique, et augmentation de la visibilité de leur événement grâce à notre communauté de coureurs."
+				},
+				{
+					"id": "fees",
+					"question": "Y a-t-il des frais ?",
+					"answer": "Nous prélevons une commission modeste sur chaque vente réussie pour couvrir les frais de transaction et maintenir la plateforme. Les détails des frais sont transparents et affichés avant chaque transaction."
+				},
+				{
+					"id": "cancellation",
+					"question": "Que se passe-t-il si la course est annulée ?",
+					"answer": "En cas d'annulation, nous suivons la politique de remboursement de l'organisateur. Nous vous tiendrons informés et faciliterons le processus de remboursement selon les conditions de l'événement."
+				}
+			],
+			"support": {
+				"heading": "Vous avez encore des questions ?",
+				"description": "Vous ne trouvez pas la réponse que vous cherchez ? Notre équipe de support est là pour vous aider avec toutes vos questions techniques ou préoccupations.",
+				"buttonText": "Contactez-nous",
+				"buttonUrl": "/contact"
+			}
+		}
+	},
+	"ko": {
+		"faq": {
+			"title": "자주 묻는 질문",
+			"description": "Beswib에 대해 알아야 할 모든 것. 찾고 있는 답변을 찾을 수 없나요? 언제든지 지원팀에 문의하세요.",
+			"items": [
+				{
+					"id": "what-is-beswib",
+					"question": "Beswib이란 무엇인가요?",
+					"answer": "Beswib은 러너들이 합법적으로 레이스 빕을 판매하고 구매할 수 있는 안전한 마켓플레이스입니다. 공식적이고 안전한 양도를 보장하기 위해 레이스 주최자와 직접 협력합니다."
+				},
+				{
+					"id": "how-to-sell",
+					"question": "빕을 어떻게 판매하나요?",
+					"answer": "계정을 만들고, 등록 정보와 함께 빕을 추가하고, 주최자의 승인을 기다린 다음 가격을 설정하세요. 판매되면 양도가 자동으로 이루어지고 결제를 받습니다."
+				},
+				{
+					"id": "is-it-legal",
+					"question": "빕을 재판매하는 것이 합법인가요?",
+					"answer": "네, 하지만 Beswib 파트너 레이스에 한해서입니다. 빕 양도를 공식적으로 승인하는 이벤트만 등록하여 각 거래의 합법성을 보장합니다."
+				},
+				{
+					"id": "how-to-buy",
+					"question": "빕을 어떻게 구매하나요?",
+					"answer": "사용 가능한 빕을 찾아보고, 원하는 것을 선택하고, 안전 결제를 하고 정보를 제공하세요. 빕이 주최자와 함께 귀하의 이름으로 양도됩니다."
+				},
+				{
+					"id": "payment-security",
+					"question": "결제가 안전한가요?",
+					"answer": "물론입니다. 암호화된 결제 시스템을 사용하고 완전한 양도 확인까지 자금이 보호됩니다. 판매자는 양도 확인 후에만 결제를 받습니다."
+				},
+				{
+					"id": "organizer-benefits",
+					"question": "주최자에게는 어떤 혜택이 있나요?",
+					"answer": "사기 감소, 고객 서비스 감소, 완전한 참가자 추적, 기술적 부담 없음, 러너 커뮤니티를 통한 이벤트 가시성 증가."
+				},
+				{
+					"id": "fees",
+					"question": "수수료가 있나요?",
+					"answer": "거래 수수료를 충당하고 플랫폼을 유지하기 위해 성공한 각 판매에 대해 적은 수수료를 받습니다. 수수료 세부사항은 투명하며 각 거래 전에 표시됩니다."
+				},
+				{
+					"id": "cancellation",
+					"question": "레이스가 취소되면 어떻게 되나요?",
+					"answer": "취소의 경우, 주최자의 환불 정책을 따릅니다. 이벤트 조건에 따라 환불 프로세스를 안내하고 지원해드립니다."
+				}
+			],
+			"support": {
+				"heading": "아직 질문이 있으신가요?",
+				"description": "찾고 있는 답변을 찾을 수 없나요? 지원팀이 기술적 질문이나 우려사항에 대해 도움을 드릴 수 있습니다.",
+				"buttonText": "지원팀 문의",
+				"buttonUrl": "/contact"
+			}
+		}
+	}
+}
