@@ -1,8 +1,10 @@
 {
 	"en": {
 		"faq": {
-			"title": "Frequently asked questions",
-			"description": "Everything you need to know about Beswib. Can't find the answer you're looking for? Feel free to contact our support team.",
+			"badge": "FAQ",
+			"title": "Everything you need to know about Beswib",
+			"description": "The secure marketplace for race bib transfers. Our goal is to streamline bib reselling, making it legal, safe and faster than ever.",
+			"contactButton": "Any questions? Reach out",
 			"items": [
 				{
 					"id": "what-is-beswib",
@@ -46,17 +48,16 @@
 				}
 			],
 			"support": {
-				"heading": "Still have questions?",
-				"description": "Can't find the answer you're looking for? Our support team is here to help with any technical questions or concerns.",
-				"buttonText": "Contact Support",
 				"buttonUrl": "/contact"
 			}
 		}
 	},
 	"fr": {
 		"faq": {
-			"title": "Questions fréquemment posées",
-			"description": "Tout ce que vous devez savoir sur Beswib. Vous ne trouvez pas la réponse que vous cherchez ? N'hésitez pas à contacter notre équipe de support.",
+			"badge": "FAQ",
+			"title": "Tout ce que vous devez savoir sur Beswib",
+			"description": "La marketplace sécurisée pour les transferts de dossards. Notre objectif est de simplifier la revente de dossards, en la rendant légale, sûre et plus rapide que jamais.",
+			"contactButton": "Des questions ? Contactez-nous",
 			"items": [
 				{
 					"id": "what-is-beswib",
@@ -100,17 +101,16 @@
 				}
 			],
 			"support": {
-				"heading": "Vous avez encore des questions ?",
-				"description": "Vous ne trouvez pas la réponse que vous cherchez ? Notre équipe de support est là pour vous aider avec toutes vos questions techniques ou préoccupations.",
-				"buttonText": "Contactez-nous",
 				"buttonUrl": "/contact"
 			}
 		}
 	},
 	"ko": {
 		"faq": {
-			"title": "자주 묻는 질문",
-			"description": "Beswib에 대해 알아야 할 모든 것. 찾고 있는 답변을 찾을 수 없나요? 언제든지 지원팀에 문의하세요.",
+			"badge": "FAQ",
+			"title": "Beswib에 대해 알아야 할 모든 것",
+			"description": "레이스 빕 양도를 위한 안전한 마켓플레이스. 빕 재판매를 합법적이고 안전하며 더 빠르게 만드는 것이 우리의 목표입니다.",
+			"contactButton": "질문이 있으신가요? 연락주세요",
 			"items": [
 				{
 					"id": "what-is-beswib",
@@ -154,9 +154,6 @@
 				}
 			],
 			"support": {
-				"heading": "아직 질문이 있으신가요?",
-				"description": "찾고 있는 답변을 찾을 수 없나요? 지원팀이 기술적 질문이나 우려사항에 대해 도움을 드릴 수 있습니다.",
-				"buttonText": "지원팀 문의",
 				"buttonUrl": "/contact"
 			}
 		}
