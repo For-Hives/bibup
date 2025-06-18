@@ -15,6 +15,9 @@ interface SecurityProcessClientProps {
 			transfer: { content: string; title: string }
 			update: { content: string; title: string }
 		}
+		steps: {
+			step: string
+		}
 	}
 }
 
@@ -29,7 +32,7 @@ export default function SecurityProcessClient({ translations }: SecurityProcessC
 			id: 0,
 			icon: Handshake,
 			energy: 100,
-			date: 'Step 1',
+			date: `${t.steps.step} 1`,
 			content: t.security.partnership.content,
 			category: 'Partnership',
 		},
@@ -40,7 +43,7 @@ export default function SecurityProcessClient({ translations }: SecurityProcessC
 			id: 1,
 			icon: Shield,
 			energy: 95,
-			date: 'Step 2',
+			date: `${t.steps.step} 2`,
 			content: t.security.certification.content,
 			category: 'Certification',
 		},
@@ -51,7 +54,7 @@ export default function SecurityProcessClient({ translations }: SecurityProcessC
 			id: 2,
 			icon: RefreshCcw,
 			energy: 80,
-			date: 'Step 3',
+			date: `${t.steps.step} 3`,
 			content: t.security.transfer.content,
 			category: 'Transfer',
 		},
@@ -62,7 +65,7 @@ export default function SecurityProcessClient({ translations }: SecurityProcessC
 			id: 3,
 			icon: FileCheck,
 			energy: 60,
-			date: 'Step 4',
+			date: `${t.steps.step} 4`,
 			content: t.security.update.content,
 			category: 'Update',
 		},
@@ -73,7 +76,7 @@ export default function SecurityProcessClient({ translations }: SecurityProcessC
 			id: 4,
 			icon: CheckCircle,
 			energy: 100,
-			date: 'Step 5',
+			date: `${t.steps.step} 5`,
 			content: t.security.confirmation.content,
 			category: 'Confirmation',
 		},

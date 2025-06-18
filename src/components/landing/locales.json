@@ -241,27 +241,27 @@
 			"step": "Étape"
 		},
 		"security": {
-			"title": "Maximum Security",
-			"subtitle": "Every transaction is processed automatically with the highest security standards",
+			"title": "Sécurité Maximum",
+			"subtitle": "Chaque transaction est traitée automatiquement avec les standards de sécurité les plus élevés",
 			"partnership": {
-				"title": "Partnership",
-				"content": "Partnership with race organizers and authorization to ensure legitimacy."
+				"title": "Partenariat",
+				"content": "Partenariat avec les organisateurs de course et autorisation pour garantir la légitimité."
 			},
 			"certification": {
 				"title": "Certification",
-				"content": "Verification of seller registration validity and bib certification for sale."
+				"content": "Vérification de la validité de l'inscription du vendeur et certification du dossard pour la vente."
 			},
 			"transfer": {
-				"title": "Transfer",
-				"content": "Collection of new runner registration data and bib ownership transfer."
+				"title": "Transfert",
+				"content": "Collecte des données d'inscription du nouveau coureur et transfert de propriété du dossard."
 			},
 			"update": {
-				"title": "Update",
-				"content": "Runner data modification with organizer and information update."
+				"title": "Mise à jour",
+				"content": "Modification des données du coureur avec l'organisateur et mise à jour des informations."
 			},
 			"confirmation": {
 				"title": "Confirmation",
-				"content": "Final validation with all parties and registration confirmation notifications."
+				"content": "Validation finale avec toutes les parties et notifications de confirmation d'inscription."
 			}
 		}
 	},
