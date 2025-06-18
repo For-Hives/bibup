@@ -28,6 +28,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 	const [autoRotate, setAutoRotate] = useState<boolean>(true)
 	const [pulseEffect, setPulseEffect] = useState<Record<number, boolean>>({})
 	const [activeNodeId, setActiveNodeId] = useState<null | number>(null)
+	const [isMobile, setIsMobile] = useState<boolean>(false)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const orbitRef = useRef<HTMLDivElement>(null)
 	const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
@@ -74,6 +75,23 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 		})
 	}
 
+	// Hook to detect screen size
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(window.innerWidth < 768)
+		}
+
+		// Check on mount
+		checkIsMobile()
+
+		// Listen to resize events
+		window.addEventListener('resize', checkIsMobile)
+
+		return () => {
+			window.removeEventListener('resize', checkIsMobile)
+		}
+	}, [])
+
 	useEffect(() => {
 		let rotationTimer: NodeJS.Timeout
 
@@ -104,7 +122,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 
 	const calculateNodePosition = (index: number, total: number) => {
 		const angle = ((index / total) * 360 + rotationAngle) % 360
-		const radius = 200
+		const radius = 160
 		const radian = (angle * Math.PI) / 180
 
 		const x = radius * Math.cos(radian)
@@ -133,7 +151,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 			onClick={handleContainerClick}
 			ref={containerRef}
 		>
-			<div className="relative flex h-full w-full max-w-6xl items-center justify-center">
+			<div className="relative flex h-full w-full max-w-6xl items-center justify-center md:scale-100">
 				<div
 					className="absolute flex h-full w-full items-center justify-center"
 					ref={orbitRef}
@@ -149,7 +167,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 					</div>
 
 					{/* Orbit Ring */}
-					<div className="border-border/30 absolute h-96 w-96 rounded-full border"></div>
+					<div className="border-border/30 absolute h-72 w-72 rounded-full border"></div>
 
 					{/* Timeline Nodes */}
 					{timelineData.map((item, index) => {
