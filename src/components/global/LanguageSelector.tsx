@@ -1,0 +1,101 @@
+'use client'
+
+import { ChevronDown, Languages } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
+interface Language {
+	code: string
+	flag: string
+	name: string
+}
+
+const languages: Language[] = [
+	{ name: 'English', flag: '🇺🇸', code: 'en' },
+	{ name: 'Français', flag: '🇫🇷', code: 'fr' },
+	{ name: '한국어', flag: '🇰🇷', code: 'ko' },
+]
+
+interface LanguageSelectorProps {
+	currentLocale?: string
+}
+
+export default function LanguageSelector({ currentLocale = 'en' }: LanguageSelectorProps) {
+	const [isOpen, setIsOpen] = useState(false)
+	const [selectedLocale, setSelectedLocale] = useState(currentLocale)
+
+	const currentLanguage = languages.find(lang => lang.code === selectedLocale) ?? languages[0]
+
+	const handleLanguageChange = (newLocale: string) => {
+		try {
+			// Set cookie to persist language preference
+			document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=lax`
+
+			setSelectedLocale(newLocale)
+			setIsOpen(false)
+
+			// Force page refresh to apply new locale
+			// This is the simplest approach for the current system
+			window.location.reload()
+		} catch (error) {
+			console.error('Error changing language:', error)
+		}
+	}
+
+	// Close dropdown when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as HTMLElement
+			if (!target.closest('.language-selector')) {
+				setIsOpen(false)
+			}
+		}
+
+		if (isOpen) {
+			document.addEventListener('click', handleClickOutside)
+			return () => document.removeEventListener('click', handleClickOutside)
+		}
+	}, [isOpen])
+
+	return (
+		<div className="language-selector relative">
+			<button
+				aria-expanded={isOpen}
+				aria-haspopup="true"
+				aria-label="Select language"
+				className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+				onClick={() => setIsOpen(!isOpen)}
+			>
+				<Languages size={16} />
+				<span className="flex items-center gap-1">
+					<span>{currentLanguage.flag}</span>
+					<span className="hidden sm:inline">{currentLanguage.name}</span>
+				</span>
+				<ChevronDown className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} size={14} />
+			</button>
+
+			{isOpen && (
+				<div className="absolute bottom-full left-0 mb-2 w-full min-w-[140px] rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
+					<div className="py-1">
+						{languages.map(language => (
+							<button
+								className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 ${
+									selectedLocale === language.code
+										? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
+										: 'text-gray-700 dark:text-gray-300'
+								}`}
+								key={language.code}
+								onClick={() => handleLanguageChange(language.code)}
+							>
+								<span>{language.flag}</span>
+								<span>{language.name}</span>
+								{selectedLocale === language.code && (
+									<span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+								)}
+							</button>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	)
+}
