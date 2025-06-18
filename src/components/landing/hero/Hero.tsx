@@ -2,14 +2,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { getTranslations } from '@/lib/getDictionary'
+import landingTranslations from '@/app/locales.json'
 import { getLocale } from '@/lib/getLocale'
 
-import landingTranslations from '../locales.json'
 import { HeroAnimation } from './HeroAnimation'
+import heroTranslations from './locales.json'
 
 export default async function Hero() {
 	const locale = await getLocale()
-	const t = getTranslations(locale, landingTranslations)
+	const t = getTranslations(locale, heroTranslations)
 	const landingT = getTranslations(locale, landingTranslations)
 
 	// Static data that doesn't need translation
@@ -113,7 +114,7 @@ export default async function Hero() {
 						</div>
 					</div>
 					<div className="col-span-12 md:col-span-7">
-						<HeroAnimation runs={runs} translations={landingT} />
+						<HeroAnimation runs={runs} translations={{ participants: 'participants' }} />
 					</div>
 				</div>
 			</div>

@@ -1,0 +1,74 @@
+{
+	"en": {
+		"runs": [
+			{
+				"name": "Nantes Marathon",
+				"location": "Nantes"
+			},
+			{
+				"name": "Ironman Nice",
+				"location": "Nice"
+			},
+			{
+				"name": "Thonon Half Marathon",
+				"location": "Thonon-les-Bains"
+			},
+			{
+				"name": "Paris Marathon",
+				"location": "Paris"
+			},
+			{
+				"name": "Ultra Trail du Mont Blanc",
+				"location": "Chamonix"
+			}
+		]
+	},
+	"fr": {
+		"runs": [
+			{
+				"name": "Marathon de Nantes",
+				"location": "Nantes"
+			},
+			{
+				"name": "Ironman Nice",
+				"location": "Nice"
+			},
+			{
+				"name": "Semi-marathon de Thonon",
+				"location": "Thonon-les-Bains"
+			},
+			{
+				"name": "Marathon de Paris",
+				"location": "Paris"
+			},
+			{
+				"name": "Ultra Trail du Mont Blanc",
+				"location": "Chamonix"
+			}
+		]
+	},
+	"ko": {
+		"runs": [
+			{
+				"name": "낭트 마라톤",
+				"location": "낭트"
+			},
+			{
+				"name": "아이언맨 니스",
+				"location": "니스"
+			},
+			{
+				"name": "토농 하프 마라톤",
+				"location": "토농 레 방"
+			},
+			{
+				"name": "파리 마라톤",
+				"location": "파리"
+			},
+			{
+				"name": "몽블랑 울트라 트레일",
+				"location": "샤모니"
+			}
+		]
+	}
+}
