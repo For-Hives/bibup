@@ -13,78 +13,69 @@ import { getLocale } from '@/lib/getLocale'
 
 import translations from './locales.json'
 
-const runs = [
-	{
-		price: 79.99,
-		originalPrice: 100,
-		event: {
+export default async function Home() {
+	const locale = await getLocale()
+	const t = getTranslations(locale, translations)
+	const landingT = getTranslations(locale, landingTranslations)
+
+	// Static data that doesn't need translation
+	const runStaticData = [
+		{
+			price: 79.99,
 			participantCount: 10000,
-			name: 'Marathon de Nantes',
-			location: 'Nantes',
+			originalPrice: 100,
 			image: '/bib-red.png',
 			distanceUnit: 'km',
 			distance: 42,
 			date: new Date(),
 		},
-	},
-	{
-		price: 440,
-		originalPrice: 500,
-		event: {
+		{
+			price: 440,
 			participantCount: 64000,
-			name: 'Ironman Nice',
-			location: 'Nice',
+			originalPrice: 500,
 			image: '/bib-green.png',
 			distanceUnit: 'km',
 			distance: 226,
 			date: new Date(),
 		},
-	},
-	{
-		price: 9.99,
-		originalPrice: 15,
-		event: {
+		{
+			price: 9.99,
 			participantCount: 2630,
-			name: 'Semi-marathon de Thonon',
-			location: 'Thonon-les-bains',
+			originalPrice: 15,
 			image: '/bib-pink.png',
 			distanceUnit: 'km',
 			distance: 21,
 			date: new Date(),
 		},
-	},
-	{
-		price: 79.99,
-		originalPrice: 100,
-		event: {
+		{
+			price: 79.99,
 			participantCount: 10000,
-			name: 'Marathon de Paris',
-			location: 'Paris',
+			originalPrice: 100,
 			image: '/bib-blue.png',
 			distanceUnit: 'km',
 			distance: 42,
 			date: new Date(),
 		},
-	},
-	{
-		price: 900,
-		originalPrice: 600,
-		event: {
+		{
+			price: 900,
 			participantCount: 9000,
-			name: 'Ultra Trail du Mont Blanc',
-			location: 'Chamonix',
+			originalPrice: 600,
 			image: '/bib-orange.png',
 			distanceUnit: 'km',
 			distance: 170,
 			date: new Date(),
 		},
-	},
-]
+	]
 
-export default async function Home() {
-	const locale = await getLocale()
-	const t = getTranslations(locale, translations)
-	const landingT = getTranslations(locale, landingTranslations)
+	// Merge translated data with static data
+	const runs = runStaticData.map((run, index) => ({
+		...run,
+		event: {
+			...run,
+			name: t.runs[index]?.name || `Event ${index + 1}`,
+			location: t.runs[index]?.location || 'Unknown',
+		},
+	}))
 
 	return (
 		<div className="relative">
