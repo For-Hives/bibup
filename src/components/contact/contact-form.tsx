@@ -5,26 +5,14 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
 
+import globalTranslations from '@/components/global/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 interface ContactFormProps {
-	t: {
-		form: {
-			messageResponse: string
-			messageSent: string
-			sendAnotherMessage: string
-			sending: string
-			sendMessage: string
-			yourEmail: string
-			yourEmailPlaceholder: string
-			yourMessage: string
-			yourMessagePlaceholder: string
-			yourName: string
-			yourNamePlaceholder: string
-		}
-	}
+	t: ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
 }
 
 export default function ContactForm({ t }: ContactFormProps) {
