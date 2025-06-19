@@ -5,11 +5,10 @@ import globalTranslations from '@/components/global/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
-import contactTranslations from './locales.json'
-
 export default async function ContactPage() {
 	const locale = await getLocale()
-	const t = getTranslations(locale, contactTranslations)
+	const globalT = getTranslations(locale, globalTranslations)
+	const t = globalT.contact as any
 
 	return <ContactPageClient t={t} />
 }

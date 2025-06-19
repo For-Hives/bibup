@@ -5,7 +5,7 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
 
-import ContactTranslations from '@/app/contact/locales.json'
+import globalTranslations from '@/components/global/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -31,7 +31,7 @@ type Props = {
 	t: Translations
 }
 
-type Translations = ReturnType<typeof getTranslations<(typeof ContactTranslations)['en'], 'en'>>
+type Translations = ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
 
 export default function BentoGrid({ t }: Props) {
 	const [activeCard, setActiveCard] = useState<null | string>(null)
