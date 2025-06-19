@@ -10,6 +10,7 @@ import { Event } from '@/models/event.model'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 import { RadioGroup, RadioGroupItem } from './radio-group'
+import { FileUpload } from './file-upload'
 import { Textarea } from './textareaAlt'
 import { Separator } from './separator'
 import { Input } from './inputAlt'
@@ -332,6 +333,23 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 										type="url"
 										value={formData.parcoursUrl}
 									/>
+								</div>
+								<div className="col-span-full">
+									<Label className="text-foreground mb-2 block text-base font-medium">Event Logo</Label>
+									<p className="text-muted-foreground mb-4 text-sm">
+										Upload a logo for your event. Supported formats: PNG, JPG, SVG (max 5MB)
+									</p>
+									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
+										<FileUpload
+											onChange={files => {
+												if (files.length > 0) {
+													// Handle logo file upload
+													console.info('Logo uploaded:', files[0].name)
+													// You can store the file in form state or upload it immediately
+												}
+											}}
+										/>
+									</div>
 								</div>
 								{/* <div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="logoUrl">

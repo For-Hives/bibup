@@ -4,10 +4,10 @@ import React, { useState } from 'react'
 import { FileUpload } from './file-upload'
 
 export default function FileUploadDemo() {
-	const [files, setFiles] = useState<File[]>([])
+	const [, setFiles] = useState<File[]>([])
 	const handleFileUpload = (files: File[]) => {
 		setFiles(files)
-		console.log(files)
+		// Handle file upload logic here
 	}
 
 	return (
