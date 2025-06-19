@@ -1,16 +1,16 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { X, ChevronsUpDown, Check } from 'lucide-react'
-import { cn } from "@/lib/utils"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Check, ChevronsUpDown, X } from 'lucide-react'
 
 import Fuse from 'fuse.js'
 
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badgeAlt'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 import locales from './locales.json'
 
@@ -67,7 +67,7 @@ export default function Searchbar({
 	// --- State for the region search input in the advanced filters
 	const [regionSearch, setRegionSearch] = useState('') // Stores the current value of the region search input
 	// State pour la région sélectionnée
-	const [selectedRegion, setSelectedRegion] = useState(tempRegion[0] || "")
+	const [selectedRegion, setSelectedRegion] = useState(tempRegion[0] || '')
 	// State pour le popover de la région
 	const [isRegionOpen, setIsRegionOpen] = useState(false)
 
@@ -271,21 +271,21 @@ export default function Searchbar({
 									</label>
 									<div className="w-full flex-col space-y-2">
 										<input
-											className="px-3 border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center [color-scheme:dark]"
+											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border px-3 text-center [color-scheme:dark]"
 											id="date-start"
 											onChange={e => setTempDateStart(e.target.value)}
 											type="date"
 											value={tempDateStart ?? ''}
 										/>
 										<input
-											className="px-3 border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center [color-scheme:dark]"
+											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border px-3 text-center [color-scheme:dark]"
 											id="date-end"
 											onChange={e => setTempDateEnd(e.target.value)}
-											type="date"
-											value={tempDateEnd ?? ''}
 											style={{
 												colorScheme: 'dark',
 											}}
+											type="date"
+											value={tempDateEnd ?? ''}
 										/>
 									</div>
 								</div>
@@ -295,45 +295,45 @@ export default function Searchbar({
 									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="region-select">
 										{t.region}
 									</label>
-									<Popover open={isRegionOpen} onOpenChange={setIsRegionOpen}>
+									<Popover onOpenChange={setIsRegionOpen} open={isRegionOpen}>
 										<PopoverTrigger asChild>
 											<Button
-												variant="outline"
 												className="w-full justify-between"
 												onClick={() => setIsRegionOpen(true)}
+												variant="outline"
 											>
 												{selectedRegion
-													? regionOptions.find((r) => r.value === selectedRegion)?.label
-													: t.selectRegion || "Rechercher une ville"}
+													? regionOptions.find(r => r.value === selectedRegion)?.label
+													: t.selectRegion || 'Rechercher une ville'}
 												<ChevronsUpDown className="opacity-50" />
 											</Button>
 										</PopoverTrigger>
-										<PopoverContent className="w-full p-0 z-[9999]">
+										<PopoverContent className="z-[9999] w-full p-0">
 											<Command>
 												<CommandInput
-													placeholder={t.selectRegion || "Rechercher une ville"}
 													className="h-9"
-													value={regionSearch}
 													onValueChange={setRegionSearch}
+													placeholder={t.selectRegion || 'Rechercher une ville'}
+													value={regionSearch}
 												/>
 												<CommandList className="max-h-60 overflow-y-auto">
 													<CommandEmpty>{t.noRegion}</CommandEmpty>
 													<CommandGroup>
-														{regionOptions.map((region) => (
+														{regionOptions.map(region => (
 															<CommandItem
 																key={region.value}
-																value={region.value}
-																onSelect={(currentValue) => {
-																	setSelectedRegion(currentValue === selectedRegion ? "" : currentValue)
+																onSelect={currentValue => {
+																	setSelectedRegion(currentValue === selectedRegion ? '' : currentValue)
 																	setTempRegion(currentValue ? [currentValue] : [])
 																	setIsRegionOpen(false)
 																}}
+																value={region.value}
 															>
 																{region.label}
 																<Check
 																	className={cn(
-																		"ml-auto",
-																		selectedRegion === region.value ? "opacity-100" : "opacity-0"
+																		'ml-auto',
+																		selectedRegion === region.value ? 'opacity-100' : 'opacity-0'
 																	)}
 																/>
 															</CommandItem>
