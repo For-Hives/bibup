@@ -103,6 +103,10 @@
 				"isPartnered": {
 					"label": "Partner Event",
 					"description": "Is this event partnered with Beswib?"
+				},
+				"registrationUrl": {
+					"label": "Registration Link",
+					"placeholder": "https://example.com/register"
 				}
 			},
 			"eventOptions": {
@@ -110,6 +114,7 @@
 				"removeOption": "Remove Option",
 				"optionType": "Option Type",
 				"optionName": "Option Name",
+				"optionKey": "Key",
 				"optionRequired": "Required",
 				"optionSelectPlaceholder": "Select option type",
 				"types": {
@@ -118,10 +123,15 @@
 					"number": "Number Input"
 				},
 				"values": {
+					"label": "Values",
 					"addValue": "Add Value",
 					"removeValue": "Remove Value",
 					"placeholder": "Option value"
 				}
+			},
+			"partnership": {
+				"partnered": "Partnered Event (allows bib resale)",
+				"notPartnered": "Not Partnered (display only)"
 			},
 			"buttons": {
 				"createEvent": "Create Event",
@@ -245,6 +255,10 @@
 				"isPartnered": {
 					"label": "Événement Partenaire",
 					"description": "Cet événement est-il en partenariat avec Beswib ?"
+				},
+				"registrationUrl": {
+					"label": "Lien d'inscription",
+					"placeholder": "https://example.com/register"
 				}
 			},
 			"eventOptions": {
@@ -252,6 +266,7 @@
 				"removeOption": "Supprimer l'Option",
 				"optionType": "Type d'Option",
 				"optionName": "Nom de l'Option",
+				"optionKey": "Clé",
 				"optionRequired": "Requis",
 				"optionSelectPlaceholder": "Sélectionnez le type d'option",
 				"types": {
@@ -260,10 +275,15 @@
 					"number": "Saisie de Nombre"
 				},
 				"values": {
+					"label": "Valeurs",
 					"addValue": "Ajouter une Valeur",
 					"removeValue": "Supprimer la Valeur",
 					"placeholder": "Valeur de l'option"
 				}
+			},
+			"partnership": {
+				"partnered": "Événement Partenaire (permet la revente de dossards)",
+				"notPartnered": "Non Partenaire (affichage uniquement)"
 			},
 			"buttons": {
 				"createEvent": "Créer l'Événement",
@@ -387,6 +407,10 @@
 				"isPartnered": {
 					"label": "파트너 이벤트",
 					"description": "이 이벤트가 Beswib과 파트너십을 맺고 있나요?"
+				},
+				"registrationUrl": {
+					"label": "등록 링크",
+					"placeholder": "https://example.com/register"
 				}
 			},
 			"eventOptions": {
@@ -394,6 +418,7 @@
 				"removeOption": "옵션 제거",
 				"optionType": "옵션 유형",
 				"optionName": "옵션 이름",
+				"optionKey": "키",
 				"optionRequired": "필수",
 				"optionSelectPlaceholder": "옵션 유형 선택",
 				"types": {
@@ -402,10 +427,15 @@
 					"number": "숫자 입력"
 				},
 				"values": {
+					"label": "값들",
 					"addValue": "값 추가",
 					"removeValue": "값 제거",
 					"placeholder": "옵션 값"
 				}
+			},
+			"partnership": {
+				"partnered": "파트너 이벤트 (비브 재판매 허용)",
+				"notPartnered": "비파트너 (표시만)"
 			},
 			"buttons": {
 				"createEvent": "이벤트 생성",
