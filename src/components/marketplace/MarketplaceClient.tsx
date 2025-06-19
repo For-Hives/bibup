@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from 'react'
 
+import Fuse from 'fuse.js'
+
 import type { BibSale } from '@/components/marketplace/card-market'
 
 import OfferCounter from '@/components/marketplace/offerCounter'
@@ -19,10 +21,10 @@ type AdvancedFilters = {
 
 // Props for the MarketplaceClient: receives an array of bibs to display
 interface MarketplaceClientProps {
-	bibs: BibSale[]
+	readonly bibs: BibSale[]
 }
 
-// Helper function to get the min/max range for each distance filter
+// --- Helper function to get the min/max range for each distance filter
 const getDistanceRange = (distanceFilter: null | string): [number, number] => {
 	switch (distanceFilter) {
 		case '5':
@@ -46,7 +48,7 @@ const getDistanceRange = (distanceFilter: null | string): [number, number] => {
 	}
 }
 
-// Helper function to sort bibs according to the selected sort option
+// --- Helper function to sort bibs according to the selected sort option
 const sortBibs = (bibs: BibSale[], sort: string) => {
 	switch (sort) {
 		case 'distance':
@@ -61,99 +63,95 @@ const sortBibs = (bibs: BibSale[], sort: string) => {
 	}
 }
 
-// Helper function to filter bibs by all filters
-const filterBibs = (
-	bibs: BibSale[],
-	searchTerm: string,
-	selectedSport: null | string,
-	selectedDistance: null | string,
-	advancedFilters: AdvancedFilters
-) => {
-	let filtered = bibs
-
-	// Filter by search term (name, location, or type)
-	if (searchTerm) {
-		const search = searchTerm.toLowerCase()
-		filtered = filtered.filter(
-			bib =>
-				bib.event.name.toLowerCase().includes(search) ||
-				bib.event.location.toLowerCase().includes(search) ||
-				bib.event.type.toLowerCase().includes(search)
-		)
-	}
-
-	// Filter by selected sport
-	if (selectedSport && selectedSport !== 'all') {
-		filtered = filtered.filter(bib => bib.event.type === selectedSport)
-	}
-
-	// Filter by selected distance
-	if (selectedDistance && selectedDistance !== 'all') {
-		const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
-		filtered = filtered.filter(bib => {
-			const distance = bib.event.distance
-			return distance >= minDistance && distance <= maxDistance
-		})
-	}
-
-	// Filter by price range
-	if (advancedFilters.price && advancedFilters.price.length === 2) {
-		const [minPrice, maxPrice] = advancedFilters.price
-		filtered = filtered.filter(bib => bib.price >= minPrice && bib.price <= maxPrice)
-	}
-
-	// Filter by region (geography)
-	if (advancedFilters.geography && advancedFilters.geography.length > 0) {
-		filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
-	}
-
-	// Filter by start date
-	if (advancedFilters.dateStart) {
-		const start = new Date(advancedFilters.dateStart)
-		filtered = filtered.filter(bib => new Date(bib.event.date) >= start)
-	}
-
-	// Filter by end date
-	if (advancedFilters.dateEnd) {
-		const end = new Date(advancedFilters.dateEnd)
-		filtered = filtered.filter(bib => new Date(bib.event.date) <= end)
-	}
-
-	return filtered
-}
-
-// Main client component for the marketplace grid and filters
+// --- Main client component for the marketplace grid and filters
 export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
-	// State for sorting, search term, selected sport, selected distance, and advanced filters
+	// --- State for sorting, search term, selected sport, selected distance, and advanced filters
 	const [sort, setSort] = useState('date')
 	const [searchTerm, setSearchTerm] = useState('')
 	const [selectedSport, setSelectedSport] = useState<null | string>(null)
 	const [selectedDistance, setSelectedDistance] = useState<null | string>(null)
 	const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({ price: [0, 200], geography: [] })
 
-	// Extract unique locations from bibs for the region filter
-	const uniqueLocations = Array.from(new Set(bibs.map(bib => bib.event.location))).sort()
+	// --- Extract unique locations from bibs for the region filter
+	const uniqueLocations = Array.from(new Set(bibs.map(bib => bib.event.location))).sort((a, b) => a.localeCompare(b))
 
-	// Extract the maximum price from bibs for the price slider
+	// --- Extract the maximum price from bibs for the price slider
 	const maxPrice = Math.max(...bibs.map(bib => bib.price), 0)
 
-	// Memoized filtered and sorted bibs to avoid unnecessary recalculations
+	// --- Fuse.js instance for fuzzy search on bibs (name, location, type)
+	const fuse = useMemo(
+		() =>
+			new Fuse(bibs, {
+				threshold: 0.4,
+				keys: ['event.name', 'event.location', 'event.type'],
+			}),
+		[bibs]
+	)
+
+	// --- Memoized filtered and sorted bibs to avoid unnecessary recalculations
 	const filteredAndSortedBibs = useMemo(() => {
-		const filtered = filterBibs(bibs, searchTerm, selectedSport, selectedDistance, advancedFilters)
+		let filtered = bibs
+
+		// --- Fuzzy search with Fuse.js on search term
+		if (searchTerm) {
+			const fuseResults = fuse.search(searchTerm)
+			filtered = fuseResults.map(result => result.item)
+		}
+
+		// --- Filter by selected sport
+		if (selectedSport && selectedSport !== 'all') {
+			filtered = filtered.filter(bib => bib.event.type === selectedSport)
+		}
+
+		// --- Filter by selected distance
+		if (selectedDistance && selectedDistance !== 'all') {
+			const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
+			filtered = filtered.filter(bib => {
+				const distance = bib.event.distance
+				return distance >= minDistance && distance <= maxDistance
+			})
+		}
+
+		// --- Filter by price range
+		if (advancedFilters.price && advancedFilters.price.length === 2) {
+			const [minPrice, maxPrice] = advancedFilters.price
+			filtered = filtered.filter(bib => bib.price >= minPrice && bib.price <= maxPrice)
+		}
+
+		// --- Filter by region (geography)
+		if (advancedFilters.geography && advancedFilters.geography.length > 0) {
+			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
+		}
+
+		// --- Filter by start date
+		if (advancedFilters.dateStart) {
+			const start = new Date(advancedFilters.dateStart)
+			filtered = filtered.filter(bib => new Date(bib.event.date) >= start)
+		}
+
+		// --- Filter by end date
+		if (advancedFilters.dateEnd) {
+			const end = new Date(advancedFilters.dateEnd)
+			filtered = filtered.filter(bib => new Date(bib.event.date) <= end)
+		}
+
+		// --- Sort the filtered bibs
 		return sortBibs(filtered, sort)
-	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters])
+	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters, fuse])
 
 	return (
-		<div className="flex flex-col space-y-6">
-			{/* Searchbar handles search, sport, distance, and advanced filters */}
-			<Searchbar
-				maxPrice={maxPrice}
-				onAdvancedFiltersChange={setAdvancedFilters}
-				onDistanceChange={setSelectedDistance}
-				onSearch={setSearchTerm}
-				onSportChange={setSelectedSport}
-				regions={uniqueLocations}
-			/>
+		<div className="flex flex-col space-y-6 pt-8">
+			{/* Wrapper Searchbar with high z-index to ensure dropdown visibility */}
+			<div className="relative z-[60]">
+				<Searchbar
+					maxPrice={maxPrice}
+					onAdvancedFiltersChange={setAdvancedFilters}
+					onDistanceChange={setSelectedDistance}
+					onSearch={setSearchTerm}
+					onSportChange={setSelectedSport}
+					regions={uniqueLocations}
+				/>
+			</div>
 			{/* OfferCounter displays the number of results and the sort selector */}
 			<OfferCounter count={filteredAndSortedBibs.length} onSortChange={setSort} sortValue={sort} />
 			{/* Grid of bib cards, responsive layout */}

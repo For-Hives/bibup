@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@clerk/nextjs": "6.22.0",
+		"@faker-js/faker": "^9.8.0",
 		"@formatjs/intl-localematcher": "0.6.1",
 		"@headlessui/react": "2.2.4",
 		"@heroicons/react": "2.2.0",
@@ -41,6 +42,7 @@
 		"eslint-plugin-promise": "7.2.1",
 		"eslint-plugin-react-hooks": "5.2.0",
 		"espree": "10.4.0",
+		"fuse.js": "^7.1.0",
 		"framer-motion": "12.18.1",
 		"husky": "9.1.7",
 		"lucide-react": "0.517.0",
