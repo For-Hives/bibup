@@ -24,15 +24,10 @@ export default function AdminEventPageClient({ translations }: AdminEventPageCli
 	const handleSuccess = (event: Event) => {
 		setCreatedEvent(event)
 		setIsSuccess(true)
-
-		// Optionally redirect after a delay
-		setTimeout(() => {
-			router.push('/admin')
-		}, 3000)
 	}
 
 	const handleCancel = () => {
-		router.push('/admin')
+		router.push('/admin/events')
 	}
 
 	if (isSuccess && createdEvent) {
@@ -46,7 +41,6 @@ export default function AdminEventPageClient({ translations }: AdminEventPageCli
 						<p className="text-muted-foreground mb-6 text-lg">
 							{translations.event.success.message.replace('{eventName}', createdEvent.name)}
 						</p>
-						<p className="text-muted-foreground/80 text-base">{translations.event.success.redirecting}</p>
 					</div>
 				</div>
 			</div>
