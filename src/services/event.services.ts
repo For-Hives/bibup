@@ -21,6 +21,7 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 			participantCount: eventData.participantCount ?? 0,
 			options: [],
 			name: eventData.name,
+			logo: eventData.logo,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
 			eventDate: new Date(eventData.eventDate),
