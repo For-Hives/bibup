@@ -1,0 +1,52 @@
+import { EventSectionProps } from './types'
+import { Input } from '../../ui/inputAlt'
+import { Label } from '../../ui/label'
+
+export default function BibPickupSection({ translations, register, errors }: EventSectionProps) {
+	return (
+		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+			<div>
+				<h2 className="text-foreground text-2xl font-semibold">{translations.event.sections.bibPickup.title}</h2>
+				<p className="text-muted-foreground mt-2 text-base leading-7">
+					{translations.event.sections.bibPickup.description}
+				</p>
+			</div>
+			<div className="sm:max-w-4xl md:col-span-2">
+				<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
+					<div className="col-span-full">
+						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupLocation">
+							{translations.event.fields.bibPickupLocation.label}
+						</Label>
+						<Input
+							id="bibPickupLocation"
+							{...register('bibPickupLocation')}
+							placeholder={translations.event.fields.bibPickupLocation.placeholder}
+							type="text"
+						/>
+						{errors.bibPickupLocation && (
+							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupLocation.message}</p>
+						)}
+					</div>
+					<div className="col-span-full sm:col-span-3">
+						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowBeginDate">
+							{translations.event.fields.bibPickupBegin.label} *
+						</Label>
+						<Input id="bibPickupWindowBeginDate" {...register('bibPickupWindowBeginDate')} type="datetime-local" />
+						{errors.bibPickupWindowBeginDate && (
+							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupWindowBeginDate.message}</p>
+						)}
+					</div>
+					<div className="col-span-full sm:col-span-3">
+						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowEndDate">
+							{translations.event.fields.bibPickupEnd.label} *
+						</Label>
+						<Input id="bibPickupWindowEndDate" {...register('bibPickupWindowEndDate')} type="datetime-local" />
+						{errors.bibPickupWindowEndDate && (
+							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupWindowEndDate.message}</p>
+						)}
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
