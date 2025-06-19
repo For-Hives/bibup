@@ -26,9 +26,34 @@ const secondaryVariant = {
 	},
 }
 
-export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void }) => {
+interface FileUploadTranslations {
+	dropText: string
+	fileModified: string
+	fileSizeUnit: string
+	uploadSubtext: string
+	uploadText: string
+}
+
+export const FileUpload = ({
+	translations,
+	onChange,
+}: {
+	onChange?: (files: File[]) => void
+	translations?: FileUploadTranslations
+}) => {
 	const [files, setFiles] = useState<File[]>([])
 	const fileInputRef = useRef<HTMLInputElement>(null)
+
+	// Default translations
+	const defaultTranslations: FileUploadTranslations = {
+		uploadText: 'Upload file',
+		uploadSubtext: 'Drag or drop your files here or click to upload',
+		fileSizeUnit: 'MB',
+		fileModified: 'modified',
+		dropText: 'Drop it',
+	}
+
+	const t = translations ?? defaultTranslations
 
 	const handleFileChange = (newFiles: File[]) => {
 		setFiles(prevFiles => [...prevFiles, ...newFiles])
@@ -66,10 +91,8 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 					<GridPattern />
 				</div>
 				<div className="flex flex-col items-center justify-center">
-					<p className="text-foreground relative z-20 font-sans text-base font-bold">Upload file</p>
-					<p className="text-muted-foreground relative z-20 mt-2 font-sans text-base font-normal">
-						Drag or drop your files here or click to upload
-					</p>
+					<p className="text-foreground relative z-20 font-sans text-base font-bold">{t.uploadText}</p>
+					<p className="text-muted-foreground relative z-20 mt-2 font-sans text-base font-normal">{t.uploadSubtext}</p>
 					<div className="relative mx-auto mt-10 w-full max-w-xl">
 						{files.length > 0 &&
 							files.map((file, idx) => (
@@ -96,7 +119,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 											initial={{ opacity: 0 }}
 											layout
 										>
-											{(file.size / (1024 * 1024)).toFixed(2)} MB
+											{(file.size / (1024 * 1024)).toFixed(2)} {t.fileSizeUnit}
 										</motion.p>
 									</div>
 
@@ -111,7 +134,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 										</motion.p>
 
 										<motion.p animate={{ opacity: 1 }} initial={{ opacity: 0 }} layout>
-											modified {new Date(file.lastModified).toLocaleDateString()}
+											{t.fileModified} {new Date(file.lastModified).toLocaleDateString()}
 										</motion.p>
 									</div>
 								</motion.div>
@@ -136,7 +159,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 										className="text-muted-foreground flex flex-col items-center"
 										initial={{ opacity: 0 }}
 									>
-										Drop it
+										{t.dropText}
 										<IconUpload className="text-muted-foreground h-4 w-4" />
 									</motion.p>
 								) : (
