@@ -351,19 +351,6 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 										/>
 									</div>
 								</div>
-								{/* <div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="logoUrl">
-										Logo URL
-									</Label>
-									<Input
-										id="logoUrl"
-										name="logoUrl"
-										onChange={e => handleInputChange('logoUrl', e.target.value)}
-										placeholder="https://example.com/logo.png"
-										type="url"
-										value={formData.logoUrl}
-									/>
-								</div> */}
 							</div>
 						</div>
 					</div>
