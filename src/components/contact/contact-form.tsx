@@ -46,7 +46,7 @@ export default function ContactForm({ t }: ContactFormProps) {
 		return (
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
-				className="flex h-full flex-col items-center justify-center p-6 text-center"
+				className="flex h-full flex-col items-center justify-center text-center"
 				initial={{ y: 10, opacity: 0 }}
 			>
 				<div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
