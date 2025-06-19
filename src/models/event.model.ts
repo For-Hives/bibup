@@ -26,8 +26,6 @@ export interface Event {
 
 	participantCount: number
 
-	registrationUrl?: string
-
 	transferDeadline?: Date // last date for resale
 
 	typeCourse: 'route' | 'trail' | 'triathlon' | 'ultra'
