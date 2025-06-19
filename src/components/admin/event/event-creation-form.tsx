@@ -475,12 +475,12 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 								</div>
 								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="registrationUrl">
-										Lien d'inscription
+										{translations.event.fields.registrationUrl.label}
 									</Label>
 									<Input
 										id="registrationUrl"
 										{...register('registrationUrl')}
-										placeholder="https://example.com/register"
+										placeholder={translations.event.fields.registrationUrl.placeholder}
 										type="url"
 									/>
 									{errors.registrationUrl && (
@@ -592,13 +592,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									<div className="flex items-center gap-x-3">
 										<RadioGroupItem id="partnered" value="partnered" />
 										<Label className="text-foreground text-base font-medium" htmlFor="partnered">
-											Partnered Event (allows bib resale)
+											{translations.event.partnership.partnered}
 										</Label>
 									</div>
 									<div className="flex items-center gap-x-3">
 										<RadioGroupItem id="not-partnered" value="not-partnered" />
 										<Label className="text-foreground text-base font-medium" htmlFor="not-partnered">
-											Not Partnered (display only)
+											{translations.event.partnership.notPartnered}
 										</Label>
 									</div>
 								</RadioGroup>
@@ -638,7 +638,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 													className="text-foreground mb-2 block text-base font-medium"
 													htmlFor={`option-key-${optionIndex}`}
 												>
-													Key
+													{translations.event.eventOptions.optionKey}
 												</Label>
 												<Input
 													id={`option-key-${optionIndex}`}
@@ -685,7 +685,9 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 
 										<div>
 											<div className="mb-4 flex items-center justify-between">
-												<Label className="text-foreground text-base font-medium">Values</Label>
+												<Label className="text-foreground text-base font-medium">
+													{translations.event.eventOptions.values.label}
+												</Label>
 												<Button onClick={() => addOptionValue(optionIndex)} size="sm" type="button" variant="outline">
 													<Plus className="size-4" />
 												</Button>
