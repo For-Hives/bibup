@@ -1,11 +1,15 @@
 'use client'
 
 import { Plus, Trash2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import * as React from 'react'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
 import { EventOption } from '@/models/eventOption.model'
-import { createEvent } from '@/services/event.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 
@@ -19,11 +23,68 @@ import { Input } from '../../ui/inputAlt'
 import { Button } from '../../ui/button'
 import { Label } from '../../ui/label'
 
+// Validation Schema using Zod
+const EventCreationSchema = z
+	.object({
+		typeCourse: z.enum(['route', 'trail', 'triathlon', 'ultra']),
+		transferDeadline: z.string().optional(),
+		registrationUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+		participantCount: z.number().min(1, 'Participant count must be at least 1'),
+		parcoursUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+		options: z.array(
+			z.object({
+				values: z.array(z.string()).min(1, 'At least one value is required'),
+				required: z.boolean(),
+				label: z.string().min(1, 'Option label is required'),
+				key: z.string().min(1, 'Option key is required'),
+			})
+		),
+		officialStandardPrice: z.number().min(0, 'Price must be positive').optional(),
+		name: z.string().min(1, 'Event name is required'),
+		logoFile: z.instanceof(File).optional(),
+		location: z.string().min(1, 'Location is required'),
+		isPartnered: z.boolean(),
+		eventDate: z.string().min(1, 'Event date is required'),
+		elevationGainM: z.number().min(0, 'Elevation gain must be positive').optional(),
+		distanceKm: z.number().min(0, 'Distance must be positive').optional(),
+		description: z.string().min(1, 'Description is required'),
+		bibPickupWindowEndDate: z.string().min(1, 'Bib pickup end date is required'),
+		bibPickupWindowBeginDate: z.string().min(1, 'Bib pickup begin date is required'),
+		bibPickupLocation: z.string().optional(),
+	})
+	.refine(
+		data => {
+			const eventDate = new Date(data.eventDate)
+			const beginDate = new Date(data.bibPickupWindowBeginDate)
+			const endDate = new Date(data.bibPickupWindowEndDate)
+
+			if (beginDate >= endDate) {
+				return false
+			}
+
+			if (data.transferDeadline) {
+				const transferDate = new Date(data.transferDeadline)
+				if (transferDate >= eventDate) {
+					return false
+				}
+			}
+
+			return true
+		},
+		{
+			path: ['form'],
+			message:
+				'Invalid date relationships: pickup begin must be before end, and transfer deadline must be before event date',
+		}
+	)
+
 interface EventCreationFormProps {
 	onCancel?: () => void
 	onSuccess?: (event: Event) => void
 	translations: Translations
 }
+
+type EventFormData = z.infer<typeof EventCreationSchema>
 
 type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
 
@@ -31,31 +92,43 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 	const [isLoading, setIsLoading] = useState(false)
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
 
-	// Form state
-	const [formData, setFormData] = useState({
-		typeCourse: 'route' as Event['typeCourse'],
-		transferDeadline: '',
-		participantCount: '',
-		parcoursUrl: '',
-		officialStandardPrice: '',
-		name: '',
-		logoUrl: '',
-		location: '',
-		isPartnered: false,
-		eventDate: '',
-		elevationGainM: '',
-		distanceKm: '',
-		description: '',
-		bibPickupWindowEndDate: '',
-		bibPickupWindowBeginDate: '',
-		bibPickupLocation: '',
+	const {
+		watch,
+		setValue,
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<EventFormData>({
+		resolver: zodResolver(EventCreationSchema),
+		defaultValues: {
+			typeCourse: 'route',
+			participantCount: 1,
+			options: [],
+			isPartnered: false,
+		},
 	})
 
-	const handleInputChange = (field: string, value: boolean | number | string) => {
-		setFormData(prev => ({
-			...prev,
-			[field]: value,
-		}))
+	const formData = watch()
+
+	const handleFileUpload = (files: File[]) => {
+		if (files.length > 0) {
+			const file = files[0]
+			// Validate file type and size
+			const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+			const maxSize = 5 * 1024 * 1024 // 5MB
+
+			if (!allowedTypes.includes(file.type)) {
+				toast.error('Invalid file type. Please upload PNG, JPG, or SVG files only.')
+				return
+			}
+
+			if (file.size > maxSize) {
+				toast.error('File size too large. Maximum size is 5MB.')
+				return
+			}
+
+			setValue('logoFile', file)
+		}
 	}
 
 	const addEventOption = () => {
@@ -69,22 +142,34 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 	}
 
 	const updateEventOption = (index: number, field: keyof EventOption, value: any) => {
-		setEventOptions(prev => prev.map((option, i) => (i === index ? { ...option, [field]: value } : option)))
+		setEventOptions(prev => {
+			const updated = prev.map((option, i) => (i === index ? { ...option, [field]: value } : option))
+			setValue('options', updated)
+			return updated
+		})
 	}
 
 	const removeEventOption = (index: number) => {
-		setEventOptions(prev => prev.filter((_, i) => i !== index))
+		setEventOptions(prev => {
+			const updated = prev.filter((_, i) => i !== index)
+			setValue('options', updated)
+			return updated
+		})
 	}
 
 	const addOptionValue = (optionIndex: number) => {
-		setEventOptions(prev =>
-			prev.map((option, i) => (i === optionIndex ? { ...option, values: [...option.values, ''] } : option))
-		)
+		setEventOptions(prev => {
+			const updated = prev.map((option, i) =>
+				i === optionIndex ? { ...option, values: [...option.values, ''] } : option
+			)
+			setValue('options', updated)
+			return updated
+		})
 	}
 
 	const updateOptionValue = (optionIndex: number, valueIndex: number, value: string) => {
-		setEventOptions(prev =>
-			prev.map((option, i) =>
+		setEventOptions(prev => {
+			const updated = prev.map((option, i) =>
 				i === optionIndex
 					? {
 							...option,
@@ -92,55 +177,90 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 						}
 					: option
 			)
-		)
+			setValue('options', updated)
+			return updated
+		})
 	}
 
 	const removeOptionValue = (optionIndex: number, valueIndex: number) => {
-		setEventOptions(prev =>
-			prev.map((option, i) =>
+		setEventOptions(prev => {
+			const updated = prev.map((option, i) =>
 				i === optionIndex ? { ...option, values: option.values.filter((_, j) => j !== valueIndex) } : option
 			)
-		)
+			setValue('options', updated)
+			return updated
+		})
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault()
+	const onSubmit = (data: EventFormData) => {
 		setIsLoading(true)
 
-		// Use setTimeout to ensure the function is properly async
-		void (async () => {
+		const submitData = async () => {
 			try {
-				const eventData: Omit<Event, 'id'> = {
-					typeCourse: formData.typeCourse,
-					transferDeadline: formData.transferDeadline ? new Date(formData.transferDeadline) : undefined,
-					participantCount: formData.participantCount ? Number(formData.participantCount) : 0,
-					parcoursUrl: formData.parcoursUrl || undefined,
-					options: eventOptions,
-					officialStandardPrice: formData.officialStandardPrice ? Number(formData.officialStandardPrice) : undefined,
-					name: formData.name,
-					logoUrl: formData.logoUrl || undefined,
-					location: formData.location,
-					isPartnered: formData.isPartnered,
-					eventDate: new Date(formData.eventDate),
-					elevationGainM: formData.elevationGainM ? Number(formData.elevationGainM) : undefined,
-					distanceKm: formData.distanceKm ? Number(formData.distanceKm) : undefined,
-					description: formData.description,
-					bibPickupWindowEndDate: new Date(formData.bibPickupWindowEndDate || formData.eventDate),
-					bibPickupWindowBeginDate: new Date(formData.bibPickupWindowBeginDate || formData.eventDate),
-					bibPickupLocation: formData.bibPickupLocation || undefined,
+				// Create FormData for multipart/form-data submission
+				const formDataToSend = new FormData()
+
+				// Add all form fields
+				formDataToSend.append('name', data.name)
+				formDataToSend.append('location', data.location)
+				formDataToSend.append('eventDate', new Date(data.eventDate).toISOString())
+				formDataToSend.append('description', data.description)
+				formDataToSend.append('typeCourse', data.typeCourse)
+				formDataToSend.append('participantCount', data.participantCount.toString())
+				formDataToSend.append('bibPickupWindowBeginDate', new Date(data.bibPickupWindowBeginDate).toISOString())
+				formDataToSend.append('bibPickupWindowEndDate', new Date(data.bibPickupWindowEndDate).toISOString())
+				formDataToSend.append('isPartnered', data.isPartnered.toString())
+				formDataToSend.append('options', JSON.stringify(data.options))
+
+				// Add optional fields
+				if (data.distanceKm !== undefined) {
+					formDataToSend.append('distanceKm', data.distanceKm.toString())
+				}
+				if (data.elevationGainM !== undefined) {
+					formDataToSend.append('elevationGainM', data.elevationGainM.toString())
+				}
+				if (data.officialStandardPrice !== undefined) {
+					formDataToSend.append('officialStandardPrice', data.officialStandardPrice.toString())
+				}
+				if (data.transferDeadline) {
+					formDataToSend.append('transferDeadline', new Date(data.transferDeadline).toISOString())
+				}
+				if (data.parcoursUrl) {
+					formDataToSend.append('parcoursUrl', data.parcoursUrl)
+				}
+				if (data.registrationUrl) {
+					formDataToSend.append('registrationUrl', data.registrationUrl)
+				}
+				if (data.bibPickupLocation) {
+					formDataToSend.append('bibPickupLocation', data.bibPickupLocation)
+				}
+				if (data.logoFile) {
+					formDataToSend.append('logo', data.logoFile)
 				}
 
-				const createdEvent = await createEvent(eventData as Event)
-				if (createdEvent) {
-					onSuccess?.(createdEvent)
+				// Call the server action to create the event
+				const response = await fetch('/api/admin/events', {
+					method: 'POST',
+					body: formDataToSend,
+				})
+
+				if (!response.ok) {
+					const errorData = await response.json()
+					throw new Error(errorData.message ?? 'Failed to create event')
 				}
+
+				const createdEvent = await response.json()
+				toast.success('Event created successfully!')
+				onSuccess?.(createdEvent)
 			} catch (error) {
 				console.error('Error creating event:', error)
-				// Handle error (show toast, etc.)
+				toast.error(error instanceof Error ? error.message : 'Failed to create event')
 			} finally {
 				setIsLoading(false)
 			}
-		})()
+		}
+
+		void submitData()
 	}
 
 	return (
@@ -149,7 +269,8 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 			<div className="relative flex items-center justify-center p-6 md:p-10">
 				<form
 					className="border-border/50 bg-card/80 w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
-					onSubmit={handleSubmit}
+					// eslint-disable-next-line @typescript-eslint/no-misused-promises
+					onSubmit={handleSubmit(onSubmit)}
 				>
 					<div className="mb-12 text-left">
 						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
@@ -157,6 +278,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 						</h1>
 						<p className="text-muted-foreground mt-4 text-lg">{translations.event.subtitle}</p>
 					</div>
+
+					{/* Global form error */}
+					{errors.root && (
+						<div className="mb-6 rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+							{errors.root.message}
+						</div>
+					)}
 
 					{/* Event Information Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
@@ -176,13 +304,11 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="name"
-										name="name"
-										onChange={e => handleInputChange('name', e.target.value)}
+										{...register('name')}
 										placeholder={translations.event.fields.eventName.placeholder}
-										required
 										type="text"
-										value={formData.name}
 									/>
+									{errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="location">
@@ -190,35 +316,30 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="location"
-										name="location"
-										onChange={e => handleInputChange('location', e.target.value)}
+										{...register('location')}
 										placeholder={translations.event.fields.location.placeholder}
-										required
 										type="text"
-										value={formData.location}
 									/>
+									{errors.location && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventDate">
 										{translations.event.fields.eventDate.label} *
 									</Label>
-									<Input
-										id="eventDate"
-										name="eventDate"
-										onChange={e => handleInputChange('eventDate', e.target.value)}
-										required
-										type="datetime-local"
-										value={formData.eventDate}
-									/>
+									<Input id="eventDate" {...register('eventDate')} type="datetime-local" />
+									{errors.eventDate && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.eventDate.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="typeCourse">
 										{translations.event.fields.eventType.label} *
 									</Label>
 									<Select
-										name="typeCourse"
-										onValueChange={value => handleInputChange('typeCourse', value)}
-										value={formData.typeCourse}
+										onValueChange={value => setValue('typeCourse', value as 'route' | 'trail' | 'triathlon' | 'ultra')}
+										value={formData.typeCourse ?? 'route'}
 									>
 										<SelectTrigger
 											className="ring-foreground/40 h-10 bg-gray-50 ring-2 dark:bg-zinc-800 dark:ring-slate-700"
@@ -233,6 +354,9 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 											<SelectItem value="ultra">{translations.event.fields.eventType.options.ultra}</SelectItem>
 										</SelectContent>
 									</Select>
+									{errors.typeCourse && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.typeCourse.message}</p>
+									)}
 								</div>
 								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="description">
@@ -240,13 +364,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Textarea
 										id="description"
-										name="description"
-										onChange={e => handleInputChange('description', e.target.value)}
+										{...register('description')}
 										placeholder={translations.event.fields.description.placeholder}
-										required
 										rows={4}
-										value={formData.description}
 									/>
+									{errors.description && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+									)}
 								</div>
 							</div>
 						</div>
@@ -272,13 +396,14 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="distanceKm"
-										name="distanceKm"
-										onChange={e => handleInputChange('distanceKm', e.target.value)}
+										{...register('distanceKm', { valueAsNumber: true })}
 										placeholder={translations.event.fields.distance.placeholder}
 										step="0.001"
 										type="number"
-										value={formData.distanceKm}
 									/>
+									{errors.distanceKm && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.distanceKm.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="elevationGainM">
@@ -286,12 +411,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="elevationGainM"
-										name="elevationGainM"
-										onChange={e => handleInputChange('elevationGainM', e.target.value)}
+										{...register('elevationGainM', { valueAsNumber: true })}
 										placeholder={translations.event.fields.elevationGain.placeholder}
 										type="number"
-										value={formData.elevationGainM}
 									/>
+									{errors.elevationGainM && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.elevationGainM.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="officialStandardPrice">
@@ -299,38 +425,39 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="officialStandardPrice"
-										name="officialStandardPrice"
-										onChange={e => handleInputChange('officialStandardPrice', e.target.value)}
+										{...register('officialStandardPrice', { valueAsNumber: true })}
 										placeholder={translations.event.fields.officialPrice.placeholder}
 										step="0.01"
 										type="number"
-										value={formData.officialStandardPrice}
 									/>
+									{errors.officialStandardPrice && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">
+											{errors.officialStandardPrice.message}
+										</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="participantCount">
-										{translations.event.fields.participantCount.label}
+										{translations.event.fields.participantCount.label} *
 									</Label>
 									<Input
 										id="participantCount"
-										name="participantCount"
-										onChange={e => handleInputChange('participantCount', e.target.value)}
+										{...register('participantCount', { valueAsNumber: true })}
 										placeholder={translations.event.fields.participantCount.placeholder}
 										type="number"
-										value={formData.participantCount}
 									/>
+									{errors.participantCount && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.participantCount.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="transferDeadline">
 										{translations.event.fields.transferDeadline.label}
 									</Label>
-									<Input
-										id="transferDeadline"
-										name="transferDeadline"
-										onChange={e => handleInputChange('transferDeadline', e.target.value)}
-										type="datetime-local"
-										value={formData.transferDeadline}
-									/>
+									<Input id="transferDeadline" {...register('transferDeadline')} type="datetime-local" />
+									{errors.transferDeadline && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.transferDeadline.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="parcoursUrl">
@@ -338,12 +465,27 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="parcoursUrl"
-										name="parcoursUrl"
-										onChange={e => handleInputChange('parcoursUrl', e.target.value)}
+										{...register('parcoursUrl')}
 										placeholder={translations.event.fields.parcoursUrl.placeholder}
 										type="url"
-										value={formData.parcoursUrl}
 									/>
+									{errors.parcoursUrl && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.parcoursUrl.message}</p>
+									)}
+								</div>
+								<div className="col-span-full">
+									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="registrationUrl">
+										Lien d'inscription
+									</Label>
+									<Input
+										id="registrationUrl"
+										{...register('registrationUrl')}
+										placeholder="https://example.com/register"
+										type="url"
+									/>
+									{errors.registrationUrl && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.registrationUrl.message}</p>
+									)}
 								</div>
 								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium">
@@ -353,17 +495,11 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 										{translations.event.fields.logoUpload.description}
 									</p>
 									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
-										<FileUpload
-											onChange={files => {
-												if (files.length > 0) {
-													// Handle logo file upload
-													console.info('Logo uploaded:', files[0].name)
-													// You can store the file in form state or upload it immediately
-												}
-											}}
-											translations={translations.event.fields.logoUpload}
-										/>
+										<FileUpload onChange={handleFileUpload} translations={translations.event.fields.logoUpload} />
 									</div>
+									{errors.logoFile && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.logoFile.message}</p>
+									)}
 								</div>
 							</div>
 						</div>
@@ -387,12 +523,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="bibPickupLocation"
-										name="bibPickupLocation"
-										onChange={e => handleInputChange('bibPickupLocation', e.target.value)}
+										{...register('bibPickupLocation')}
 										placeholder={translations.event.fields.bibPickupLocation.placeholder}
 										type="text"
-										value={formData.bibPickupLocation}
 									/>
+									{errors.bibPickupLocation && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupLocation.message}</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label
@@ -403,23 +540,25 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 									</Label>
 									<Input
 										id="bibPickupWindowBeginDate"
-										name="bibPickupWindowBeginDate"
-										onChange={e => handleInputChange('bibPickupWindowBeginDate', e.target.value)}
+										{...register('bibPickupWindowBeginDate')}
 										type="datetime-local"
-										value={formData.bibPickupWindowBeginDate}
 									/>
+									{errors.bibPickupWindowBeginDate && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">
+											{errors.bibPickupWindowBeginDate.message}
+										</p>
+									)}
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowEndDate">
 										{translations.event.fields.bibPickupEnd.label} *
 									</Label>
-									<Input
-										id="bibPickupWindowEndDate"
-										name="bibPickupWindowEndDate"
-										onChange={e => handleInputChange('bibPickupWindowEndDate', e.target.value)}
-										type="datetime-local"
-										value={formData.bibPickupWindowEndDate}
-									/>
+									<Input id="bibPickupWindowEndDate" {...register('bibPickupWindowEndDate')} type="datetime-local" />
+									{errors.bibPickupWindowEndDate && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">
+											{errors.bibPickupWindowEndDate.message}
+										</p>
+									)}
 								</div>
 							</div>
 						</div>
@@ -447,7 +586,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 								</p>
 								<RadioGroup
 									className="mt-6"
-									onValueChange={value => handleInputChange('isPartnered', value === 'partnered')}
+									onValueChange={value => setValue('isPartnered', value === 'partnered')}
 									value={formData.isPartnered ? 'partnered' : 'not-partnered'}
 								>
 									<div className="flex items-center gap-x-3">
