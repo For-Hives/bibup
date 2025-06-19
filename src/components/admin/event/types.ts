@@ -73,9 +73,27 @@ export type EventFormData = z.infer<typeof EventCreationSchema>
 export interface EventSectionProps {
 	errors: FieldErrors<EventFormData>
 	formData: EventFormData
+	locale?: string
 	register: UseFormRegister<EventFormData>
 	setValue: UseFormSetValue<EventFormData>
 	translations: Translations
 }
 
 export type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
+
+/**
+ * Extract locale from translations object
+ * This is a helper function to determine the current locale
+ */
+export function getLocaleFromTranslations(translations: Translations): string {
+	// Check if we have French translations (specific to French)
+	if (translations.event?.fields?.eventName?.label === "Nom de l'Événement") {
+		return 'fr'
+	}
+	// Check if we have Korean translations (this would need to be added)
+	if (translations.event?.fields?.eventName?.label?.includes('한국')) {
+		return 'ko'
+	}
+	// Default to English if no specific match
+	return 'en'
+}

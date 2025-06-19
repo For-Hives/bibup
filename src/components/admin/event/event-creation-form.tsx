@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import { EventOption } from '@/models/eventOption.model'
 
-import { EventCreationFormProps, EventCreationSchema, EventFormData } from './types'
+import { EventCreationFormProps, EventCreationSchema, EventFormData, getLocaleFromTranslations } from './types'
 import EventInformationSection from './EventInformationSection'
 import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
@@ -22,6 +22,9 @@ import FakerButton from './FakerButton'
 export default function EventCreationForm({ translations, onSuccess, onCancel }: EventCreationFormProps) {
 	const [isLoading, setIsLoading] = useState(false)
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
+
+	// Extract locale from translations
+	const locale = getLocaleFromTranslations(translations)
 
 	const {
 		watch,
@@ -142,6 +145,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 					<EventInformationSection
 						errors={errors}
 						formData={formData}
+						locale={locale}
 						register={register}
 						setValue={setValue}
 						translations={translations}
@@ -153,6 +157,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 					<EventDetailsSection
 						errors={errors}
 						formData={formData}
+						locale={locale}
 						register={register}
 						setValue={setValue}
 						translations={translations}
@@ -164,6 +169,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 					<BibPickupSection
 						errors={errors}
 						formData={formData}
+						locale={locale}
 						register={register}
 						setValue={setValue}
 						translations={translations}
