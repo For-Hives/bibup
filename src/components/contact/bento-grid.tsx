@@ -13,7 +13,6 @@ import { cn } from '@/lib/utils'
 type BentoCardProps = {
 	className?: string
 	content: string
-	delay: number
 	hoverEffect: 'float' | 'glow' | 'pulse'
 	href: string
 	icon: React.ReactNode
@@ -106,7 +105,6 @@ export default function BentoGrid({ t }: Props) {
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 border transition-colors"
 				content="contact@beswib.com"
-				delay={0.2}
 				hoverEffect="glow"
 				href="mailto:contact@beswib.com"
 				icon={<Mail className="text-primary h-6 w-6" />}
@@ -120,7 +118,6 @@ export default function BentoGrid({ t }: Props) {
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 border transition-colors"
 				content="support@beswib.com"
-				delay={0.3}
 				hoverEffect="float"
 				href="mailto:support@beswib.com"
 				icon={<Users className="text-primary h-6 w-6" />}
@@ -134,7 +131,6 @@ export default function BentoGrid({ t }: Props) {
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 border transition-colors"
 				content="partners@beswib.com"
-				delay={0.4}
 				hoverEffect="pulse"
 				href="mailto:partners@beswib.com"
 				icon={<Handshake className="text-primary h-6 w-6" />}
@@ -171,7 +167,6 @@ function BentoCard({
 	icon,
 	href,
 	hoverEffect,
-	delay,
 	content,
 	className,
 }: BentoCardProps) {
@@ -186,7 +181,6 @@ function BentoCard({
 			initial={{ y: 20, opacity: 0 }}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
-			transition={{ delay }}
 			whileHover={{ scale: 1.03 }}
 		>
 			<div className="z-10">

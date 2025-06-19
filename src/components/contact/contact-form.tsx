@@ -70,24 +70,24 @@ export default function ContactForm({ t }: ContactFormProps) {
 	}
 
 	return (
-		<form className="h-full space-y-4" onSubmit={handleSubmit}>
+		<form className="mt-4 h-full space-y-4" onSubmit={handleSubmit}>
 			<div>
-				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
+				<label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
 					{t.form.yourName}
 				</label>
 				<Input
-					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
+					className="border-foreground/60 ring-foreground/40 bg-white/50 ring-2 backdrop-blur-sm dark:border-stone-700 dark:bg-stone-800/50"
 					id="name"
 					placeholder={t.form.yourNamePlaceholder}
 					required
 				/>
 			</div>
 			<div>
-				<label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="email">
+				<label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="email">
 					{t.form.yourEmail}
 				</label>
 				<Input
-					className="border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50 dark:focus:ring-slate-700"
+					className="border-foreground/60 ring-foreground/40 bg-white/50 ring-2 backdrop-blur-sm dark:border-stone-700 dark:bg-stone-800/50 dark:focus:ring-slate-700"
 					id="email"
 					placeholder={t.form.yourEmailPlaceholder}
 					required
@@ -99,14 +99,14 @@ export default function ContactForm({ t }: ContactFormProps) {
 					{t.form.yourMessage}
 				</label>
 				<Textarea
-					className="h-[120px] resize-none border-violet-600/60 bg-white/50 ring-2 ring-violet-600/40 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/50"
+					className="border-foreground/60 ring-foreground/40 h-[120px] resize-none bg-white/50 ring-2 backdrop-blur-sm dark:border-stone-700 dark:bg-stone-800/50"
 					id="message"
 					placeholder={t.form.yourMessagePlaceholder}
 					required
 				/>
 			</div>
 			<Button
-				className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:from-violet-700 hover:to-indigo-700"
+				className="from-primary to-primary/80 hover:from-primary/80 hover:to-primary w-full cursor-pointer bg-gradient-to-r text-white"
 				disabled={isSubmitting}
 				type="submit"
 			>
