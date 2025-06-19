@@ -6,10 +6,10 @@ import { useState } from 'react'
 import type React from 'react'
 
 import globalTranslations from '@/components/global/locales.json'
+import { Textarea } from '@/components/ui/textareaAlt'
 import { getTranslations } from '@/lib/getDictionary'
-import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 
 interface ContactFormProps {
 	t: ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
