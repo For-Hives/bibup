@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -15,26 +15,43 @@ type SelectedFilters = {
 	price: number[]
 }
 
-export default function Searchbar() {
-	// State for the search input value
-	const [searchTerm, setSearchTerm] = useState('')
-	// State to control the visibility of the filter dropdown
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-	// const [sortBy, setSortBy] = useState('Best Match')
-	// const [deliveryType, setDeliveryType] = useState('Regular Delivery')
+interface SearchbarProps {
+	readonly onSearch: (value: string) => void
+	readonly onSportChange: (sport: string | null) => void
+	readonly onDistanceChange: (distance: string | null) => void
+	readonly onAdvancedFiltersChange?: (filters: SelectedFilters) => void
+	readonly regions?: string[]
+	readonly maxPrice?: number
+}
 
-	// State for the currently applied price range (used for the badge and slider sync)
+// Main searchbar component that handles filtering and searching functionality
+// Switches from a stacked layout on mobile to a horizontal layout on desktop (>1280px)
+export default function Searchbar({ onSearch, onSportChange, onDistanceChange, onAdvancedFiltersChange, regions = [], maxPrice = 200 }: SearchbarProps) {
+	// State management for search and filters
+	// searchTerm: value of the main search input
+	// isDropdownOpen: controls visibility of advanced filters
+	// selectedFilters: main state for all applied filters (used for badges and filtering)
+	// tempPrice, tempRegion, tempDateStart, tempDateEnd: temporary states for advanced filters before applying
+	// isHover, isHover2: hover states for select triggers
+	const [searchTerm, setSearchTerm] = useState('') // Stores the current search input value
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false) // Controls the visibility of the filter dropdown
+
+	// State for the price range filter
 	const [, setPriceRange] = useState([0, 200])
-	// State for the filters that are currently applied (displayed as badges)
+
+	// Main state object that stores all currently applied filters
+	// These filters are displayed as badges and used for filtering the results
 	const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-		price: [0, 200],
+		price: [0, maxPrice],
 		geography: [],
 		dateStart: undefined,
 		dateEnd: undefined,
 	})
 
-	// Temporary states for the filter dropdown (not applied until 'Apply' is clicked)
-	const [tempPrice, setTempPrice] = useState<[number, number]>([0, 200])
+	// Temporary states for the filter dropdown
+	// These states are only applied when clicking the "Apply" button
+	// This allows users to modify filters without affecting the results until they're ready
+	const [tempPrice, setTempPrice] = useState<[number, number]>([0, maxPrice])
 	const [tempRegion, setTempRegion] = useState<string[]>([])
 	const [tempDateStart, setTempDateStart] = useState<string | undefined>(undefined)
 	const [tempDateEnd, setTempDateEnd] = useState<string | undefined>(undefined)
@@ -43,79 +60,88 @@ export default function Searchbar() {
 	const [isHover, setIsHover] = useState(false)
 	const [isHover2, setIsHover2] = useState(false)
 
-	const toggleDropdown = () => {
-		setIsDropdownOpen(!isDropdownOpen)
-	}
+	// Toggle function for the filter dropdown
+	const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
 
-	// Handle input change for the search bar
+	// Handler for search input changes
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value)
+		onSearch(e.target.value)
 	}
 
-	// Handler to remove a geography filter
+	// Filter removal handlers
+	// These functions remove individual filters when clicking the X on their badges
 	const handleRemoveGeography = (location: string) => {
 		setSelectedFilters(prev => ({
 			...prev,
 			geography: prev.geography.filter((item: string) => item !== location),
 		}))
 	}
-	// Handler to reset price filter
+
 	const handleResetPrice = () => {
-		setSelectedFilters(prev => ({ ...prev, price: [0, 200] }))
-		setPriceRange([0, 200])
+		setSelectedFilters(prev => {
+			const updated = { ...prev, price: [0, maxPrice] }
+			setPriceRange([0, maxPrice])
+			setTempPrice([0, maxPrice])
+			return updated
+		})
 	}
-	// Handler to remove dateStart filter
+
 	const handleRemoveDateStart = () => {
 		setSelectedFilters(prev => ({ ...prev, dateStart: undefined }))
 	}
-	// Handler to remove dateEnd filter
+
 	const handleRemoveDateEnd = () => {
 		setSelectedFilters(prev => ({ ...prev, dateEnd: undefined }))
 	}
 
+	// Synchronize price filters with maxPrice when it changes
+	useEffect(() => {
+		setSelectedFilters(prev => ({ ...prev, price: [0, maxPrice] }))
+		setTempPrice([0, maxPrice])
+		setPriceRange([0, maxPrice])
+	}, [maxPrice])
+
+	// Notify parent when selectedFilters changes
+	useEffect(() => {
+		if (onAdvancedFiltersChange) onAdvancedFiltersChange(selectedFilters)
+	}, [selectedFilters, onAdvancedFiltersChange])
+
 	return (
-		<div className="flex w-full max-w-7xl flex-col rounded-xl bg-white p-2 xl:p-4 shadow-md">
-			<div className="flex flex-col xl:flex-row xl:items-center gap-2 xl:gap-4">
-				{/* Search Bar Input */}
-				<div className="relative flex w-full xl:w-3/4 items-center rounded-lg px-2 xl:px-4 py-2">
+		// Main container with responsive padding and shadow
+		<div className="flex w-full max-w-7xl flex-col rounded-xl bg-card/80 border border-border p-2 shadow-md xl:p-4 backdrop-blur-md">
+			{/* Main content wrapper - switches from column to row layout on desktop */}
+			<div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:gap-4">
+				{/* Search input section - takes 3/4 of the width on desktop */}
+				<div className="relative flex w-full items-center rounded-lg px-2 py-2 xl:w-3/4 xl:px-4">
 					<input
-						className="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 pr-10 text-sm text-gray-900"
+						className="block w-full rounded-lg border border-border bg-card/60 p-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
 						id="search_input"
 						onChange={handleInputChange}
-						placeholder="Search..."
+						placeholder="Rechercher une course, une ville, ..."
 						required
 						type="text"
 						value={searchTerm}
 					/>
-					{/* Search Button (icon only, not functional) */}
-					<button
-						className="absolute top-1/2 right-3 xl:right-7 flex -translate-y-1/2 items-center text-gray-500 hover:text-gray-600 focus:outline-none"
-						type="submit"
-					>
-						<svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-							<path
-								clipRule="evenodd"
-								d="M8 4a6 6 0 100 12 6 6 0 000-12zm0 2a4 4 0 100 8 4 4 0 000-8zm5.707 9.293a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414z"
-								fillRule="evenodd"
-							/>
-						</svg>
-					</button>
 				</div>
 
-				{/* Filter Selects and Dropdown Button */}
-				<div className="flex w-full xl:w-1/4 items-center gap-2 xl:gap-4">
-					{/* Example select for sport (not used in filters anymore) */}
+				{/* Filters section - takes 1/4 of the width on desktop */}
+				<div className="flex w-full items-center gap-2 xl:w-1/4 xl:gap-4">
+					{/* Sport dropdown - takes 1/3 of the filters section */}
 					<div className="w-1/3">
-						<Select>
+						<Select onValueChange={value => onSportChange(value || null)}>
 							<SelectTrigger
-								className="w-full h-9 overflow-hidden border-gray-400 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
+								className="h-9 w-full overflow-hidden border border-border text-ellipsis whitespace-nowrap text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground"
 								onMouseEnter={() => setIsHover2(true)}
 								onMouseLeave={() => setIsHover2(false)}
-								style={{ backgroundColor: isHover2 ? '#D1D5DB' : '#FFFFFF' }}
+								style={{ backgroundColor: isHover2 ? 'rgba(var(--accent),0.08)' : 'var(--card)' }}
 							>
-								<SelectValue className="text-gray-400" placeholder="Sport" />
+								<SelectValue className="text-foreground" placeholder="Sport" />
 							</SelectTrigger>
-							<SelectContent className="border-gray-400 bg-white text-gray-400">
+							<SelectContent className="border-border bg-card text-foreground">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="all">
+									Tous les sports
+								</SelectItem>
 								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="running">
 									Running
 								</SelectItem>
@@ -125,68 +151,83 @@ export default function Searchbar() {
 								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="triathlon">
 									Triathlon
 								</SelectItem>
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="cyclisme">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="cycling">
 									Cyclisme
+								</SelectItem>
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="swimming">
+									Natation
 								</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
 
-					{/* Example select for distance (not used in filters anymore) */}
+					{/* Distance dropdown - takes 1/3 of the filters section */}
 					<div className="w-1/3">
-						<Select>
+						<Select onValueChange={value => onDistanceChange(value || null)}>
 							<SelectTrigger
-								className="w-full h-9 overflow-hidden border-gray-400 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
+								className="h-9 w-full overflow-hidden border border-border text-ellipsis whitespace-nowrap text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground"
 								onMouseEnter={() => setIsHover(true)}
 								onMouseLeave={() => setIsHover(false)}
-								style={{ backgroundColor: isHover ? '#D1D5DB' : '#FFFFFF' }}
+								style={{ backgroundColor: isHover ? 'rgba(var(--accent),0.08)' : 'var(--card)' }}
 							>
 								<SelectValue placeholder="Distance" />
 							</SelectTrigger>
-							<SelectContent className="border-gray-400 bg-white text-gray-400">
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="5km">
+							<SelectContent className="border-border bg-card text-foreground">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="all">
+									Toutes les distances
+								</SelectItem>
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="5">
 									5km
 								</SelectItem>
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="10km">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="10">
 									10km
 								</SelectItem>
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="semi">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="21">
 									Semi-Marathon
 								</SelectItem>
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="marathon">
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="42">
 									Marathon
 								</SelectItem>
-								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="ultra">
-									Ultra
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="80">
+									Ultra (+80km)
+								</SelectItem>
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="tri-s">
+									Triathlon S
+								</SelectItem>
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="tri-m">
+									Triathlon M
+								</SelectItem>
+								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="tri-l">
+									Triathlon L
 								</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
 
-					{/* Dropdown Filter Button */}
+					{/* Filter button with dropdown - takes 1/3 of the filters section */}
 					<div className="relative w-1/3">
 						<Button
-							className="w-full h-9 border border-gray-400 bg-white text-gray-400 hover:bg-gray-300 px-3 py-0"
+							className="h-9 w-full border border-border bg-card text-foreground hover:bg-card/80 px-3 py-0"
 							onClick={toggleDropdown}
 						>
 							Filters
 						</Button>
-						{/* Dropdown content for filters (price, date, region, distance) */}
+						{/* Advanced filters dropdown - appears when clicking the Filters button */}
 						{isDropdownOpen && (
-							<div className="absolute right-0 z-10 mt-2 w-full min-w-[220px] xl:w-64 rounded-lg border border-gray-400 bg-white p-4 text-gray-400 shadow-lg">
-								{/* Price Range Filter */}
+							<div className="absolute right-0 z-10 mt-2 w-full min-w-[220px] rounded-lg border border-border bg-card p-4 text-foreground shadow-lg xl:w-64">
+								{/* Price range slider */}
 								<div className="mb-4">
 									<label className="mb-2 font-semibold" htmlFor="price-range-slider">
 										Price Range
 									</label>
 									<input
-										className="h-2 w-full appearance-none rounded-full bg-gray-300"
+										className="h-2 w-full appearance-none rounded-full bg-accent/30"
 										id="price-range-slider"
-										max={200}
 										min={0}
+										max={maxPrice}
 										onChange={e => setTempPrice([0, +e.target.value])}
 										style={{
-											background: `linear-gradient(to right, #2563EB 0%, #2563EB ${((tempPrice[1] / 200) * 100).toFixed(0)}%, #E5E7EB ${((tempPrice[1] / 200) * 100).toFixed(0)}%, #E5E7EB 100%)`,
+											background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((tempPrice[1] / maxPrice) * 100).toFixed(0)}%, #E5E7EB ${((tempPrice[1] / maxPrice) * 100).toFixed(0)}%, #E5E7EB 100%)`,
 										}}
 										type="range"
 										value={tempPrice[1]}
@@ -197,21 +238,21 @@ export default function Searchbar() {
 									</div>
 								</div>
 
-								{/* Date Range Filter */}
+								{/* Date range inputs */}
 								<div className="flex flex-col justify-between text-sm">
-									<label className="mb-2 block text-lg font-medium text-slate-300" htmlFor="date-start">
+									<label className="mb-2 block text-lg font-medium text-muted-foreground" htmlFor="date-start">
 										Date
 									</label>
 									<div className="w-full flex-col space-y-2">
 										<input
-											className="h-10 w-full rounded border border-slate-600 bg-white text-center text-gray-400 focus:border-gray-400"
+											className="h-10 w-full rounded border border-border bg-card/60 text-center text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
 											id="date-start"
 											onChange={e => setTempDateStart(e.target.value)}
 											type="date"
 											value={tempDateStart ?? ''}
 										/>
 										<input
-											className="h-10 w-full rounded border border-slate-600 bg-white text-center text-gray-400 focus:border-gray-400"
+											className="h-10 w-full rounded border border-border bg-card/60 text-center text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
 											id="date-end"
 											onChange={e => setTempDateEnd(e.target.value)}
 											type="date"
@@ -220,46 +261,49 @@ export default function Searchbar() {
 									</div>
 								</div>
 
-								{/* Region Filter */}
+								{/* Region selector */}
 								<div>
-									<label className="mb-2 block text-lg font-medium text-slate-300" htmlFor="region-select">
+									<label className="mb-2 block text-lg font-medium text-muted-foreground" htmlFor="region-select">
 										Région
 									</label>
 									<Select onValueChange={value => setTempRegion(value ? [value] : [])} value={tempRegion[0] || ''}>
 										<SelectTrigger
-											className="w-full border-gray-400 bg-slate-700 text-gray-400 data-[placeholder]:!text-gray-400"
+											className="w-full border border-border bg-card/60 text-foreground data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent"
 											id="region-select"
-											style={{ backgroundColor: isHover ? '#D1D5DB' : '#FFFFFF' }}
 										>
 											<SelectValue placeholder="Toutes les régions" />
 										</SelectTrigger>
-										<SelectContent className="border-gray-400 bg-white text-gray-400">
-											<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="idf">
-												Île-de-France
-											</SelectItem>
-											<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="paca">
-												PACA
-											</SelectItem>
-											<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="ara">
-												Auvergne-Rhône-Alpes
-											</SelectItem>
+										<SelectContent className="border-border bg-card/80 text-foreground">
+											{regions.length === 0 ? (
+												<SelectItem value="" disabled>Aucune région</SelectItem>
+											) : (
+												regions.map(region => (
+													<SelectItem key={region} value={region.toLowerCase()} className="focus:bg-slate-300 focus:text-gray-400">
+														{region}
+													</SelectItem>
+												))
+											)}
 										</SelectContent>
 									</Select>
 								</div>
 
-								{/* Apply Button: applies the temporary filter states to the global filters */}
+								{/* Apply button - updates the main filters state with temporary values */}
 								<div className="mt-4">
 									<Button
-										className="w-full border border-gray-400 bg-white text-gray-400 hover:bg-slate-200"
+										className="w-full border border-border bg-accent/20 text-accent-foreground hover:bg-accent/30"
 										onClick={() => {
-											setSelectedFilters({
+											const newFilters = {
 												price: tempPrice,
 												geography: tempRegion,
 												dateStart: tempDateStart,
 												dateEnd: tempDateEnd,
-											})
+											}
+											setSelectedFilters(newFilters)
 											setPriceRange(tempPrice)
 											setIsDropdownOpen(false)
+											if (onAdvancedFiltersChange) {
+												onAdvancedFiltersChange(newFilters)
+											}
 										}}
 									>
 										Apply
@@ -271,10 +315,11 @@ export default function Searchbar() {
 				</div>
 			</div>
 
-			<hr className="border-gray-400 my-2" />
+			{/* Divider between search/filters and filter badges */}
+			<hr className="my-2 border-gray-400" />
 
-			{/* Selected Filters as Badges (only price, region, and dates) */}
-			<div className="mt-4 flex flex-wrap gap-2 xl:gap-4 xl:mt-0">
+			{/* Filter badges section - shows currently applied filters */}
+			<div className="mt-4 flex flex-wrap gap-2 xl:mt-0 xl:gap-4">
 				{/* Region filter badges */}
 				{selectedFilters.geography.map(location => (
 					<Badge
@@ -295,9 +340,9 @@ export default function Searchbar() {
 				))}
 				{/* Price filter badge */}
 				<Badge className="bg-yellow-400 text-white" key="price" variant="secondary">
-					{selectedFilters.price[0] === 0 && selectedFilters.price[1] === 200
+					{selectedFilters.price[0] === 0 && selectedFilters.price[1] === maxPrice
 						? 'All prices'
-						: `Prix: 0€ - ${selectedFilters.price[1]}€`}
+						: `Prix: ${selectedFilters.price[0]}€ - ${selectedFilters.price[1]}€`}
 					<button
 						aria-label="Reset price filter"
 						className="ml-1 flex h-3 w-3 cursor-pointer items-center justify-center"
@@ -307,7 +352,7 @@ export default function Searchbar() {
 						<X />
 					</button>
 				</Badge>
-				{/* Date filter badges */}
+				{/* Start date filter badge */}
 				{selectedFilters.dateStart != null && selectedFilters.dateStart !== '' && (
 					<Badge className="bg-gray-400 text-white" key="dateStart" variant="secondary">
 						{`Début: ${selectedFilters.dateStart}`}
@@ -321,6 +366,7 @@ export default function Searchbar() {
 						</button>
 					</Badge>
 				)}
+				{/* End date filter badge */}
 				{selectedFilters.dateEnd != null && selectedFilters.dateEnd !== '' && (
 					<Badge className="bg-gray-400 text-white" key="dateEnd" variant="secondary">
 						{`Fin: ${selectedFilters.dateEnd}`}
