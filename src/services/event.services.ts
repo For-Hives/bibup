@@ -10,7 +10,7 @@ import { pb } from '@/lib/pocketbaseClient'
  * @param organizerId The ID of the user (organizer) creating the event.
  */
 export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (eventData.name === '' || isNaN(eventData.eventDate.getTime()) || eventData.location === '') {
+	if (!eventData.name || isNaN(eventData.eventDate.getTime()) || !eventData.location) {
 		console.error('Event name, date, and location are required.')
 		return null
 	}
@@ -18,21 +18,39 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 	try {
 		const dataToCreate: Omit<Event, 'id'> = {
 			typeCourse: eventData.typeCourse ?? 'route',
+			transferDeadline: eventData.transferDeadline,
+			registrationUrl: eventData.registrationUrl,
 			participantCount: eventData.participantCount ?? 0,
-			options: [],
+			parcoursUrl: eventData.parcoursUrl,
+			options: eventData.options ?? [],
+			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
 			logo: eventData.logo,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
+
 			eventDate: new Date(eventData.eventDate),
+			elevationGainM: eventData.elevationGainM,
+			// Optional fields
+			distanceKm: eventData.distanceKm,
 			description: eventData.description ?? '',
 			bibPickupWindowEndDate: eventData.bibPickupWindowEndDate ?? new Date(),
 			bibPickupWindowBeginDate: eventData.bibPickupWindowBeginDate ?? new Date(),
+			bibPickupLocation: eventData.bibPickupLocation,
 		}
 
+		console.info('Creating event with PocketBase:', {
+			url: pb.baseUrl,
+			hasAuth: !!pb.authStore.token,
+			eventName: dataToCreate.name,
+		})
+
 		const record = await pb.collection('events').create<Event>(dataToCreate)
+
+		console.info('Event created successfully:', record.id)
 		return record
 	} catch (error: unknown) {
+		console.error('PocketBase error details:', error)
 		throw new Error('Error creating event: ' + (error instanceof Error ? error.message : String(error)))
 	}
 }

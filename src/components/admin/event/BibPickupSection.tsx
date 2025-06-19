@@ -1,8 +1,9 @@
+import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
-export default function BibPickupSection({ translations, register, errors }: EventSectionProps) {
+export default function BibPickupSection({ translations, register, locale = 'fr', errors }: EventSectionProps) {
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div>
@@ -31,7 +32,7 @@ export default function BibPickupSection({ translations, register, errors }: Eve
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowBeginDate">
 							{translations.event.fields.bibPickupBegin.label} *
 						</Label>
-						<Input id="bibPickupWindowBeginDate" {...register('bibPickupWindowBeginDate')} type="datetime-local" />
+						<DateInput id="bibPickupWindowBeginDate" locale={locale} {...register('bibPickupWindowBeginDate')} />
 						{errors.bibPickupWindowBeginDate && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupWindowBeginDate.message}</p>
 						)}
@@ -40,7 +41,7 @@ export default function BibPickupSection({ translations, register, errors }: Eve
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowEndDate">
 							{translations.event.fields.bibPickupEnd.label} *
 						</Label>
-						<Input id="bibPickupWindowEndDate" {...register('bibPickupWindowEndDate')} type="datetime-local" />
+						<DateInput id="bibPickupWindowEndDate" locale={locale} {...register('bibPickupWindowEndDate')} />
 						{errors.bibPickupWindowEndDate && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.bibPickupWindowEndDate.message}</p>
 						)}

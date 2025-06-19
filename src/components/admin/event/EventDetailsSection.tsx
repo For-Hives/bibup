@@ -1,11 +1,18 @@
 import { toast } from 'sonner'
 
 import { FileUpload } from '../../ui/file-upload'
+import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
-export default function EventDetailsSection({ translations, setValue, register, errors }: EventSectionProps) {
+export default function EventDetailsSection({
+	translations,
+	setValue,
+	register,
+	locale = 'fr',
+	errors,
+}: EventSectionProps) {
 	const handleFileUploadWithValidation = (files: File[]) => {
 		if (files.length > 0) {
 			const file = files[0]
@@ -99,7 +106,7 @@ export default function EventDetailsSection({ translations, setValue, register, 
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="transferDeadline">
 							{translations.event.fields.transferDeadline.label}
 						</Label>
-						<Input id="transferDeadline" {...register('transferDeadline')} type="datetime-local" />
+						<DateInput id="transferDeadline" locale={locale} {...register('transferDeadline')} />
 						{errors.transferDeadline && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.transferDeadline.message}</p>
 						)}

@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
 import { Textarea } from '../../ui/textareaAlt'
+import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
@@ -8,6 +9,7 @@ export default function EventInformationSection({
 	translations,
 	setValue,
 	register,
+	locale = 'fr',
 	formData,
 	errors,
 }: EventSectionProps) {
@@ -53,7 +55,7 @@ export default function EventInformationSection({
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventDate">
 							{translations.event.fields.eventDate.label} *
 						</Label>
-						<Input id="eventDate" {...register('eventDate')} type="datetime-local" />
+						<DateInput id="eventDate" locale={locale} {...register('eventDate')} />
 						{errors.eventDate && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{String(errors.eventDate.message)}</p>
 						)}
