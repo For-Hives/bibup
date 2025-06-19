@@ -4,10 +4,10 @@ import React, { useMemo, useState } from 'react'
 
 import Fuse from 'fuse.js'
 
-import type { BibSale } from '@/components/marketplace/card-market'
+import type { BibSale } from '@/components/marketplace/CardMarket'
 
 import OfferCounter from '@/components/marketplace/offerCounter'
-import CardMarket from '@/components/marketplace/card-market'
+import CardMarket from '@/components/marketplace/CardMarket'
 
 import Searchbar from './searchbar'
 
@@ -120,9 +120,7 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 
 		// --- Filter by region (geography)
 		if (advancedFilters.geography && advancedFilters.geography.length > 0) {
-			filtered = filtered.filter(bib => 
-				advancedFilters.geography.includes(bib.event.location.toLowerCase())
-			)
+			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
 		}
 
 		// --- Filter by start date

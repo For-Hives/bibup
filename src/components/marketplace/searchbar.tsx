@@ -189,7 +189,7 @@ export default function Searchbar({
 
 					{/* Distance dropdown - takes 1/3 of the filters section */}
 					<div className="w-1/3">
-						<Select onValueChange={value => onDistanceChange(value || null)}>
+						<Select onValueChange={value => onDistanceChange(value ?? null)}>
 							<SelectTrigger
 								className="border-border text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground h-9 w-full overflow-hidden border text-ellipsis whitespace-nowrap"
 								onMouseEnter={() => setIsHover(true)}

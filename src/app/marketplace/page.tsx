@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { faker } from '@faker-js/faker'
 
-import type { BibSale } from '@/components/marketplace/card-market'
+import type { BibSale } from '@/components/marketplace/CardMarket'
 
 import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
 import { getTranslations } from '@/lib/getDictionary'
@@ -39,6 +39,7 @@ function generateRandomBibSale(): BibSale {
 			participantCount: faker.number.int({ min: 100, max: 50000 }),
 			name: faker.company.name() + ' ' + faker.word.noun(),
 			location: faker.location.city(),
+			image: faker.image.url(),
 			id: faker.string.uuid(),
 			distanceUnit,
 			distance,

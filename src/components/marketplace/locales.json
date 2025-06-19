@@ -36,7 +36,9 @@
 		"available": "Available",
 		"sold": "Sold",
 		"seller": "Sold by",
-		"participants": "participants"
+		"participants": "participants",
+		"soldBy": "sold by",
+		"wantThisBib": "I want this bib"
 	},
 	"fr": {
 		"searchPlaceholder": "Rechercher une course, une ville, ...",
@@ -74,24 +76,49 @@
 		"available": "Disponible",
 		"sold": "Vendu",
 		"seller": "Vendu par",
-		"participants": "participants"
-	}
-}
-
-{
-	"en": {
-		"soldBy": "sold by",
 		"participants": "participants",
-		"wantThisBib": "I want this bib"
-	},
-	"fr": {
 		"soldBy": "vendu par",
-		"participants": "participants",
 		"wantThisBib": "Je veux ce dossard"
 	},
-	"ko": {
-		"soldBy": "판매자",
+	"kr": {
+		"searchPlaceholder": "경기, 도시 검색",
+		"sport": "종목",
+		"distance": "거리",
+		"filters": "필터",
+		"apply": "적용",
+		"priceRange": "가격 범위",
+		"region": "도시",
+		"allPrices": "모든 가격",
+		"allSports": "모든 종목",
+		"cycling": "자전거",
+		"swimming": "수영",
+		"allDistances": "모든 거리",
+		"noRegion": "도시 없음",
+		"date": "날짜",
+		"start": "시작",
+		"end": "종료",
+		"noBibs": "빕 없음",
+		"oneBib": "1 빕",
+		"manyBibs": "{count} 빕",
+		"city": "도시",
+		"sortBy": "정렬",
+		"sortByDate": "경기 날짜",
+		"sortByPriceAsc": "가격 오름차순",
+		"sortByPriceDesc": "가격 내림차순",
+		"sortByDistance": "거리",
+		"remove": "제거",
+		"reset": "초기화",
+		"applyFilters": "필터 적용",
+		"clearAll": "모두 지우기",
+		"selectRegion": "도시 검색",
+		"selectSport": "종목 선택",
+		"selectDistance": "거리 선택",
+		"noResults": "결과 없음",
+		"available": "가능",
+		"sold": "판매",
+		"seller": "판매자",
 		"participants": "참가자",
+		"soldBy": "판매자",
 		"wantThisBib": "이 빕을 원합니다"
 	}
 }
