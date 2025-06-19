@@ -1,7 +1,7 @@
 'use client'
 
-import { ChevronDown, Languages } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 
 interface Language {
 	code: string
@@ -65,7 +65,6 @@ export default function LanguageSelector({ currentLocale = 'en' }: LanguageSelec
 				className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
 				onClick={() => setIsOpen(!isOpen)}
 			>
-				<Languages size={16} />
 				<span className="flex items-center gap-1">
 					<span>{currentLanguage.flag}</span>
 					<span className="hidden sm:inline">{currentLanguage.name}</span>
