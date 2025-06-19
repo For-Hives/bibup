@@ -10,7 +10,7 @@ type Translations = ReturnType<typeof getTranslations<(typeof ContactTranslation
 export default function ContactPageClient({ t }: { t: Translations }) {
 	return (
 		<div className="bg-background min-h-screen">
-			<div className="mx-auto max-w-6xl p-5 pt-10 font-sans xl:px-0 xl:pt-20">
+			<div className="mx-auto max-w-7xl p-4 pt-10 font-sans xl:px-0 xl:pt-20">
 				<BentoGrid t={t} />
 			</div>
 		</div>

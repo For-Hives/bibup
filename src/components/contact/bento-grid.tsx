@@ -48,7 +48,7 @@ export default function BentoGrid({ t }: Props) {
 			{/* Information card - spans full width */}
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
-				className="bg-primary relative col-span-1 overflow-hidden rounded-3xl p-8 shadow-xl md:col-span-3"
+				className="bg-foreground/5 relative col-span-1 overflow-hidden rounded-3xl p-8 shadow-xl md:col-span-3"
 				initial={{ y: 20, opacity: 0 }}
 				transition={{ delay: 0.6 }}
 				whileHover={{ scale: 1.01 }}
@@ -58,8 +58,7 @@ export default function BentoGrid({ t }: Props) {
 					<p className="text-primary-foreground/80 mb-8">{t.useContactForm}</p>
 
 					<div className="mb-2">
-						<p className="text-primary-foreground/80">{t.runnerOrganizer}</p>
-						<br />
+						<p className="text-primary-foreground/80 mb-4">{t.runnerOrganizer}</p>
 
 						<div className="flex justify-between space-x-4">
 							<div>
@@ -74,7 +73,7 @@ export default function BentoGrid({ t }: Props) {
 							</div>
 							<div className="flex w-1/3 items-center justify-center">
 								<div className="bg-primary-foreground/10 rounded-full p-4 backdrop-blur-sm">
-									<MessageCircle className="text-primary-foreground h-18 w-18" />
+									<MessageCircle className="text-primary-foreground h-16 w-16 p-2" />
 								</div>
 							</div>
 						</div>
@@ -82,9 +81,9 @@ export default function BentoGrid({ t }: Props) {
 				</div>
 
 				{/* Background decoration */}
-				<div className="via-primary-foreground/30 absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent to-transparent"></div>
-				<div className="from-primary-foreground/10 absolute top-0 right-0 h-40 w-40 rounded-bl-full bg-gradient-to-bl to-transparent"></div>
-				<div className="from-primary-foreground/10 absolute bottom-0 left-0 h-32 w-32 rounded-tr-full bg-gradient-to-tr to-transparent"></div>
+				<div className="via-primary/50 absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent to-transparent"></div>
+				<div className="from-primary/25 absolute top-0 right-0 h-40 w-40 rounded-bl-full bg-gradient-to-bl to-transparent"></div>
+				<div className="from-primary/10 absolute bottom-0 left-0 h-32 w-32 rounded-tr-full bg-gradient-to-tr to-transparent"></div>
 			</motion.div>
 
 			{/* Main contact form - spans 2 rows */}
@@ -96,11 +95,11 @@ export default function BentoGrid({ t }: Props) {
 				whileHover={{ scale: 1.02 }}
 			>
 				<div className="via-primary/60 absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent to-transparent"></div>
-				<div className="p-8">
-					<h2 className="text-card-foreground mb-6 text-2xl font-bold">{t.getInTouch}</h2>
+				<div className="h-full p-8">
+					<h2 className="text-card-foreground text-2xl font-bold">{t.getInTouch}</h2>
 					<ContactForm t={t} />
 				</div>
-				<div className="from-accent/30 via-accent/5 pointer-events-none absolute right-0 bottom-0 h-45 w-45 rounded-tl-full bg-gradient-to-tl to-transparent"></div>
+				<div className="from-primary/25 via-primary/5 pointer-events-none absolute right-0 bottom-0 h-45 w-45 rounded-tl-full bg-gradient-to-tl to-transparent"></div>
 			</motion.div>
 
 			{/* Email card with hover effect */}
