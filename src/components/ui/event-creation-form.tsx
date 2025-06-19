@@ -6,9 +6,11 @@ import * as React from 'react'
 
 import { EventOption } from '@/models/eventOption.model'
 import { createEvent } from '@/services/event.services'
+import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
+import adminTranslations from '../../app/admin/event/locales.json'
 import { RadioGroup, RadioGroupItem } from './radio-group'
 import { FileUpload } from './file-upload'
 import { Textarea } from './textareaAlt'
@@ -20,9 +22,12 @@ import { Label } from './label'
 interface EventCreationFormProps {
 	onCancel?: () => void
 	onSuccess?: (event: Event) => void
+	translations: Translations
 }
 
-export default function EventCreationForm({ onSuccess, onCancel }: EventCreationFormProps) {
+type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
+
+export default function EventCreationForm({ translations, onSuccess, onCancel }: EventCreationFormProps) {
 	const [isLoading, setIsLoading] = useState(false)
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
 
@@ -147,29 +152,33 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					onSubmit={handleSubmit}
 				>
 					<div className="mb-12 text-left">
-						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">Create New Event</h1>
-						<p className="text-muted-foreground mt-4 text-lg">Configure your racing event for the Beswib platform</p>
+						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
+							{translations.event.title}
+						</h1>
+						<p className="text-muted-foreground mt-4 text-lg">{translations.event.subtitle}</p>
 					</div>
 
 					{/* Event Information Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h2 className="text-foreground text-2xl font-semibold">Event Information</h2>
+							<h2 className="text-foreground text-2xl font-semibold">
+								{translations.event.sections.eventInformation.title}
+							</h2>
 							<p className="text-muted-foreground mt-2 text-base leading-7">
-								Basic information about the event including name, date, and location.
+								{translations.event.sections.eventInformation.description}
 							</p>
 						</div>
 						<div className="sm:max-w-4xl md:col-span-2">
 							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="name">
-										Event Name *
+										{translations.event.fields.eventName.label} *
 									</Label>
 									<Input
 										id="name"
 										name="name"
 										onChange={e => handleInputChange('name', e.target.value)}
-										placeholder="Marathon de Paris"
+										placeholder={translations.event.fields.eventName.placeholder}
 										required
 										type="text"
 										value={formData.name}
@@ -177,13 +186,13 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="location">
-										Location *
+										{translations.event.fields.location.label} *
 									</Label>
 									<Input
 										id="location"
 										name="location"
 										onChange={e => handleInputChange('location', e.target.value)}
-										placeholder="Paris, France"
+										placeholder={translations.event.fields.location.placeholder}
 										required
 										type="text"
 										value={formData.location}
@@ -191,7 +200,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventDate">
-										Event Date *
+										{translations.event.fields.eventDate.label} *
 									</Label>
 									<Input
 										id="eventDate"
@@ -204,7 +213,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="typeCourse">
-										Event Type *
+										{translations.event.fields.eventType.label} *
 									</Label>
 									<Select
 										name="typeCourse"
@@ -215,25 +224,25 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 											className="ring-foreground/40 h-10 bg-gray-50 ring-2 dark:bg-zinc-800 dark:ring-slate-700"
 											id="typeCourse"
 										>
-											<SelectValue placeholder="Select event type" />
+											<SelectValue placeholder={translations.event.fields.eventType.placeholder} />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="route">Route</SelectItem>
-											<SelectItem value="trail">Trail</SelectItem>
-											<SelectItem value="triathlon">Triathlon</SelectItem>
-											<SelectItem value="ultra">Ultra</SelectItem>
+											<SelectItem value="route">{translations.event.fields.eventType.options.route}</SelectItem>
+											<SelectItem value="trail">{translations.event.fields.eventType.options.trail}</SelectItem>
+											<SelectItem value="triathlon">{translations.event.fields.eventType.options.triathlon}</SelectItem>
+											<SelectItem value="ultra">{translations.event.fields.eventType.options.ultra}</SelectItem>
 										</SelectContent>
 									</Select>
 								</div>
 								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="description">
-										Description *
+										{translations.event.fields.description.label} *
 									</Label>
 									<Textarea
 										id="description"
 										name="description"
 										onChange={e => handleInputChange('description', e.target.value)}
-										placeholder="Describe the event..."
+										placeholder={translations.event.fields.description.placeholder}
 										required
 										rows={4}
 										value={formData.description}
@@ -248,22 +257,24 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					{/* Event Details Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h2 className="text-foreground text-2xl font-semibold">Event Details</h2>
+							<h2 className="text-foreground text-2xl font-semibold">
+								{translations.event.sections.eventDetails.title}
+							</h2>
 							<p className="text-muted-foreground mt-2 text-base leading-7">
-								Additional details about distance, elevation, pricing, and logistics.
+								{translations.event.sections.eventDetails.description}
 							</p>
 						</div>
 						<div className="sm:max-w-4xl md:col-span-2">
 							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="distanceKm">
-										Distance (km)
+										{translations.event.fields.distance.label}
 									</Label>
 									<Input
 										id="distanceKm"
 										name="distanceKm"
 										onChange={e => handleInputChange('distanceKm', e.target.value)}
-										placeholder="42.195"
+										placeholder={translations.event.fields.distance.placeholder}
 										step="0.001"
 										type="number"
 										value={formData.distanceKm}
@@ -271,26 +282,26 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="elevationGainM">
-										Elevation Gain (m)
+										{translations.event.fields.elevationGain.label}
 									</Label>
 									<Input
 										id="elevationGainM"
 										name="elevationGainM"
 										onChange={e => handleInputChange('elevationGainM', e.target.value)}
-										placeholder="500"
+										placeholder={translations.event.fields.elevationGain.placeholder}
 										type="number"
 										value={formData.elevationGainM}
 									/>
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="officialStandardPrice">
-										Official Price (€)
+										{translations.event.fields.officialPrice.label}
 									</Label>
 									<Input
 										id="officialStandardPrice"
 										name="officialStandardPrice"
 										onChange={e => handleInputChange('officialStandardPrice', e.target.value)}
-										placeholder="120"
+										placeholder={translations.event.fields.officialPrice.placeholder}
 										step="0.01"
 										type="number"
 										value={formData.officialStandardPrice}
@@ -298,20 +309,20 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="participantCount">
-										Participant Count
+										{translations.event.fields.participantCount.label}
 									</Label>
 									<Input
 										id="participantCount"
 										name="participantCount"
 										onChange={e => handleInputChange('participantCount', e.target.value)}
-										placeholder="30000"
+										placeholder={translations.event.fields.participantCount.placeholder}
 										type="number"
 										value={formData.participantCount}
 									/>
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="transferDeadline">
-										Transfer Deadline
+										{translations.event.fields.transferDeadline.label}
 									</Label>
 									<Input
 										id="transferDeadline"
@@ -323,21 +334,23 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="parcoursUrl">
-										Parcours URL
+										{translations.event.fields.parcoursUrl.label}
 									</Label>
 									<Input
 										id="parcoursUrl"
 										name="parcoursUrl"
 										onChange={e => handleInputChange('parcoursUrl', e.target.value)}
-										placeholder="https://example.com/route.gpx"
+										placeholder={translations.event.fields.parcoursUrl.placeholder}
 										type="url"
 										value={formData.parcoursUrl}
 									/>
 								</div>
 								<div className="col-span-full">
-									<Label className="text-foreground mb-2 block text-base font-medium">Event Logo</Label>
+									<Label className="text-foreground mb-2 block text-base font-medium">
+										{translations.event.fields.logoUpload.label}
+									</Label>
 									<p className="text-muted-foreground mb-4 text-sm">
-										Upload a logo for your event. Supported formats: PNG, JPG, SVG (max 5MB)
+										{translations.event.fields.logoUpload.description}
 									</p>
 									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
 										<FileUpload
@@ -348,6 +361,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 													// You can store the file in form state or upload it immediately
 												}
 											}}
+											translations={translations.event.fields.logoUpload}
 										/>
 									</div>
 								</div>
@@ -360,22 +374,22 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					{/* Bib Pickup Information Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h2 className="text-foreground text-2xl font-semibold">Bib Pickup Information</h2>
+							<h2 className="text-foreground text-2xl font-semibold">{translations.event.sections.bibPickup.title}</h2>
 							<p className="text-muted-foreground mt-2 text-base leading-7">
-								Details about when and where participants can pick up their bibs.
+								{translations.event.sections.bibPickup.description}
 							</p>
 						</div>
 						<div className="sm:max-w-4xl md:col-span-2">
 							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
 								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupLocation">
-										Bib Pickup Location
+										{translations.event.fields.bibPickupLocation.label}
 									</Label>
 									<Input
 										id="bibPickupLocation"
 										name="bibPickupLocation"
 										onChange={e => handleInputChange('bibPickupLocation', e.target.value)}
-										placeholder="Expo Hall, Porte de Versailles"
+										placeholder={translations.event.fields.bibPickupLocation.placeholder}
 										type="text"
 										value={formData.bibPickupLocation}
 									/>
@@ -385,7 +399,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 										className="text-foreground mb-2 block text-base font-medium"
 										htmlFor="bibPickupWindowBeginDate"
 									>
-										Pickup Window Start
+										{translations.event.fields.bibPickupBegin.label} *
 									</Label>
 									<Input
 										id="bibPickupWindowBeginDate"
@@ -397,7 +411,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 								</div>
 								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowEndDate">
-										Pickup Window End
+										{translations.event.fields.bibPickupEnd.label} *
 									</Label>
 									<Input
 										id="bibPickupWindowEndDate"
@@ -416,16 +430,20 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					{/* Partnership Settings Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h2 className="text-foreground text-2xl font-semibold">Partnership Settings</h2>
+							<h2 className="text-foreground text-2xl font-semibold">
+								{translations.event.sections.partnership.title}
+							</h2>
 							<p className="text-muted-foreground mt-2 text-base leading-7">
-								Configure whether this event is partnered with Beswib for bib resale.
+								{translations.event.sections.partnership.description}
 							</p>
 						</div>
 						<div className="sm:max-w-4xl md:col-span-2">
 							<fieldset>
-								<legend className="text-foreground text-lg font-medium">Partnership Status</legend>
+								<legend className="text-foreground text-lg font-medium">
+									{translations.event.fields.isPartnered.label}
+								</legend>
 								<p className="text-muted-foreground mt-3 text-base leading-7">
-									Choose whether this event allows bib resale through Beswib.
+									{translations.event.fields.isPartnered.description}
 								</p>
 								<RadioGroup
 									className="mt-6"
@@ -454,9 +472,11 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					{/* Event Options Section */}
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h2 className="text-foreground text-2xl font-semibold">Event Options</h2>
+							<h2 className="text-foreground text-2xl font-semibold">
+								{translations.event.sections.eventOptions.title}
+							</h2>
 							<p className="text-muted-foreground mt-2 text-base leading-7">
-								Configure registration options like size, meal preferences, etc.
+								{translations.event.sections.eventOptions.description}
 							</p>
 						</div>
 						<div className="sm:max-w-4xl md:col-span-2">
@@ -494,7 +514,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 													className="text-foreground mb-2 block text-base font-medium"
 													htmlFor={`option-label-${optionIndex}`}
 												>
-													Label
+													{translations.event.eventOptions.optionName}
 												</Label>
 												<Input
 													id={`option-label-${optionIndex}`}
@@ -519,7 +539,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 													className="text-foreground text-base font-medium"
 													htmlFor={`option-required-${optionIndex}`}
 												>
-													Required field
+													{translations.event.eventOptions.optionRequired}
 												</Label>
 											</div>
 										</div>
@@ -535,7 +555,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 												<div className="mb-3 flex items-center gap-3" key={valueIndex}>
 													<Input
 														onChange={e => updateOptionValue(optionIndex, valueIndex, e.target.value)}
-														placeholder="XS"
+														placeholder={translations.event.eventOptions.values.placeholder}
 														type="text"
 														value={value}
 													/>
@@ -557,7 +577,7 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 
 								<Button className="w-full" onClick={addEventOption} type="button" variant="outline">
 									<Plus className="mr-2 size-4" />
-									Add Event Option
+									{translations.event.eventOptions.addOption}
 								</Button>
 							</div>
 						</div>
@@ -569,11 +589,11 @@ export default function EventCreationForm({ onSuccess, onCancel }: EventCreation
 					<div className="flex items-center justify-end space-x-6 pt-8">
 						{onCancel && (
 							<Button disabled={isLoading} onClick={onCancel} size="lg" type="button" variant="outline">
-								Cancel
+								{translations.event.buttons.cancel}
 							</Button>
 						)}
 						<Button disabled={isLoading} size="lg" type="submit">
-							{isLoading ? 'Creating...' : 'Create Event'}
+							{isLoading ? translations.event.buttons.creating : translations.event.buttons.createEvent}
 						</Button>
 					</div>
 				</form>
