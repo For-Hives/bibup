@@ -62,7 +62,7 @@ export default function Searchbar({
 	const [isHover, setIsHover] = useState(false)
 	const [isHover2, setIsHover2] = useState(false)
 	// --- State for the region search input in the advanced filters
-	const [regionSearch, setRegionSearch] = useState('');
+	const [regionSearch, setRegionSearch] = useState('')
 
 	// Toggle function for the filter dropdown
 	const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
@@ -114,10 +114,8 @@ export default function Searchbar({
 	}, [selectedFilters, onAdvancedFiltersChange])
 
 	// --- Fuzzy search for regions using Fuse.js
-	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions]);
-	const filteredRegions: string[] = regionSearch
-		? fuse.search(regionSearch).map(result => result.item)
-		: regions;
+	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions])
+	const filteredRegions: string[] = regionSearch ? fuse.search(regionSearch).map(result => result.item) : regions
 
 	const lang = locale ?? 'fr'
 	const t = locales[lang] || locales['fr']
