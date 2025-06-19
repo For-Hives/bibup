@@ -1,17 +1,6 @@
 'use client'
 
-import {
-	ArrowRight,
-	Facebook,
-	Handshake,
-	Instagram,
-	Mail,
-	MessageCircle,
-	MousePointer2,
-	Twitter,
-	Users,
-	X,
-} from 'lucide-react'
+import { ArrowRight, Facebook, Handshake, Instagram, Mail, MessageCircle, Twitter, Users, X } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import type React from 'react'
