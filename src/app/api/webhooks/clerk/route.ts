@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { Webhook } from 'svix'
 
 import { createUser, CreateUserDTO } from '@/services/user.services' // Adjust path as necessary
+import { User } from '@/models/user.model'
 
 // Make sure to set CLERK_WEBHOOK_SECRET in your environment variables
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET
@@ -50,13 +51,7 @@ export async function POST(req: Request) {
 	const eventType = evt.type
 
 	if (eventType === 'user.created') {
-		const {
-			last_name,
-
-			id: clerkId,
-			first_name,
-			email_addresses,
-		} = evt.data
+		const { last_name, id: clerkId, first_name, email_addresses } = evt.data
 
 		if (!clerkId) {
 			console.error('Received user.created event without clerkId')
@@ -70,10 +65,12 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: 'Primary email address missing' }, { status: 400 })
 		}
 
-		const userData: CreateUserDTO = {
+		const userData: Omit<User, 'id'> = {
+			role: 'user',
 			lastName: last_name ?? '',
 			firstName: first_name ?? '',
 			email: primaryEmail,
+			createdAt: new Date(),
 			clerkId,
 		}
 
