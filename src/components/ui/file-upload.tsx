@@ -32,7 +32,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 
 	const handleFileChange = (newFiles: File[]) => {
 		setFiles(prevFiles => [...prevFiles, ...newFiles])
-		onChange && onChange(newFiles)
+		onChange?.(newFiles)
 	}
 
 	const handleClick = () => {
@@ -41,7 +41,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 
 	const { isDragActive, getRootProps } = useDropzone({
 		onDropRejected: error => {
-			console.log(error)
+			console.error('File upload rejected:', error)
 		},
 		onDrop: handleFileChange,
 		noClick: true,
@@ -58,7 +58,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
 				<input
 					className="hidden"
 					id="file-upload-handle"
-					onChange={e => handleFileChange(Array.from(e.target.files || []))}
+					onChange={e => handleFileChange(Array.from(e.target.files ?? []))}
 					ref={fileInputRef}
 					type="file"
 				/>
