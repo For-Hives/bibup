@@ -17,6 +17,7 @@ import PartnershipSection from './PartnershipSection'
 import BibPickupSection from './BibPickupSection'
 import { Separator } from '../../ui/separator'
 import { Button } from '../../ui/button'
+import FakerButton from './FakerButton'
 
 export default function EventCreationForm({ translations, onSuccess, onCancel }: EventCreationFormProps) {
 	const [isLoading, setIsLoading] = useState(false)
@@ -116,10 +117,13 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 			<div className="relative flex items-center justify-center p-6 md:p-10">
 				<form
-					className="border-border/50 bg-card/80 w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
+					className="border-border/50 bg-card/80 relative w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
 					// eslint-disable-next-line @typescript-eslint/no-misused-promises
 					onSubmit={handleSubmit(onSubmit)}
 				>
+					{/* Faker Button - Development only */}
+					<FakerButton setEventOptions={setEventOptions} setValue={setValue} translations={translations} />
+
 					<div className="mb-12 text-left">
 						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
 							{translations.event.title}
