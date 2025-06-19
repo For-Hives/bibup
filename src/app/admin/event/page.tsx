@@ -1,7 +1,7 @@
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
-import AdminEventPageClient from './AdminEventPageClient'
+import AdminEventPageClient from '../../../components/admin/event/AdminEventPageClient'
 import translations from './locales.json'
 
 export default async function AdminEventPage() {
