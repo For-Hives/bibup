@@ -62,8 +62,6 @@ export default async function SellerDashboardPage({
 		})[] //TODO: use a proper client component for this
 	}
 
-	const beswibBalance = beswibUser?.beswibBalance ?? 0
-
 	const bibStatusFromQuery = searchParams?.bibStatus as string
 	const successMessage =
 		searchParams?.success === 'true'
@@ -96,12 +94,6 @@ export default async function SellerDashboardPage({
 			)}
 			{/* Bento Grid Layout */}
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-				{' '}
-				{/* Balance Box */}
-				<div className="bento-box flex flex-col items-center justify-center md:col-span-1">
-					<h2 className="mb-2 text-xl font-semibold text-[var(--text-dark)]">{t.yourBeswibBalance}</h2>
-					<p className="text-3xl font-bold text-[var(--accent-sporty)]">${beswibBalance.toFixed(2)}</p>
-				</div>
 				{/* Manage Bib Listings Box (takes more space) */}
 				<div className="bento-box md:col-span-2">
 					<h2 className="mb-4 text-xl font-semibold text-[var(--text-dark)]">{t.manageBibListings}</h2>
