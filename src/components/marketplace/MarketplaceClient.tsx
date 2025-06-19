@@ -83,12 +83,12 @@ const filterBibs = (
 	}
 
 	// Filter by selected sport
-	if (typeof selectedSport === 'string' && selectedSport !== '' && selectedSport !== 'all') {
+	if (selectedSport && selectedSport !== 'all') {
 		filtered = filtered.filter(bib => bib.event.type === selectedSport)
 	}
 
 	// Filter by selected distance
-	if (typeof selectedDistance === 'string' && selectedDistance !== '' && selectedDistance !== 'all') {
+	if (selectedDistance && selectedDistance !== 'all') {
 		const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
 		filtered = filtered.filter(bib => {
 			const distance = bib.event.distance
@@ -103,7 +103,7 @@ const filterBibs = (
 	}
 
 	// Filter by region (geography)
-	if (Array.isArray(advancedFilters.geography) && advancedFilters.geography.length > 0) {
+	if (advancedFilters.geography && advancedFilters.geography.length > 0) {
 		filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
 	}
 
