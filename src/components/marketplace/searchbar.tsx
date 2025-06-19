@@ -74,10 +74,10 @@ export default function Searchbar() {
 	}
 
 	return (
-		<div className="flex w-full max-w-7xl flex-col rounded-xl bg-white p-4 shadow-md">
-			<div className="flex items-center">
+		<div className="flex w-full max-w-7xl flex-col rounded-xl bg-white p-2 xl:p-4 shadow-md">
+			<div className="flex flex-col xl:flex-row xl:items-center gap-2 xl:gap-4">
 				{/* Search Bar Input */}
-				<div className="relative flex w-3/4 items-center rounded-lg px-4 py-2">
+				<div className="relative flex w-full xl:w-3/4 items-center rounded-lg px-2 xl:px-4 py-2">
 					<input
 						className="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 pr-10 text-sm text-gray-900"
 						id="search_input"
@@ -89,8 +89,7 @@ export default function Searchbar() {
 					/>
 					{/* Search Button (icon only, not functional) */}
 					<button
-						className="absolute top-1/2 right-7 flex -translate-y-1/2 items-center text-gray-500 hover:text-gray-600 focus:outline-none"
-						// onClick={handleSearch}
+						className="absolute top-1/2 right-3 xl:right-7 flex -translate-y-1/2 items-center text-gray-500 hover:text-gray-600 focus:outline-none"
 						type="submit"
 					>
 						<svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -103,12 +102,13 @@ export default function Searchbar() {
 					</button>
 				</div>
 
-				<div className="flex w-1/4 items-center gap-2">
+				{/* Filter Selects and Dropdown Button */}
+				<div className="flex w-full xl:w-1/4 items-center gap-2 xl:gap-4">
 					{/* Example select for sport (not used in filters anymore) */}
-					<div className="flex w-1/3 items-center">
+					<div className="w-1/3">
 						<Select>
 							<SelectTrigger
-								className="w-40 max-w-[100px] overflow-hidden border-gray-400 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
+								className="w-full h-9 overflow-hidden border-gray-400 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
 								onMouseEnter={() => setIsHover2(true)}
 								onMouseLeave={() => setIsHover2(false)}
 								style={{ backgroundColor: isHover2 ? '#D1D5DB' : '#FFFFFF' }}
@@ -133,10 +133,10 @@ export default function Searchbar() {
 					</div>
 
 					{/* Example select for distance (not used in filters anymore) */}
-					<div className="flex w-1/3 items-center">
+					<div className="w-1/3">
 						<Select>
 							<SelectTrigger
-								className="w-40 max-w-[100px] overflow-hidden border-gray-400 bg-slate-700 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
+								className="w-full h-9 overflow-hidden border-gray-400 text-ellipsis whitespace-nowrap text-gray-400 data-[placeholder]:!text-gray-400"
 								onMouseEnter={() => setIsHover(true)}
 								onMouseLeave={() => setIsHover(false)}
 								style={{ backgroundColor: isHover ? '#D1D5DB' : '#FFFFFF' }}
@@ -166,14 +166,14 @@ export default function Searchbar() {
 					{/* Dropdown Filter Button */}
 					<div className="relative w-1/3">
 						<Button
-							className="border border-gray-400 bg-white text-gray-400 hover:bg-gray-300"
+							className="w-full h-9 border border-gray-400 bg-white text-gray-400 hover:bg-gray-300 px-3 py-0"
 							onClick={toggleDropdown}
 						>
 							Filters
 						</Button>
 						{/* Dropdown content for filters (price, date, region, distance) */}
 						{isDropdownOpen && (
-							<div className="absolute z-10 mt-2 w-64 rounded-lg border border-gray-400 bg-white p-4 text-gray-400 shadow-lg">
+							<div className="absolute right-0 z-10 mt-2 w-full min-w-[220px] xl:w-64 rounded-lg border border-gray-400 bg-white p-4 text-gray-400 shadow-lg">
 								{/* Price Range Filter */}
 								<div className="mb-4">
 									<label className="mb-2 font-semibold" htmlFor="price-range-slider">
@@ -271,10 +271,10 @@ export default function Searchbar() {
 				</div>
 			</div>
 
-			<hr className="border-gray-400" />
+			<hr className="border-gray-400 my-2" />
 
 			{/* Selected Filters as Badges (only price, region, and dates) */}
-			<div className="mt-4 flex flex-wrap gap-2">
+			<div className="mt-4 flex flex-wrap gap-2 xl:gap-4 xl:mt-0">
 				{/* Region filter badges */}
 				{selectedFilters.geography.map(location => (
 					<Badge
