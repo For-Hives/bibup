@@ -1,7 +1,10 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { X } from 'lucide-react'
+import { X, ChevronsUpDown, Check } from 'lucide-react'
+import { cn } from "@/lib/utils"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 import Fuse from 'fuse.js'
 
@@ -62,7 +65,11 @@ export default function Searchbar({
 	const [isHover, setIsHover] = useState(false)
 	const [isHover2, setIsHover2] = useState(false)
 	// --- State for the region search input in the advanced filters
-	const [regionSearch, setRegionSearch] = useState('')
+	const [regionSearch, setRegionSearch] = useState('') // Stores the current value of the region search input
+	// State pour la région sélectionnée
+	const [selectedRegion, setSelectedRegion] = useState(tempRegion[0] || "")
+	// State pour le popover de la région
+	const [isRegionOpen, setIsRegionOpen] = useState(false)
 
 	// Toggle function for the filter dropdown
 	const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
@@ -114,8 +121,14 @@ export default function Searchbar({
 	}, [selectedFilters, onAdvancedFiltersChange])
 
 	// --- Fuzzy search for regions using Fuse.js
-	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions])
-	const filteredRegions: string[] = regionSearch ? fuse.search(regionSearch).map(result => result.item) : regions
+	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions]) // Fuse instance for fuzzy search
+	const filteredRegions: string[] = regionSearch ? fuse.search(regionSearch).map(result => result.item) : regions // Filtered regions based on fuzzy search
+
+	// Utilise filteredRegions pour la recherche floue (Fuse.js)
+	const regionOptions = filteredRegions.map(region => ({
+		value: region.toLowerCase(),
+		label: region,
+	}))
 
 	const lang = locale ?? 'fr'
 	const t = locales[lang] || locales['fr']
@@ -151,7 +164,7 @@ export default function Searchbar({
 							>
 								<SelectValue className="text-foreground" placeholder={t.sport} />
 							</SelectTrigger>
-							<SelectContent className="border-border bg-card text-foreground">
+							<SelectContent className="border-border bg-card text-foreground z-[9999]">
 								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="all">
 									{t.allSports}
 								</SelectItem>
@@ -185,7 +198,7 @@ export default function Searchbar({
 							>
 								<SelectValue placeholder={t.distance} />
 							</SelectTrigger>
-							<SelectContent className="border-border bg-card text-foreground">
+							<SelectContent className="border-border bg-card text-foreground z-[9999]">
 								<SelectItem className="focus:bg-slate-300 focus:text-gray-400" value="all">
 									{t.allDistances}
 								</SelectItem>
@@ -258,18 +271,21 @@ export default function Searchbar({
 									</label>
 									<div className="w-full flex-col space-y-2">
 										<input
-											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center"
+											className="px-3 border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center [color-scheme:dark]"
 											id="date-start"
 											onChange={e => setTempDateStart(e.target.value)}
 											type="date"
 											value={tempDateStart ?? ''}
 										/>
 										<input
-											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center"
+											className="px-3 border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center [color-scheme:dark]"
 											id="date-end"
 											onChange={e => setTempDateEnd(e.target.value)}
 											type="date"
 											value={tempDateEnd ?? ''}
+											style={{
+												colorScheme: 'dark',
+											}}
 										/>
 									</div>
 								</div>
@@ -279,40 +295,54 @@ export default function Searchbar({
 									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="region-select">
 										{t.region}
 									</label>
-									<div className="p-2">
-										<input
-											className="w-full rounded border px-2 py-1 text-sm"
-											onChange={e => setRegionSearch(e.target.value)}
-											placeholder={t.selectRegion || 'Rechercher une ville'}
-											type="text"
-											value={regionSearch}
-										/>
-									</div>
-									<Select onValueChange={value => setTempRegion(value ? [value] : [])} value={tempRegion[0] || ''}>
-										<SelectTrigger
-											className="border-border bg-card/60 text-foreground data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent w-full border"
-											id="region-select"
-										>
-											<SelectValue placeholder={t.region} />
-										</SelectTrigger>
-										<SelectContent className="border-border bg-card/80 text-foreground z-[9999] max-h-60 overflow-y-auto">
-											{filteredRegions.length === 0 ? (
-												<SelectItem disabled value="no-result">
-													{t.noRegion}
-												</SelectItem>
-											) : (
-												filteredRegions.map(region => (
-													<SelectItem
-														className="focus:bg-slate-300 focus:text-gray-400"
-														key={region}
-														value={region.toLowerCase()}
-													>
-														{region}
-													</SelectItem>
-												))
-											)}
-										</SelectContent>
-									</Select>
+									<Popover open={isRegionOpen} onOpenChange={setIsRegionOpen}>
+										<PopoverTrigger asChild>
+											<Button
+												variant="outline"
+												className="w-full justify-between"
+												onClick={() => setIsRegionOpen(true)}
+											>
+												{selectedRegion
+													? regionOptions.find((r) => r.value === selectedRegion)?.label
+													: t.selectRegion || "Rechercher une ville"}
+												<ChevronsUpDown className="opacity-50" />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className="w-full p-0 z-[9999]">
+											<Command>
+												<CommandInput
+													placeholder={t.selectRegion || "Rechercher une ville"}
+													className="h-9"
+													value={regionSearch}
+													onValueChange={setRegionSearch}
+												/>
+												<CommandList className="max-h-60 overflow-y-auto">
+													<CommandEmpty>{t.noRegion}</CommandEmpty>
+													<CommandGroup>
+														{regionOptions.map((region) => (
+															<CommandItem
+																key={region.value}
+																value={region.value}
+																onSelect={(currentValue) => {
+																	setSelectedRegion(currentValue === selectedRegion ? "" : currentValue)
+																	setTempRegion(currentValue ? [currentValue] : [])
+																	setIsRegionOpen(false)
+																}}
+															>
+																{region.label}
+																<Check
+																	className={cn(
+																		"ml-auto",
+																		selectedRegion === region.value ? "opacity-100" : "opacity-0"
+																	)}
+																/>
+															</CommandItem>
+														))}
+													</CommandGroup>
+												</CommandList>
+											</Command>
+										</PopoverContent>
+									</Popover>
 								</div>
 
 								{/* Apply button - updates the main filters state with temporary values */}

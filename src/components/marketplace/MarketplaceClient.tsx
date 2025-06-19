@@ -66,17 +66,17 @@ const sortBibs = (bibs: BibSale[], sort: string) => {
 // --- Main client component for the marketplace grid and filters
 export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 	// --- State for sorting, search term, selected sport, selected distance, and advanced filters
-	const [sort, setSort] = useState('date')
-	const [searchTerm, setSearchTerm] = useState('')
-	const [selectedSport, setSelectedSport] = useState<null | string>(null)
-	const [selectedDistance, setSelectedDistance] = useState<null | string>(null)
-	const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({ price: [0, 200], geography: [] })
+	const [sort, setSort] = useState('date') // Current sort option
+	const [searchTerm, setSearchTerm] = useState('') // Search term for fuzzy search
+	const [selectedSport, setSelectedSport] = useState<null | string>(null) // Selected sport filter
+	const [selectedDistance, setSelectedDistance] = useState<null | string>(null) // Selected distance filter
+	const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({ price: [0, 200], geography: [] }) // Advanced filters state
 
 	// --- Extract unique locations from bibs for the region filter
-	const uniqueLocations = Array.from(new Set(bibs.map(bib => bib.event.location))).sort((a, b) => a.localeCompare(b))
+	const uniqueLocations = Array.from(new Set(bibs.map(bib => bib.event.location))).sort((a, b) => a.localeCompare(b)) // Unique, sorted list of locations
 
 	// --- Extract the maximum price from bibs for the price slider
-	const maxPrice = Math.max(...bibs.map(bib => bib.price), 0)
+	const maxPrice = Math.max(...bibs.map(bib => bib.price), 0) // Maximum price for slider
 
 	// --- Fuse.js instance for fuzzy search on bibs (name, location, type)
 	const fuse = useMemo(
@@ -120,7 +120,9 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 
 		// --- Filter by region (geography)
 		if (advancedFilters.geography && advancedFilters.geography.length > 0) {
-			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
+			filtered = filtered.filter(bib => 
+				advancedFilters.geography.includes(bib.event.location.toLowerCase())
+			)
 		}
 
 		// --- Filter by start date
@@ -139,6 +141,7 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		return sortBibs(filtered, sort)
 	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters, fuse])
 
+	// --- Main render: searchbar, offer counter, and grid of bib cards
 	return (
 		<div className="flex flex-col space-y-6 pt-8">
 			{/* Wrapper Searchbar with high z-index to ensure dropdown visibility */}
