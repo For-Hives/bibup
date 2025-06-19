@@ -28,36 +28,21 @@ export default function AdminEventPage() {
 
 	if (isSuccess && createdEvent) {
 		return (
-			<div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-				<div className="w-full max-w-md rounded-lg bg-white p-8 text-center dark:bg-gray-800">
-					<div className="mb-4 text-6xl text-green-600 dark:text-green-400">✓</div>
-					<h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-gray-100">Event Created Successfully!</h1>
-					<p className="mb-4 text-gray-600 dark:text-gray-300">
-						"{createdEvent.name}" has been created and is now available on the platform.
-					</p>
-					<p className="text-sm text-gray-500 dark:text-gray-400">Redirecting to admin dashboard...</p>
+			<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+				<div className="relative flex min-h-screen items-center justify-center">
+					<div className="border-border/50 bg-card/80 w-full max-w-md rounded-3xl border p-8 text-center shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md">
+						<div className="mb-6 text-6xl text-green-600 dark:text-green-400">✓</div>
+						<h1 className="text-foreground mb-4 text-3xl font-bold">Event Created Successfully!</h1>
+						<p className="text-muted-foreground mb-6 text-lg">
+							"{createdEvent.name}" has been created and is now available on the platform.
+						</p>
+						<p className="text-muted-foreground/80 text-base">Redirecting to admin dashboard...</p>
+					</div>
 				</div>
 			</div>
 		)
 	}
 
-	return (
-		<div className="min-h-screen">
-			<div className="py-8">
-				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-					<div className="mb-8">
-						<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Create New Event</h1>
-						<p className="mt-2 text-gray-600 dark:text-gray-300">
-							Add a new racing event to the Beswib platform. Complete all required fields to make the event available
-							for bib resale.
-						</p>
-					</div>
-
-					<div className="rounded-lg bg-white/10 shadow">
-						<EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} />
-					</div>
-				</div>
-			</div>
-		</div>
-	)
+	return <EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} />
 }
