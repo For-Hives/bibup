@@ -1,11 +1,20 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+
+interface SearchbarProps {
+	readonly maxPrice?: number
+	readonly onAdvancedFiltersChange?: (filters: SelectedFilters) => void
+	readonly onDistanceChange: (distance: null | string) => void
+	readonly onSearch: (value: string) => void
+	readonly onSportChange: (sport: null | string) => void
+	readonly regions?: string[]
+}
 
 // Type for the filters that can be applied
 type SelectedFilters = {
@@ -15,18 +24,16 @@ type SelectedFilters = {
 	price: number[]
 }
 
-interface SearchbarProps {
-	readonly onSearch: (value: string) => void
-	readonly onSportChange: (sport: string | null) => void
-	readonly onDistanceChange: (distance: string | null) => void
-	readonly onAdvancedFiltersChange?: (filters: SelectedFilters) => void
-	readonly regions?: string[]
-	readonly maxPrice?: number
-}
-
 // Main searchbar component that handles filtering and searching functionality
 // Switches from a stacked layout on mobile to a horizontal layout on desktop (>1280px)
-export default function Searchbar({ onSearch, onSportChange, onDistanceChange, onAdvancedFiltersChange, regions = [], maxPrice = 200 }: SearchbarProps) {
+export default function Searchbar({
+	regions = [],
+	onSportChange,
+	onSearch,
+	onDistanceChange,
+	onAdvancedFiltersChange,
+	maxPrice = 200,
+}: SearchbarProps) {
 	// State management for search and filters
 	// searchTerm: value of the main search input
 	// isDropdownOpen: controls visibility of advanced filters
@@ -109,13 +116,13 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 
 	return (
 		// Main container with responsive padding and shadow
-		<div className="flex w-full max-w-7xl flex-col rounded-xl bg-card/80 border border-border p-2 shadow-md xl:p-4 backdrop-blur-md">
+		<div className="bg-card/80 border-border flex w-full max-w-7xl flex-col rounded-xl border p-2 shadow-md backdrop-blur-md xl:p-4">
 			{/* Main content wrapper - switches from column to row layout on desktop */}
 			<div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:gap-4">
 				{/* Search input section - takes 3/4 of the width on desktop */}
 				<div className="relative flex w-full items-center rounded-lg px-2 py-2 xl:w-3/4 xl:px-4">
 					<input
-						className="block w-full rounded-lg border border-border bg-card/60 p-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
+						className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent block w-full rounded-lg border p-2.5 pr-10 text-sm"
 						id="search_input"
 						onChange={handleInputChange}
 						placeholder="Rechercher une course, une ville, ..."
@@ -131,7 +138,7 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 					<div className="w-1/3">
 						<Select onValueChange={value => onSportChange(value || null)}>
 							<SelectTrigger
-								className="h-9 w-full overflow-hidden border border-border text-ellipsis whitespace-nowrap text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground"
+								className="border-border text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground h-9 w-full overflow-hidden border text-ellipsis whitespace-nowrap"
 								onMouseEnter={() => setIsHover2(true)}
 								onMouseLeave={() => setIsHover2(false)}
 								style={{ backgroundColor: isHover2 ? 'rgba(var(--accent),0.08)' : 'var(--card)' }}
@@ -165,7 +172,7 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 					<div className="w-1/3">
 						<Select onValueChange={value => onDistanceChange(value || null)}>
 							<SelectTrigger
-								className="h-9 w-full overflow-hidden border border-border text-ellipsis whitespace-nowrap text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground"
+								className="border-border text-foreground bg-card data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent placeholder:text-muted-foreground h-9 w-full overflow-hidden border text-ellipsis whitespace-nowrap"
 								onMouseEnter={() => setIsHover(true)}
 								onMouseLeave={() => setIsHover(false)}
 								style={{ backgroundColor: isHover ? 'rgba(var(--accent),0.08)' : 'var(--card)' }}
@@ -207,24 +214,24 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 					{/* Filter button with dropdown - takes 1/3 of the filters section */}
 					<div className="relative w-1/3">
 						<Button
-							className="h-9 w-full border border-border bg-card text-foreground hover:bg-card/80 px-3 py-0"
+							className="border-border bg-card text-foreground hover:bg-card/80 h-9 w-full border px-3 py-0"
 							onClick={toggleDropdown}
 						>
 							Filters
 						</Button>
 						{/* Advanced filters dropdown - appears when clicking the Filters button */}
 						{isDropdownOpen && (
-							<div className="absolute right-0 z-10 mt-2 w-full min-w-[220px] rounded-lg border border-border bg-card p-4 text-foreground shadow-lg xl:w-64">
+							<div className="border-border bg-card text-foreground absolute right-0 z-10 mt-2 w-full min-w-[220px] rounded-lg border p-4 shadow-lg xl:w-64">
 								{/* Price range slider */}
 								<div className="mb-4">
 									<label className="mb-2 font-semibold" htmlFor="price-range-slider">
 										Price Range
 									</label>
 									<input
-										className="h-2 w-full appearance-none rounded-full bg-accent/30"
+										className="bg-accent/30 h-2 w-full appearance-none rounded-full"
 										id="price-range-slider"
-										min={0}
 										max={maxPrice}
+										min={0}
 										onChange={e => setTempPrice([0, +e.target.value])}
 										style={{
 											background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((tempPrice[1] / maxPrice) * 100).toFixed(0)}%, #E5E7EB ${((tempPrice[1] / maxPrice) * 100).toFixed(0)}%, #E5E7EB 100%)`,
@@ -240,19 +247,19 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 
 								{/* Date range inputs */}
 								<div className="flex flex-col justify-between text-sm">
-									<label className="mb-2 block text-lg font-medium text-muted-foreground" htmlFor="date-start">
+									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="date-start">
 										Date
 									</label>
 									<div className="w-full flex-col space-y-2">
 										<input
-											className="h-10 w-full rounded border border-border bg-card/60 text-center text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
+											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center"
 											id="date-start"
 											onChange={e => setTempDateStart(e.target.value)}
 											type="date"
 											value={tempDateStart ?? ''}
 										/>
 										<input
-											className="h-10 w-full rounded border border-border bg-card/60 text-center text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent"
+											className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent h-10 w-full rounded border text-center"
 											id="date-end"
 											onChange={e => setTempDateEnd(e.target.value)}
 											type="date"
@@ -263,22 +270,28 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 
 								{/* Region selector */}
 								<div>
-									<label className="mb-2 block text-lg font-medium text-muted-foreground" htmlFor="region-select">
+									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="region-select">
 										Région
 									</label>
 									<Select onValueChange={value => setTempRegion(value ? [value] : [])} value={tempRegion[0] || ''}>
 										<SelectTrigger
-											className="w-full border border-border bg-card/60 text-foreground data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent"
+											className="border-border bg-card/60 text-foreground data-[placeholder]:!text-muted-foreground focus:border-accent focus:ring-accent w-full border"
 											id="region-select"
 										>
 											<SelectValue placeholder="Toutes les régions" />
 										</SelectTrigger>
 										<SelectContent className="border-border bg-card/80 text-foreground">
 											{regions.length === 0 ? (
-												<SelectItem value="" disabled>Aucune région</SelectItem>
+												<SelectItem disabled value="">
+													Aucune région
+												</SelectItem>
 											) : (
 												regions.map(region => (
-													<SelectItem key={region} value={region.toLowerCase()} className="focus:bg-slate-300 focus:text-gray-400">
+													<SelectItem
+														className="focus:bg-slate-300 focus:text-gray-400"
+														key={region}
+														value={region.toLowerCase()}
+													>
 														{region}
 													</SelectItem>
 												))
@@ -290,7 +303,7 @@ export default function Searchbar({ onSearch, onSportChange, onDistanceChange, o
 								{/* Apply button - updates the main filters state with temporary values */}
 								<div className="mt-4">
 									<Button
-										className="w-full border border-border bg-accent/20 text-accent-foreground hover:bg-accent/30"
+										className="border-border bg-accent/20 text-accent-foreground hover:bg-accent/30 w-full border"
 										onClick={() => {
 											const newFilters = {
 												price: tempPrice,

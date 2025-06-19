@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 
 import type { BibSale } from '@/components/marketplace/card-market'
+
+import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
-import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
 
 import marketplaceTranslations from './locales.json'
 
@@ -16,66 +17,66 @@ export const metadata: Metadata = {
 // Mock data for race bibs (matches BibSale interface)
 const mockBibs: BibSale[] = [
 	{
-		id: '1',
-		event: {
-			id: 'e1',
-			name: 'Paris Marathon',
-			date: new Date('2024-04-07'),
-			distance: 42.195,
-			distanceUnit: 'km',
-			location: 'Paris',
-			participantCount: 50000,
-			type: 'running',
-		},
-		originalPrice: 120,
-		price: 80,
-		status: 'available',
 		user: {
+			lastName: 'Martin',
 			id: 'u1',
 			firstName: 'Alice',
-			lastName: 'Martin',
+		},
+		status: 'available',
+		price: 80,
+		originalPrice: 120,
+		id: '1',
+		event: {
+			type: 'running',
+			participantCount: 50000,
+			name: 'Paris Marathon',
+			location: 'Paris',
+			id: 'e1',
+			distanceUnit: 'km',
+			distance: 42.195,
+			date: new Date('2024-04-07'),
 		},
 	},
 	{
-		id: '2',
-		event: {
-			id: 'e2',
-			name: 'Nice Triathlon',
-			date: new Date('2024-06-15'),
-			distance: 51.5,
-			distanceUnit: 'km',
-			location: 'Nice',
-			participantCount: 2000,
-			type: 'triathlon',
-		},
-		originalPrice: 150,
-		price: 250,
-		status: 'available',
 		user: {
+			lastName: 'Dupont',
 			id: 'u2',
 			firstName: 'Bob',
-			lastName: 'Dupont',
+		},
+		status: 'available',
+		price: 250,
+		originalPrice: 150,
+		id: '2',
+		event: {
+			type: 'triathlon',
+			participantCount: 2000,
+			name: 'Nice Triathlon',
+			location: 'Nice',
+			id: 'e2',
+			distanceUnit: 'km',
+			distance: 51.5,
+			date: new Date('2024-06-15'),
 		},
 	},
 	{
-		id: '3',
-		event: {
-			id: 'e3',
-			name: 'Mont Blanc Trail',
-			date: new Date('2024-08-20'),
-			distance: 80,
-			distanceUnit: 'km',
-			location: 'Chamonix',
-			participantCount: 1500,
-			type: 'trail',
-		},
-		originalPrice: 180,
-		price: 140,
-		status: 'sold',
 		user: {
+			lastName: 'Durand',
 			id: 'u3',
 			firstName: 'Claire',
-			lastName: 'Durand',
+		},
+		status: 'sold',
+		price: 140,
+		originalPrice: 180,
+		id: '3',
+		event: {
+			type: 'trail',
+			participantCount: 1500,
+			name: 'Mont Blanc Trail',
+			location: 'Chamonix',
+			id: 'e3',
+			distanceUnit: 'km',
+			distance: 80,
+			date: new Date('2024-08-20'),
 		},
 	},
 ]
