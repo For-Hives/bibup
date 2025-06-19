@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import Searchbar from '@/components/marketplace/searchbar'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
@@ -15,7 +16,7 @@ export default async function MarketplacePage() {
 	const t = getTranslations(locale, marketplaceTranslations)
 
 	return (
-		<div className="mx-auto max-w-4xl p-5 font-sans">
+		<div className="mx-auto max-w-7xl p-5 font-sans">
 			<header className="mb-8 text-center">
 				<h1 className="text-3xl font-bold">{t.title}</h1>
 				<p className="text-lg text-gray-600">{t.description}</p>
@@ -24,6 +25,8 @@ export default async function MarketplacePage() {
 			<main>
 				<p className="text-center text-lg">{t.comingSoon}</p>
 			</main>
+
+			<Searchbar />
 		</div>
 	)
 }
