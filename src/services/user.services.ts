@@ -2,25 +2,9 @@ import type { User } from '@/models/user.model'
 
 import { pb } from '@/lib/pocketbaseClient'
 
-export interface CreateUserDTO {
-	clerkId: string
-	email: string
-	firstName: string
-	lastName: string
-}
-
-export async function createUser(userData: CreateUserDTO): Promise<null | User> {
+export async function createUser(userData: Omit<User, 'id'>): Promise<null | User> {
 	try {
-		const newUserRecord = {
-			roles: ['buyer'],
-			lastName: userData.lastName,
-			firstName: userData.firstName,
-			email: userData.email,
-			clerkId: userData.clerkId,
-			beswibBalance: 0,
-		}
-
-		const record = await pb.collection('users').create<User>(newUserRecord)
+		const record = await pb.collection('users').create<User>(userData)
 		return record
 	} catch (error: unknown) {
 		if (error != null && typeof error === 'object') {
