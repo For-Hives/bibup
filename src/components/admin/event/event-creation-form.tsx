@@ -1,603 +1,507 @@
 'use client'
 
-import { Plus, Trash2 } from 'lucide-react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import * as React from 'react'
 
-import { EventOption } from '@/models/eventOption.model'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { FileUpload } from '@/components/ui/file-upload'
 import { createEvent } from '@/services/event.services'
-import { getTranslations } from '@/lib/getDictionary'
+import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Event } from '@/models/event.model'
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
-import adminTranslations from '../../../app/admin/event/locales.json'
-import { RadioGroup, RadioGroupItem } from '../../ui/radio-group'
-import { FileUpload } from '../../ui/file-upload'
-import { Textarea } from '../../ui/textareaAlt'
-import { Separator } from '../../ui/separator'
-import { Input } from '../../ui/inputAlt'
-import { Button } from '../../ui/button'
-import { Label } from '../../ui/label'
+// Zod schema for form validation
+const eventSchema = z.object({
+	typeCourse: z.enum(['route', 'trail', 'triathlon', 'ultra'], {
+		required_error: 'Le type de course est requis',
+	}),
+	transferDeadline: z.string().optional().or(z.literal('')),
+	registrationUrl: z.string().url('URL invalide').optional().or(z.literal('')),
+	participantCount: z.number().min(1, 'Le nombre de participants doit être supérieur à 0'),
+	parcoursUrl: z.string().url('URL invalide').optional().or(z.literal('')),
+	// Event options matching EventOption model
+	options: z
+		.array(
+			z.object({
+				values: z.array(z.string()).min(1, 'Au moins une valeur est requise'),
+				required: z.boolean(),
+				label: z.string().min(1, 'Le libellé est requis'),
+				key: z.string().min(1, 'La clé est requise'),
+			})
+		)
+		.optional(),
+	officialStandardPrice: z.number().min(0, 'Le prix doit être positif').optional().or(z.literal('')),
 
-interface EventCreationFormProps {
-	onCancel?: () => void
-	onSuccess?: (event: Event) => void
-	translations: Translations
-}
+	name: z.string().min(1, "Le nom de l'événement est requis").max(100, 'Le nom ne peut pas dépasser 100 caractères'),
+	logo: z.instanceof(File).optional(),
+	location: z.string().min(1, 'Le lieu est requis').max(100, 'Le lieu ne peut pas dépasser 100 caractères'),
+	isPartnered: z.boolean(),
+	eventDate: z.string().min(1, "La date de l'événement est requise"),
+	elevationGainM: z.number().min(0, 'Le dénivelé doit être positif').optional().or(z.literal('')),
+	// Optional fields
+	distanceKm: z.number().min(0, 'La distance doit être positive').optional().or(z.literal('')),
+	description: z
+		.string()
+		.min(1, 'La description est requise')
+		.max(1000, 'La description ne peut pas dépasser 1000 caractères'),
+	bibPickupWindowEndDate: z.string().optional().or(z.literal('')),
+	bibPickupWindowBeginDate: z.string().optional().or(z.literal('')),
 
-type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
+	bibPickupLocation: z
+		.string()
+		.max(200, 'Le lieu de retrait ne peut pas dépasser 200 caractères')
+		.optional()
+		.or(z.literal('')),
+})
 
-export default function EventCreationForm({ translations, onSuccess, onCancel }: EventCreationFormProps) {
-	const [isLoading, setIsLoading] = useState(false)
-	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
+type EventCreateData = Omit<Event, 'id'>
+type EventFormData = z.infer<typeof eventSchema>
 
-	// Form state
-	const [formData, setFormData] = useState({
-		typeCourse: 'route' as Event['typeCourse'],
-		transferDeadline: '',
-		participantCount: '',
-		parcoursUrl: '',
-		officialStandardPrice: '',
-		name: '',
-		logoUrl: '',
-		location: '',
-		isPartnered: false,
-		eventDate: '',
-		elevationGainM: '',
-		distanceKm: '',
-		description: '',
-		bibPickupWindowEndDate: '',
-		bibPickupWindowBeginDate: '',
-		bibPickupLocation: '',
+export default function EventCreationForm() {
+	const [isSubmitting, setIsSubmitting] = useState(false)
+	const router = useRouter()
+
+	const {
+		setValue,
+		register,
+		handleSubmit,
+		formState: { errors },
+		control,
+	} = useForm<EventFormData>({
+		resolver: zodResolver(eventSchema),
+		defaultValues: {
+			options: [],
+			isPartnered: false,
+		},
 	})
 
-	const handleInputChange = (field: string, value: boolean | number | string) => {
-		setFormData(prev => ({
-			...prev,
-			[field]: value,
-		}))
-	}
+	const { remove, fields, append } = useFieldArray({
+		name: 'options',
+		control,
+	})
 
-	const addEventOption = () => {
-		const newOption: EventOption = {
-			values: [''],
-			required: false,
-			label: '',
-			key: '',
-		}
-		setEventOptions(prev => [...prev, newOption])
-	}
-
-	const updateEventOption = (index: number, field: keyof EventOption, value: any) => {
-		setEventOptions(prev => prev.map((option, i) => (i === index ? { ...option, [field]: value } : option)))
-	}
-
-	const removeEventOption = (index: number) => {
-		setEventOptions(prev => prev.filter((_, i) => i !== index))
-	}
-
-	const addOptionValue = (optionIndex: number) => {
-		setEventOptions(prev =>
-			prev.map((option, i) => (i === optionIndex ? { ...option, values: [...option.values, ''] } : option))
-		)
-	}
-
-	const updateOptionValue = (optionIndex: number, valueIndex: number, value: string) => {
-		setEventOptions(prev =>
-			prev.map((option, i) =>
-				i === optionIndex
-					? {
-							...option,
-							values: option.values.map((v, j) => (j === valueIndex ? value : v)),
-						}
-					: option
-			)
-		)
-	}
-
-	const removeOptionValue = (optionIndex: number, valueIndex: number) => {
-		setEventOptions(prev =>
-			prev.map((option, i) =>
-				i === optionIndex ? { ...option, values: option.values.filter((_, j) => j !== valueIndex) } : option
-			)
-		)
-	}
-
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault()
-		setIsLoading(true)
-
-		// Use setTimeout to ensure the function is properly async
-		void (async () => {
-			try {
-				const eventData: Omit<Event, 'id'> = {
-					typeCourse: formData.typeCourse,
-					transferDeadline: formData.transferDeadline ? new Date(formData.transferDeadline) : undefined,
-					participantCount: formData.participantCount ? Number(formData.participantCount) : 0,
-					parcoursUrl: formData.parcoursUrl || undefined,
-					options: eventOptions,
-					officialStandardPrice: formData.officialStandardPrice ? Number(formData.officialStandardPrice) : undefined,
-					name: formData.name,
-					logoUrl: formData.logoUrl || undefined,
-					location: formData.location,
-					isPartnered: formData.isPartnered,
-					eventDate: new Date(formData.eventDate),
-					elevationGainM: formData.elevationGainM ? Number(formData.elevationGainM) : undefined,
-					distanceKm: formData.distanceKm ? Number(formData.distanceKm) : undefined,
-					description: formData.description,
-					bibPickupWindowEndDate: new Date(formData.bibPickupWindowEndDate || formData.eventDate),
-					bibPickupWindowBeginDate: new Date(formData.bibPickupWindowBeginDate || formData.eventDate),
-					bibPickupLocation: formData.bibPickupLocation || undefined,
-				}
-
-				const createdEvent = await createEvent(eventData as Event)
-				if (createdEvent) {
-					onSuccess?.(createdEvent)
-				}
-			} catch (error) {
-				console.error('Error creating event:', error)
-				// Handle error (show toast, etc.)
-			} finally {
-				setIsLoading(false)
+	const onSubmit = async (data: EventFormData) => {
+		setIsSubmitting(true)
+		try {
+			const eventData: EventCreateData = {
+				typeCourse: data.typeCourse,
+				transferDeadline: data.transferDeadline ? new Date(data.transferDeadline) : undefined,
+				registrationUrl: data.registrationUrl === '' ? undefined : data.registrationUrl,
+				participantCount: data.participantCount,
+				parcoursUrl: data.parcoursUrl === '' ? undefined : data.parcoursUrl,
+				options: data.options ?? [],
+				officialStandardPrice: data.officialStandardPrice === '' ? undefined : Number(data.officialStandardPrice),
+				name: data.name,
+				logo: data.logo ?? new File([], ''),
+				location: data.location,
+				isPartnered: data.isPartnered,
+				eventDate: new Date(data.eventDate),
+				elevationGainM: data.elevationGainM === '' ? undefined : Number(data.elevationGainM),
+				distanceKm: data.distanceKm === '' ? undefined : Number(data.distanceKm),
+				description: data.description,
+				bibPickupWindowEndDate: data.bibPickupWindowEndDate ? new Date(data.bibPickupWindowEndDate) : new Date(),
+				bibPickupWindowBeginDate: data.bibPickupWindowBeginDate ? new Date(data.bibPickupWindowBeginDate) : new Date(),
+				bibPickupLocation: data.bibPickupLocation === '' ? undefined : data.bibPickupLocation,
 			}
-		})()
+
+			await createEvent(eventData as unknown as Event)
+			toast.success('Événement créé avec succès!')
+			void router.push('/admin/events')
+		} catch (error) {
+			console.error("Erreur lors de la création de l'événement:", error)
+			toast.error("Erreur lors de la création de l'événement")
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
+
+	const addOption = () => {
+		append({ values: [''], required: false, label: '', key: '' })
+	}
+
+	const handleFileChange = (files: File[]) => {
+		if (files.length > 0) {
+			setValue('logo', files[0])
+		}
+	}
+
+	const handleFormSubmit = (e: React.FormEvent) => {
+		e.preventDefault()
+		void handleSubmit(onSubmit)(e)
 	}
 
 	return (
-		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
-			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-			<div className="relative flex items-center justify-center p-6 md:p-10">
-				<form
-					className="border-border/50 bg-card/80 w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
-					onSubmit={handleSubmit}
-				>
-					<div className="mb-12 text-left">
-						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
-							{translations.event.title}
-						</h1>
-						<p className="text-muted-foreground mt-4 text-lg">{translations.event.subtitle}</p>
-					</div>
+		<div className="container mx-auto py-8">
+			<Card className="mx-auto max-w-4xl">
+				<CardHeader>
+					<CardTitle className="text-2xl font-bold">Créer un nouvel événement</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<form className="space-y-8" onSubmit={handleFormSubmit}>
+						{/* Informations principales */}
+						<div className="space-y-6">
+							<h3 className="text-lg font-semibold">Informations principales</h3>
 
-					{/* Event Information Section */}
-					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-						<div>
-							<h2 className="text-foreground text-2xl font-semibold">
-								{translations.event.sections.eventInformation.title}
-							</h2>
-							<p className="text-muted-foreground mt-2 text-base leading-7">
-								{translations.event.sections.eventInformation.description}
-							</p>
-						</div>
-						<div className="sm:max-w-4xl md:col-span-2">
-							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="name">
-										{translations.event.fields.eventName.label} *
-									</Label>
-									<Input
-										id="name"
-										name="name"
-										onChange={e => handleInputChange('name', e.target.value)}
-										placeholder={translations.event.fields.eventName.placeholder}
-										required
-										type="text"
-										value={formData.name}
-									/>
+							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+								<div className="space-y-2">
+									<Label htmlFor="name">Nom de l'événement *</Label>
+									<Input id="name" {...register('name')} className={errors.name ? 'border-red-500' : ''} />
+									{errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="location">
-										{translations.event.fields.location.label} *
-									</Label>
-									<Input
-										id="location"
-										name="location"
-										onChange={e => handleInputChange('location', e.target.value)}
-										placeholder={translations.event.fields.location.placeholder}
-										required
-										type="text"
-										value={formData.location}
-									/>
+
+								<div className="space-y-2">
+									<Label htmlFor="location">Lieu *</Label>
+									<Input id="location" {...register('location')} className={errors.location ? 'border-red-500' : ''} />
+									{errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventDate">
-										{translations.event.fields.eventDate.label} *
-									</Label>
+
+								<div className="space-y-2">
+									<Label htmlFor="eventDate">Date de l'événement *</Label>
 									<Input
 										id="eventDate"
-										name="eventDate"
-										onChange={e => handleInputChange('eventDate', e.target.value)}
-										required
 										type="datetime-local"
-										value={formData.eventDate}
+										{...register('eventDate')}
+										className={errors.eventDate ? 'border-red-500' : ''}
 									/>
+									{errors.eventDate && <p className="text-sm text-red-500">{errors.eventDate.message}</p>}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="typeCourse">
-										{translations.event.fields.eventType.label} *
-									</Label>
-									<Select
+
+								<div className="space-y-2">
+									<Label htmlFor="typeCourse">Type de course *</Label>
+									<Controller
+										control={control}
 										name="typeCourse"
-										onValueChange={value => handleInputChange('typeCourse', value)}
-										value={formData.typeCourse}
-									>
-										<SelectTrigger
-											className="ring-foreground/40 h-10 bg-gray-50 ring-2 dark:bg-zinc-800 dark:ring-slate-700"
-											id="typeCourse"
-										>
-											<SelectValue placeholder={translations.event.fields.eventType.placeholder} />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="route">{translations.event.fields.eventType.options.route}</SelectItem>
-											<SelectItem value="trail">{translations.event.fields.eventType.options.trail}</SelectItem>
-											<SelectItem value="triathlon">{translations.event.fields.eventType.options.triathlon}</SelectItem>
-											<SelectItem value="ultra">{translations.event.fields.eventType.options.ultra}</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-								<div className="col-span-full">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="description">
-										{translations.event.fields.description.label} *
-									</Label>
-									<Textarea
-										id="description"
-										name="description"
-										onChange={e => handleInputChange('description', e.target.value)}
-										placeholder={translations.event.fields.description.placeholder}
-										required
-										rows={4}
-										value={formData.description}
+										render={({ field }) => (
+											<Select onValueChange={field.onChange} value={field.value}>
+												<SelectTrigger className={errors.typeCourse ? 'border-red-500' : ''}>
+													<SelectValue placeholder="Sélectionner un type" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="route">Route</SelectItem>
+													<SelectItem value="trail">Trail</SelectItem>
+													<SelectItem value="triathlon">Triathlon</SelectItem>
+													<SelectItem value="ultra">Ultra</SelectItem>
+												</SelectContent>
+											</Select>
+										)}
 									/>
+									{errors.typeCourse && <p className="text-sm text-red-500">{errors.typeCourse.message}</p>}
 								</div>
-							</div>
-						</div>
-					</div>
 
-					<Separator className="my-12" />
-
-					{/* Event Details Section */}
-					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-						<div>
-							<h2 className="text-foreground text-2xl font-semibold">
-								{translations.event.sections.eventDetails.title}
-							</h2>
-							<p className="text-muted-foreground mt-2 text-base leading-7">
-								{translations.event.sections.eventDetails.description}
-							</p>
-						</div>
-						<div className="sm:max-w-4xl md:col-span-2">
-							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="distanceKm">
-										{translations.event.fields.distance.label}
-									</Label>
-									<Input
-										id="distanceKm"
-										name="distanceKm"
-										onChange={e => handleInputChange('distanceKm', e.target.value)}
-										placeholder={translations.event.fields.distance.placeholder}
-										step="0.001"
-										type="number"
-										value={formData.distanceKm}
-									/>
-								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="elevationGainM">
-										{translations.event.fields.elevationGain.label}
-									</Label>
-									<Input
-										id="elevationGainM"
-										name="elevationGainM"
-										onChange={e => handleInputChange('elevationGainM', e.target.value)}
-										placeholder={translations.event.fields.elevationGain.placeholder}
-										type="number"
-										value={formData.elevationGainM}
-									/>
-								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="officialStandardPrice">
-										{translations.event.fields.officialPrice.label}
-									</Label>
-									<Input
-										id="officialStandardPrice"
-										name="officialStandardPrice"
-										onChange={e => handleInputChange('officialStandardPrice', e.target.value)}
-										placeholder={translations.event.fields.officialPrice.placeholder}
-										step="0.01"
-										type="number"
-										value={formData.officialStandardPrice}
-									/>
-								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="participantCount">
-										{translations.event.fields.participantCount.label}
-									</Label>
+								<div className="space-y-2">
+									<Label htmlFor="participantCount">Nombre de participants *</Label>
 									<Input
 										id="participantCount"
-										name="participantCount"
-										onChange={e => handleInputChange('participantCount', e.target.value)}
-										placeholder={translations.event.fields.participantCount.placeholder}
 										type="number"
-										value={formData.participantCount}
+										{...register('participantCount', { valueAsNumber: true })}
+										className={errors.participantCount ? 'border-red-500' : ''}
 									/>
+									{errors.participantCount && <p className="text-sm text-red-500">{errors.participantCount.message}</p>}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="transferDeadline">
-										{translations.event.fields.transferDeadline.label}
-									</Label>
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="description">Description *</Label>
+								<Textarea
+									id="description"
+									{...register('description')}
+									className={errors.description ? 'border-red-500' : ''}
+									rows={4}
+								/>
+								{errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+							</div>
+						</div>
+
+						<Separator />
+
+						{/* Détails de l'événement */}
+						<div className="space-y-6">
+							<h3 className="text-lg font-semibold">Détails de l'événement</h3>
+
+							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+								<div className="space-y-2">
+									<Label htmlFor="distanceKm">Distance (km)</Label>
+									<Input
+										id="distanceKm"
+										step="0.1"
+										type="number"
+										{...register('distanceKm', { valueAsNumber: true })}
+										className={errors.distanceKm ? 'border-red-500' : ''}
+									/>
+									{errors.distanceKm && <p className="text-sm text-red-500">{errors.distanceKm.message}</p>}
+								</div>
+
+								<div className="space-y-2">
+									<Label htmlFor="elevationGainM">Dénivelé positif (m)</Label>
+									<Input
+										id="elevationGainM"
+										type="number"
+										{...register('elevationGainM', { valueAsNumber: true })}
+										className={errors.elevationGainM ? 'border-red-500' : ''}
+									/>
+									{errors.elevationGainM && <p className="text-sm text-red-500">{errors.elevationGainM.message}</p>}
+								</div>
+
+								<div className="space-y-2">
+									<Label htmlFor="officialStandardPrice">Prix officiel (€)</Label>
+									<Input
+										id="officialStandardPrice"
+										step="0.01"
+										type="number"
+										{...register('officialStandardPrice', { valueAsNumber: true })}
+										className={errors.officialStandardPrice ? 'border-red-500' : ''}
+									/>
+									{errors.officialStandardPrice && (
+										<p className="text-sm text-red-500">{errors.officialStandardPrice.message}</p>
+									)}
+								</div>
+
+								<div className="space-y-2">
+									<Label htmlFor="transferDeadline">Date limite de transfert</Label>
 									<Input
 										id="transferDeadline"
-										name="transferDeadline"
-										onChange={e => handleInputChange('transferDeadline', e.target.value)}
 										type="datetime-local"
-										value={formData.transferDeadline}
+										{...register('transferDeadline')}
+										className={errors.transferDeadline ? 'border-red-500' : ''}
 									/>
+									{errors.transferDeadline && <p className="text-sm text-red-500">{errors.transferDeadline.message}</p>}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="parcoursUrl">
-										{translations.event.fields.parcoursUrl.label}
-									</Label>
+
+								<div className="space-y-2">
+									<Label htmlFor="parcoursUrl">URL du parcours</Label>
 									<Input
 										id="parcoursUrl"
-										name="parcoursUrl"
-										onChange={e => handleInputChange('parcoursUrl', e.target.value)}
-										placeholder={translations.event.fields.parcoursUrl.placeholder}
+										placeholder="https://..."
 										type="url"
-										value={formData.parcoursUrl}
+										{...register('parcoursUrl')}
+										className={errors.parcoursUrl ? 'border-red-500' : ''}
 									/>
+									{errors.parcoursUrl && <p className="text-sm text-red-500">{errors.parcoursUrl.message}</p>}
 								</div>
-								<div className="col-span-full">
-									<Label className="text-foreground mb-2 block text-base font-medium">
-										{translations.event.fields.logoUpload.label}
-									</Label>
-									<p className="text-muted-foreground mb-4 text-sm">
-										{translations.event.fields.logoUpload.description}
-									</p>
-									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
-										<FileUpload
-											onChange={files => {
-												if (files.length > 0) {
-													// Handle logo file upload
-													console.info('Logo uploaded:', files[0].name)
-													// You can store the file in form state or upload it immediately
-												}
-											}}
-											translations={translations.event.fields.logoUpload}
-										/>
-									</div>
+
+								<div className="space-y-2">
+									<Label htmlFor="registrationUrl">Lien d'inscription</Label>
+									<Input
+										id="registrationUrl"
+										placeholder="https://..."
+										type="url"
+										{...register('registrationUrl')}
+										className={errors.registrationUrl ? 'border-red-500' : ''}
+									/>
+									{errors.registrationUrl && <p className="text-sm text-red-500">{errors.registrationUrl.message}</p>}
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<Separator className="my-12" />
+						<Separator />
 
-					{/* Bib Pickup Information Section */}
-					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-						<div>
-							<h2 className="text-foreground text-2xl font-semibold">{translations.event.sections.bibPickup.title}</h2>
-							<p className="text-muted-foreground mt-2 text-base leading-7">
-								{translations.event.sections.bibPickup.description}
-							</p>
-						</div>
-						<div className="sm:max-w-4xl md:col-span-2">
-							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
-								<div className="col-span-full">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupLocation">
-										{translations.event.fields.bibPickupLocation.label}
-									</Label>
+						{/* Retrait des dossards */}
+						<div className="space-y-6">
+							<h3 className="text-lg font-semibold">Retrait des dossards</h3>
+
+							<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+								<div className="space-y-2">
+									<Label htmlFor="bibPickupLocation">Lieu de retrait</Label>
 									<Input
 										id="bibPickupLocation"
-										name="bibPickupLocation"
-										onChange={e => handleInputChange('bibPickupLocation', e.target.value)}
-										placeholder={translations.event.fields.bibPickupLocation.placeholder}
-										type="text"
-										value={formData.bibPickupLocation}
+										{...register('bibPickupLocation')}
+										className={errors.bibPickupLocation ? 'border-red-500' : ''}
 									/>
+									{errors.bibPickupLocation && (
+										<p className="text-sm text-red-500">{errors.bibPickupLocation.message}</p>
+									)}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label
-										className="text-foreground mb-2 block text-base font-medium"
-										htmlFor="bibPickupWindowBeginDate"
-									>
-										{translations.event.fields.bibPickupBegin.label} *
-									</Label>
+
+								<div className="space-y-2">
+									<Label htmlFor="bibPickupWindowBeginDate">Début du retrait</Label>
 									<Input
 										id="bibPickupWindowBeginDate"
-										name="bibPickupWindowBeginDate"
-										onChange={e => handleInputChange('bibPickupWindowBeginDate', e.target.value)}
 										type="datetime-local"
-										value={formData.bibPickupWindowBeginDate}
+										{...register('bibPickupWindowBeginDate')}
+										className={errors.bibPickupWindowBeginDate ? 'border-red-500' : ''}
 									/>
+									{errors.bibPickupWindowBeginDate && (
+										<p className="text-sm text-red-500">{errors.bibPickupWindowBeginDate.message}</p>
+									)}
 								</div>
-								<div className="col-span-full sm:col-span-3">
-									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="bibPickupWindowEndDate">
-										{translations.event.fields.bibPickupEnd.label} *
-									</Label>
+
+								<div className="space-y-2">
+									<Label htmlFor="bibPickupWindowEndDate">Fin du retrait</Label>
 									<Input
 										id="bibPickupWindowEndDate"
-										name="bibPickupWindowEndDate"
-										onChange={e => handleInputChange('bibPickupWindowEndDate', e.target.value)}
 										type="datetime-local"
-										value={formData.bibPickupWindowEndDate}
+										{...register('bibPickupWindowEndDate')}
+										className={errors.bibPickupWindowEndDate ? 'border-red-500' : ''}
 									/>
+									{errors.bibPickupWindowEndDate && (
+										<p className="text-sm text-red-500">{errors.bibPickupWindowEndDate.message}</p>
+									)}
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<Separator className="my-12" />
+						<Separator />
 
-					{/* Partnership Settings Section */}
-					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-						<div>
-							<h2 className="text-foreground text-2xl font-semibold">
-								{translations.event.sections.partnership.title}
-							</h2>
-							<p className="text-muted-foreground mt-2 text-base leading-7">
-								{translations.event.sections.partnership.description}
-							</p>
-						</div>
-						<div className="sm:max-w-4xl md:col-span-2">
-							<fieldset>
-								<legend className="text-foreground text-lg font-medium">
-									{translations.event.fields.isPartnered.label}
-								</legend>
-								<p className="text-muted-foreground mt-3 text-base leading-7">
-									{translations.event.fields.isPartnered.description}
-								</p>
-								<RadioGroup
-									className="mt-6"
-									onValueChange={value => handleInputChange('isPartnered', value === 'partnered')}
-									value={formData.isPartnered ? 'partnered' : 'not-partnered'}
-								>
-									<div className="flex items-center gap-x-3">
-										<RadioGroupItem id="partnered" value="partnered" />
-										<Label className="text-foreground text-base font-medium" htmlFor="partnered">
-											Partnered Event (allows bib resale)
-										</Label>
-									</div>
-									<div className="flex items-center gap-x-3">
-										<RadioGroupItem id="not-partnered" value="not-partnered" />
-										<Label className="text-foreground text-base font-medium" htmlFor="not-partnered">
-											Not Partnered (display only)
-										</Label>
-									</div>
-								</RadioGroup>
-							</fieldset>
-						</div>
-					</div>
+						{/* Partenariat */}
+						<div className="space-y-6">
+							<h3 className="text-lg font-semibold">Paramètres de partenariat</h3>
 
-					<Separator className="my-12" />
-
-					{/* Event Options Section */}
-					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-						<div>
-							<h2 className="text-foreground text-2xl font-semibold">
-								{translations.event.sections.eventOptions.title}
-							</h2>
-							<p className="text-muted-foreground mt-2 text-base leading-7">
-								{translations.event.sections.eventOptions.description}
-							</p>
-						</div>
-						<div className="sm:max-w-4xl md:col-span-2">
-							<div className="space-y-8">
-								{eventOptions.map((option, optionIndex) => (
-									<div
-										className="border-border/50 bg-card/50 rounded-2xl border p-6 shadow-md backdrop-blur-sm"
-										key={optionIndex}
-									>
-										<div className="mb-6 flex items-center justify-between">
-											<h3 className="text-foreground text-lg font-medium">Option {optionIndex + 1}</h3>
-											<Button onClick={() => removeEventOption(optionIndex)} size="sm" type="button" variant="outline">
-												<Trash2 className="size-4" />
-											</Button>
-										</div>
-
-										<div className="mb-6 grid grid-cols-2 gap-6">
-											<div>
-												<Label
-													className="text-foreground mb-2 block text-base font-medium"
-													htmlFor={`option-key-${optionIndex}`}
-												>
-													Key
-												</Label>
-												<Input
-													id={`option-key-${optionIndex}`}
-													onChange={e => updateEventOption(optionIndex, 'key', e.target.value)}
-													placeholder="size"
-													type="text"
-													value={option.key}
-												/>
+							<div className="space-y-2">
+								<Label>Événement en partenariat</Label>
+								<Controller
+									control={control}
+									name="isPartnered"
+									render={({ field }) => (
+										<RadioGroup
+											className="flex gap-6"
+											onValueChange={value => field.onChange(value === 'true')}
+											value={field.value ? 'true' : 'false'}
+										>
+											<div className="flex items-center space-x-2">
+												<RadioGroupItem id="partnered-yes" value="true" />
+												<Label htmlFor="partnered-yes">Oui</Label>
 											</div>
-											<div>
-												<Label
-													className="text-foreground mb-2 block text-base font-medium"
-													htmlFor={`option-label-${optionIndex}`}
-												>
-													{translations.event.eventOptions.optionName}
-												</Label>
-												<Input
-													id={`option-label-${optionIndex}`}
-													onChange={e => updateEventOption(optionIndex, 'label', e.target.value)}
-													placeholder="Taille"
-													type="text"
-													value={option.label}
-												/>
+											<div className="flex items-center space-x-2">
+												<RadioGroupItem id="partnered-no" value="false" />
+												<Label htmlFor="partnered-no">Non</Label>
 											</div>
-										</div>
-
-										<div className="mb-6">
-											<div className="flex items-center gap-3">
-												<input
-													checked={option.required}
-													className="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300"
-													id={`option-required-${optionIndex}`}
-													onChange={e => updateEventOption(optionIndex, 'required', e.target.checked)}
-													type="checkbox"
-												/>
-												<Label
-													className="text-foreground text-base font-medium"
-													htmlFor={`option-required-${optionIndex}`}
-												>
-													{translations.event.eventOptions.optionRequired}
-												</Label>
-											</div>
-										</div>
-
-										<div>
-											<div className="mb-4 flex items-center justify-between">
-												<Label className="text-foreground text-base font-medium">Values</Label>
-												<Button onClick={() => addOptionValue(optionIndex)} size="sm" type="button" variant="outline">
-													<Plus className="size-4" />
-												</Button>
-											</div>
-											{option.values.map((value, valueIndex) => (
-												<div className="mb-3 flex items-center gap-3" key={valueIndex}>
-													<Input
-														onChange={e => updateOptionValue(optionIndex, valueIndex, e.target.value)}
-														placeholder={translations.event.eventOptions.values.placeholder}
-														type="text"
-														value={value}
-													/>
-													{option.values.length > 1 && (
-														<Button
-															onClick={() => removeOptionValue(optionIndex, valueIndex)}
-															size="sm"
-															type="button"
-															variant="outline"
-														>
-															<Trash2 className="size-4" />
-														</Button>
-													)}
-												</div>
-											))}
-										</div>
-									</div>
-								))}
-
-								<Button className="w-full" onClick={addEventOption} type="button" variant="outline">
-									<Plus className="mr-2 size-4" />
-									{translations.event.eventOptions.addOption}
-								</Button>
+										</RadioGroup>
+									)}
+								/>
+								{errors.isPartnered && <p className="text-sm text-red-500">{errors.isPartnered.message}</p>}
 							</div>
 						</div>
-					</div>
 
-					<Separator className="my-12" />
+						<Separator />
 
-					{/* Form Actions */}
-					<div className="flex items-center justify-end space-x-6 pt-8">
-						{onCancel && (
-							<Button disabled={isLoading} onClick={onCancel} size="lg" type="button" variant="outline">
-								{translations.event.buttons.cancel}
+						{/* Logo */}
+						<div className="space-y-6">
+							<h3 className="text-lg font-semibold">Logo de l'événement</h3>
+
+							<div className="space-y-2">
+								<Label>Logo (optionnel)</Label>
+								<FileUpload onChange={handleFileChange} />
+								{errors.logo && <p className="text-sm text-red-500">{errors.logo.message}</p>}
+							</div>
+						</div>
+
+						<Separator />
+
+						{/* Options de l'événement */}
+						<div className="space-y-6">
+							<div className="flex items-center justify-between">
+								<h3 className="text-lg font-semibold">Options de l'événement</h3>
+								<Button onClick={addOption} type="button" variant="outline">
+									Ajouter une option
+								</Button>
+							</div>
+
+							<div className="space-y-4">
+								{fields.map((field, index) => (
+									<Card className="p-4" key={field.id}>
+										<div className="grid grid-cols-1 gap-4">
+											<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+												<div className="space-y-2">
+													<Label htmlFor={`options.${index}.key`}>Clé</Label>
+													<Input
+														{...register(`options.${index}.key` as const)}
+														className={errors.options?.[index]?.key ? 'border-red-500' : ''}
+														placeholder="size, gender, meal"
+													/>
+													{errors.options?.[index]?.key && (
+														<p className="text-sm text-red-500">{errors.options[index]?.key?.message}</p>
+													)}
+												</div>
+
+												<div className="space-y-2">
+													<Label htmlFor={`options.${index}.label`}>Libellé</Label>
+													<Input
+														{...register(`options.${index}.label` as const)}
+														className={errors.options?.[index]?.label ? 'border-red-500' : ''}
+														placeholder="Taille, Genre, Repas"
+													/>
+													{errors.options?.[index]?.label && (
+														<p className="text-sm text-red-500">{errors.options[index]?.label?.message}</p>
+													)}
+												</div>
+
+												<div className="space-y-2">
+													<Label htmlFor={`options.${index}.values`}>Valeurs (séparées par des virgules)</Label>
+													<Controller
+														control={control}
+														name={`options.${index}.values` as const}
+														render={({ field }) => (
+															<Input
+																className={errors.options?.[index]?.values ? 'border-red-500' : ''}
+																onChange={e => {
+																	const values = e.target.value
+																		.split(',')
+																		.map(v => v.trim())
+																		.filter(v => v)
+																	field.onChange(values)
+																}}
+																placeholder="XS, S, M, L, XL"
+																value={field.value?.join(', ') || ''}
+															/>
+														)}
+													/>
+													{errors.options?.[index]?.values && (
+														<p className="text-sm text-red-500">{errors.options[index]?.values?.message}</p>
+													)}
+												</div>
+											</div>
+
+											<div className="flex items-center justify-between">
+												<Controller
+													control={control}
+													name={`options.${index}.required` as const}
+													render={({ field }) => (
+														<div className="flex items-center space-x-2">
+															<input
+																checked={field.value}
+																className="rounded border-gray-300"
+																id={`options.${index}.required`}
+																onChange={field.onChange}
+																type="checkbox"
+															/>
+															<Label htmlFor={`options.${index}.required`}>Option requise</Label>
+														</div>
+													)}
+												/>
+												<Button onClick={() => remove(index)} size="sm" type="button" variant="destructive">
+													Supprimer cette option
+												</Button>
+											</div>
+										</div>
+									</Card>
+								))}
+							</div>
+						</div>
+
+						<Separator />
+
+						{/* Boutons de soumission */}
+						<div className="flex justify-end gap-4">
+							<Button disabled={isSubmitting} onClick={() => router.back()} type="button" variant="outline">
+								Annuler
 							</Button>
-						)}
-						<Button disabled={isLoading} size="lg" type="submit">
-							{isLoading ? translations.event.buttons.creating : translations.event.buttons.createEvent}
-						</Button>
-					</div>
-				</form>
-			</div>
+							<Button disabled={isSubmitting} type="submit">
+								{isSubmitting ? 'Création en cours...' : "Créer l'événement"}
+							</Button>
+						</div>
+					</form>
+				</CardContent>
+			</Card>
 		</div>
 	)
 }
