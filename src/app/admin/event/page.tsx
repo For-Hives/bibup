@@ -42,7 +42,7 @@ export default function AdminEventPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+		<div className="min-h-screen">
 			<div className="py-8">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="mb-8">
@@ -53,7 +53,7 @@ export default function AdminEventPage() {
 						</p>
 					</div>
 
-					<div className="rounded-lg bg-white shadow dark:bg-gray-800">
+					<div className="rounded-lg bg-white/10 shadow">
 						<EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} />
 					</div>
 				</div>
