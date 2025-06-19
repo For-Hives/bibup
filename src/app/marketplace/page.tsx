@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { faker } from '@faker-js/faker'
+
 import type { BibSale } from '@/components/marketplace/card-market'
 
 import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
@@ -14,72 +16,39 @@ export const metadata: Metadata = {
 	description: 'Browse and buy race bibs from our marketplace.',
 }
 
-// Mock data for race bibs (matches BibSale interface)
-const mockBibs: BibSale[] = [
-	{
+// Génère un BibSale aléatoire
+function generateRandomBibSale(): BibSale {
+	const sports = ['running', 'trail', 'triathlon', 'cycling', 'swimming', 'other'] as const
+	const type = faker.helpers.arrayElement(sports)
+	const distance = faker.helpers.arrayElement([5, 10, 21, 42, 80, 51.5, 180])
+	const distanceUnit = 'km'
+	const price = faker.number.int({ min: 20, max: 300 })
+	const originalPrice = price + faker.number.int({ min: 10, max: 100 })
+	return {
 		user: {
-			lastName: 'Martin',
-			id: 'u1',
-			firstName: 'Alice',
+			lastName: faker.person.lastName(),
+			id: faker.string.uuid(),
+			firstName: faker.person.firstName(),
 		},
-		status: 'available',
-		price: 80,
-		originalPrice: 120,
-		id: '1',
+		status: faker.helpers.arrayElement(['available', 'sold']),
+		price,
+		originalPrice,
+		id: faker.string.uuid(),
 		event: {
-			type: 'running',
-			participantCount: 50000,
-			name: 'Paris Marathon',
-			location: 'Paris',
-			id: 'e1',
-			distanceUnit: 'km',
-			distance: 42.195,
-			date: new Date('2024-04-07'),
+			type,
+			participantCount: faker.number.int({ min: 100, max: 50000 }),
+			name: faker.company.name() + ' ' + faker.word.noun(),
+			location: faker.location.city(),
+			id: faker.string.uuid(),
+			distanceUnit,
+			distance,
+			date: faker.date.soon({ days: 365 }),
 		},
-	},
-	{
-		user: {
-			lastName: 'Dupont',
-			id: 'u2',
-			firstName: 'Bob',
-		},
-		status: 'available',
-		price: 250,
-		originalPrice: 150,
-		id: '2',
-		event: {
-			type: 'triathlon',
-			participantCount: 2000,
-			name: 'Nice Triathlon',
-			location: 'Nice',
-			id: 'e2',
-			distanceUnit: 'km',
-			distance: 51.5,
-			date: new Date('2024-06-15'),
-		},
-	},
-	{
-		user: {
-			lastName: 'Durand',
-			id: 'u3',
-			firstName: 'Claire',
-		},
-		status: 'sold',
-		price: 140,
-		originalPrice: 180,
-		id: '3',
-		event: {
-			type: 'trail',
-			participantCount: 1500,
-			name: 'Mont Blanc Trail',
-			location: 'Chamonix',
-			id: 'e3',
-			distanceUnit: 'km',
-			distance: 80,
-			date: new Date('2024-08-20'),
-		},
-	},
-]
+	}
+}
+
+// Génère un lot de 10 à 15 dossards
+const mockBibs: BibSale[] = Array.from({ length: faker.number.int({ min: 10, max: 15 }) }, generateRandomBibSale)
 
 // Main server component for the marketplace page
 export default async function MarketplacePage() {
