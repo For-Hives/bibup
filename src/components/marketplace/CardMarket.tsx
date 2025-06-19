@@ -58,7 +58,7 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 					<div className="from-primary/20 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
 						<Image
 							alt="template-run"
-							className="cover -z-10 rounded-2xl p-3"
+							className="-z-10 rounded-2xl object-cover p-3"
 							fill
 							sizes="100vw"
 							src={bibSale.event.image}
@@ -101,7 +101,7 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 				</div>
 				<div className="via-border h-px w-full bg-gradient-to-r from-transparent to-transparent" />
 				<div className="flex flex-1 flex-col gap-2 px-4 py-2">
-					<div className="flex w-full justify-between">
+					<div className="flex w-full justify-between gap-2">
 						<h3 className="text-foreground text-lg font-bold">{bibSale.event.name}</h3>
 						<div className="relative flex flex-col items-center gap-2">
 							<p className="text-2xl font-bold text-white">{bibSale.price}€</p>
