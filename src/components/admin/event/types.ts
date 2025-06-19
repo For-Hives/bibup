@@ -1,66 +1,60 @@
 import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
-import { z } from 'zod'
+import * as v from 'valibot'
 
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 
 import adminTranslations from '../../../app/admin/event/locales.json'
 
-// Validation Schema using Zod
-export const EventCreationSchema = z
-	.object({
-		typeCourse: z.enum(['route', 'trail', 'triathlon', 'ultra']),
-		transferDeadline: z.string().optional(),
-		registrationUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-		participantCount: z.number().min(1, 'Participant count must be at least 1'),
-		parcoursUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-		options: z.array(
-			z.object({
-				values: z.array(z.string()).min(1, 'At least one value is required'),
-				required: z.boolean(),
-				label: z.string().min(1, 'Option label is required'),
-				key: z.string().min(1, 'Option key is required'),
+// Validation Schema using Valibot
+export const EventCreationSchema = v.pipe(
+	v.object({
+		typeCourse: v.picklist(['route', 'trail', 'triathlon', 'ultra']),
+		transferDeadline: v.optional(v.string()),
+		registrationUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
+		participantCount: v.pipe(v.number(), v.minValue(1, 'Participant count must be at least 1')),
+		parcoursUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
+		options: v.array(
+			v.object({
+				values: v.pipe(v.array(v.string()), v.minLength(1, 'At least one value is required')),
+				required: v.boolean(),
+				label: v.pipe(v.string(), v.minLength(1, 'Option label is required')),
+				key: v.pipe(v.string(), v.minLength(1, 'Option key is required')),
 			})
 		),
-		officialStandardPrice: z.number().min(0, 'Price must be positive').optional(),
-		name: z.string().min(1, 'Event name is required'),
-		logoFile: z.instanceof(File).optional(),
-		location: z.string().min(1, 'Location is required'),
-		isPartnered: z.boolean(),
-		eventDate: z.string().min(1, 'Event date is required'),
-		elevationGainM: z.number().min(0, 'Elevation gain must be positive').optional(),
-		distanceKm: z.number().min(0, 'Distance must be positive').optional(),
-		description: z.string().min(1, 'Description is required'),
-		bibPickupWindowEndDate: z.string().min(1, 'Bib pickup end date is required'),
-		bibPickupWindowBeginDate: z.string().min(1, 'Bib pickup begin date is required'),
-		bibPickupLocation: z.string().optional(),
-	})
-	.refine(
-		data => {
-			const eventDate = new Date(data.eventDate)
-			const beginDate = new Date(data.bibPickupWindowBeginDate)
-			const endDate = new Date(data.bibPickupWindowEndDate)
+		officialStandardPrice: v.optional(v.pipe(v.number(), v.minValue(0, 'Price must be positive'))),
+		name: v.pipe(v.string(), v.minLength(1, 'Event name is required')),
+		logoFile: v.optional(v.instance(File)),
+		location: v.pipe(v.string(), v.minLength(1, 'Location is required')),
+		isPartnered: v.boolean(),
+		eventDate: v.pipe(v.string(), v.minLength(1, 'Event date is required')),
+		elevationGainM: v.optional(v.pipe(v.number(), v.minValue(0, 'Elevation gain must be positive'))),
+		distanceKm: v.optional(v.pipe(v.number(), v.minValue(0, 'Distance must be positive'))),
+		description: v.pipe(v.string(), v.minLength(1, 'Description is required')),
+		bibPickupWindowEndDate: v.pipe(v.string(), v.minLength(1, 'Bib pickup end date is required')),
+		bibPickupWindowBeginDate: v.pipe(v.string(), v.minLength(1, 'Bib pickup begin date is required')),
+		bibPickupLocation: v.optional(v.string()),
+	}),
+	v.check(data => {
+		const eventDate = new Date(data.eventDate)
+		const beginDate = new Date(data.bibPickupWindowBeginDate)
+		const endDate = new Date(data.bibPickupWindowEndDate)
 
-			if (beginDate >= endDate) {
+		if (beginDate >= endDate) {
+			return false
+		}
+
+		if (data.transferDeadline) {
+			const transferDate = new Date(data.transferDeadline)
+			if (transferDate >= eventDate) {
 				return false
 			}
-
-			if (data.transferDeadline) {
-				const transferDate = new Date(data.transferDeadline)
-				if (transferDate >= eventDate) {
-					return false
-				}
-			}
-
-			return true
-		},
-		{
-			path: ['form'],
-			message:
-				'Invalid date relationships: pickup begin must be before end, and transfer deadline must be before event date',
 		}
-	)
+
+		return true
+	}, 'Invalid date relationships: pickup begin must be before end, and transfer deadline must be before event date')
+)
 
 export interface EventCreationFormProps {
 	onCancel?: () => void
@@ -68,7 +62,7 @@ export interface EventCreationFormProps {
 	translations: Translations
 }
 
-export type EventFormData = z.infer<typeof EventCreationSchema>
+export type EventFormData = v.InferOutput<typeof EventCreationSchema>
 
 export interface EventSectionProps {
 	errors: FieldErrors<EventFormData>

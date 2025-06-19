@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import * as React from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
+import { valibotResolver } from '@hookform/resolvers/valibot'
 import { toast } from 'sonner'
 
 import { EventOption } from '@/models/eventOption.model'
@@ -33,7 +33,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 		handleSubmit,
 		formState: { errors },
 	} = useForm<EventFormData>({
-		resolver: zodResolver(EventCreationSchema),
+		resolver: valibotResolver(EventCreationSchema),
 		defaultValues: {
 			typeCourse: 'route',
 			participantCount: 1,
