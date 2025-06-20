@@ -116,7 +116,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 	}
 
 	return (
-		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
+		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br pt-24">
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 			<div className="relative flex items-center justify-center p-6 md:p-10">
 				<form
