@@ -5,5 +5,5 @@ export interface User {
 	firstName: string
 	id: string
 	lastName: string
-	role: 'admin' | 'user'
+	roles: ('admin' | 'user')[]
 }

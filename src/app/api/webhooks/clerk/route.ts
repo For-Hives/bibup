@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 		}
 
 		const userData: Omit<User, 'id'> = {
-			role: 'user',
+			roles: ['user'],
 			lastName: last_name ?? '',
 			firstName: first_name ?? '',
 			email: primaryEmail,

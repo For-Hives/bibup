@@ -61,7 +61,7 @@ export default function AdminEventPageClient({ translations, currentUser }: Admi
 						</p>
 					</div>
 					<div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">
-						{currentUser.role.toUpperCase()}
+						{currentUser.roles.join(', ').toUpperCase()}
 					</div>
 				</div>
 			</div>
