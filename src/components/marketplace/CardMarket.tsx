@@ -190,7 +190,7 @@ function formatDateWithLocale(date: Date, locale?: null | string): string {
 
 function formatParticipantCount(participantCount: number) {
 	// format the number, to display it with ',' and ' '
-	return participantCount.toLocaleString('fr-FR', {
+	return participantCount.toLocaleString('en-US', {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	})

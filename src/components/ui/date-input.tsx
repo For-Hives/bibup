@@ -9,7 +9,7 @@ export interface DateInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 }
 
 const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
-	({ showHelper = true, locale = 'fr', className, ...props }, ref) => {
+	({ showHelper = true, locale = 'en', className, ...props }, ref) => {
 		const dateFormat = getDateFormatPattern(locale)
 
 		return (
