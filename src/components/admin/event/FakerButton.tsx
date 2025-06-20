@@ -172,7 +172,7 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 		// Fill form with fake data
 		Object.entries(fakeData).forEach(([key, value]) => {
 			if (value !== undefined) {
-				setValue(key as keyof EventFormData, value as any)
+				setValue(key as keyof EventFormData, value)
 			}
 		})
 

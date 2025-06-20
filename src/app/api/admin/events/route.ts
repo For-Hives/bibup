@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 	try {
 		// Check authentication
 		const { userId } = await auth()
-		if (!userId) {
+		if (userId === null || userId === undefined || userId === '') {
 			return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
 		}
 
@@ -27,13 +27,19 @@ export async function POST(request: NextRequest) {
 		const isPartnered = formData.get('isPartnered') === 'true'
 
 		// Extract optional fields
-		const distanceKm = formData.get('distanceKm') ? parseFloat(formData.get('distanceKm') as string) : undefined
-		const elevationGainM = formData.get('elevationGainM')
-			? parseInt(formData.get('elevationGainM') as string, 10)
-			: undefined
-		const officialStandardPrice = formData.get('officialStandardPrice')
-			? parseFloat(formData.get('officialStandardPrice') as string)
-			: undefined
+		const distanceKmValue = formData.get('distanceKm')
+		const distanceKm =
+			distanceKmValue !== null && distanceKmValue !== '' ? parseFloat(distanceKmValue as string) : undefined
+		const elevationGainMValue = formData.get('elevationGainM')
+		const elevationGainM =
+			elevationGainMValue !== null && elevationGainMValue !== ''
+				? parseInt(elevationGainMValue as string, 10)
+				: undefined
+		const officialStandardPriceValue = formData.get('officialStandardPrice')
+		const officialStandardPrice =
+			officialStandardPriceValue !== null && officialStandardPriceValue !== ''
+				? parseFloat(officialStandardPriceValue as string)
+				: undefined
 		const transferDeadline = (formData.get('transferDeadline') as string) ?? undefined
 		const parcoursUrl = (formData.get('parcoursUrl') as string) ?? undefined
 		const registrationUrl = (formData.get('registrationUrl') as string) ?? undefined
