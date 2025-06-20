@@ -130,8 +130,8 @@ export default function Searchbar({
 		label: region,
 	}))
 
-	const lang = locale ?? 'fr'
-	const t = locales[lang] || locales['fr']
+	const lang = locale ?? 'en'
+	const t = locales[lang] || locales['en']
 
 	return (
 		// Main container with responsive padding and shadow

@@ -1,94 +1,94 @@
 import globalLocalesData from './globalLocales.json'
 
 /**
- * SYSTÈME DE TRADUCTIONS INTERNATIONALES (i18n)
- * ==============================================
+ * INTERNATIONAL TRANSLATIONS SYSTEM (i18n)
+ * =========================================
  *
- * Ce fichier gère les traductions de l'application dans différentes langues.
- * Il combine deux types de traductions :
+ * This file manages application translations in different languages.
+ * It combines two types of translations:
  *
- * 1. TRADUCTIONS GLOBALES (fichier globalLocales.json)
- *    - Contient les textes utilisés partout dans l'app (nom de l'app, messages généraux, etc.)
- *    - Structure : { "en": { "GLOBAL": { "appName": "...", "welcomeMessage": "..." } }, "fr": {...} }
+ * 1. GLOBAL TRANSLATIONS (globalLocales.json file)
+ *    - Contains texts used throughout the app (app name, general messages, etc.)
+ *    - Structure: { "en": { "GLOBAL": { "appName": "...", "welcomeMessage": "..." } }, "fr": {...} }
  *
- * 2. TRADUCTIONS SPÉCIFIQUES À UNE PAGE (fichiers locales.json dans chaque dossier)
- *    - Contient les textes spécifiques à une page ou composant
- *    - Structure : { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
+ * 2. PAGE-SPECIFIC TRANSLATIONS (locales.json files in each folder)
+ *    - Contains texts specific to a page or component
+ *    - Structure: { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
  *
- * COMMENT ÇA MARCHE :
- * - La fonction getTranslations() prend une langue (ex: "fr") et les traductions de page
- * - Elle récupère automatiquement les traductions globales correspondantes
- * - Elle retourne un objet qui combine les deux : { GLOBAL: {...}, navbar: {...} }
- * - Si une langue n'existe pas, elle utilise l'anglais par défaut
- * - Si le fichier globalLocales.json n'existe pas, elle utilise des valeurs par défaut
+ * HOW IT WORKS:
+ * - The getTranslations() function takes a language (ex: "en") and page translations
+ * - It automatically retrieves corresponding global translations
+ * - It returns an object that combines both: { GLOBAL: {...}, navbar: {...} }
+ * - If a language doesn't exist, it uses English as default
+ * - If the globalLocales.json file doesn't exist, it uses default values
  */
 import 'server-only'
 
-// DÉFINITION DES TYPES (pour que TypeScript comprenne la structure des données)
-// ===============================================================================
+// TYPE DEFINITIONS (so TypeScript understands the data structure)
+// ================================================================
 
-// Type qui décrit la structure d'une traduction globale pour une langue
-// Ce type s'adapte automatiquement au contenu réel du fichier globalLocales.json
-// Exemple : { GLOBAL: { appName: "Mon App", welcomeMessage: "Bienvenue !" } }
+// Type that describes the structure of a global translation for a language
+// This type automatically adapts to the actual content of the globalLocales.json file
+// Example: { GLOBAL: { appName: "My App", welcomeMessage: "Welcome!" } }
 type GlobalTranslationFileContent = ImportedGlobalLocales[keyof ImportedGlobalLocales]
 
-// Type qui représente tout le fichier globalLocales.json importé
-// TypeScript peut ainsi connaître exactement quelles propriétés existent
+// Type that represents the entire imported globalLocales.json file
+// TypeScript can thus know exactly which properties exist
 type ImportedGlobalLocales = typeof globalLocalesData
 
-// Type qui décrit un ensemble de traductions de page pour toutes les langues
-// Le "T" est un type générique - ça veut dire qu'on peut l'adapter selon le contenu réel
-// Exemple : { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
+// Type that describes a set of page translations for all languages
+// The "T" is a generic type - it means we can adapt it according to the actual content
+// Example: { "en": { "navbar": { "homeLink": "Home" } }, "fr": { "navbar": { "homeLink": "Accueil" } } }
 type PageLocales<T extends PageTranslationContent> = Record<string, T>
 
-// Type qui décrit le contenu d'une traduction de page pour une langue
-// Record<string, unknown> = un objet avec des clés texte et des valeurs de n'importe quel type
-// Exemple : { "navbar": { "homeLink": "Home" }, "button": { "submit": "Submit" } }
+// Type that describes the content of a page translation for a language
+// Record<string, unknown> = an object with text keys and values of any type
+// Example: { "navbar": { "homeLink": "Home" }, "button": { "submit": "Submit" } }
 type PageTranslationContent = Record<string, unknown>
 
 /**
- * FONCTION PRINCIPALE : getTranslations
- * =====================================
+ * MAIN FUNCTION: getTranslations
+ * ===============================
  *
- * Cette fonction combine les traductions globales et les traductions spécifiques à une page.
+ * This function combines global translations and page-specific translations.
  *
- * PARAMÈTRES :
- * - locale : La langue demandée (ex: "fr", "en", "ko")
- * - pageLocaleJsonData : Les traductions spécifiques à la page (importées depuis un fichier locales.json)
- * - defaultLocale : La langue de secours si la langue demandée n'existe pas (par défaut: "en")
+ * PARAMETERS:
+ * - locale: The requested language (ex: "en", "fr", "ko")
+ * - pageLocaleJsonData: Page-specific translations (imported from a locales.json file)
+ * - defaultLocale: The fallback language if the requested language doesn't exist (default: "en")
  *
- * RETOURNE :
- * Un objet qui combine les traductions globales et de page.
- * Exemple : { GLOBAL: { appName: "Mon App" }, navbar: { homeLink: "Accueil" } }
+ * RETURNS:
+ * An object that combines global and page translations.
+ * Example: { GLOBAL: { appName: "My App" }, navbar: { homeLink: "Home" } }
  *
- * LOGIQUE :
- * 1. Cherche les traductions de page dans la langue demandée
- * 2. Si introuvable, utilise la langue par défaut
- * 3. Si toujours introuvable, utilise la première langue disponible
- * 4. Fait la même chose pour les traductions globales
- * 5. Combine les deux et retourne le résultat
+ * LOGIC:
+ * 1. Looks for page translations in the requested language
+ * 2. If not found, uses the default language
+ * 3. If still not found, uses the first available language
+ * 4. Does the same for global translations
+ * 5. Combines both and returns the result
  */
 export function getTranslations<P extends PageTranslationContent, LocaleKey extends string = string>(
 	locale: LocaleKey,
 	pageLocaleJsonData: PageLocales<P>,
 	defaultLocale: LocaleKey = 'en' as LocaleKey
 ): GlobalTranslationFileContent & P {
-	// Le type de retour combine les traductions globales (GlobalTranslationFileContent) et de page (P)
+	// The return type combines global (GlobalTranslationFileContent) and page (P) translations
 
-	// ÉTAPE 1 : Récupérer les traductions spécifiques à la page
-	// =========================================================
+	// STEP 1: Get page-specific translations
+	// ======================================
 	const finalPageContent: P = getFallbackTranslation(
 		locale,
 		defaultLocale,
 		pageLocaleJsonData,
-		{} as P // Valeur de fallback si aucune traduction n'est trouvée
+		{} as P // Fallback value if no translation is found
 	)
 
-	// ÉTAPE 2 : Récupérer les traductions globales
-	// =============================================
-	const typedGlobalLocales = globalLocalesData // Les données globales importées du fichier JSON
+	// STEP 2: Get global translations
+	// ===============================
+	const typedGlobalLocales = globalLocalesData // Global data imported from JSON file
 
-	// Initialisation dynamique pour la valeur de fallback
+	// Dynamic initialization for fallback value
 	const defaultGlobalContent: GlobalTranslationFileContent =
 		Object.keys(typedGlobalLocales).length > 0
 			? { ...typedGlobalLocales[Object.keys(typedGlobalLocales)[0] as keyof typeof globalLocalesData] }
@@ -101,10 +101,10 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 		defaultGlobalContent
 	)
 
-	// ÉTAPE 3 : Combiner et retourner le résultat
-	// ============================================
-	// L'opérateur "..." (spread) combine les deux objets en un seul
-	// Si une clé existe dans les deux, celle de droite (finalGlobalContent) prend le dessus
+	// STEP 3: Combine and return the result
+	// =====================================
+	// The "..." (spread) operator combines the two objects into one
+	// If a key exists in both, the right one (finalGlobalContent) takes precedence
 	return { ...finalPageContent, ...finalGlobalContent }
 }
 
@@ -112,20 +112,20 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
  * HELPER FUNCTION: getFallbackTranslation
  * ========================================
  *
- * Cette fonction implémente la logique de sélection de langue avec fallback.
- * Elle est utilisée pour éviter la duplication entre les traductions de page et globales.
+ * This function implements the language selection logic with fallback.
+ * It is used to avoid duplication between page and global translations.
  *
- * PARAMÈTRES :
- * - locale : La langue demandée
- * - defaultLocale : La langue de secours
- * - localeData : L'objet contenant toutes les traductions disponibles
- * - fallbackValue : Valeur par défaut si aucune traduction n'est trouvée
+ * PARAMETERS:
+ * - locale: The requested language
+ * - defaultLocale: The fallback language
+ * - localeData: The object containing all available translations
+ * - fallbackValue: Default value if no translation is found
  *
- * LOGIQUE :
- * 1. Essaie la langue demandée
- * 2. Si introuvable, essaie la langue par défaut
- * 3. Si toujours introuvable, prend la première langue disponible
- * 4. Si aucune langue disponible, retourne la valeur de fallback
+ * LOGIC:
+ * 1. Tries the requested language
+ * 2. If not found, tries the default language
+ * 3. If still not found, takes the first available language
+ * 4. If no language available, returns the fallback value
  */
 function getFallbackTranslation<T, LocaleKey extends string>(
 	locale: LocaleKey,
