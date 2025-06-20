@@ -6,8 +6,8 @@ import type { Bib } from '@/models/bib.model'
 
 import { pb } from '@/lib/pocketbaseClient'
 
-import { fetchUserById, updateUserBalance } from './user.services'
 import { createTransaction } from './transaction.services'
+import { fetchUserById } from './user.services'
 
 /**
  * Creates a new bib listing. Handles both partnered and unlisted events.
@@ -178,7 +178,7 @@ export async function fetchPubliclyListedBibsForEvent(eventId: string): Promise<
 
 /**
  * Processes the sale of a bib.
- * This involves creating a transaction, updating seller's balance, and marking the bib as sold.
+ * This involves creating a transaction and marking the bib as sold.
  * @param bibId The ID of the bib being sold.
  * @param buyerUserId The PocketBase User ID of the buyer.
  */
@@ -206,7 +206,7 @@ export async function processBibSale(
 			return { success: false, error: 'Seller cannot buy their own bib.' }
 		}
 
-		// 2. Fetch the Seller User to get their Clerk ID for balance update.
+		// 2. Fetch the Seller User to get their information for transaction creation.
 		const sellerUser = await fetchUserById(bib.sellerUserId)
 		if (sellerUser == null) {
 			return { success: false, error: `Seller user with PocketBase ID ${bib.sellerUserId} not found.` }
@@ -215,9 +215,8 @@ export async function processBibSale(
 			return { success: false, error: `Clerk ID not found for seller user ${bib.sellerUserId}.` }
 		}
 
-		// 3. Calculate platform fee and seller amount.
+		// 3. Calculate platform fee.
 		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic
-		const amountToSeller = bib.price - platformFeeAmount
 
 		// 4. Create the transaction record.
 		const transaction = await createTransaction({
@@ -232,23 +231,6 @@ export async function processBibSale(
 
 		if (transaction == null) {
 			return { success: false, error: 'Failed to create transaction record.' }
-		}
-
-		// 5. Update seller's balance.
-		const sellerBalanceUpdated = await updateUserBalance(sellerUser.clerkId, amountToSeller)
-		if (sellerBalanceUpdated == null) {
-			// This is a critical error that needs monitoring/manual intervention.
-			await pb.collection('transactions').update(transaction.id, {
-				status: 'failed',
-				notes: 'Seller balance update failed after fund capture.',
-			})
-			console.error(
-				`CRITICAL: Failed to update seller ${sellerUser.clerkId} balance for transaction ${transaction.id}.`
-			)
-			return {
-				success: false,
-				error: "Failed to update seller's balance. Transaction recorded but needs attention.",
-			}
 		}
 
 		// 6. Update the Bib status to 'sold' and set buyerUserId.

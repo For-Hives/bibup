@@ -6,7 +6,6 @@ import { useState } from 'react'
 import type React from 'react'
 
 import globalTranslations from '@/components/global/locales.json'
-import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -31,7 +30,7 @@ type Props = {
 	t: Translations
 }
 
-type Translations = ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
+type Translations = (typeof globalTranslations)['en']['contact']
 
 export default function BentoGrid({ t }: Props) {
 	const [activeCard, setActiveCard] = useState<null | string>(null)
