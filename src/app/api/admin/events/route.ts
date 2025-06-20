@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: 'User not found' }, { status: 404 })
 		}
 
-		if (user.roles !== 'admin') {
+		if (user.role !== 'admin') {
 			return NextResponse.json({ message: 'Forbidden: Admin access required' }, { status: 403 })
 		}
 

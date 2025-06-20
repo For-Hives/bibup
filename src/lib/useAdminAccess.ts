@@ -51,8 +51,8 @@ export function useAdminAccess(redirectOnFail = true): UseAdminAccessReturn {
 
 				setBeswibUser(user)
 
-				// Check if user has admin role - roles is a string
-				if (user.roles !== 'admin') {
+				// Check if user has admin role - role is a string
+				if (user.role !== 'admin') {
 					if (redirectOnFail) {
 						router.push('/unauthorized')
 					}
@@ -74,7 +74,7 @@ export function useAdminAccess(redirectOnFail = true): UseAdminAccessReturn {
 	return {
 		user: beswibUser,
 		isLoading,
-		isAdmin: beswibUser?.roles === 'admin',
+		isAdmin: beswibUser?.role === 'admin',
 	}
 }
 
