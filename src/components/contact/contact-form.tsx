@@ -7,12 +7,11 @@ import type React from 'react'
 
 import globalTranslations from '@/components/global/locales.json'
 import { Textarea } from '@/components/ui/textareaAlt'
-import { getTranslations } from '@/lib/getDictionary'
 import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
 
 interface ContactFormProps {
-	t: ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
+	t: (typeof globalTranslations)['en']['contact']
 }
 
 export default function ContactForm({ t }: ContactFormProps) {

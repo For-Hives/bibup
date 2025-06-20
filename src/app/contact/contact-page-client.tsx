@@ -2,9 +2,8 @@
 
 import globalTranslations from '@/components/global/locales.json'
 import BentoGrid from '@/components/contact/bento-grid'
-import { getTranslations } from '@/lib/getDictionary'
 
-type Translations = ReturnType<typeof getTranslations<(typeof globalTranslations)['en']['contact'], 'en'>>
+type Translations = (typeof globalTranslations)['en']['contact']
 
 export default function ContactPageClient({ t }: { t: Translations }) {
 	return (
