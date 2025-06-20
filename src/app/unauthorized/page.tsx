@@ -5,11 +5,11 @@ import { getLocale } from '@/lib/getLocale'
 
 const unauthorizedTranslations = {
 	fr: {
-		title: 'Accès Refusé',
-		message: "Vous n'avez pas la permission d'accéder à cette page.",
-		contactSupport: 'Contacter le Support',
-		backToHome: "Retour à l'accueil",
-		adminRequired: 'Les privilèges administrateur sont requis pour voir ce contenu.',
+		title: 'Access Denied',
+		message: 'You do not have permission to access this page.',
+		contactSupport: 'Contact Support',
+		backToHome: 'Back to Home',
+		adminRequired: 'Administrator privileges are required to view this content.',
 	},
 	en: {
 		title: 'Access Denied',
@@ -54,9 +54,7 @@ export default async function UnauthorizedPage() {
 					{/* Additional help text */}
 					<div className="border-border/30 mt-8 border-t pt-6">
 						<p className="text-muted-foreground text-xs">
-							{locale === 'fr'
-								? "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur."
-								: 'If you believe this is an error, please contact the administrator.'}
+							If you believe this is an error, please contact the administrator.
 						</p>
 					</div>
 				</div>

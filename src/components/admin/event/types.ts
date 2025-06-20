@@ -80,9 +80,9 @@ export type Translations = ReturnType<typeof getTranslations<(typeof adminTransl
  * This is a helper function to determine the current locale
  */
 export function getLocaleFromTranslations(translations: Translations): string {
-	// Check if we have French translations (specific to French)
-	if (translations.event?.fields?.eventName?.label === "Nom de l'Événement") {
-		return 'fr'
+	// Check if we have different language translations
+	if (translations.event?.fields?.eventName?.label === 'Event Name') {
+		return 'en'
 	}
 	// Check if we have Korean translations (this would need to be added)
 	if (translations.event?.fields?.eventName?.label?.includes('한국')) {

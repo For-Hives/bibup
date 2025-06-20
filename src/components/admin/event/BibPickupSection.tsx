@@ -3,7 +3,7 @@ import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
-export default function BibPickupSection({ translations, register, locale = 'fr', errors }: EventSectionProps) {
+export default function BibPickupSection({ translations, register, locale = 'en', errors }: EventSectionProps) {
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div>
