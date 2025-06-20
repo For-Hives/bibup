@@ -160,9 +160,9 @@ function getFallbackTranslation<T, LocaleKey extends string>(
  * // }
  *
  * export default function Navbar() {
- *   const locale = "fr" // Récupéré depuis un système de détection de langue
+ *   const locale = "en" // Retrieved from a language detection system
  *
- *   // Appel de la fonction - elle combine automatiquement les traductions globales et de page
+ *   // Function call - automatically combines global and page translations
  *   const t = getTranslations(locale, pageTranslations)
  *
  *   // Utilisation :

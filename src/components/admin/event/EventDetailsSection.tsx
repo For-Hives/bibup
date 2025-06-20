@@ -10,7 +10,7 @@ export default function EventDetailsSection({
 	translations,
 	setValue,
 	register,
-	locale = 'fr',
+	locale = 'en',
 	errors,
 }: EventSectionProps) {
 	const handleFileUploadWithValidation = (files: File[]) => {

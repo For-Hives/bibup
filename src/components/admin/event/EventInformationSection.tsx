@@ -9,7 +9,7 @@ export default function EventInformationSection({
 	translations,
 	setValue,
 	register,
-	locale = 'fr',
+	locale = 'en',
 	formData,
 	errors,
 }: EventSectionProps) {

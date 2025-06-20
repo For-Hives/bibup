@@ -18,7 +18,7 @@ export function datetimeToDate(datetimeString: string): string {
  * @param locale - The locale ('en', 'fr', 'ko')
  * @returns Formatted date string
  */
-export function formatDateForDisplay(dateString: string, locale: string = 'fr'): string {
+export function formatDateForDisplay(dateString: string, locale: string = 'en'): string {
 	if (!dateString) return ''
 
 	try {
@@ -79,7 +79,7 @@ export function formatDateForInput(dateString: string): string {
  * @param locale - The locale ('en', 'fr', 'ko')
  * @returns Date format pattern
  */
-export function getDateFormatPattern(locale: string = 'fr'): string {
+export function getDateFormatPattern(locale: string = 'en'): string {
 	switch (locale) {
 		case 'en':
 			return 'mm/dd/yyyy'
@@ -97,7 +97,7 @@ export function getDateFormatPattern(locale: string = 'fr'): string {
  * @param locale - The locale ('en', 'fr', 'ko')
  * @returns Placeholder text
  */
-export function getDatePlaceholder(locale: string = 'fr'): string {
+export function getDatePlaceholder(locale: string = 'en'): string {
 	switch (locale) {
 		case 'en':
 			return 'mm/dd/yyyy'
