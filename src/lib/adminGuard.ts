@@ -1,4 +1,5 @@
 import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { User } from '@/models/user.model'
@@ -54,32 +55,29 @@ export async function getCurrentUser(): Promise<null | User> {
 export async function requireAdminAccess(): Promise<User> {
 	try {
 		// Get current user from Clerk
-		const authUser = await auth()
-		const clerkId = authUser.userId
-		console.log('authUser', authUser)
+		const { userId: clerkId } = await auth()
 
 		// Check if user is authenticated
-		if (authUser.userId === null || authUser.userId === undefined) {
-			// redirect('/sign-in?redirectUrl=' + encodeURIComponent('/admin/event'))
+		if (clerkId === null || clerkId === undefined) {
+			redirect('/sign-in?redirectUrl=' + encodeURIComponent('/admin/event'))
 		}
 
 		// Fetch user data from PocketBase
-		const user = await fetchUserByClerkId(authUser.userId)
+		const user = await fetchUserByClerkId(clerkId)
 
 		// Check if user exists in our database
 		if (!user) {
-			// redirect('/unauthorized')
+			redirect('/unauthorized')
 		}
 
 		// Check if user has admin role
 		if (!user.roles.includes('admin')) {
-			// redirect('/unauthorized')
+			redirect('/unauthorized')
 		}
 
 		return user
 	} catch (error) {
 		console.error('Error in requireAdminAccess:', error)
-		// redirect('/unauthorized')
-		return null
+		redirect('/unauthorized')
 	}
 }
