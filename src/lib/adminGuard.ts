@@ -1,5 +1,4 @@
 import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { User } from '@/models/user.model'
@@ -18,7 +17,7 @@ export async function checkAdminAccess(): Promise<null | User> {
 
 		const user = await fetchUserByClerkId(clerkId)
 
-		if (!user || user.role !== 'admin') {
+		if (!user?.roles.includes('admin')) {
 			return null
 		}
 
@@ -55,29 +54,32 @@ export async function getCurrentUser(): Promise<null | User> {
 export async function requireAdminAccess(): Promise<User> {
 	try {
 		// Get current user from Clerk
-		const { userId: clerkId } = await auth()
+		const authUser = await auth()
+		const clerkId = authUser.userId
+		console.log('authUser', authUser)
 
 		// Check if user is authenticated
-		if (clerkId === null || clerkId === undefined) {
-			redirect('/sign-in?redirectUrl=' + encodeURIComponent('/admin/event'))
+		if (authUser.userId === null || authUser.userId === undefined) {
+			// redirect('/sign-in?redirectUrl=' + encodeURIComponent('/admin/event'))
 		}
 
 		// Fetch user data from PocketBase
-		const user = await fetchUserByClerkId(clerkId)
+		const user = await fetchUserByClerkId(authUser.userId)
 
 		// Check if user exists in our database
 		if (!user) {
-			redirect('/unauthorized')
+			// redirect('/unauthorized')
 		}
 
 		// Check if user has admin role
-		if (user.role !== 'admin') {
-			redirect('/unauthorized')
+		if (!user.roles.includes('admin')) {
+			// redirect('/unauthorized')
 		}
 
 		return user
 	} catch (error) {
 		console.error('Error in requireAdminAccess:', error)
-		redirect('/unauthorized')
+		// redirect('/unauthorized')
+		return null
 	}
 }
