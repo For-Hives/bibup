@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
+import { motion } from 'framer-motion'
 import Fuse from 'fuse.js'
 
 import type { BibSale } from '@/components/marketplace/CardMarket'
@@ -140,7 +141,7 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		return sortBibs(filtered, sort)
 	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters, fuse])
 
-	const PAGE_SIZE = 50
+	const PAGE_SIZE = 25
 	const [page, setPage] = useState(1)
 	const [displayedBibs, setDisplayedBibs] = useState<BibSale[]>([])
 	const { ref, inView } = useInView({ threshold: 0 })
@@ -184,8 +185,15 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 			<OfferCounter count={filteredAndSortedBibs.length} onSortChange={setSort} sortValue={sort} />
 			{/* Grid of bib cards, responsive layout */}
 			<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{displayedBibs.map(bib => (
-					<CardMarket bibSale={bib} key={bib.id} />
+				{displayedBibs.map((bib, i) => (
+					<motion.div
+						animate={{ y: 0, opacity: 1 }}
+						initial={{ y: 30, opacity: 0 }}
+						key={bib.id}
+						transition={{ duration: 0.3, delay: i * 0.03 }}
+					>
+						<CardMarket bibSale={bib} />
+					</motion.div>
 				))}
 			</div>
 			{/* Sentinel for infinite scroll */}
