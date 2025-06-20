@@ -7,16 +7,18 @@ import { useRouter } from 'next/navigation'
 import EventCreationForm from '@/components/admin/event/event-creation-form'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
+import { User } from '@/models/user.model'
 
 import translations from '../../../app/admin/event/locales.json'
 
 interface AdminEventPageClientProps {
+	currentUser: User
 	translations: Translations
 }
 
 type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
-export default function AdminEventPageClient({ translations }: AdminEventPageClientProps) {
+export default function AdminEventPageClient({ translations, currentUser }: AdminEventPageClientProps) {
 	const router = useRouter()
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [createdEvent, setCreatedEvent] = useState<Event | null>(null)
@@ -47,5 +49,23 @@ export default function AdminEventPageClient({ translations }: AdminEventPageCli
 		)
 	}
 
-	return <EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} translations={translations} />
+	return (
+		<div>
+			{/* Admin header with user info */}
+			<div className="bg-card/50 border-border/30 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
+				<div className="flex items-center justify-between">
+					<div>
+						<p className="text-muted-foreground text-sm">Connected as</p>
+						<p className="text-foreground font-medium">
+							{currentUser.firstName} {currentUser.lastName} ({currentUser.email})
+						</p>
+					</div>
+					<div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">
+						{currentUser.role.toUpperCase()}
+					</div>
+				</div>
+			</div>
+			<EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} translations={translations} />
+		</div>
+	)
 }

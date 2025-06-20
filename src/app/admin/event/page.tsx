@@ -1,12 +1,16 @@
 import { getTranslations } from '@/lib/getDictionary'
+import { requireAdminAccess } from '@/lib/adminGuard'
 import { getLocale } from '@/lib/getLocale'
 
 import AdminEventPageClient from '../../../components/admin/event/AdminEventPageClient'
 import translations from './locales.json'
 
 export default async function AdminEventPage() {
+	// Verify admin access before rendering the page
+	const adminUser = await requireAdminAccess()
+
 	const locale = await getLocale()
 	const t = getTranslations(locale, translations)
 
-	return <AdminEventPageClient translations={t} />
+	return <AdminEventPageClient currentUser={adminUser} translations={t} />
 }
