@@ -91,5 +91,3 @@ export function getLocaleFromTranslations(translations: Translations): string {
 	// Default to English if no specific match
 	return 'en'
 }
-
-// @AdminEventPageClient.tsx @event-creation-form.tsx @BibPickupSection.tsx @EventDetailsSection.tsx @EventInformationSection.tsx @EventOptionCard.tsx @EventOptionsSection.tsx @types.ts @FakerButton.tsx @PartnershipSection.tsx aide moi à  récupérer le user actuel, et rediriger sur une page d'erreur spécifique pour dire qu'il ne doit pas être là
