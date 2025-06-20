@@ -45,7 +45,7 @@ export function formatDateForDisplay(dateString: string, locale: string = 'en'):
 					day: 'numeric',
 				})
 			default:
-				return date.toLocaleDateString('fr-FR', {
+				return date.toLocaleDateString('en-US', {
 					year: 'numeric',
 					month: 'long',
 					day: 'numeric',
