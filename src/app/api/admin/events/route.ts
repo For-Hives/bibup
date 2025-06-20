@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 
+import { fetchUserByClerkId } from '@/services/user.services'
 import { createEvent } from '@/services/event.services'
 import { Event } from '@/models/event.model'
 
@@ -10,6 +11,16 @@ export async function POST(request: NextRequest) {
 		const { userId } = await auth()
 		if (userId === null || userId === undefined || userId === '') {
 			return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+		}
+
+		// Check if user has admin role
+		const user = await fetchUserByClerkId(userId)
+		if (!user) {
+			return NextResponse.json({ message: 'User not found' }, { status: 404 })
+		}
+
+		if (user.roles !== 'admin') {
+			return NextResponse.json({ message: 'Forbidden: Admin access required' }, { status: 403 })
 		}
 
 		// Parse the form data
