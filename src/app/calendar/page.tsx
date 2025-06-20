@@ -1,8 +1,7 @@
-import Link from 'next/link'
+import type { Event } from '@/models/event.model'
 
-import type { Event } from '@/models/event.model' // Adjust path as necessary
-
-import { fetchApprovedPublicEvents } from '@/services/event.services' // Adjust path as necessary
+import CalendarEventList from '@/components/calendar/CalendarEventList'
+import { fetchApprovedPublicEvents } from '@/services/event.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { getLocale } from '@/lib/getLocale'
 
@@ -39,42 +38,11 @@ export default async function CalendarPage() {
 	return (
 		<div className="p-5 font-sans">
 			<header className="mb-8 text-center">
-				<h1>{t.calendar.title}</h1>
-				<p>{t.calendar.description}</p>
+				<h1 className="text-3xl font-bold">{t.calendar.title}</h1>
+				<p className="text-lg text-gray-600">{t.calendar.description}</p>
 			</header>
 
-			<main className="mx-auto max-w-4xl">
-				{sortedMonthKeys.length > 0 ? (
-					sortedMonthKeys.map(monthKey => (
-						<section className="mb-8" key={monthKey}>
-							<h2 className="mb-5 border-b-2 border-gray-200 pb-2.5 text-2xl">{monthKey}</h2>
-							<ul className="list-none p-0">
-								{groupedEvents[monthKey].map(event => (
-									<li className="mb-4 rounded-md border border-gray-300 bg-gray-100 p-2.5" key={event.id}>
-										<Link className="text-lg font-bold text-blue-700 no-underline" href={`/events/${event.id}`}>
-											{event.name}
-										</Link>
-										<p className="mt-1">
-											<strong>Date:</strong> {new Date(event.eventDate).toLocaleDateString()}
-										</p>
-										<p className="mt-1">
-											<strong>Location:</strong> {event.location}
-										</p>
-										{event.description != null && event.description !== '' && (
-											<p className="mt-1 text-sm text-gray-600">
-												{event.description.substring(0, 100)}
-												{event.description.length > 100 ? '...' : ''}
-											</p>
-										)}
-									</li>
-								))}
-							</ul>
-						</section>
-					))
-				) : (
-					<p className="text-center text-lg">{t.calendar.noEvents}</p>
-				)}
-			</main>
+			<CalendarEventList groupedEvents={groupedEvents} sortedMonthKeys={sortedMonthKeys} t={t} />
 		</div>
 	)
 }
