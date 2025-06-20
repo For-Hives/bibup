@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+	trailingSlash: true,
 	images: {
 		remotePatterns: [
 			{
@@ -25,6 +26,7 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	// eslint-disable-next-line @typescript-eslint/require-await
 	async headers() {
 		return [
 			{

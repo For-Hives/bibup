@@ -4,18 +4,18 @@ import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
+import { Locale } from '@/lib/i18n-config'
+
 import CardMarketSimplified, { BibSaleSimplified } from '../CardMarketSimplified'
 
 export const HeroAnimation = ({
-	translations,
 	runs,
+	locale,
 	autoplay = true,
 }: {
 	autoplay?: boolean
+	locale: Locale
 	runs: BibSaleSimplified[]
-	translations?: {
-		participants: string
-	}
 }) => {
 	const [active, setActive] = useState(0)
 	const [isMounted, setIsMounted] = useState(false)
@@ -60,7 +60,7 @@ export const HeroAnimation = ({
 			<div className="relative w-full pb-32 md:pb-40">
 				<div className="relative h-116 w-full md:translate-x-1/3">
 					<div className="absolute inset-0 origin-bottom">
-						<CardMarketSimplified bibSaleSimplified={runs[0]} translations={translations} />
+						<CardMarketSimplified bibSaleSimplified={runs[0]} locale={locale} />
 					</div>
 				</div>
 			</div>
@@ -100,7 +100,7 @@ export const HeroAnimation = ({
 									duration: 0.4,
 								}}
 							>
-								<CardMarketSimplified bibSaleSimplified={run} translations={translations} />
+								<CardMarketSimplified bibSaleSimplified={run} locale={locale} />
 							</motion.div>
 						))}
 					</AnimatePresence>

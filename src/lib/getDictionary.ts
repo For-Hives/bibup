@@ -22,7 +22,6 @@ import globalLocalesData from './globalLocales.json'
  * - If a language doesn't exist, it uses English as default
  * - If the globalLocales.json file doesn't exist, it uses default values
  */
-import 'server-only'
 
 // TYPE DEFINITIONS (so TypeScript understands the data structure)
 // ================================================================

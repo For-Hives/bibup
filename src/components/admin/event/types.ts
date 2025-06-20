@@ -5,7 +5,7 @@ import * as v from 'valibot'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 
-import adminTranslations from '../../../app/admin/event/create/locales.json'
+import adminTranslations from '@/app/[locale]/event/create/locales.json'
 
 // Validation Schema using Valibot
 export const EventCreationSchema = v.pipe(

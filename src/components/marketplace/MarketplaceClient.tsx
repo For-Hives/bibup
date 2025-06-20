@@ -8,6 +8,7 @@ import type { BibSale } from '@/components/marketplace/CardMarket'
 
 import OfferCounter from '@/components/marketplace/offerCounter'
 import CardMarket from '@/components/marketplace/CardMarket'
+import { Locale } from '@/lib/i18n-config'
 
 import Searchbar from './searchbar'
 
@@ -22,6 +23,7 @@ type AdvancedFilters = {
 // Props for the MarketplaceClient: receives an array of bibs to display
 interface MarketplaceClientProps {
 	readonly bibs: BibSale[]
+	locale: Locale
 }
 
 // --- Helper function to get the min/max range for each distance filter
@@ -64,7 +66,9 @@ const sortBibs = (bibs: BibSale[], sort: string) => {
 }
 
 // --- Main client component for the marketplace grid and filters
-export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function MarketplaceClient({ locale, bibs }: MarketplaceClientProps) {
+	// TODO: translations -> locale
 	// --- State for sorting, search term, selected sport, selected distance, and advanced filters
 	const [sort, setSort] = useState('date') // Current sort option
 	const [searchTerm, setSearchTerm] = useState('') // Search term for fuzzy search

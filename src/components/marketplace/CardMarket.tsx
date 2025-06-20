@@ -172,8 +172,8 @@ function formatDateWithLocale(date: Date, locale?: null | string): string {
 		}
 
 		// Use provided locale, or automatically detect browser locale
-		const targetLocale = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
-		const dateTime = dt.setLocale(targetLocale)
+		const targetLocaleFromPath = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
+		const dateTime = dt.setLocale(targetLocaleFromPath)
 
 		// Check if locale is valid after configuration
 		if (!dateTime.isValid) {

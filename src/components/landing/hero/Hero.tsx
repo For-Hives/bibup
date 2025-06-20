@@ -1,19 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import landingTranslations from '@/app/[locale]/locales.json'
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
-import landingTranslations from '@/app/locales.json'
-import { getLocale } from '@/lib/getLocale'
 
-import marketplaceTranslations from '../../marketplace/locales.json'
 import { HeroAnimation } from './HeroAnimation'
 import heroTranslations from './locales.json'
 
-export default async function Hero() {
-	const locale = await getLocale()
+export default async function Hero({ localeParams }: { localeParams: Promise<LocaleParams> }) {
+	const { locale } = await localeParams
+
 	const t = getTranslations(locale, heroTranslations)
 	const landingT = getTranslations(locale, landingTranslations)
-	const marketplaceT = getTranslations(locale, marketplaceTranslations)
 
 	// Static data that doesn't need translation
 	const runStaticData = [
@@ -116,7 +115,7 @@ export default async function Hero() {
 						</div>
 					</div>
 					<div className="col-span-12 md:col-span-7">
-						<HeroAnimation runs={runs} translations={{ participants: marketplaceT.participants }} />
+						<HeroAnimation locale={locale} runs={runs} />
 					</div>
 				</div>
 			</div>

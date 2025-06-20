@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import { EventOption } from '@/models/eventOption.model'
 
-import { EventCreationFormProps, EventCreationSchema, EventFormData, getLocaleFromTranslations } from './types'
+import { EventCreationFormProps, EventCreationSchema, EventFormData } from './types'
 import EventInformationSection from './EventInformationSection'
 import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
@@ -24,7 +24,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
 
 	// Extract locale from translations
-	const locale = getLocaleFromTranslations(translations)
+	const locale = 'fr' // Use default locale for admin client component
 
 	const {
 		watch,
