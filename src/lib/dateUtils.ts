@@ -2,6 +2,10 @@
  * Utility functions for date handling and localization
  */
 
+import { DateTime } from 'luxon'
+
+import { Locale } from './i18n-config'
+
 /**
  * Converts a datetime-local string to a date string (YYYY-MM-DD)
  * @param datetimeString - The datetime string (YYYY-MM-DDTHH:mm format)
@@ -71,6 +75,31 @@ export function formatDateForInput(dateString: string): string {
 	} catch (error) {
 		console.error('Error formatting date for input:', error)
 		return ''
+	}
+}
+
+// Helper function to format date with Luxon safely
+export function formatDateWithLocale(date: Date, locale: Locale): string {
+	try {
+		const dt = DateTime.fromJSDate(date)
+		if (!dt.isValid) {
+			return new Date(date).toLocaleDateString()
+		}
+
+		// Use provided locale, or automatically detect browser locale
+		const targetLocaleFromPath = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
+		const dateTime = dt.setLocale(targetLocaleFromPath)
+
+		// Check if locale is valid after configuration
+		if (!dateTime.isValid) {
+			// If locale is not supported, use default locale
+			return dt.toLocaleString(DateTime.DATE_MED)
+		}
+
+		return dateTime.toLocaleString(DateTime.DATE_MED)
+	} catch {
+		// Fallback to native JavaScript Date formatting
+		return new Date(date).toLocaleDateString()
 	}
 }
 

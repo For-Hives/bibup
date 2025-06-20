@@ -9,7 +9,7 @@ import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 import { User } from '@/models/user.model'
 
-import translations from '../../../app/admin/event/create/locales.json'
+import translations from '@/app/[locale]/event/create/locales.json'
 
 interface AdminEventPageClientProps {
 	currentUser: null | User

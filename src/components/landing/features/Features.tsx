@@ -1,13 +1,14 @@
 import { Calendar, ChartBar, CreditCard, Globe, Mail, Search, Star, Users } from 'lucide-react'
 
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 import { cn } from '@/lib/utils'
 
 import translations from './locales.json'
 
-export default async function FeaturesBento() {
-	const locale = await getLocale()
+export default async function FeaturesBento({ localeParams }: { localeParams: Promise<LocaleParams> }) {
+	const { locale } = await localeParams
+
 	const t = getTranslations(locale, translations)
 
 	const features = [

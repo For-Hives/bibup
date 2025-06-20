@@ -2,9 +2,12 @@
 
 import { Calendar, MapPinned, User } from 'lucide-react'
 
-import { DateTime } from 'luxon'
 import Image from 'next/image'
 
+import marketplaceTranslations from '@/components/marketplace/locales.json'
+import { formatDateWithLocale } from '@/lib/dateUtils'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 import { cn } from '@/lib/utils'
 
 export interface BibSaleSimplified {
@@ -23,12 +26,12 @@ export interface BibSaleSimplified {
 
 interface CardMarketSimplifiedProps {
 	bibSaleSimplified: BibSaleSimplified
-	translations?: {
-		participants: string
-	}
+	locale: Locale
 }
 
-export default function CardMarketSimplified({ translations, bibSaleSimplified }: CardMarketSimplifiedProps) {
+export default function CardMarketSimplified({ locale, bibSaleSimplified }: CardMarketSimplifiedProps) {
+	const translations = getTranslations(locale, marketplaceTranslations).participants
+
 	return (
 		<div className="w-full max-w-xs">
 			<div className="bg-card/80 border-border relative flex flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
@@ -73,7 +76,7 @@ export default function CardMarketSimplified({ translations, bibSaleSimplified }
 					<div className="flex items-center gap-3">
 						<Calendar className="h-5 w-5" />
 						<p className="text-muted-foreground text-xs leading-relaxed">
-							{formatDateWithLocale(bibSaleSimplified.event.date)}
+							{formatDateWithLocale(bibSaleSimplified.event.date, locale)}
 						</p>
 					</div>
 					<div className="flex items-center gap-3">
@@ -92,39 +95,13 @@ export default function CardMarketSimplified({ translations, bibSaleSimplified }
 					<div className="flex items-center gap-2 pb-2">
 						<User className="h-5 w-5" />
 						<p className="text-muted-foreground text-xs leading-relaxed">
-							{formatParticipantCount(bibSaleSimplified.event.participantCount)}{' '}
-							{translations?.participants ?? 'participants'}
+							{formatParticipantCount(bibSaleSimplified.event.participantCount)} {translations ?? 'participants'}
 						</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	)
-}
-
-// Helper function to format date with Luxon safely
-function formatDateWithLocale(date: Date, locale?: null | string): string {
-	try {
-		const dt = DateTime.fromJSDate(date)
-		if (!dt.isValid) {
-			return new Date(date).toLocaleDateString()
-		}
-
-		// Use provided locale, or automatically detect browser locale
-		const targetLocale = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
-		const dateTime = dt.setLocale(targetLocale)
-
-		// Check if locale is valid after configuration
-		if (!dateTime.isValid) {
-			// If locale is not supported, use default locale
-			return dt.toLocaleString(DateTime.DATE_MED)
-		}
-
-		return dateTime.toLocaleString(DateTime.DATE_MED)
-	} catch {
-		// Fallback to native JavaScript Date formatting
-		return new Date(date).toLocaleDateString()
-	}
 }
 
 function formatParticipantCount(participantCount: number) {

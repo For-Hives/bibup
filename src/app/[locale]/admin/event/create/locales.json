@@ -1,0 +1,275 @@
+{
+	"en": {
+		"events": {
+			"title": "Event Management",
+			"subtitle": "Manage all events, partnerships, and configurations from this central hub.",
+			"sections": {
+				"overview": {
+					"title": "Events Overview",
+					"description": "View and manage all events in the system"
+				},
+				"actions": {
+					"title": "Quick Actions",
+					"description": "Common administrative tasks for event management"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total Events",
+				"activeEvents": "Active Events",
+				"upcomingEvents": "Upcoming Events",
+				"pastEvents": "Past Events",
+				"partneredEvents": "Partnered Events",
+				"draftEvents": "Draft Events"
+			},
+			"actions": {
+				"createEvent": "Create New Event",
+				"createEventDescription": "Add a new event to the platform",
+				"importEvents": "Import Events",
+				"importEventsDescription": "Bulk import events from external sources",
+				"manageCategories": "Manage Categories",
+				"manageCategoriesDescription": "Organize events by categories and types"
+			},
+			"table": {
+				"columns": {
+					"name": "Event Name",
+					"date": "Date",
+					"distance": "Distance",
+					"type": "Type",
+					"participants": "Participants",
+					"partnered": "Partnered",
+					"actions": "Actions"
+				},
+				"status": {
+					"active": "Active",
+					"upcoming": "Upcoming",
+					"past": "Past",
+					"draft": "Draft",
+					"cancelled": "Cancelled"
+				},
+				"actions": {
+					"edit": "Edit",
+					"view": "View",
+					"delete": "Delete",
+					"duplicate": "Duplicate"
+				},
+				"empty": {
+					"title": "No events found",
+					"description": "Get started by creating your first event",
+					"createButton": "Create Event"
+				},
+				"controls": {
+					"selectAll": "Select all",
+					"selectRow": "Select row",
+					"clearFilter": "Clear filter",
+					"toggleColumns": "Toggle columns",
+					"rowsPerPage": "Rows per page",
+					"deleteSelected": "Delete",
+					"confirmDelete": "Are you absolutely sure?",
+					"deleteDescription": "This action cannot be undone. This will permanently delete",
+					"cancel": "Cancel",
+					"yes": "Yes",
+					"no": "No"
+				}
+			},
+			"filters": {
+				"all": "All Events",
+				"active": "Active",
+				"upcoming": "Upcoming",
+				"past": "Past",
+				"partnered": "Partnered",
+				"search": "Search events..."
+			},
+			"ui": {
+				"comingSoon": "Coming Soon",
+				"loading": "Loading...",
+				"refreshing": "Refreshing...",
+				"accessError": "Access Error",
+				"accessErrorDescription": "Unable to verify admin access. Please try logging in again.",
+				"signIn": "Sign In",
+				"connectedAs": "Connected as"
+			}
+		}
+	},
+	"fr": {
+		"events": {
+			"title": "Gestion des Événements",
+			"subtitle": "Gérez tous les événements, partenariats et configurations depuis ce hub central.",
+			"sections": {
+				"overview": {
+					"title": "Aperçu des Événements",
+					"description": "Visualisez et gérez tous les événements du système"
+				},
+				"actions": {
+					"title": "Actions Rapides",
+					"description": "Tâches administratives courantes pour la gestion des événements"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total Événements",
+				"activeEvents": "Événements Actifs",
+				"upcomingEvents": "Événements à Venir",
+				"pastEvents": "Événements Passés",
+				"partneredEvents": "Événements Partenaires",
+				"draftEvents": "Brouillons"
+			},
+			"actions": {
+				"createEvent": "Créer un Nouvel Événement",
+				"createEventDescription": "Ajouter un nouvel événement à la plateforme",
+				"importEvents": "Importer des Événements",
+				"importEventsDescription": "Importation en masse d'événements depuis des sources externes",
+				"manageCategories": "Gérer les Catégories",
+				"manageCategoriesDescription": "Organiser les événements par catégories et types"
+			},
+			"table": {
+				"columns": {
+					"name": "Nom de l'Événement",
+					"date": "Date",
+					"distance": "Distance",
+					"type": "Type",
+					"participants": "Participants",
+					"partnered": "Partenaire",
+					"actions": "Actions"
+				},
+				"status": {
+					"active": "Actif",
+					"upcoming": "À Venir",
+					"past": "Passé",
+					"draft": "Brouillon",
+					"cancelled": "Annulé"
+				},
+				"actions": {
+					"edit": "Modifier",
+					"view": "Voir",
+					"delete": "Supprimer",
+					"duplicate": "Dupliquer"
+				},
+				"empty": {
+					"title": "Aucun événement trouvé",
+					"description": "Commencez par créer votre premier événement",
+					"createButton": "Créer un Événement"
+				},
+				"controls": {
+					"selectAll": "Tout sélectionner",
+					"selectRow": "Sélectionner la ligne",
+					"clearFilter": "Effacer le filtre",
+					"toggleColumns": "Basculer les colonnes",
+					"rowsPerPage": "Lignes par page",
+					"deleteSelected": "Supprimer",
+					"confirmDelete": "Êtes-vous absolument sûr ?",
+					"deleteDescription": "Cette action ne peut pas être annulée. Cela supprimera définitivement",
+					"cancel": "Annuler",
+					"yes": "Oui",
+					"no": "Non"
+				}
+			},
+			"filters": {
+				"all": "Tous les Événements",
+				"active": "Actifs",
+				"upcoming": "À Venir",
+				"past": "Passés",
+				"partnered": "Partenaires",
+				"search": "Rechercher des événements..."
+			},
+			"ui": {
+				"comingSoon": "Bientôt Disponible",
+				"loading": "Chargement...",
+				"refreshing": "Actualisation...",
+				"accessError": "Erreur d'Accès",
+				"accessErrorDescription": "Impossible de vérifier l'accès administrateur. Veuillez vous reconnecter.",
+				"signIn": "Se Connecter",
+				"connectedAs": "Connecté en tant que"
+			}
+		}
+	},
+	"ko": {
+		"events": {
+			"title": "이벤트 관리",
+			"subtitle": "이 중앙 허브에서 모든 이벤트, 파트너십 및 구성을 관리하세요.",
+			"sections": {
+				"overview": {
+					"title": "이벤트 개요",
+					"description": "시스템의 모든 이벤트를 보고 관리합니다"
+				},
+				"actions": {
+					"title": "빠른 작업",
+					"description": "이벤트 관리를 위한 일반적인 관리 작업"
+				}
+			},
+			"stats": {
+				"totalEvents": "총 이벤트",
+				"activeEvents": "활성 이벤트",
+				"upcomingEvents": "예정된 이벤트",
+				"pastEvents": "지난 이벤트",
+				"partneredEvents": "파트너 이벤트",
+				"draftEvents": "초안"
+			},
+			"actions": {
+				"createEvent": "새 이벤트 만들기",
+				"createEventDescription": "플랫폼에 새 이벤트 추가",
+				"importEvents": "이벤트 가져오기",
+				"importEventsDescription": "외부 소스에서 이벤트 대량 가져오기",
+				"manageCategories": "카테고리 관리",
+				"manageCategoriesDescription": "카테고리 및 유형별로 이벤트 정리"
+			},
+			"table": {
+				"columns": {
+					"name": "이벤트 이름",
+					"date": "날짜",
+					"distance": "거리",
+					"type": "유형",
+					"participants": "참가자",
+					"partnered": "파트너",
+					"actions": "작업"
+				},
+				"status": {
+					"active": "활성",
+					"upcoming": "예정",
+					"past": "지난",
+					"draft": "초안",
+					"cancelled": "취소됨"
+				},
+				"actions": {
+					"edit": "편집",
+					"view": "보기",
+					"delete": "삭제",
+					"duplicate": "복제"
+				},
+				"empty": {
+					"title": "이벤트를 찾을 수 없습니다",
+					"description": "첫 번째 이벤트를 만들어 시작하세요",
+					"createButton": "이벤트 만들기"
+				},
+				"controls": {
+					"selectAll": "모두 선택",
+					"selectRow": "행 선택",
+					"clearFilter": "필터 지우기",
+					"toggleColumns": "열 토글",
+					"rowsPerPage": "페이지당 행 수",
+					"deleteSelected": "삭제",
+					"confirmDelete": "정말 확실합니까?",
+					"deleteDescription": "이 작업은 되돌릴 수 없습니다. 영구적으로 삭제됩니다",
+					"cancel": "취소",
+					"yes": "예",
+					"no": "아니오"
+				}
+			},
+			"filters": {
+				"all": "모든 이벤트",
+				"active": "활성",
+				"upcoming": "예정",
+				"past": "지난",
+				"partnered": "파트너",
+				"search": "이벤트 검색..."
+			},
+			"ui": {
+				"comingSoon": "곧 출시",
+				"loading": "로딩 중...",
+				"refreshing": "새로고침 중...",
+				"accessError": "접근 오류",
+				"accessErrorDescription": "관리자 접근을 확인할 수 없습니다. 다시 로그인해 주세요.",
+				"signIn": "로그인",
+				"connectedAs": "다음으로 연결됨"
+			}
+		}
+	}
+}

@@ -6,15 +6,15 @@ import { checkAdminAccess } from '@/guard/adminGuard'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
 
 import pageTranslationsData from './locales.json'
 
-export default async function Header() {
+export default async function Header({ localeParams }: { localeParams: Promise<LocaleParams> }) {
 	const user = await checkAdminAccess()
 
-	const locale: string = await getLocale()
+	const { locale } = await localeParams
 
 	const t = getTranslations(locale, pageTranslationsData)
 

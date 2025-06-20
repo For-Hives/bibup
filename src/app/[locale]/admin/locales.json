@@ -1,0 +1,197 @@
+{
+	"en": {
+		"dashboard": {
+			"title": "Admin Dashboard",
+			"subtitle": "Manage your Beswib platform",
+			"sections": {
+				"overview": {
+					"title": "Platform Overview",
+					"description": "Key metrics and statistics"
+				},
+				"events": {
+					"title": "Events Management",
+					"description": "Manage racing events and approvals"
+				},
+				"bibs": {
+					"title": "Bibs Management",
+					"description": "Oversee bib listings and validations"
+				},
+				"users": {
+					"title": "Users Management",
+					"description": "Manage platform users and roles"
+				},
+				"transactions": {
+					"title": "Transactions",
+					"description": "Monitor payments and financial activity"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total Events",
+				"pendingEvents": "Pending Events",
+				"totalBibs": "Total Bibs",
+				"pendingBibs": "Pending Validation",
+				"totalUsers": "Total Users",
+				"todaysTransactions": "Today's Transactions",
+				"platformGrowth": "Platform growth",
+				"revenueToday": "revenue today"
+			},
+			"actions": {
+				"createEvent": "Create New Event",
+				"createEventDescription": "Create and configure new racing events for the platform",
+				"viewEvents": "View Events",
+				"viewEventsDescription": "Browse and manage all racing events on the platform",
+				"validateEvents": "Validate Events",
+				"validateEventsDescription": "Review and approve events proposed by organizers",
+				"reviewBibs": "Review Pending Bibs",
+				"manageUsers": "Manage Users",
+				"viewTransactions": "View All Transactions",
+				"viewReports": "View Reports"
+			},
+			"recentActivity": {
+				"title": "Recent Activity",
+				"description": "View recent platform activity and system events",
+				"noBibsPending": "No bibs pending validation",
+				"noRecentActivity": "No recent activity"
+			},
+			"ui": {
+				"connectedAs": "Connected as",
+				"comingSoon": "Coming Soon",
+				"signIn": "Sign In"
+			},
+			"errors": {
+				"accessError": "Access Error",
+				"accessErrorMessage": "Unable to verify admin access. Please try logging in again."
+			}
+		}
+	},
+	"fr": {
+		"dashboard": {
+			"title": "Tableau de bord Admin",
+			"subtitle": "Gérez votre plateforme Beswib",
+			"sections": {
+				"overview": {
+					"title": "Vue d'ensemble de la plateforme",
+					"description": "Métriques clés et statistiques"
+				},
+				"events": {
+					"title": "Gestion des événements",
+					"description": "Gérer les événements de course et les approbations"
+				},
+				"bibs": {
+					"title": "Gestion des dossards",
+					"description": "Superviser les annonces de dossards et les validations"
+				},
+				"users": {
+					"title": "Gestion des utilisateurs",
+					"description": "Gérer les utilisateurs de la plateforme et les rôles"
+				},
+				"transactions": {
+					"title": "Transactions",
+					"description": "Surveiller les paiements et l'activité financière"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total des événements",
+				"pendingEvents": "Événements en attente",
+				"totalBibs": "Total des dossards",
+				"pendingBibs": "En attente de validation",
+				"totalUsers": "Total des utilisateurs",
+				"todaysTransactions": "Transactions du jour",
+				"platformGrowth": "Croissance de la plateforme",
+				"revenueToday": "revenus aujourd'hui"
+			},
+			"actions": {
+				"createEvent": "Créer un nouvel événement",
+				"createEventDescription": "Créer et configurer de nouveaux événements de course pour la plateforme",
+				"viewEvents": "Voir les événements",
+				"viewEventsDescription": "Parcourir et gérer tous les événements de course sur la plateforme",
+				"validateEvents": "Valider les événements",
+				"validateEventsDescription": "Examiner et approuver les événements proposés par les organisateurs",
+				"reviewBibs": "Examiner les dossards en attente",
+				"manageUsers": "Gérer les utilisateurs",
+				"viewTransactions": "Voir toutes les transactions",
+				"viewReports": "Voir les rapports"
+			},
+			"recentActivity": {
+				"title": "Activité récente",
+				"description": "Voir l'activité récente de la plateforme et les événements système",
+				"noBibsPending": "Aucun dossard en attente de validation",
+				"noRecentActivity": "Aucune activité récente"
+			},
+			"ui": {
+				"connectedAs": "Connecté en tant que",
+				"comingSoon": "Bientôt disponible",
+				"signIn": "Se connecter"
+			},
+			"errors": {
+				"accessError": "Erreur d'accès",
+				"accessErrorMessage": "Impossible de vérifier l'accès administrateur. Veuillez vous reconnecter."
+			}
+		}
+	},
+	"ko": {
+		"dashboard": {
+			"title": "관리자 대시보드",
+			"subtitle": "Beswib 플랫폼을 관리하세요",
+			"sections": {
+				"overview": {
+					"title": "플랫폼 개요",
+					"description": "주요 지표 및 통계"
+				},
+				"events": {
+					"title": "이벤트 관리",
+					"description": "레이싱 이벤트 및 승인 관리"
+				},
+				"bibs": {
+					"title": "비브 관리",
+					"description": "비브 목록 및 검증 관리"
+				},
+				"users": {
+					"title": "사용자 관리",
+					"description": "플랫폼 사용자 및 역할 관리"
+				},
+				"transactions": {
+					"title": "거래",
+					"description": "결제 및 금융 활동 모니터링"
+				}
+			},
+			"stats": {
+				"totalEvents": "총 이벤트",
+				"pendingEvents": "대기 중인 이벤트",
+				"totalBibs": "총 비브",
+				"pendingBibs": "검증 대기 중",
+				"totalUsers": "총 사용자",
+				"todaysTransactions": "오늘의 거래",
+				"platformGrowth": "플랫폼 성장",
+				"revenueToday": "오늘 수익"
+			},
+			"actions": {
+				"createEvent": "새 이벤트 생성",
+				"createEventDescription": "플랫폼을 위한 새로운 레이싱 이벤트 생성 및 구성",
+				"viewEvents": "이벤트 보기",
+				"viewEventsDescription": "플랫폼의 모든 레이싱 이벤트 탐색 및 관리",
+				"validateEvents": "이벤트 검증",
+				"validateEventsDescription": "주최자가 제안한 이벤트 검토 및 승인",
+				"reviewBibs": "대기 중인 비브 검토",
+				"manageUsers": "사용자 관리",
+				"viewTransactions": "모든 거래 보기",
+				"viewReports": "보고서 보기"
+			},
+			"recentActivity": {
+				"title": "최근 활동",
+				"description": "최근 플랫폼 활동 및 시스템 이벤트 보기",
+				"noBibsPending": "검증 대기 중인 비브가 없습니다",
+				"noRecentActivity": "최근 활동이 없습니다"
+			},
+			"ui": {
+				"connectedAs": "로그인:",
+				"comingSoon": "곧 출시",
+				"signIn": "로그인"
+			},
+			"errors": {
+				"accessError": "접근 오류",
+				"accessErrorMessage": "관리자 접근을 확인할 수 없습니다. 다시 로그인해 주세요."
+			}
+		}
+	}
+}
