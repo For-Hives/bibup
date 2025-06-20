@@ -88,29 +88,5 @@ export async function fetchUserById(userId: string): Promise<null | User> {
  * @param user The user object to check.
  */
 export function isAdmin(user: null | User): boolean {
-	return user?.roles === 'admin'
-}
-
-/**
- * Updates a user's role in PocketBase.
- * @param userId The PocketBase record ID of the user.
- * @param newRole The new role to assign to the user.
- */
-export async function updateUserRole(userId: string, newRole: 'admin' | 'user'): Promise<null | User> {
-	if (userId === '') {
-		console.error('User ID is required to update user role.')
-		return null
-	}
-
-	try {
-		const updatedUser = await pb.collection('users').update<User>(userId, {
-			roles: newRole,
-		})
-
-		return updatedUser
-	} catch (error: unknown) {
-		throw new Error(
-			`Error updating role for user ${userId}: ` + (error instanceof Error ? error.message : String(error))
-		)
-	}
+	return user?.role === 'admin'
 }

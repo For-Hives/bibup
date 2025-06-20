@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 		}
 
 		const userData: Omit<User, 'id'> = {
-			roles: 'user',
+			role: 'user',
 			lastName: last_name ?? '',
 			firstName: first_name ?? '',
 			email: primaryEmail,
@@ -86,10 +86,10 @@ export async function POST(req: Request) {
 
 			// Update Clerk user metadata with default role
 			// Note: public_metadata from the event might not be up-to-date if it was just created.
-			// We explicitly set the roles we want as the default.
+			// We explicitly set the role we want as the default.
 			// await clerkClient.users.updateUserMetadata(clerkId, {
 			//   publicMetadata: {
-			//     roles: ["buyer"], // Default role
+			//     role: ["buyer"], // Default role
 			//   },
 			// });
 

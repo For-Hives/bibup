@@ -18,7 +18,7 @@ export async function checkAdminAccess(): Promise<null | User> {
 
 		const user = await fetchUserByClerkId(clerkId)
 
-		if (user === null || user.roles !== 'admin') {
+		if (user === null || user.role !== 'admin') {
 			return null
 		}
 
@@ -71,7 +71,7 @@ export async function requireAdminAccess(): Promise<User> {
 		}
 
 		// Check if user has admin role
-		if (user.roles !== 'admin') {
+		if (user.role !== 'admin') {
 			redirect('/unauthorized')
 		}
 
