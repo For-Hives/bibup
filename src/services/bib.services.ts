@@ -346,8 +346,14 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 
 		return updatedRecord
 	} catch (error: unknown) {
-		if (error != null && typeof error === 'object' && 'message' in error) {
-			console.error('PocketBase error details:', (error as { message: string }).message)
+		if (
+			error != null &&
+			typeof error === 'object' &&
+			'message' in error &&
+			typeof (error as { message: unknown }).message === 'string'
+		) {
+			const errorMessage = (error as { message: string }).message
+			console.error('PocketBase error details:', errorMessage)
 		}
 		throw new Error(
 			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error))

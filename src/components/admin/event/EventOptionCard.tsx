@@ -11,7 +11,7 @@ interface EventOptionCardProps {
 	onAddValue: (optionIndex: number) => void
 	onRemove: (index: number) => void
 	onRemoveValue: (optionIndex: number, valueIndex: number) => void
-	onUpdate: (index: number, field: keyof EventOption, value: any) => void
+	onUpdate: (index: number, field: keyof EventOption, value: boolean | string | string[]) => void
 	onUpdateValue: (optionIndex: number, valueIndex: number, value: string) => void
 	option: EventOption
 	optionIndex: number

@@ -74,16 +74,16 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 				if (data.officialStandardPrice !== undefined) {
 					formDataToSend.append('officialStandardPrice', data.officialStandardPrice.toString())
 				}
-				if (data.transferDeadline) {
+				if (data.transferDeadline !== undefined && data.transferDeadline !== null && data.transferDeadline !== '') {
 					formDataToSend.append('transferDeadline', new Date(data.transferDeadline).toISOString())
 				}
-				if (data.parcoursUrl) {
+				if (data.parcoursUrl !== undefined && data.parcoursUrl !== null && data.parcoursUrl !== '') {
 					formDataToSend.append('parcoursUrl', data.parcoursUrl)
 				}
-				if (data.registrationUrl) {
+				if (data.registrationUrl !== undefined && data.registrationUrl !== null && data.registrationUrl !== '') {
 					formDataToSend.append('registrationUrl', data.registrationUrl)
 				}
-				if (data.bibPickupLocation) {
+				if (data.bibPickupLocation !== undefined && data.bibPickupLocation !== null && data.bibPickupLocation !== '') {
 					formDataToSend.append('bibPickupLocation', data.bibPickupLocation)
 				}
 				if (data.logoFile) {

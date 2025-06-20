@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { Webhook } from 'svix'
 
-import { createUser, CreateUserDTO } from '@/services/user.services' // Adjust path as necessary
+import { createUser } from '@/services/user.services' // Adjust path as necessary
 import { User } from '@/models/user.model'
 
 // Make sure to set CLERK_WEBHOOK_SECRET in your environment variables

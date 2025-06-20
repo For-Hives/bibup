@@ -27,7 +27,7 @@ export default function EventOptionsSection({
 		setEventOptions([...eventOptions, newOption])
 	}
 
-	const updateEventOption = (index: number, field: keyof EventOption, value: any) => {
+	const updateEventOption = (index: number, field: keyof EventOption, value: boolean | string | string[]) => {
 		const updated = eventOptions.map((option, i) => (i === index ? { ...option, [field]: value } : option))
 		setValue('options', updated)
 		setEventOptions(updated)

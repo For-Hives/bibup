@@ -131,7 +131,7 @@ export default function Searchbar({
 	}))
 
 	const lang = locale ?? 'en'
-	const t = locales[lang] || locales['en']
+	const t = locales[lang] ?? locales['en']
 
 	return (
 		// Main container with responsive padding and shadow

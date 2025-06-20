@@ -8,7 +8,8 @@ import { getLocale } from '@/lib/getLocale'
 export default async function ContactPage() {
 	const locale = await getLocale()
 	const globalT = getTranslations(locale, globalTranslations)
-	const t = globalT.contact as any
+
+	const t = globalT.contact
 
 	return <ContactPageClient t={t} />
 }

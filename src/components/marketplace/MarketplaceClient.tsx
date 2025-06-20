@@ -93,18 +93,18 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		let filtered = bibs
 
 		// --- Fuzzy search with Fuse.js on search term
-		if (searchTerm) {
+		if (searchTerm !== null && searchTerm !== undefined && searchTerm !== '') {
 			const fuseResults = fuse.search(searchTerm)
 			filtered = fuseResults.map(result => result.item)
 		}
 
 		// --- Filter by selected sport
-		if (selectedSport && selectedSport !== 'all') {
+		if (selectedSport !== null && selectedSport !== undefined && selectedSport !== 'all') {
 			filtered = filtered.filter(bib => bib.event.type === selectedSport)
 		}
 
 		// --- Filter by selected distance
-		if (selectedDistance && selectedDistance !== 'all') {
+		if (selectedDistance !== null && selectedDistance !== undefined && selectedDistance !== 'all') {
 			const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
 			filtered = filtered.filter(bib => {
 				const distance = bib.event.distance
@@ -113,24 +113,28 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		}
 
 		// --- Filter by price range
-		if (advancedFilters.price && advancedFilters.price.length === 2) {
+		if (Array.isArray(advancedFilters.price) && advancedFilters.price.length === 2) {
 			const [minPrice, maxPrice] = advancedFilters.price
 			filtered = filtered.filter(bib => bib.price >= minPrice && bib.price <= maxPrice)
 		}
 
 		// --- Filter by region (geography)
-		if (advancedFilters.geography && advancedFilters.geography.length > 0) {
+		if (Array.isArray(advancedFilters.geography) && advancedFilters.geography.length > 0) {
 			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
 		}
 
 		// --- Filter by start date
-		if (advancedFilters.dateStart) {
+		if (
+			advancedFilters.dateStart !== null &&
+			advancedFilters.dateStart !== undefined &&
+			advancedFilters.dateStart !== ''
+		) {
 			const start = new Date(advancedFilters.dateStart)
 			filtered = filtered.filter(bib => new Date(bib.event.date) >= start)
 		}
 
 		// --- Filter by end date
-		if (advancedFilters.dateEnd) {
+		if (advancedFilters.dateEnd !== null && advancedFilters.dateEnd !== undefined && advancedFilters.dateEnd !== '') {
 			const end = new Date(advancedFilters.dateEnd)
 			filtered = filtered.filter(bib => new Date(bib.event.date) <= end)
 		}
