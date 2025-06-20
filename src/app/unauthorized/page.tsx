@@ -1,29 +1,8 @@
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
-import { getLocale } from '@/lib/getLocale'
 
-const unauthorizedTranslations = {
-	fr: {
-		title: 'Access Denied',
-		message: 'You do not have permission to access this page.',
-		contactSupport: 'Contact Support',
-		backToHome: 'Back to Home',
-		adminRequired: 'Administrator privileges are required to view this content.',
-	},
-	en: {
-		title: 'Access Denied',
-		message: 'You do not have permission to access this page.',
-		contactSupport: 'Contact Support',
-		backToHome: 'Back to Home',
-		adminRequired: 'Administrator privileges are required to view this content.',
-	},
-} as const
-
-export default async function UnauthorizedPage() {
-	const locale = await getLocale()
-	const t = unauthorizedTranslations[locale as keyof typeof unauthorizedTranslations] ?? unauthorizedTranslations.en
-
+export default function UnauthorizedPage() {
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -33,21 +12,21 @@ export default async function UnauthorizedPage() {
 					<div className="mb-6 text-6xl text-red-600 dark:text-red-400">🚫</div>
 
 					{/* Title */}
-					<h1 className="text-foreground mb-4 text-3xl font-bold">{t.title}</h1>
+					<h1 className="text-foreground mb-4 text-3xl font-bold">Access Denied</h1>
 
 					{/* Messages */}
 					<div className="mb-6 space-y-3">
-						<p className="text-muted-foreground text-lg">{t.message}</p>
-						<p className="text-muted-foreground text-sm">{t.adminRequired}</p>
+						<p className="text-muted-foreground text-lg">You do not have permission to access this page.</p>
+						<p className="text-muted-foreground text-sm">Administrator privileges are required to view this content.</p>
 					</div>
 
 					{/* Action buttons */}
 					<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
 						<Button asChild size="lg" variant="default">
-							<Link href="/">{t.backToHome}</Link>
+							<Link href="/">Back to Home</Link>
 						</Button>
 						<Button asChild size="lg" variant="outline">
-							<Link href="/contact">{t.contactSupport}</Link>
+							<Link href="/contact">Contact Support</Link>
 						</Button>
 					</div>
 
