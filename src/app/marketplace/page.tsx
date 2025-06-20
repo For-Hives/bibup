@@ -48,8 +48,8 @@ function generateRandomBibSale(): BibSale {
 	}
 }
 
-// Génère un lot de 10 à 15 dossards
-const mockBibs: BibSale[] = Array.from({ length: faker.number.int({ min: 10, max: 15 }) }, generateRandomBibSale)
+// Génère un lot de 120 dossards
+const mockBibs: BibSale[] = Array.from({ length: 200 }, generateRandomBibSale)
 
 // Main server component for the marketplace page
 export default async function MarketplacePage() {

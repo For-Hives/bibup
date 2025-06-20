@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 import Fuse from 'fuse.js'
 
@@ -93,18 +94,18 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		let filtered = bibs
 
 		// --- Fuzzy search with Fuse.js on search term
-		if (searchTerm) {
+		if (searchTerm != null && searchTerm !== '') {
 			const fuseResults = fuse.search(searchTerm)
 			filtered = fuseResults.map(result => result.item)
 		}
 
 		// --- Filter by selected sport
-		if (selectedSport && selectedSport !== 'all') {
+		if (selectedSport != null && selectedSport !== '' && selectedSport !== 'all') {
 			filtered = filtered.filter(bib => bib.event.type === selectedSport)
 		}
 
 		// --- Filter by selected distance
-		if (selectedDistance && selectedDistance !== 'all') {
+		if (selectedDistance != null && selectedDistance !== '' && selectedDistance !== 'all') {
 			const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
 			filtered = filtered.filter(bib => {
 				const distance = bib.event.distance
@@ -113,24 +114,24 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		}
 
 		// --- Filter by price range
-		if (advancedFilters.price && advancedFilters.price.length === 2) {
+		if (advancedFilters.price.length === 2) {
 			const [minPrice, maxPrice] = advancedFilters.price
 			filtered = filtered.filter(bib => bib.price >= minPrice && bib.price <= maxPrice)
 		}
 
 		// --- Filter by region (geography)
-		if (advancedFilters.geography && advancedFilters.geography.length > 0) {
+		if (advancedFilters.geography.length > 0) {
 			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
 		}
 
 		// --- Filter by start date
-		if (advancedFilters.dateStart) {
+		if (advancedFilters.dateStart != null && advancedFilters.dateStart !== '') {
 			const start = new Date(advancedFilters.dateStart)
 			filtered = filtered.filter(bib => new Date(bib.event.date) >= start)
 		}
 
 		// --- Filter by end date
-		if (advancedFilters.dateEnd) {
+		if (advancedFilters.dateEnd != null && advancedFilters.dateEnd !== '') {
 			const end = new Date(advancedFilters.dateEnd)
 			filtered = filtered.filter(bib => new Date(bib.event.date) <= end)
 		}
@@ -139,10 +140,36 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 		return sortBibs(filtered, sort)
 	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters, fuse])
 
+	const PAGE_SIZE = 50
+	const [page, setPage] = useState(1)
+	const [displayedBibs, setDisplayedBibs] = useState<BibSale[]>([])
+	const { ref, inView } = useInView({ threshold: 0 })
+	const [hasMore, setHasMore] = useState(true)
+
+	// Update displayedBibs when filters change
+	useEffect(() => {
+		setDisplayedBibs(filteredAndSortedBibs.slice(0, PAGE_SIZE))
+		setPage(1)
+		setHasMore(filteredAndSortedBibs.length > PAGE_SIZE)
+	}, [filteredAndSortedBibs])
+
+	// Load next page when the sentinel is visible (infinite scroll)
+	useEffect(() => {
+		if (inView && hasMore) {
+			const nextPage = page + 1
+			const nextBibs = filteredAndSortedBibs.slice(0, nextPage * PAGE_SIZE)
+			setDisplayedBibs(nextBibs)
+			setPage(nextPage)
+			if (nextBibs.length >= filteredAndSortedBibs.length) {
+				setHasMore(false)
+			}
+		}
+	}, [inView, hasMore, page, filteredAndSortedBibs])
+
 	// --- Main render: searchbar, offer counter, and grid of bib cards
 	return (
 		<div className="flex flex-col space-y-6 pt-8">
-			{/* Wrapper Searchbar with high z-index to ensure dropdown visibility */}
+			{/* Searchbar wrapper with high z-index to ensure dropdown visibility */}
 			<div className="relative z-[60]">
 				<Searchbar
 					maxPrice={maxPrice}
@@ -157,10 +184,13 @@ export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
 			<OfferCounter count={filteredAndSortedBibs.length} onSortChange={setSort} sortValue={sort} />
 			{/* Grid of bib cards, responsive layout */}
 			<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{filteredAndSortedBibs.map(bib => (
+				{displayedBibs.map(bib => (
 					<CardMarket bibSale={bib} key={bib.id} />
 				))}
 			</div>
+			{/* Sentinel for infinite scroll */}
+			{hasMore && <div ref={ref} style={{ height: 1 }} />}
+			{!hasMore && <p className="text-muted-foreground py-4 text-center">Tu as tout vu !</p>}
 		</div>
 	)
 }

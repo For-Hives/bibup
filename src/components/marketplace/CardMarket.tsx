@@ -41,7 +41,7 @@ interface CardMarketProps {
 	}
 }
 
-export default function CardMarket({ translations, bibSale }: CardMarketProps) {
+export default function CardMarket({ translations, bibSale }: Readonly<CardMarketProps>) {
 	return (
 		<div className="h-full w-full max-w-xs">
 			<div className="bg-card/80 border-border relative flex h-full flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
@@ -55,7 +55,7 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 				/>
 				<div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-25 dark:bg-black"></div>
 				<div className="relative flex justify-center px-4 pt-4">
-					<div className="from-primary/20 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:via-secondary before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
+					<div className="from-primary/20 via-accent/20 to-secondary/20 before:from-primary before:via-accent before:to-ring relative h-64 w-full overflow-hidden rounded-xl bg-gradient-to-br shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] before:absolute before:inset-0 before:-z-10 before:m-[-1px] before:rounded-xl before:bg-gradient-to-br before:p-0.5">
 						<Image
 							alt="template-run"
 							className="-z-10 rounded-2xl object-cover p-3"
