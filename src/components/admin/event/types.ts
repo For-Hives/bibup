@@ -2,10 +2,9 @@ import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
 import * as v from 'valibot'
 
+import adminTranslations from '@/app/[locale]/admin/event/create/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
-
-import adminTranslations from '@/app/[locale]/event/create/locales.json'
 
 // Validation Schema using Valibot
 export const EventCreationSchema = v.pipe(
@@ -74,20 +73,3 @@ export interface EventSectionProps {
 }
 
 export type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
-
-/**
- * Extract locale from translations object
- * This is a helper function to determine the current locale
- */
-export function getLocaleFromTranslations(translations: Translations): string {
-	// Check if we have different language translations
-	if (translations.event?.fields?.eventName?.label === 'Event Name') {
-		return 'en'
-	}
-	// Check if we have Korean translations (this would need to be added)
-	if (translations.event?.fields?.eventName?.label?.includes('한국')) {
-		return 'ko'
-	}
-	// Default to English if no specific match
-	return 'en'
-}
