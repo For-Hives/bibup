@@ -269,7 +269,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 									<CardDescription>{t.dashboard.actions.createEventDescription}</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
-									<Link href="/admin/event">
+									<Link href="/admin/event/create">
 										<Button className="w-full">
 											<Plus className="mr-2 h-4 w-4" />
 											{t.dashboard.actions.createEvent}
@@ -278,22 +278,22 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								</CardContent>
 							</Card>
 
-							{/* View Events Card - Disabled for now */}
-							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
+							{/* View Events Card */}
+							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
 								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
+									<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-colors">
 										<Eye className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl text-gray-500">{t.dashboard.actions.viewEvents}</CardTitle>
-									<CardDescription className="text-gray-400">
-										{t.dashboard.actions.viewEventsDescription}
-									</CardDescription>
+									<CardTitle className="text-xl">{t.dashboard.actions.viewEvents}</CardTitle>
+									<CardDescription>{t.dashboard.actions.viewEventsDescription}</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
-									<Button className="w-full" disabled variant="outline">
-										<Clock className="mr-2 h-4 w-4" />
-										{t.dashboard.ui.comingSoon}
-									</Button>
+									<Link href="/admin/event">
+										<Button className="w-full">
+											<Eye className="mr-2 h-4 w-4" />
+											{t.dashboard.actions.viewEvents}
+										</Button>
+									</Link>
 								</CardContent>
 							</Card>
 
