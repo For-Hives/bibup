@@ -14,7 +14,7 @@ import { fetchUserById } from './user.services'
  * @param bibData Data for the new bib, including potential unlisted event details.
  * @param sellerUserId The ID of the user (seller) listing the bib.
  */
-export async function createBib(bibData: Omit<Bib, 'created' | 'id' | 'updated'>): Promise<Bib | null> {
+export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 	if (bibData.sellerUserId === '') {
 		console.error('Seller ID is required to create a bib listing.')
 		return null
@@ -28,7 +28,7 @@ export async function createBib(bibData: Omit<Bib, 'created' | 'id' | 'updated'>
 	let finalEventId: string = bibData.eventId
 
 	try {
-		const dataToCreate: Omit<Bib, 'created' | 'id' | 'updated'> = {
+		const dataToCreate: Omit<Bib, 'id'> = {
 			validated: false,
 
 			status: status,

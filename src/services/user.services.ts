@@ -2,7 +2,7 @@ import type { User } from '@/models/user.model'
 
 import { pb } from '@/lib/pocketbaseClient'
 
-export async function createUser(userData: Omit<User, 'created' | 'id' | 'updated'>): Promise<null | User> {
+export async function createUser(userData: Omit<User, 'id'>): Promise<null | User> {
 	try {
 		const record = await pb.collection('users').create<User>(userData)
 		return record
