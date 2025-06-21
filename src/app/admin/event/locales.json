@@ -1,16 +1,16 @@
 {
 	"en": {
 		"events": {
-			"title": "Events Management",
-			"subtitle": "Manage all racing events on the Beswib platform",
+			"title": "Event Management",
+			"subtitle": "Manage all events, partnerships, and configurations from this central hub.",
 			"sections": {
 				"overview": {
 					"title": "Events Overview",
-					"description": "View and manage all events"
+					"description": "View and manage all events in the system"
 				},
 				"actions": {
 					"title": "Quick Actions",
-					"description": "Common event management actions"
+					"description": "Common administrative tasks for event management"
 				}
 			},
 			"stats": {
@@ -23,15 +23,15 @@
 			},
 			"actions": {
 				"createEvent": "Create New Event",
-				"createEventDescription": "Create and configure a new racing event",
+				"createEventDescription": "Add a new event to the platform",
 				"importEvents": "Import Events",
-				"importEventsDescription": "Import events from external sources",
+				"importEventsDescription": "Bulk import events from external sources",
 				"manageCategories": "Manage Categories",
 				"manageCategoriesDescription": "Organize events by categories and types"
 			},
 			"table": {
 				"columns": {
-					"name": "Name",
+					"name": "Event Name",
 					"date": "Date",
 					"location": "Location",
 					"type": "Type",
@@ -41,15 +41,15 @@
 					"actions": "Actions"
 				},
 				"status": {
-					"draft": "Draft",
 					"active": "Active",
 					"upcoming": "Upcoming",
 					"past": "Past",
+					"draft": "Draft",
 					"cancelled": "Cancelled"
 				},
 				"actions": {
-					"view": "View",
 					"edit": "Edit",
+					"view": "View",
 					"delete": "Delete",
 					"duplicate": "Duplicate"
 				},
@@ -64,28 +64,28 @@
 				"active": "Active",
 				"upcoming": "Upcoming",
 				"past": "Past",
-				"partnered": "Partnered Only",
+				"partnered": "Partnered",
 				"search": "Search events..."
 			},
 			"ui": {
-				"loading": "Loading events...",
-				"refreshing": "Refreshing...",
-				"comingSoon": "Coming Soon"
+				"comingSoon": "Coming Soon",
+				"loading": "Loading...",
+				"refreshing": "Refreshing..."
 			}
 		}
 	},
 	"fr": {
 		"events": {
 			"title": "Gestion des Événements",
-			"subtitle": "Gérez tous les événements de course sur la plateforme Beswib",
+			"subtitle": "Gérez tous les événements, partenariats et configurations depuis ce hub central.",
 			"sections": {
 				"overview": {
-					"title": "Vue d'ensemble des Événements",
-					"description": "Visualiser et gérer tous les événements"
+					"title": "Aperçu des Événements",
+					"description": "Visualisez et gérez tous les événements du système"
 				},
 				"actions": {
 					"title": "Actions Rapides",
-					"description": "Actions communes de gestion d'événements"
+					"description": "Tâches administratives courantes pour la gestion des événements"
 				}
 			},
 			"stats": {
@@ -98,15 +98,15 @@
 			},
 			"actions": {
 				"createEvent": "Créer un Nouvel Événement",
-				"createEventDescription": "Créer et configurer un nouvel événement de course",
+				"createEventDescription": "Ajouter un nouvel événement à la plateforme",
 				"importEvents": "Importer des Événements",
-				"importEventsDescription": "Importer des événements depuis des sources externes",
+				"importEventsDescription": "Importation en masse d'événements depuis des sources externes",
 				"manageCategories": "Gérer les Catégories",
 				"manageCategoriesDescription": "Organiser les événements par catégories et types"
 			},
 			"table": {
 				"columns": {
-					"name": "Nom",
+					"name": "Nom de l'Événement",
 					"date": "Date",
 					"location": "Lieu",
 					"type": "Type",
@@ -116,21 +116,21 @@
 					"actions": "Actions"
 				},
 				"status": {
-					"draft": "Brouillon",
 					"active": "Actif",
-					"upcoming": "À venir",
+					"upcoming": "À Venir",
 					"past": "Passé",
+					"draft": "Brouillon",
 					"cancelled": "Annulé"
 				},
 				"actions": {
-					"view": "Voir",
 					"edit": "Modifier",
+					"view": "Voir",
 					"delete": "Supprimer",
 					"duplicate": "Dupliquer"
 				},
 				"empty": {
 					"title": "Aucun événement trouvé",
-					"description": "Commencez en créant votre premier événement",
+					"description": "Commencez par créer votre premier événement",
 					"createButton": "Créer un Événement"
 				}
 			},
@@ -139,28 +139,28 @@
 				"active": "Actifs",
 				"upcoming": "À Venir",
 				"past": "Passés",
-				"partnered": "Partenaires Uniquement",
+				"partnered": "Partenaires",
 				"search": "Rechercher des événements..."
 			},
 			"ui": {
-				"loading": "Chargement des événements...",
-				"refreshing": "Actualisation...",
-				"comingSoon": "Bientôt Disponible"
+				"comingSoon": "Bientôt Disponible",
+				"loading": "Chargement...",
+				"refreshing": "Actualisation..."
 			}
 		}
 	},
 	"ko": {
 		"events": {
 			"title": "이벤트 관리",
-			"subtitle": "Beswib 플랫폼의 모든 레이싱 이벤트를 관리하세요",
+			"subtitle": "이 중앙 허브에서 모든 이벤트, 파트너십 및 구성을 관리하세요.",
 			"sections": {
 				"overview": {
 					"title": "이벤트 개요",
-					"description": "모든 이벤트 보기 및 관리"
+					"description": "시스템의 모든 이벤트를 보고 관리합니다"
 				},
 				"actions": {
 					"title": "빠른 작업",
-					"description": "일반적인 이벤트 관리 작업"
+					"description": "이벤트 관리를 위한 일반적인 관리 작업"
 				}
 			},
 			"stats": {
@@ -172,16 +172,16 @@
 				"draftEvents": "초안"
 			},
 			"actions": {
-				"createEvent": "새 이벤트 생성",
-				"createEventDescription": "새로운 레이싱 이벤트 생성 및 구성",
+				"createEvent": "새 이벤트 만들기",
+				"createEventDescription": "플랫폼에 새 이벤트 추가",
 				"importEvents": "이벤트 가져오기",
-				"importEventsDescription": "외부 소스에서 이벤트 가져오기",
+				"importEventsDescription": "외부 소스에서 이벤트 대량 가져오기",
 				"manageCategories": "카테고리 관리",
 				"manageCategoriesDescription": "카테고리 및 유형별로 이벤트 정리"
 			},
 			"table": {
 				"columns": {
-					"name": "이름",
+					"name": "이벤트 이름",
 					"date": "날짜",
 					"location": "위치",
 					"type": "유형",
@@ -191,36 +191,36 @@
 					"actions": "작업"
 				},
 				"status": {
-					"draft": "초안",
 					"active": "활성",
 					"upcoming": "예정",
-					"past": "과거",
+					"past": "지난",
+					"draft": "초안",
 					"cancelled": "취소됨"
 				},
 				"actions": {
-					"view": "보기",
 					"edit": "편집",
+					"view": "보기",
 					"delete": "삭제",
 					"duplicate": "복제"
 				},
 				"empty": {
 					"title": "이벤트를 찾을 수 없습니다",
-					"description": "첫 번째 이벤트를 생성하여 시작하세요",
-					"createButton": "이벤트 생성"
+					"description": "첫 번째 이벤트를 만들어 시작하세요",
+					"createButton": "이벤트 만들기"
 				}
 			},
 			"filters": {
 				"all": "모든 이벤트",
 				"active": "활성",
 				"upcoming": "예정",
-				"past": "과거",
-				"partnered": "파트너만",
+				"past": "지난",
+				"partnered": "파트너",
 				"search": "이벤트 검색..."
 			},
 			"ui": {
-				"loading": "이벤트 로딩 중...",
-				"refreshing": "새로고침 중...",
-				"comingSoon": "곧 출시"
+				"comingSoon": "곧 출시",
+				"loading": "로딩 중...",
+				"refreshing": "새로고침 중..."
 			}
 		}
 	}
