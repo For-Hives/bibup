@@ -4,20 +4,20 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import translations from '@/app/[locale]/admin/event/create/create/locales.json'
 import EventCreationForm from '@/components/admin/event/event-creation-form'
+import Translations from '@/app/[locale]/event/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 import { User } from '@/models/user.model'
-
+import { Locale } from '@/lib/i18n-config'
 interface AdminEventPageClientProps {
 	currentUser: null | User
-	translations: Translations
+	locale: Locale
 }
 
-type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
+export default function AdminEventPageClient({ locale, currentUser }: AdminEventPageClientProps) {
+	const translations = getTranslations(locale, Translations)
 
-export default function AdminEventPageClient({ translations, currentUser }: AdminEventPageClientProps) {
 	const router = useRouter()
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [createdEvent, setCreatedEvent] = useState<Event | null>(null)
@@ -88,7 +88,7 @@ export default function AdminEventPageClient({ translations, currentUser }: Admi
 					</div>
 				</div>
 			</div>
-			<EventCreationForm onCancel={handleCancel} onSuccess={handleSuccess} translations={translations} />
+			<EventCreationForm locale={locale} onCancel={handleCancel} onSuccess={handleSuccess} />
 		</div>
 	)
 }

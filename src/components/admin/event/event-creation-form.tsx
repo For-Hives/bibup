@@ -7,10 +7,13 @@ import * as React from 'react'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { toast } from 'sonner'
 
+import Translations from '@/app/[locale]/event/locales.json'
 import { EventOption } from '@/models/eventOption.model'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
-import { EventCreationFormProps, EventCreationSchema, EventFormData } from './types'
 import EventInformationSection from './EventInformationSection'
+import { EventCreationSchema, EventFormData } from './types'
 import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
 import PartnershipSection from './PartnershipSection'
@@ -19,12 +22,17 @@ import { Separator } from '../../ui/separator'
 import { Button } from '../../ui/button'
 import FakerButton from './FakerButton'
 
-export default function EventCreationForm({ translations, onSuccess, onCancel }: EventCreationFormProps) {
+export interface EventCreationFormProps {
+	locale: Locale
+	onCancel?: () => void
+	onSuccess?: (event: Event) => void
+}
+
+export default function EventCreationForm({ onSuccess, onCancel, locale }: EventCreationFormProps) {
+	const translations = getTranslations(locale, Translations)
+
 	const [isLoading, setIsLoading] = useState(false)
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
-
-	// Extract locale from translations
-	const locale = 'fr' // Use default locale for admin client component //TODO: Update to use locale from translations if available
 
 	const {
 		watch,
