@@ -290,9 +290,11 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.type,
 				cell: ({ row }) => {
 					const type = row.getValue('typeCourse')
+					// if (type === null || type === undefined || type === '') return 'N/A'
+					// if (typeof type !== 'string') return 'N/A'
 					return (
 						<Badge className="capitalize" variant="outline">
-							{type ?? 'N/A'}
+							{(type as string) || 'N/A'}
 						</Badge>
 					)
 				},
@@ -701,7 +703,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 															>
 																{value}{' '}
 																<span className="text-muted-foreground ms-2 text-xs">
-																	{statusCounts.get(value) || 0}
+																	{statusCounts.get(value) ?? 0}
 																</span>
 															</Label>
 														</div>
