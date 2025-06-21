@@ -208,7 +208,9 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								</CardHeader>
 								<CardContent>
 									<div className="text-2xl font-bold">{stats?.todaysTransactions ?? 0}</div>
-									<p className="text-muted-foreground text-xs">€{stats?.todaysRevenue ?? 0} revenue today</p>
+									<p className="text-muted-foreground text-xs">
+										€{stats?.todaysRevenue ?? 0} {t.dashboard.stats.revenueToday}
+									</p>
 								</CardContent>
 							</Card>
 						</div>
@@ -222,7 +224,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 										<Plus className="h-8 w-8" />
 									</div>
 									<CardTitle className="text-xl">{t.dashboard.actions.createEvent}</CardTitle>
-									<CardDescription>Create and configure new racing events for the platform</CardDescription>
+									<CardDescription>{t.dashboard.actions.createEventDescription}</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
 									<Link href="/admin/event">
@@ -240,15 +242,15 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
 										<Eye className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl text-gray-500">View Events</CardTitle>
+									<CardTitle className="text-xl text-gray-500">{t.dashboard.actions.viewEvents}</CardTitle>
 									<CardDescription className="text-gray-400">
-										Browse and manage all racing events on the platform
+										{t.dashboard.actions.viewEventsDescription}
 									</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
 									<Button className="w-full" disabled variant="outline">
 										<Clock className="mr-2 h-4 w-4" />
-										Coming Soon
+										{t.dashboard.ui.comingSoon}
 									</Button>
 								</CardContent>
 							</Card>
@@ -259,15 +261,15 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
 										<CheckCircle className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl text-gray-500">Validate Events</CardTitle>
+									<CardTitle className="text-xl text-gray-500">{t.dashboard.actions.validateEvents}</CardTitle>
 									<CardDescription className="text-gray-400">
-										Review and approve events proposed by organizers
+										{t.dashboard.actions.validateEventsDescription}
 									</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
 									<Button className="w-full" disabled variant="outline">
 										<Clock className="mr-2 h-4 w-4" />
-										Coming Soon
+										{t.dashboard.ui.comingSoon}
 									</Button>
 								</CardContent>
 							</Card>
@@ -280,14 +282,12 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 									<Clock className="h-8 w-8" />
 								</div>
 								<CardTitle className="text-xl text-gray-500">{t.dashboard.recentActivity.title}</CardTitle>
-								<CardDescription className="text-gray-400">
-									View recent platform activity and system events
-								</CardDescription>
+								<CardDescription className="text-gray-400">{t.dashboard.recentActivity.description}</CardDescription>
 							</CardHeader>
 							<CardContent className="text-center">
 								<Button className="w-full" disabled variant="outline">
 									<Clock className="mr-2 h-4 w-4" />
-									Coming Soon
+									{t.dashboard.ui.comingSoon}
 								</Button>
 							</CardContent>
 						</Card>
