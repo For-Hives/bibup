@@ -7,12 +7,15 @@ import type { Waitlist } from '@/models/waitlist.model'
 import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
-import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
-import { fetchUserWaitlists } from '@/services/waitlist.services' // Import waitlist service
+import { fetchUserWaitlists } from '@/services/waitlist.services'
 import { fetchBibsByBuyer } from '@/services/bib.services'
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
 
 import buyerTranslations from './locales.json'
+
+// Force dynamic rendering for dashboard routes
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
 	title: 'Buyer Dashboard | Beswib',
@@ -132,9 +135,4 @@ export default async function BuyerDashboardPage({
 			</section>
 		</div>
 	)
-}
-
-// Generate static params for all locales
-export function generateStaticParams() {
-	return generateLocaleParams()
 }

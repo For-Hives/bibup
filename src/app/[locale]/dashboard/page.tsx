@@ -3,10 +3,13 @@ import type { Metadata } from 'next'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 
-import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
 
 import dashboardTranslations from './locales.json'
+
+// Force dynamic rendering for dashboard routes
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
 	title: 'Dashboard | Beswib',
@@ -63,9 +66,4 @@ export default async function DashboardPage({ params }: { params: Promise<Locale
 			)}
 		</div>
 	)
-}
-
-// Generate static params for all locales
-export function generateStaticParams() {
-	return generateLocaleParams()
 }

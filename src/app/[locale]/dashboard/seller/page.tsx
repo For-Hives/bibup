@@ -7,12 +7,15 @@ import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
-import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
 import { fetchUserByClerkId } from '@/services/user.services'
 import { fetchBibsBySeller } from '@/services/bib.services'
+import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
 
 import sellerTranslations from './locales.json'
+
+// Force dynamic rendering for dashboard routes
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
 	title: 'Seller Dashboard | Beswib',
@@ -28,11 +31,6 @@ const getBibStatusClass = (status: Bib['status']): string => {
 		default:
 			return 'bg-gray-200 text-gray-800' // Default fallback
 	}
-}
-
-// Generate static params for all locales
-export function generateStaticParams() {
-	return generateLocaleParams()
 }
 
 export default async function SellerDashboardPage({
