@@ -1,5 +1,5 @@
 import { getTranslations } from '@/lib/getDictionary'
-import { getLocale } from '@/lib/getLocale'
+import { Locale } from '@/lib/i18n-config'
 
 import marketplaceTranslations from '../marketplace/locales.json'
 import CardMarket, { BibSale } from '../marketplace/CardMarket'
@@ -117,9 +117,7 @@ const runsExample: BibSale[] = [
 	},
 ]
 
-// export default function MarketplaceGrid({ runs }: { runs: BibSale[] }) {
-export default async function MarketplaceGrid() {
-	const locale = await getLocale()
+export default function MarketplaceGrid({ locale }: { locale: Locale }) {
 	const t = getTranslations(locale, marketplaceTranslations)
 
 	return (
