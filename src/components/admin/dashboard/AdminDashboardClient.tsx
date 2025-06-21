@@ -1,6 +1,17 @@
 'use client'
 
-import { Calendar, CheckCircle, Clock, CreditCard, Eye, FileText, Plus, TrendingUp, Users } from 'lucide-react'
+import {
+	Building,
+	Calendar,
+	CheckCircle,
+	Clock,
+	CreditCard,
+	Eye,
+	FileText,
+	Plus,
+	TrendingUp,
+	Users,
+} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -24,10 +35,14 @@ interface DashboardTranslations {
 		actions: {
 			createEvent: string
 			createEventDescription: string
-			validateEvents: string
-			validateEventsDescription: string
+			createOrganizer: string
+			createOrganizerDescription: string
+			validateOrganizer: string
+			validateOrganizerDescription: string
 			viewEvents: string
 			viewEventsDescription: string
+			viewOrganizers: string
+			viewOrganizersDescription: string
 		}
 		errors: {
 			accessError: string
@@ -38,12 +53,17 @@ interface DashboardTranslations {
 			title: string
 		}
 		sections: {
+			organizers: {
+				description: string
+				title: string
+			}
 			transactions: {
 				description: string
 				title: string
 			}
 		}
 		stats: {
+			partneredOrganizers: string
 			pendingBibs: string
 			pendingEvents: string
 			platformGrowth: string
@@ -51,6 +71,7 @@ interface DashboardTranslations {
 			todaysTransactions: string
 			totalBibs: string
 			totalEvents: string
+			totalOrganizers: string
 			totalUsers: string
 		}
 		subtitle: string
@@ -297,15 +318,53 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								</CardContent>
 							</Card>
 
-							{/* Validate Events Card - Disabled for now */}
+							{/* Create Organizer Card */}
+							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+								<CardHeader className="text-center">
+									<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-colors">
+										<Building className="h-8 w-8" />
+									</div>
+									<CardTitle className="text-xl">{t.dashboard.actions.createOrganizer}</CardTitle>
+									<CardDescription>{t.dashboard.actions.createOrganizerDescription}</CardDescription>
+								</CardHeader>
+								<CardContent className="text-center">
+									<Link href="/admin/organizer/create">
+										<Button className="w-full">
+											<Building className="mr-2 h-4 w-4" />
+											{t.dashboard.actions.createOrganizer}
+										</Button>
+									</Link>
+								</CardContent>
+							</Card>
+
+							{/* View Organizers Card */}
+							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+								<CardHeader className="text-center">
+									<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-colors">
+										<Users className="h-8 w-8" />
+									</div>
+									<CardTitle className="text-xl">{t.dashboard.actions.viewOrganizers}</CardTitle>
+									<CardDescription>{t.dashboard.actions.viewOrganizersDescription}</CardDescription>
+								</CardHeader>
+								<CardContent className="text-center">
+									<Link href="/admin/organizer">
+										<Button className="w-full">
+											<Users className="mr-2 h-4 w-4" />
+											{t.dashboard.actions.viewOrganizers}
+										</Button>
+									</Link>
+								</CardContent>
+							</Card>
+
+							{/* Validate Organizer Card - Disabled for now */}
 							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
 								<CardHeader className="text-center">
 									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
 										<CheckCircle className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl text-gray-500">{t.dashboard.actions.validateEvents}</CardTitle>
+									<CardTitle className="text-xl text-gray-500">{t.dashboard.actions.validateOrganizer}</CardTitle>
 									<CardDescription className="text-gray-400">
-										{t.dashboard.actions.validateEventsDescription}
+										{t.dashboard.actions.validateOrganizerDescription}
 									</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
