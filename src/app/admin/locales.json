@@ -1,0 +1,146 @@
+{
+	"en": {
+		"dashboard": {
+			"title": "Admin Dashboard",
+			"subtitle": "Manage your Beswib platform",
+			"sections": {
+				"overview": {
+					"title": "Platform Overview",
+					"description": "Key metrics and statistics"
+				},
+				"events": {
+					"title": "Events Management",
+					"description": "Manage racing events and approvals"
+				},
+				"bibs": {
+					"title": "Bibs Management",
+					"description": "Oversee bib listings and validations"
+				},
+				"users": {
+					"title": "Users Management",
+					"description": "Manage platform users and roles"
+				},
+				"transactions": {
+					"title": "Transactions",
+					"description": "Monitor payments and financial activity"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total Events",
+				"pendingEvents": "Pending Events",
+				"totalBibs": "Total Bibs",
+				"pendingBibs": "Pending Validation",
+				"totalUsers": "Total Users",
+				"todaysTransactions": "Today's Transactions"
+			},
+			"actions": {
+				"createEvent": "Create New Event",
+				"reviewBibs": "Review Pending Bibs",
+				"manageUsers": "Manage Users",
+				"viewTransactions": "View All Transactions",
+				"viewReports": "View Reports"
+			},
+			"recentActivity": {
+				"title": "Recent Activity",
+				"noBibsPending": "No bibs pending validation",
+				"noRecentActivity": "No recent activity"
+			}
+		}
+	},
+	"fr": {
+		"dashboard": {
+			"title": "Tableau de bord Admin",
+			"subtitle": "Gérez votre plateforme Beswib",
+			"sections": {
+				"overview": {
+					"title": "Vue d'ensemble de la plateforme",
+					"description": "Métriques clés et statistiques"
+				},
+				"events": {
+					"title": "Gestion des événements",
+					"description": "Gérer les événements de course et les approbations"
+				},
+				"bibs": {
+					"title": "Gestion des dossards",
+					"description": "Superviser les annonces de dossards et les validations"
+				},
+				"users": {
+					"title": "Gestion des utilisateurs",
+					"description": "Gérer les utilisateurs de la plateforme et les rôles"
+				},
+				"transactions": {
+					"title": "Transactions",
+					"description": "Surveiller les paiements et l'activité financière"
+				}
+			},
+			"stats": {
+				"totalEvents": "Total des événements",
+				"pendingEvents": "Événements en attente",
+				"totalBibs": "Total des dossards",
+				"pendingBibs": "En attente de validation",
+				"totalUsers": "Total des utilisateurs",
+				"todaysTransactions": "Transactions du jour"
+			},
+			"actions": {
+				"createEvent": "Créer un nouvel événement",
+				"reviewBibs": "Examiner les dossards en attente",
+				"manageUsers": "Gérer les utilisateurs",
+				"viewTransactions": "Voir toutes les transactions",
+				"viewReports": "Voir les rapports"
+			},
+			"recentActivity": {
+				"title": "Activité récente",
+				"noBibsPending": "Aucun dossard en attente de validation",
+				"noRecentActivity": "Aucune activité récente"
+			}
+		}
+	},
+	"ko": {
+		"dashboard": {
+			"title": "관리자 대시보드",
+			"subtitle": "Beswib 플랫폼을 관리하세요",
+			"sections": {
+				"overview": {
+					"title": "플랫폼 개요",
+					"description": "주요 지표 및 통계"
+				},
+				"events": {
+					"title": "이벤트 관리",
+					"description": "레이싱 이벤트 및 승인 관리"
+				},
+				"bibs": {
+					"title": "비브 관리",
+					"description": "비브 목록 및 검증 관리"
+				},
+				"users": {
+					"title": "사용자 관리",
+					"description": "플랫폼 사용자 및 역할 관리"
+				},
+				"transactions": {
+					"title": "거래",
+					"description": "결제 및 금융 활동 모니터링"
+				}
+			},
+			"stats": {
+				"totalEvents": "총 이벤트",
+				"pendingEvents": "대기 중인 이벤트",
+				"totalBibs": "총 비브",
+				"pendingBibs": "검증 대기 중",
+				"totalUsers": "총 사용자",
+				"todaysTransactions": "오늘의 거래"
+			},
+			"actions": {
+				"createEvent": "새 이벤트 생성",
+				"reviewBibs": "대기 중인 비브 검토",
+				"manageUsers": "사용자 관리",
+				"viewTransactions": "모든 거래 보기",
+				"viewReports": "보고서 보기"
+			},
+			"recentActivity": {
+				"title": "최근 활동",
+				"noBibsPending": "검증 대기 중인 비브가 없습니다",
+				"noRecentActivity": "최근 활동이 없습니다"
+			}
+		}
+	}
+}
