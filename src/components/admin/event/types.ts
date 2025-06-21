@@ -53,12 +53,6 @@ export const EventCreationSchema = v.pipe(
 	}, 'Invalid date relationships: pickup begin must be before end, and transfer deadline must be before event date')
 )
 
-export interface EventCreationFormProps {
-	onCancel?: () => void
-	onSuccess?: (event: Event) => void
-	translations: Translations
-}
-
 export type EventFormData = v.InferOutput<typeof EventCreationSchema>
 
 export type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>
