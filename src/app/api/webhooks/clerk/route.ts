@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: 'Primary email address missing' }, { status: 400 })
 		}
 
-		const userData: Omit<User, 'id'> = {
+		const userData: Omit<User, 'created' | 'id' | 'updated'> = {
 			role: 'user',
 			lastName: last_name ?? '',
 			firstName: first_name ?? '',
