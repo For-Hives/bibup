@@ -28,7 +28,7 @@ export async function createBib(bibData: Omit<Bib, 'created' | 'id' | 'updated'>
 	let finalEventId: string = bibData.eventId
 
 	try {
-		const dataToCreate: Omit<Bib, 'id'> = {
+		const dataToCreate: Omit<Bib, 'created' | 'id' | 'updated'> = {
 			validated: false,
 
 			status: status,
