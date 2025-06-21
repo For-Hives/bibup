@@ -10,15 +10,57 @@ import type { User } from '@/models/user.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { type DashboardStats } from '@/services/dashboard.services'
-import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 
 import { getDashboardStatsAction } from '../../../app/admin/actions'
-import translations from '../../../app/admin/locales.json'
 
 interface AdminDashboardClientProps {
 	currentUser: null | User
-	translations: any // Using any to avoid complex type issues
+	translations: DashboardTranslations
+}
+
+interface DashboardTranslations {
+	dashboard: {
+		actions: {
+			createEvent: string
+			createEventDescription: string
+			validateEvents: string
+			validateEventsDescription: string
+			viewEvents: string
+			viewEventsDescription: string
+		}
+		errors: {
+			accessError: string
+			accessErrorMessage: string
+		}
+		recentActivity: {
+			description: string
+			title: string
+		}
+		sections: {
+			transactions: {
+				description: string
+				title: string
+			}
+		}
+		stats: {
+			pendingBibs: string
+			pendingEvents: string
+			platformGrowth: string
+			revenueToday: string
+			todaysTransactions: string
+			totalBibs: string
+			totalEvents: string
+			totalUsers: string
+		}
+		subtitle: string
+		title: string
+		ui: {
+			comingSoon: string
+			connectedAs: string
+			signIn: string
+		}
+	}
 }
 
 export default function AdminDashboardClient({ translations: t, currentUser }: AdminDashboardClientProps) {
