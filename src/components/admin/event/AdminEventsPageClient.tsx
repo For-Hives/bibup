@@ -29,7 +29,6 @@ import {
 	Columns3,
 	Edit,
 	Eye,
-	Filter,
 	MoreHorizontal,
 	Plus,
 	Search,
@@ -71,7 +70,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card'
 import { Pagination, PaginationContent, PaginationItem } from '../../ui/pagination'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import { getAllEventsAction } from '../../../app/admin/actions'
 import { Checkbox } from '../../ui/checkbox'
 import { Button } from '../../ui/button'
@@ -859,12 +857,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 }
 
 function RowActions({ t, row }: { row: Row<Event>; t: EventsTranslations }) {
-	const router = useRouter()
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-
-	const handleEdit = () => {
-		router.push(`/admin/event/edit/${row.original.id}`)
-	}
 
 	const handleDelete = () => {
 		// TODO: Implement delete functionality
@@ -883,11 +876,11 @@ function RowActions({ t, row }: { row: Row<Event>; t: EventsTranslations }) {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuGroup>
-						<DropdownMenuItem onClick={handleEdit}>
+						<DropdownMenuItem className="cursor-not-allowed opacity-50" disabled>
 							<Edit className="mr-2 h-4 w-4" />
 							{t.events.table.actions.edit}
 						</DropdownMenuItem>
-						<DropdownMenuItem onClick={() => router.push(`/events/${row.original.id}`)}>
+						<DropdownMenuItem className="cursor-not-allowed opacity-50" disabled>
 							<Eye className="mr-2 h-4 w-4" />
 							{t.events.table.actions.view}
 						</DropdownMenuItem>
