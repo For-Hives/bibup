@@ -1,16 +1,29 @@
 'use client'
 
-import { Calendar, CheckCircle, Clock, CreditCard, Eye, Plus } from 'lucide-react'
-import React from 'react'
+import {
+	AlertCircle,
+	Calendar,
+	CheckCircle,
+	Clock,
+	CreditCard,
+	Eye,
+	FileText,
+	Plus,
+	TrendingUp,
+	Users,
+} from 'lucide-react'
+import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 import type { User } from '@/models/user.model'
 
+import { type DashboardStats, getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 import translations from '../../../app/admin/locales.json'
 
@@ -19,10 +32,85 @@ interface AdminDashboardClientProps {
 	translations: Translations
 }
 
+interface RecentActivity {
+	id: string
+	status: 'completed' | 'failed' | 'pending'
+	timestamp: Date
+	title: string
+	type: 'bib_validation' | 'event_creation' | 'transaction' | 'user_registration'
+}
+
 type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
 export default function AdminDashboardClient({ translations: t, currentUser }: AdminDashboardClientProps) {
 	const router = useRouter()
+	const [stats, setStats] = useState<DashboardStats | null>(null)
+	const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
+	const [isLoading, setIsLoading] = useState(true)
+
+	useEffect(() => {
+		const fetchDashboardData = async () => {
+			try {
+				setIsLoading(true)
+				const [dashboardStats, activities] = await Promise.all([getDashboardStats(), getRecentActivity()])
+				setStats(dashboardStats)
+				setRecentActivity(activities)
+			} catch (error) {
+				console.error('Error fetching dashboard data:', error)
+				// Set fallback data in case of error
+				setStats({
+					totalUsers: 0,
+					totalTransactions: 0,
+					totalEvents: 0,
+					totalBibs: 0,
+					todaysTransactions: 0,
+					todaysRevenue: 0,
+					soldBibs: 0,
+					pendingEvents: 0,
+					pendingBibs: 0,
+					eventCreationRequests: {
+						waiting: 0,
+						total: 0,
+						rejected: 0,
+						accepted: 0,
+					},
+					availableBibs: 0,
+				})
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		void fetchDashboardData()
+	}, [])
+
+	const getActivityIcon = (type: RecentActivity['type']) => {
+		switch (type) {
+			case 'bib_validation':
+				return <FileText className="h-4 w-4" />
+			case 'event_creation':
+				return <Calendar className="h-4 w-4" />
+			case 'transaction':
+				return <CreditCard className="h-4 w-4" />
+			case 'user_registration':
+				return <Users className="h-4 w-4" />
+			default:
+				return <AlertCircle className="h-4 w-4" />
+		}
+	}
+
+	const getStatusBadgeVariant = (status: RecentActivity['status']) => {
+		switch (status) {
+			case 'completed':
+				return 'default'
+			case 'failed':
+				return 'destructive'
+			case 'pending':
+				return 'secondary'
+			default:
+				return 'secondary'
+		}
+	}
 
 	// Safety check - if currentUser is null, show error
 	if (!currentUser) {
@@ -42,6 +130,30 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 						>
 							Sign In
 						</button>
+					</div>
+				</div>
+			</div>
+		)
+	}
+
+	if (isLoading) {
+		return (
+			<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+				<div className="relative pt-32 pb-12">
+					<div className="container mx-auto max-w-6xl p-6">
+						<div className="space-y-8">
+							<div className="space-y-2 text-center">
+								<div className="mx-auto h-12 w-96 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+								<div className="mx-auto h-6 w-64 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+							</div>
+							<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+								{Array.from({ length: 4 }).map((_, i) => (
+									<div className="h-64 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700" key={i}></div>
+								))}
+							</div>
+							<div className="h-96 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -75,6 +187,59 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 						<div className="space-y-2 text-center">
 							<h1 className="text-foreground text-4xl font-bold">{t.dashboard.title}</h1>
 							<p className="text-muted-foreground text-lg">{t.dashboard.subtitle}</p>
+						</div>
+
+						{/* Stats Grid */}
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+									<CardTitle className="text-sm font-medium">{t.dashboard.stats.totalEvents}</CardTitle>
+									<Calendar className="text-muted-foreground h-4 w-4" />
+								</CardHeader>
+								<CardContent>
+									<div className="text-2xl font-bold">{stats?.totalEvents ?? 0}</div>
+									<p className="text-muted-foreground text-xs">
+										{stats?.pendingEvents ?? 0} {t.dashboard.stats.pendingEvents.toLowerCase()}
+									</p>
+								</CardContent>
+							</Card>
+
+							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+									<CardTitle className="text-sm font-medium">{t.dashboard.stats.totalBibs}</CardTitle>
+									<FileText className="text-muted-foreground h-4 w-4" />
+								</CardHeader>
+								<CardContent>
+									<div className="text-2xl font-bold">{stats?.totalBibs ?? 0}</div>
+									<p className="text-muted-foreground text-xs">
+										{stats?.pendingBibs ?? 0} {t.dashboard.stats.pendingBibs.toLowerCase()}
+									</p>
+								</CardContent>
+							</Card>
+
+							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+									<CardTitle className="text-sm font-medium">{t.dashboard.stats.totalUsers}</CardTitle>
+									<Users className="text-muted-foreground h-4 w-4" />
+								</CardHeader>
+								<CardContent>
+									<div className="text-2xl font-bold">{stats?.totalUsers ?? 0}</div>
+									<p className="text-muted-foreground text-xs">
+										<TrendingUp className="inline h-3 w-3" /> Platform growth
+									</p>
+								</CardContent>
+							</Card>
+
+							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+									<CardTitle className="text-sm font-medium">{t.dashboard.stats.todaysTransactions}</CardTitle>
+									<CreditCard className="text-muted-foreground h-4 w-4" />
+								</CardHeader>
+								<CardContent>
+									<div className="text-2xl font-bold">{stats?.todaysTransactions ?? 0}</div>
+									<p className="text-muted-foreground text-xs">€{stats?.todaysRevenue ?? 0} revenue today</p>
+								</CardContent>
+							</Card>
 						</div>
 
 						{/* Dashboard Cards Grid */}
@@ -135,55 +300,54 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 									</Link>
 								</CardContent>
 							</Card>
-
-							{/* Transactions Card (Coming Soon) */}
-							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
-								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
-										<CreditCard className="h-8 w-8" />
-									</div>
-									<CardTitle className="text-xl text-gray-500">{t.dashboard.sections.transactions.title}</CardTitle>
-									<CardDescription className="text-gray-400">
-										{t.dashboard.sections.transactions.description}
-									</CardDescription>
-								</CardHeader>
-								<CardContent className="text-center">
-									<Button className="w-full" disabled>
-										<Clock className="mr-2 h-4 w-4" />
-										Coming Soon
-									</Button>
-								</CardContent>
-							</Card>
 						</div>
 
-						{/* Quick Stats Overview */}
+						{/* Recent Activity */}
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<Calendar className="h-5 w-5" />
-									{t.dashboard.sections.overview.title}
-								</CardTitle>
-								<CardDescription>{t.dashboard.sections.overview.description}</CardDescription>
+								<CardTitle>{t.dashboard.recentActivity.title}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-									<div className="text-center">
-										<div className="text-primary text-2xl font-bold">12</div>
-										<div className="text-muted-foreground text-sm">Active Events</div>
+								{recentActivity.length > 0 ? (
+									<div className="space-y-4">
+										{recentActivity.slice(0, 5).map(activity => (
+											<div
+												className="flex items-center justify-between border-b pb-4 last:border-b-0"
+												key={activity.id}
+											>
+												<div className="flex items-center space-x-3">
+													<div className="bg-muted rounded-full p-2">{getActivityIcon(activity.type)}</div>
+													<div>
+														<p className="text-sm font-medium">{activity.title}</p>
+														<p className="text-muted-foreground text-xs">{activity.timestamp.toLocaleString()}</p>
+													</div>
+												</div>
+												<Badge variant={getStatusBadgeVariant(activity.status)}>{activity.status}</Badge>
+											</div>
+										))}
 									</div>
-									<div className="text-center">
-										<div className="text-2xl font-bold text-blue-500">3</div>
-										<div className="text-muted-foreground text-sm">Pending Approval</div>
-									</div>
-									<div className="text-center">
-										<div className="text-2xl font-bold text-green-500">156</div>
-										<div className="text-muted-foreground text-sm">Total Bibs Listed</div>
-									</div>
-									<div className="text-center">
-										<div className="text-2xl font-bold text-orange-500">1,284</div>
-										<div className="text-muted-foreground text-sm">Registered Users</div>
-									</div>
+								) : (
+									<p className="text-muted-foreground">{t.dashboard.recentActivity.noRecentActivity}</p>
+								)}
+							</CardContent>
+						</Card>
+
+						{/* Transactions Card (Coming Soon) */}
+						<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
+							<CardHeader className="text-center">
+								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
+									<CreditCard className="h-8 w-8" />
 								</div>
+								<CardTitle className="text-xl text-gray-500">{t.dashboard.sections.transactions.title}</CardTitle>
+								<CardDescription className="text-gray-400">
+									{t.dashboard.sections.transactions.description}
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="text-center">
+								<Button className="w-full" disabled>
+									<Clock className="mr-2 h-4 w-4" />
+									Coming Soon
+								</Button>
 							</CardContent>
 						</Card>
 					</div>
