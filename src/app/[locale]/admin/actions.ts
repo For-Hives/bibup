@@ -1,14 +1,15 @@
 'use server'
 
 import { getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
+import { fetchAllOrganizers } from '@/services/organizer.services'
 import { getAllEvents } from '@/services/event.services'
 
 /**
  * Server action to get all events for admin
  */
-export async function getAllEventsAction() {
+export async function getAllEventsAction(expandOrganizer = true) {
 	try {
-		const events = await getAllEvents()
+		const events = await getAllEvents(expandOrganizer)
 		return {
 			success: true,
 			data: events,
@@ -18,6 +19,25 @@ export async function getAllEventsAction() {
 		return {
 			success: false,
 			error: error instanceof Error ? error.message : 'Failed to fetch events',
+		}
+	}
+}
+
+/**
+ * Server action to get all organizers for admin
+ */
+export async function getAllOrganizersAction() {
+	try {
+		const organizers = await fetchAllOrganizers()
+		return {
+			success: true,
+			data: organizers,
+		}
+	} catch (error) {
+		console.error('Error fetching all organizers:', error)
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : 'Failed to fetch organizers',
 		}
 	}
 }

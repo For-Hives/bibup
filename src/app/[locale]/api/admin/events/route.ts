@@ -32,10 +32,11 @@ export async function POST(request: NextRequest) {
 		const eventDate = formData.get('eventDate') as string
 		const description = formData.get('description') as string
 		const typeCourse = formData.get('typeCourse') as 'route' | 'trail' | 'triathlon' | 'ultra'
-		const participantCount = parseInt(formData.get('participantCount') as string, 10)
+		const participantCount = parseInt(formData.get('participantCount') as string, 10) || undefined
 		const bibPickupWindowBeginDate = formData.get('bibPickupWindowBeginDate') as string
 		const bibPickupWindowEndDate = formData.get('bibPickupWindowEndDate') as string
 		const isPartnered = formData.get('isPartnered') === 'true'
+		const organizer = formData.get('organizer') as string
 
 		// Extract optional fields
 		const distanceKmValue = formData.get('distanceKm')
@@ -70,9 +71,9 @@ export async function POST(request: NextRequest) {
 		}
 
 		// Validate required fields
-		if (!name || !location || !eventDate || !description) {
+		if (!name || !location || !eventDate || !description || !organizer) {
 			return NextResponse.json(
-				{ message: 'Missing required fields: name, location, eventDate, description' },
+				{ message: 'Missing required fields: name, location, eventDate, description, organizer' },
 				{ status: 400 }
 			)
 		}
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
 			registrationUrl,
 			participantCount,
 			parcoursUrl,
+			organizer,
 			options,
 			officialStandardPrice,
 			name,
@@ -100,7 +102,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		// Create the event using the service
-		const createdEvent = await createEvent(eventData as Event)
+		const createdEvent = await createEvent(eventData)
 
 		if (!createdEvent) {
 			return NextResponse.json({ message: 'Failed to create event' }, { status: 500 })

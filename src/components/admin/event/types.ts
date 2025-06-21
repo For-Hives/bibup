@@ -13,6 +13,7 @@ export const EventCreationSchema = v.pipe(
 		registrationUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
 		participantCount: v.pipe(v.number(), v.minValue(1, 'Participant count must be at least 1')),
 		parcoursUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
+		organizer: v.pipe(v.string(), v.minLength(1, 'Organizer is required')),
 		options: v.array(
 			v.object({
 				values: v.pipe(v.array(v.string()), v.minLength(1, 'At least one value is required')),

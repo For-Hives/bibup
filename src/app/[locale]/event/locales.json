@@ -20,6 +20,10 @@
 					"title": "Partnership Settings",
 					"description": "Configure partnership status and related settings."
 				},
+				"organizer": {
+					"title": "Event Organizer",
+					"description": "Select the organizer responsible for this event."
+				},
 				"eventOptions": {
 					"title": "Event Options",
 					"description": "Configure additional options and categories for the event."
@@ -107,6 +111,13 @@
 				"registrationUrl": {
 					"label": "Registration Link",
 					"placeholder": "https://example.com/register"
+				},
+				"organizer": {
+					"label": "Event Organizer",
+					"placeholder": "Select an organizer",
+					"loading": "Loading organizers...",
+					"partnered": "Partner",
+					"noOrganizers": "No organizers available"
 				}
 			},
 			"eventOptions": {
@@ -171,6 +182,10 @@
 				"partnership": {
 					"title": "Paramètres de Partenariat",
 					"description": "Configurez le statut de partenariat et les paramètres associés."
+				},
+				"organizer": {
+					"title": "Organisateur de l'Événement",
+					"description": "Sélectionnez l'organisateur responsable de cet événement."
 				},
 				"eventOptions": {
 					"title": "Options de l'Événement",
@@ -259,6 +274,13 @@
 				"registrationUrl": {
 					"label": "Lien d'inscription",
 					"placeholder": "https://example.com/register"
+				},
+				"organizer": {
+					"label": "Organisateur de l'Événement",
+					"placeholder": "Sélectionnez un organisateur",
+					"loading": "Chargement des organisateurs...",
+					"partnered": "Partenaire",
+					"noOrganizers": "Aucun organisateur disponible"
 				}
 			},
 			"eventOptions": {
@@ -323,6 +345,10 @@
 				"partnership": {
 					"title": "파트너십 설정",
 					"description": "파트너십 상태 및 관련 설정을 구성합니다."
+				},
+				"organizer": {
+					"title": "이벤트 주최자",
+					"description": "이 이벤트를 담당하는 주최자를 선택하세요."
 				},
 				"eventOptions": {
 					"title": "이벤트 옵션",
@@ -411,6 +437,13 @@
 				"registrationUrl": {
 					"label": "등록 링크",
 					"placeholder": "https://example.com/register"
+				},
+				"organizer": {
+					"label": "이벤트 주최자",
+					"placeholder": "주최자 선택",
+					"loading": "주최자 로딩 중...",
+					"partnered": "파트너",
+					"noOrganizers": "사용 가능한 주최자가 없습니다"
 				}
 			},
 			"eventOptions": {
