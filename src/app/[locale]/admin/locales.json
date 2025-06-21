@@ -23,6 +23,10 @@
 				"transactions": {
 					"title": "Transactions",
 					"description": "Monitor payments and financial activity"
+				},
+				"organizers": {
+					"title": "Organizers Management",
+					"description": "Manage event organizers and partnerships"
 				}
 			},
 			"stats": {
@@ -33,15 +37,21 @@
 				"totalUsers": "Total Users",
 				"todaysTransactions": "Today's Transactions",
 				"platformGrowth": "Platform growth",
-				"revenueToday": "revenue today"
+				"revenueToday": "revenue today",
+				"totalOrganizers": "Total Organizers",
+				"partneredOrganizers": "Partnered Organizers"
 			},
 			"actions": {
 				"createEvent": "Create New Event",
 				"createEventDescription": "Create and configure new racing events for the platform",
 				"viewEvents": "View Events",
 				"viewEventsDescription": "Browse and manage all racing events on the platform",
-				"validateEvents": "Validate Events",
-				"validateEventsDescription": "Review and approve events proposed by organizers",
+				"createOrganizer": "Create New Organizer",
+				"createOrganizerDescription": "Add new event organizers to the platform",
+				"viewOrganizers": "View Organizers",
+				"viewOrganizersDescription": "Manage all event organizers and their partnerships",
+				"validateOrganizer": "Validate Organizers",
+				"validateOrganizerDescription": "Review and approve organizer partnership requests",
 				"reviewBibs": "Review Pending Bibs",
 				"manageUsers": "Manage Users",
 				"viewTransactions": "View All Transactions",
@@ -88,6 +98,10 @@
 				"transactions": {
 					"title": "Transactions",
 					"description": "Surveiller les paiements et l'activité financière"
+				},
+				"organizers": {
+					"title": "Gestion des organisateurs",
+					"description": "Gérer les organisateurs d'événements et les partenariats"
 				}
 			},
 			"stats": {
@@ -98,15 +112,21 @@
 				"totalUsers": "Total des utilisateurs",
 				"todaysTransactions": "Transactions du jour",
 				"platformGrowth": "Croissance de la plateforme",
-				"revenueToday": "revenus aujourd'hui"
+				"revenueToday": "revenus aujourd'hui",
+				"totalOrganizers": "Total des organisateurs",
+				"partneredOrganizers": "Organisateurs partenaires"
 			},
 			"actions": {
 				"createEvent": "Créer un nouvel événement",
 				"createEventDescription": "Créer et configurer de nouveaux événements de course pour la plateforme",
 				"viewEvents": "Voir les événements",
 				"viewEventsDescription": "Parcourir et gérer tous les événements de course sur la plateforme",
-				"validateEvents": "Valider les événements",
-				"validateEventsDescription": "Examiner et approuver les événements proposés par les organisateurs",
+				"createOrganizer": "Créer un nouvel organisateur",
+				"createOrganizerDescription": "Ajouter de nouveaux organisateurs d'événements à la plateforme",
+				"viewOrganizers": "Voir les organisateurs",
+				"viewOrganizersDescription": "Gérer tous les organisateurs d'événements et leurs partenariats",
+				"validateOrganizer": "Valider les organisateurs",
+				"validateOrganizerDescription": "Examiner et approuver les demandes de partenariat des organisateurs",
 				"reviewBibs": "Examiner les dossards en attente",
 				"manageUsers": "Gérer les utilisateurs",
 				"viewTransactions": "Voir toutes les transactions",
@@ -153,6 +173,10 @@
 				"transactions": {
 					"title": "거래",
 					"description": "결제 및 금융 활동 모니터링"
+				},
+				"organizers": {
+					"title": "주최자 관리",
+					"description": "이벤트 주최자 및 파트너십 관리"
 				}
 			},
 			"stats": {
@@ -163,15 +187,21 @@
 				"totalUsers": "총 사용자",
 				"todaysTransactions": "오늘의 거래",
 				"platformGrowth": "플랫폼 성장",
-				"revenueToday": "오늘 수익"
+				"revenueToday": "오늘 수익",
+				"totalOrganizers": "총 주최자",
+				"partneredOrganizers": "파트너 주최자"
 			},
 			"actions": {
 				"createEvent": "새 이벤트 생성",
 				"createEventDescription": "플랫폼을 위한 새로운 레이싱 이벤트 생성 및 구성",
 				"viewEvents": "이벤트 보기",
 				"viewEventsDescription": "플랫폼의 모든 레이싱 이벤트 탐색 및 관리",
-				"validateEvents": "이벤트 검증",
-				"validateEventsDescription": "주최자가 제안한 이벤트 검토 및 승인",
+				"createOrganizer": "새 주최자 생성",
+				"createOrganizerDescription": "플랫폼에 새로운 이벤트 주최자 추가",
+				"viewOrganizers": "주최자 보기",
+				"viewOrganizersDescription": "모든 이벤트 주최자 및 파트너십 관리",
+				"validateOrganizer": "주최자 검증",
+				"validateOrganizerDescription": "주최자 파트너십 요청 검토 및 승인",
 				"reviewBibs": "대기 중인 비브 검토",
 				"manageUsers": "사용자 관리",
 				"viewTransactions": "모든 거래 보기",
