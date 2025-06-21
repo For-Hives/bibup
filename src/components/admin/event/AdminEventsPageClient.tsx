@@ -140,7 +140,6 @@ interface EventsTranslations {
 				date: string
 				distance: string
 				name: string
-				participants: string
 				partnered: string
 				type: string
 			}
@@ -274,17 +273,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 					)
 				},
 				accessorKey: 'typeCourse',
-			},
-			{
-				size: 120,
-				header: t.events.table.columns.participants,
-				cell: ({ row }) => {
-					const count = row.getValue('participantCount')
-					return count !== null && count !== undefined && typeof count === 'number' && count > 0
-						? count.toLocaleString()
-						: 'N/A'
-				},
-				accessorKey: 'participantCount',
 			},
 			{
 				size: 100,
