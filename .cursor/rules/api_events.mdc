@@ -19,7 +19,6 @@ alwaysApply: false
       "eventDate": "2022-01-01 10:00:00.123Z",
       "description": "test",
       "location": "test",
-      "isPartnered": true,
       "bibPickupWindowBeginDate": "2022-01-01 10:00:00.123Z",
       "bibPickupWindowEndDate": "2022-01-01 10:00:00.123Z",
       "distanceKm": 123,
@@ -29,9 +28,10 @@ alwaysApply: false
       "parcoursUrl": "https://example.com",
       "transferDeadline": "2022-01-01 10:00:00.123Z",
       "typeCourse": "route",
-      "logo": "filename.jpg",
       "registrationUrl": "https://example.com",
       "bibPickupLocation": "test",
+      "participants": 123,
+      "organizer": "RELATION_RECORD_ID",
       "created": "2022-01-01 10:00:00.123Z",
       "updated": "2022-01-01 10:00:00.123Z"
     },
@@ -43,7 +43,6 @@ alwaysApply: false
       "eventDate": "2022-01-01 10:00:00.123Z",
       "description": "test",
       "location": "test",
-      "isPartnered": true,
       "bibPickupWindowBeginDate": "2022-01-01 10:00:00.123Z",
       "bibPickupWindowEndDate": "2022-01-01 10:00:00.123Z",
       "distanceKm": 123,
@@ -53,11 +52,13 @@ alwaysApply: false
       "parcoursUrl": "https://example.com",
       "transferDeadline": "2022-01-01 10:00:00.123Z",
       "typeCourse": "route",
-      "logo": "filename.jpg",
       "registrationUrl": "https://example.com",
       "bibPickupLocation": "test",
+      "participants": 123,
+      "organizer": "RELATION_RECORD_ID",
       "created": "2022-01-01 10:00:00.123Z",
       "updated": "2022-01-01 10:00:00.123Z"
     }
   ]
 }
+
