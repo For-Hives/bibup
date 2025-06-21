@@ -246,7 +246,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.date,
 				cell: ({ row }) => {
 					const date = row.getValue('eventDate')
-					return <div>{date ? new Date(date as string).toLocaleDateString() : 'N/A'}</div>
+					return <div>{Boolean(date) ? new Date(date as string).toLocaleDateString() : 'N/A'}</div>
 				},
 				accessorKey: 'eventDate',
 			},
@@ -255,7 +255,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.distance,
 				cell: ({ row }) => {
 					const distance = row.getValue('distanceKm')
-					return <div>{distance && typeof distance === 'number' ? `${distance}km` : 'N/A'}</div>
+					return <div>{Boolean(distance) && typeof distance === 'number' ? `${distance}km` : 'N/A'}</div>
 				},
 				accessorKey: 'distanceKm',
 			},
@@ -277,8 +277,8 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 			{
 				size: 100,
 				header: t.events.table.columns.partnered,
-				cell: ({ row }) => (
-					<Badge variant={row.getValue('isPartnered') ? 'default' : 'secondary'}>
+				cell: ({ row }: { row: Row<Event> }) => (
+					<Badge variant={Boolean(row.getValue('isPartnered')) ? 'default' : 'secondary'}>
 						{row.getValue('isPartnered') ? t.events.table.controls.yes : t.events.table.controls.no}
 					</Badge>
 				),
