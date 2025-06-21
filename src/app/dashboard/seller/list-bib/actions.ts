@@ -57,7 +57,7 @@ export async function handleListBibServerAction(formData: FormData): Promise<Bib
 
 	const validatedData = validationResult.output
 
-	const bibToCreate: Omit<Bib, 'id'> = {
+	const bibToCreate: Omit<Bib, 'created' | 'id' | 'updated'> = {
 		validated: false,
 
 		status: 'available',
