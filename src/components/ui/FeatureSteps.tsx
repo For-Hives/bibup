@@ -87,17 +87,17 @@ export function FeatureSteps({ features, className, autoPlayInterval = 100 }: Fe
 							'bg-muted/50 relative order-1 h-[250px] overflow-hidden rounded-lg border md:order-2 md:h-[350px] lg:h-[450px]'
 						)}
 					>
-						<AnimatePresence mode="wait">
+						<AnimatePresence>
 							{features.map(
 								(feature, index) =>
 									index === currentFeature && (
 										<motion.div
-											animate={{ y: 0, rotateX: 0, opacity: 1 }}
+											animate={{ opacity: 1 }}
 											className="absolute inset-0 overflow-hidden rounded-lg"
-											exit={{ rotateX: 10, opacity: 0 }}
-											initial={{ rotateX: -10, opacity: 0 }}
+											exit={{ opacity: 0 }}
+											initial={{ opacity: 0 }}
 											key={index}
-											transition={{ ease: 'easeInOut', duration: 0.6 }}
+											transition={{ ease: 'easeInOut', duration: 0.4 }}
 										>
 											<Image
 												alt={feature.step}
