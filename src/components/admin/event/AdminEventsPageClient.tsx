@@ -177,45 +177,6 @@ const multiColumnFilterFn: FilterFn<Event> = (row, columnId, filterValue) => {
 	return searchableRowContent.includes(searchTerm)
 }
 
-const statusFilterFn: FilterFn<Event> = (row, columnId, filterValue: string[]) => {
-	if (!filterValue?.length) return true
-	const status = getEventStatus(row.original)
-	return filterValue.includes(status)
-}
-
-const getEventStatus = (event: Event) => {
-	const now = new Date()
-	const eventDate = new Date(event.eventDate)
-
-	if (eventDate < now) return 'past'
-	if (event.isPartnered && eventDate >= now) return 'active'
-	if (eventDate >= now) return 'upcoming'
-	return 'draft'
-}
-
-const getStatusBadge = (status: string, t: EventsTranslations) => {
-	const statusConfig = {
-		upcoming: {
-			label: t.events.table.status.upcoming,
-			className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-		},
-		past: {
-			label: t.events.table.status.past,
-			className: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
-		},
-		draft: {
-			label: t.events.table.status.draft,
-			className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-		},
-		active: {
-			label: t.events.table.status.active,
-			className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-		},
-	}
-	const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft
-	return <Badge className={config.className}>{config.label}</Badge>
-}
-
 export default function AdminEventsPageClient({ translations: t, currentUser }: AdminEventsPageClientProps) {
 	const router = useRouter()
 	const id = useId()
@@ -320,13 +281,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 			},
 			{
 				size: 100,
-				header: t.events.table.columns.status,
-				filterFn: statusFilterFn,
-				cell: ({ row }) => getStatusBadge(getEventStatus(row.original), t),
-				accessorKey: 'status',
-			},
-			{
-				size: 100,
 				header: t.events.table.columns.partnered,
 				cell: ({ row }) => (
 					<Badge variant={row.getValue('isPartnered') ? 'default' : 'secondary'}>
@@ -427,42 +381,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 		data: events,
 		columns,
 	})
-
-	// Get unique status values
-	const uniqueStatusValues = useMemo(() => {
-		const statusColumn = table.getColumn('status')
-		if (!statusColumn) return []
-		const values = Array.from(statusColumn.getFacetedUniqueValues().keys()) as string[]
-		return values.sort()
-	}, [table.getColumn('status')?.getFacetedUniqueValues()])
-
-	// Get counts for each status
-	const statusCounts = useMemo(() => {
-		const statusColumn = table.getColumn('status')
-		if (!statusColumn) return new Map<string, number>()
-		return statusColumn.getFacetedUniqueValues()
-	}, [table.getColumn('status')?.getFacetedUniqueValues()])
-
-	const selectedStatuses = useMemo(() => {
-		const filterValue = table.getColumn('status')?.getFilterValue() as string[] | undefined
-		return filterValue ?? []
-	}, [table.getColumn('status')?.getFilterValue()])
-
-	const handleStatusChange = (checked: boolean, value: string) => {
-		const filterValue = table.getColumn('status')?.getFilterValue() as string[] | undefined
-		const newFilterValue = filterValue ? [...filterValue] : []
-
-		if (checked) {
-			newFilterValue.push(value)
-		} else {
-			const index = newFilterValue.indexOf(value)
-			if (index > -1) {
-				newFilterValue.splice(index, 1)
-			}
-		}
-
-		table.getColumn('status')?.setFilterValue(newFilterValue.length ? newFilterValue : undefined)
-	}
 
 	// Safety check - if currentUser is null, show error
 	if (!currentUser) {
@@ -680,46 +598,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 											)}
 									</div>
 
-									{/* Filter by status */}
-									<Popover>
-										<PopoverTrigger asChild>
-											<Button variant="outline">
-												<Filter aria-hidden="true" className="-ms-1 opacity-60" size={16} />
-												Status
-												{selectedStatuses.length > 0 && (
-													<span className="bg-background text-muted-foreground/70 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
-														{selectedStatuses.length}
-													</span>
-												)}
-											</Button>
-										</PopoverTrigger>
-										<PopoverContent align="start" className="w-auto min-w-36 p-3">
-											<div className="space-y-3">
-												<div className="text-muted-foreground text-xs font-medium">Filters</div>
-												<div className="space-y-3">
-													{uniqueStatusValues.map(value => (
-														<div className="flex items-center gap-2" key={`status-${value}`}>
-															<Checkbox
-																checked={selectedStatuses.includes(value)}
-																id={`${id}-status-${value}`}
-																onCheckedChange={(checked: boolean) => handleStatusChange(checked, value)}
-															/>
-															<Label
-																className="flex grow justify-between gap-2 font-normal"
-																htmlFor={`${id}-status-${value}`}
-															>
-																{value}{' '}
-																<span className="text-muted-foreground ms-2 text-xs">
-																	{statusCounts.get(value) ?? 0}
-																</span>
-															</Label>
-														</div>
-													))}
-												</div>
-											</div>
-										</PopoverContent>
-									</Popover>
-
 									{/* Toggle columns visibility */}
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
@@ -792,14 +670,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 											</AlertDialogContent>
 										</AlertDialog>
 									)}
-
-									{/* Add event button */}
-									<Link href="/admin/event/create">
-										<Button className="ml-auto" variant="outline">
-											<Plus aria-hidden="true" className="-ms-1 opacity-60" size={16} />
-											Add Event
-										</Button>
-									</Link>
 								</div>
 							</div>
 
