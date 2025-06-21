@@ -306,7 +306,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 							<CardContent className="text-center">
 								<Button className="w-full" disabled>
 									<Clock className="mr-2 h-4 w-4" />
-									Coming Soon
+									{t.dashboard.ui.comingSoon}
 								</Button>
 							</CardContent>
 						</Card>
