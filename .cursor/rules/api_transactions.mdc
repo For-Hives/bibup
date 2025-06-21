@@ -1,0 +1,45 @@
+---
+description: the api description
+globs: 
+alwaysApply: false
+---
+# transactions
+/api/collections/transactions/records
+{
+  "page": 1,
+  "perPage": 30,
+  "totalPages": 1,
+  "totalItems": 2,
+  "items": [
+    {
+      "collectionId": "pbc_2194024101",
+      "collectionName": "transactions",
+      "id": "test",
+      "amount": 123,
+      "paymentIntentId": "test",
+      "platformFee": 123,
+      "status": "claimed",
+      "transactionDate": "2022-01-01 10:00:00.123Z",
+      "bibId": "RELATION_RECORD_ID",
+      "buyerUserId": "RELATION_RECORD_ID",
+      "sellerUserId": "RELATION_RECORD_ID",
+      "created": "2022-01-01 10:00:00.123Z",
+      "updated": "2022-01-01 10:00:00.123Z"
+    },
+    {
+      "collectionId": "pbc_2194024101",
+      "collectionName": "transactions",
+      "id": "[object Object]2",
+      "amount": 123,
+      "paymentIntentId": "test",
+      "platformFee": 123,
+      "status": "claimed",
+      "transactionDate": "2022-01-01 10:00:00.123Z",
+      "bibId": "RELATION_RECORD_ID",
+      "buyerUserId": "RELATION_RECORD_ID",
+      "sellerUserId": "RELATION_RECORD_ID",
+      "created": "2022-01-01 10:00:00.123Z",
+      "updated": "2022-01-01 10:00:00.123Z"
+    }
+  ]
+}
