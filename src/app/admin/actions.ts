@@ -1,6 +1,26 @@
 'use server'
 
 import { getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
+import { getAllEvents } from '@/services/event.services'
+
+/**
+ * Server action to get all events for admin
+ */
+export async function getAllEventsAction() {
+	try {
+		const events = await getAllEvents()
+		return {
+			success: true,
+			data: events,
+		}
+	} catch (error) {
+		console.error('Error fetching all events:', error)
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : 'Failed to fetch events',
+		}
+	}
+}
 
 /**
  * Server action to get dashboard statistics

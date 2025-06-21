@@ -124,3 +124,18 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 		)
 	}
 }
+
+/**
+ * Fetches all events for admin purposes.
+ * This function should only be used by admin users.
+ */
+export async function getAllEvents(): Promise<Event[]> {
+	try {
+		const records = await pb.collection('events').getFullList<Event>({
+			sort: '-created',
+		})
+		return records
+	} catch (error: unknown) {
+		throw new Error('Error fetching all events: ' + (error instanceof Error ? error.message : String(error)))
+	}
+}

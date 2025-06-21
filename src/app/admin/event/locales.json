@@ -1,457 +1,226 @@
 {
 	"en": {
-		"event": {
-			"title": "Create New Event",
-			"subtitle": "Configure your racing event for the Beswib platform",
+		"events": {
+			"title": "Events Management",
+			"subtitle": "Manage all racing events on the Beswib platform",
 			"sections": {
-				"eventInformation": {
-					"title": "Event Information",
-					"description": "Basic information about the event including name, date, and location."
+				"overview": {
+					"title": "Events Overview",
+					"description": "View and manage all events"
 				},
-				"eventDetails": {
-					"title": "Event Details",
-					"description": "Additional details about distance, elevation, pricing, and logistics."
-				},
-				"bibPickup": {
-					"title": "Bib Pickup Information",
-					"description": "Details about where and when participants can collect their bibs."
-				},
-				"partnership": {
-					"title": "Partnership Settings",
-					"description": "Configure partnership status and related settings."
-				},
-				"eventOptions": {
-					"title": "Event Options",
-					"description": "Configure additional options and categories for the event."
+				"actions": {
+					"title": "Quick Actions",
+					"description": "Common event management actions"
 				}
 			},
-			"fields": {
-				"eventName": {
-					"label": "Event Name",
-					"placeholder": "Marathon de Paris",
-					"required": true
+			"stats": {
+				"totalEvents": "Total Events",
+				"activeEvents": "Active Events",
+				"upcomingEvents": "Upcoming Events",
+				"pastEvents": "Past Events",
+				"partneredEvents": "Partnered Events",
+				"draftEvents": "Draft Events"
+			},
+			"actions": {
+				"createEvent": "Create New Event",
+				"createEventDescription": "Create and configure a new racing event",
+				"importEvents": "Import Events",
+				"importEventsDescription": "Import events from external sources",
+				"manageCategories": "Manage Categories",
+				"manageCategoriesDescription": "Organize events by categories and types"
+			},
+			"table": {
+				"columns": {
+					"name": "Name",
+					"date": "Date",
+					"location": "Location",
+					"type": "Type",
+					"participants": "Participants",
+					"status": "Status",
+					"partnered": "Partnered",
+					"actions": "Actions"
 				},
-				"location": {
-					"label": "Location",
-					"placeholder": "Paris, France",
-					"required": true
+				"status": {
+					"draft": "Draft",
+					"active": "Active",
+					"upcoming": "Upcoming",
+					"past": "Past",
+					"cancelled": "Cancelled"
 				},
-				"eventDate": {
-					"label": "Event Date",
-					"required": true
+				"actions": {
+					"view": "View",
+					"edit": "Edit",
+					"delete": "Delete",
+					"duplicate": "Duplicate"
 				},
-				"eventType": {
-					"label": "Event Type",
-					"placeholder": "Select event type",
-					"options": {
-						"route": "Route",
-						"trail": "Trail",
-						"triathlon": "Triathlon",
-						"ultra": "Ultra"
-					},
-					"required": true
-				},
-				"description": {
-					"label": "Description",
-					"placeholder": "Describe the event...",
-					"required": true
-				},
-				"distance": {
-					"label": "Distance (km)",
-					"placeholder": "42.195"
-				},
-				"elevationGain": {
-					"label": "Elevation Gain (m)",
-					"placeholder": "500"
-				},
-				"officialPrice": {
-					"label": "Official Price (€)",
-					"placeholder": "120"
-				},
-				"participantCount": {
-					"label": "Participant Count",
-					"placeholder": "30000"
-				},
-				"transferDeadline": {
-					"label": "Transfer Deadline"
-				},
-				"parcoursUrl": {
-					"label": "Parcours URL",
-					"placeholder": "https://example.com/route.gpx"
-				},
-				"logoUpload": {
-					"label": "Event Logo",
-					"description": "Upload a logo for your event. Supported formats: PNG, JPG, SVG (max 5MB)",
-					"uploadText": "Upload file",
-					"uploadSubtext": "Drag or drop your files here or click to upload",
-					"dropText": "Drop it",
-					"fileSizeUnit": "MB",
-					"fileModified": "modified"
-				},
-				"bibPickupLocation": {
-					"label": "Bib Pickup Location",
-					"placeholder": "Marathon Expo, Porte de Versailles"
-				},
-				"bibPickupBegin": {
-					"label": "Pickup Window Begin",
-					"required": true
-				},
-				"bibPickupEnd": {
-					"label": "Pickup Window End",
-					"required": true
-				},
-				"isPartnered": {
-					"label": "Partner Event",
-					"description": "Is this event partnered with Beswib?"
-				},
-				"registrationUrl": {
-					"label": "Registration Link",
-					"placeholder": "https://example.com/register"
+				"empty": {
+					"title": "No events found",
+					"description": "Get started by creating your first event",
+					"createButton": "Create Event"
 				}
 			},
-			"eventOptions": {
-				"addOption": "Add Event Option",
-				"removeOption": "Remove Option",
-				"optionType": "Option Type",
-				"optionName": "Option Name",
-				"optionKey": "Key",
-				"optionRequired": "Required",
-				"optionSelectPlaceholder": "Select option type",
-				"types": {
-					"select": "Select",
-					"text": "Text Input",
-					"number": "Number Input"
-				},
-				"values": {
-					"label": "Values",
-					"addValue": "Add Value",
-					"removeValue": "Remove Value",
-					"placeholder": "Option value"
-				}
+			"filters": {
+				"all": "All Events",
+				"active": "Active",
+				"upcoming": "Upcoming",
+				"past": "Past",
+				"partnered": "Partnered Only",
+				"search": "Search events..."
 			},
-			"partnership": {
-				"partnered": "Partnered Event (allows bib resale)",
-				"notPartnered": "Not Partnered (display only)"
-			},
-			"buttons": {
-				"createEvent": "Create Event",
-				"cancel": "Cancel",
-				"creating": "Creating Event..."
-			},
-			"success": {
-				"title": "Event Created Successfully!",
-				"message": "\"{eventName}\" has been created and is now available on the platform.",
-				"redirecting": "Redirecting to admin dashboard..."
-			},
-			"errors": {
-				"creationFailed": "Failed to create event. Please try again.",
-				"fillRequired": "Please fill in all required fields.",
-				"invalidDate": "Please select a valid date.",
-				"invalidPrice": "Please enter a valid price."
+			"ui": {
+				"loading": "Loading events...",
+				"refreshing": "Refreshing...",
+				"comingSoon": "Coming Soon"
 			}
 		}
 	},
 	"fr": {
-		"event": {
-			"title": "Créer un Nouvel Événement",
-			"subtitle": "Configurez votre événement de course pour la plateforme Beswib",
+		"events": {
+			"title": "Gestion des Événements",
+			"subtitle": "Gérez tous les événements de course sur la plateforme Beswib",
 			"sections": {
-				"eventInformation": {
-					"title": "Informations de l'Événement",
-					"description": "Informations de base sur l'événement incluant le nom, la date et le lieu."
+				"overview": {
+					"title": "Vue d'ensemble des Événements",
+					"description": "Visualiser et gérer tous les événements"
 				},
-				"eventDetails": {
-					"title": "Détails de l'Événement",
-					"description": "Détails supplémentaires sur la distance, le dénivelé, les prix et la logistique."
-				},
-				"bibPickup": {
-					"title": "Informations de Retrait des Dossards",
-					"description": "Détails sur où et quand les participants peuvent récupérer leurs dossards."
-				},
-				"partnership": {
-					"title": "Paramètres de Partenariat",
-					"description": "Configurez le statut de partenariat et les paramètres associés."
-				},
-				"eventOptions": {
-					"title": "Options de l'Événement",
-					"description": "Configurez les options supplémentaires et les catégories pour l'événement."
+				"actions": {
+					"title": "Actions Rapides",
+					"description": "Actions communes de gestion d'événements"
 				}
 			},
-			"fields": {
-				"eventName": {
-					"label": "Nom de l'Événement",
-					"placeholder": "Marathon de Paris",
-					"required": true
+			"stats": {
+				"totalEvents": "Total Événements",
+				"activeEvents": "Événements Actifs",
+				"upcomingEvents": "Événements à Venir",
+				"pastEvents": "Événements Passés",
+				"partneredEvents": "Événements Partenaires",
+				"draftEvents": "Brouillons"
+			},
+			"actions": {
+				"createEvent": "Créer un Nouvel Événement",
+				"createEventDescription": "Créer et configurer un nouvel événement de course",
+				"importEvents": "Importer des Événements",
+				"importEventsDescription": "Importer des événements depuis des sources externes",
+				"manageCategories": "Gérer les Catégories",
+				"manageCategoriesDescription": "Organiser les événements par catégories et types"
+			},
+			"table": {
+				"columns": {
+					"name": "Nom",
+					"date": "Date",
+					"location": "Lieu",
+					"type": "Type",
+					"participants": "Participants",
+					"status": "Statut",
+					"partnered": "Partenaire",
+					"actions": "Actions"
 				},
-				"location": {
-					"label": "Lieu",
-					"placeholder": "Paris, France",
-					"required": true
+				"status": {
+					"draft": "Brouillon",
+					"active": "Actif",
+					"upcoming": "À venir",
+					"past": "Passé",
+					"cancelled": "Annulé"
 				},
-				"eventDate": {
-					"label": "Date de l'Événement",
-					"required": true
+				"actions": {
+					"view": "Voir",
+					"edit": "Modifier",
+					"delete": "Supprimer",
+					"duplicate": "Dupliquer"
 				},
-				"eventType": {
-					"label": "Type d'Événement",
-					"placeholder": "Sélectionnez le type d'événement",
-					"options": {
-						"route": "Route",
-						"trail": "Trail",
-						"triathlon": "Triathlon",
-						"ultra": "Ultra"
-					},
-					"required": true
-				},
-				"description": {
-					"label": "Description",
-					"placeholder": "Décrivez l'événement...",
-					"required": true
-				},
-				"distance": {
-					"label": "Distance (km)",
-					"placeholder": "42.195"
-				},
-				"elevationGain": {
-					"label": "Dénivelé Positif (m)",
-					"placeholder": "500"
-				},
-				"officialPrice": {
-					"label": "Prix Officiel (€)",
-					"placeholder": "120"
-				},
-				"participantCount": {
-					"label": "Nombre de Participants",
-					"placeholder": "30000"
-				},
-				"transferDeadline": {
-					"label": "Date Limite de Transfert"
-				},
-				"parcoursUrl": {
-					"label": "URL du Parcours",
-					"placeholder": "https://example.com/route.gpx"
-				},
-				"logoUpload": {
-					"label": "Logo de l'Événement",
-					"description": "Téléchargez un logo pour votre événement. Formats supportés : PNG, JPG, SVG (max 5Mo)",
-					"uploadText": "Télécharger un fichier",
-					"uploadSubtext": "Glissez et déposez vos fichiers ici ou cliquez pour télécharger",
-					"dropText": "Déposez-le",
-					"fileSizeUnit": "Mo",
-					"fileModified": "modifié"
-				},
-				"bibPickupLocation": {
-					"label": "Lieu de Retrait des Dossards",
-					"placeholder": "Salon du Marathon, Porte de Versailles"
-				},
-				"bibPickupBegin": {
-					"label": "Début de la Période de Retrait",
-					"required": true
-				},
-				"bibPickupEnd": {
-					"label": "Fin de la Période de Retrait",
-					"required": true
-				},
-				"isPartnered": {
-					"label": "Événement Partenaire",
-					"description": "Cet événement est-il en partenariat avec Beswib ?"
-				},
-				"registrationUrl": {
-					"label": "Lien d'inscription",
-					"placeholder": "https://example.com/register"
+				"empty": {
+					"title": "Aucun événement trouvé",
+					"description": "Commencez en créant votre premier événement",
+					"createButton": "Créer un Événement"
 				}
 			},
-			"eventOptions": {
-				"addOption": "Ajouter une Option",
-				"removeOption": "Supprimer l'Option",
-				"optionType": "Type d'Option",
-				"optionName": "Nom de l'Option",
-				"optionKey": "Clé",
-				"optionRequired": "Requis",
-				"optionSelectPlaceholder": "Sélectionnez le type d'option",
-				"types": {
-					"select": "Sélection",
-					"text": "Saisie de Texte",
-					"number": "Saisie de Nombre"
-				},
-				"values": {
-					"label": "Valeurs",
-					"addValue": "Ajouter une Valeur",
-					"removeValue": "Supprimer la Valeur",
-					"placeholder": "Valeur de l'option"
-				}
+			"filters": {
+				"all": "Tous les Événements",
+				"active": "Actifs",
+				"upcoming": "À Venir",
+				"past": "Passés",
+				"partnered": "Partenaires Uniquement",
+				"search": "Rechercher des événements..."
 			},
-			"partnership": {
-				"partnered": "Événement Partenaire (permet la revente de dossards)",
-				"notPartnered": "Non Partenaire (affichage uniquement)"
-			},
-			"buttons": {
-				"createEvent": "Créer l'Événement",
-				"cancel": "Annuler",
-				"creating": "Création de l'Événement..."
-			},
-			"success": {
-				"title": "Événement Créé avec Succès !",
-				"message": "\"{eventName}\" a été créé et est maintenant disponible sur la plateforme.",
-				"redirecting": "Redirection vers le tableau de bord admin..."
-			},
-			"errors": {
-				"creationFailed": "Échec de la création de l'événement. Veuillez réessayer.",
-				"fillRequired": "Veuillez remplir tous les champs obligatoires.",
-				"invalidDate": "Veuillez sélectionner une date valide.",
-				"invalidPrice": "Veuillez saisir un prix valide."
+			"ui": {
+				"loading": "Chargement des événements...",
+				"refreshing": "Actualisation...",
+				"comingSoon": "Bientôt Disponible"
 			}
 		}
 	},
 	"ko": {
-		"event": {
-			"title": "새 이벤트 생성",
-			"subtitle": "Beswib 플랫폼을 위한 레이싱 이벤트를 구성하세요",
+		"events": {
+			"title": "이벤트 관리",
+			"subtitle": "Beswib 플랫폼의 모든 레이싱 이벤트를 관리하세요",
 			"sections": {
-				"eventInformation": {
-					"title": "이벤트 정보",
-					"description": "이름, 날짜, 위치를 포함한 이벤트의 기본 정보입니다."
+				"overview": {
+					"title": "이벤트 개요",
+					"description": "모든 이벤트 보기 및 관리"
 				},
-				"eventDetails": {
-					"title": "이벤트 세부사항",
-					"description": "거리, 고도, 가격 및 물류에 대한 추가 세부사항입니다."
-				},
-				"bibPickup": {
-					"title": "비브 픽업 정보",
-					"description": "참가자들이 비브를 수령할 수 있는 장소와 시간에 대한 세부사항입니다."
-				},
-				"partnership": {
-					"title": "파트너십 설정",
-					"description": "파트너십 상태 및 관련 설정을 구성합니다."
-				},
-				"eventOptions": {
-					"title": "이벤트 옵션",
-					"description": "이벤트를 위한 추가 옵션과 카테고리를 구성합니다."
+				"actions": {
+					"title": "빠른 작업",
+					"description": "일반적인 이벤트 관리 작업"
 				}
 			},
-			"fields": {
-				"eventName": {
-					"label": "이벤트 이름",
-					"placeholder": "파리 마라톤",
-					"required": true
+			"stats": {
+				"totalEvents": "총 이벤트",
+				"activeEvents": "활성 이벤트",
+				"upcomingEvents": "예정된 이벤트",
+				"pastEvents": "지난 이벤트",
+				"partneredEvents": "파트너 이벤트",
+				"draftEvents": "초안"
+			},
+			"actions": {
+				"createEvent": "새 이벤트 생성",
+				"createEventDescription": "새로운 레이싱 이벤트 생성 및 구성",
+				"importEvents": "이벤트 가져오기",
+				"importEventsDescription": "외부 소스에서 이벤트 가져오기",
+				"manageCategories": "카테고리 관리",
+				"manageCategoriesDescription": "카테고리 및 유형별로 이벤트 정리"
+			},
+			"table": {
+				"columns": {
+					"name": "이름",
+					"date": "날짜",
+					"location": "위치",
+					"type": "유형",
+					"participants": "참가자",
+					"status": "상태",
+					"partnered": "파트너",
+					"actions": "작업"
 				},
-				"location": {
-					"label": "위치",
-					"placeholder": "파리, 프랑스",
-					"required": true
+				"status": {
+					"draft": "초안",
+					"active": "활성",
+					"upcoming": "예정",
+					"past": "과거",
+					"cancelled": "취소됨"
 				},
-				"eventDate": {
-					"label": "이벤트 날짜",
-					"required": true
+				"actions": {
+					"view": "보기",
+					"edit": "편집",
+					"delete": "삭제",
+					"duplicate": "복제"
 				},
-				"eventType": {
-					"label": "이벤트 유형",
-					"placeholder": "이벤트 유형 선택",
-					"options": {
-						"route": "로드",
-						"trail": "트레일",
-						"triathlon": "트라이애슬론",
-						"ultra": "울트라"
-					},
-					"required": true
-				},
-				"description": {
-					"label": "설명",
-					"placeholder": "이벤트를 설명하세요...",
-					"required": true
-				},
-				"distance": {
-					"label": "거리 (km)",
-					"placeholder": "42.195"
-				},
-				"elevationGain": {
-					"label": "고도 상승 (m)",
-					"placeholder": "500"
-				},
-				"officialPrice": {
-					"label": "공식 가격 (€)",
-					"placeholder": "120"
-				},
-				"participantCount": {
-					"label": "참가자 수",
-					"placeholder": "30000"
-				},
-				"transferDeadline": {
-					"label": "양도 마감일"
-				},
-				"parcoursUrl": {
-					"label": "코스 URL",
-					"placeholder": "https://example.com/route.gpx"
-				},
-				"logoUpload": {
-					"label": "이벤트 로고",
-					"description": "이벤트 로고를 업로드하세요. 지원 형식: PNG, JPG, SVG (최대 5MB)",
-					"uploadText": "파일 업로드",
-					"uploadSubtext": "파일을 여기에 드래그 앤 드롭하거나 클릭하여 업로드하세요",
-					"dropText": "놓아주세요",
-					"fileSizeUnit": "MB",
-					"fileModified": "수정됨"
-				},
-				"bibPickupLocation": {
-					"label": "비브 픽업 장소",
-					"placeholder": "마라톤 엑스포, 베르사유 문"
-				},
-				"bibPickupBegin": {
-					"label": "픽업 기간 시작",
-					"required": true
-				},
-				"bibPickupEnd": {
-					"label": "픽업 기간 종료",
-					"required": true
-				},
-				"isPartnered": {
-					"label": "파트너 이벤트",
-					"description": "이 이벤트가 Beswib과 파트너십을 맺고 있나요?"
-				},
-				"registrationUrl": {
-					"label": "등록 링크",
-					"placeholder": "https://example.com/register"
+				"empty": {
+					"title": "이벤트를 찾을 수 없습니다",
+					"description": "첫 번째 이벤트를 생성하여 시작하세요",
+					"createButton": "이벤트 생성"
 				}
 			},
-			"eventOptions": {
-				"addOption": "옵션 추가",
-				"removeOption": "옵션 제거",
-				"optionType": "옵션 유형",
-				"optionName": "옵션 이름",
-				"optionKey": "키",
-				"optionRequired": "필수",
-				"optionSelectPlaceholder": "옵션 유형 선택",
-				"types": {
-					"select": "선택",
-					"text": "텍스트 입력",
-					"number": "숫자 입력"
-				},
-				"values": {
-					"label": "값들",
-					"addValue": "값 추가",
-					"removeValue": "값 제거",
-					"placeholder": "옵션 값"
-				}
+			"filters": {
+				"all": "모든 이벤트",
+				"active": "활성",
+				"upcoming": "예정",
+				"past": "과거",
+				"partnered": "파트너만",
+				"search": "이벤트 검색..."
 			},
-			"partnership": {
-				"partnered": "파트너 이벤트 (비브 재판매 허용)",
-				"notPartnered": "비파트너 (표시만)"
-			},
-			"buttons": {
-				"createEvent": "이벤트 생성",
-				"cancel": "취소",
-				"creating": "이벤트 생성 중..."
-			},
-			"success": {
-				"title": "이벤트가 성공적으로 생성되었습니다!",
-				"message": "\"{eventName}\"이(가) 생성되어 플랫폼에서 이용 가능합니다.",
-				"redirecting": "관리자 대시보드로 리디렉션 중..."
-			},
-			"errors": {
-				"creationFailed": "이벤트 생성에 실패했습니다. 다시 시도해주세요.",
-				"fillRequired": "모든 필수 필드를 입력해주세요.",
-				"invalidDate": "유효한 날짜를 선택해주세요.",
-				"invalidPrice": "유효한 가격을 입력해주세요."
+			"ui": {
+				"loading": "이벤트 로딩 중...",
+				"refreshing": "새로고침 중...",
+				"comingSoon": "곧 출시"
 			}
 		}
 	}
