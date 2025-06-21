@@ -1,17 +1,6 @@
 'use client'
 
-import {
-	AlertCircle,
-	Calendar,
-	CheckCircle,
-	Clock,
-	CreditCard,
-	Eye,
-	FileText,
-	Plus,
-	TrendingUp,
-	Users,
-} from 'lucide-react'
+import { Calendar, CheckCircle, Clock, CreditCard, Eye, FileText, Plus, TrendingUp, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -23,9 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { type DashboardStats } from '@/services/dashboard.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 
-import { getDashboardStatsAction, getRecentActivityAction } from '../../../app/admin/actions'
+import { getDashboardStatsAction } from '../../../app/admin/actions'
 import translations from '../../../app/admin/locales.json'
 
 interface AdminDashboardClientProps {
@@ -33,27 +21,18 @@ interface AdminDashboardClientProps {
 	translations: Translations
 }
 
-interface RecentActivity {
-	id: string
-	status: 'completed' | 'failed' | 'pending'
-	timestamp: Date
-	title: string
-	type: 'bib_validation' | 'event_creation' | 'transaction' | 'user_registration'
-}
-
 type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
 export default function AdminDashboardClient({ translations: t, currentUser }: AdminDashboardClientProps) {
 	const router = useRouter()
 	const [stats, setStats] = useState<DashboardStats | null>(null)
-	const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
 		const fetchDashboardData = async () => {
 			try {
 				setIsLoading(true)
-				const [statsResult, activityResult] = await Promise.all([getDashboardStatsAction(), getRecentActivityAction()])
+				const statsResult = await getDashboardStatsAction()
 
 				if (statsResult.success && statsResult.data) {
 					setStats(statsResult.data)
@@ -78,14 +57,6 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 						},
 						availableBibs: 0,
 					})
-				}
-
-				if (activityResult.success && activityResult.data) {
-					setRecentActivity(activityResult.data)
-				} else {
-					console.error('Error fetching activity:', activityResult.error)
-					// Set empty activity in case of error
-					setRecentActivity([])
 				}
 			} catch (error) {
 				console.error('Error fetching dashboard data:', error)
@@ -115,34 +86,6 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 
 		void fetchDashboardData()
 	}, [])
-
-	const getActivityIcon = (type: RecentActivity['type']) => {
-		switch (type) {
-			case 'bib_validation':
-				return <FileText className="h-4 w-4" />
-			case 'event_creation':
-				return <Calendar className="h-4 w-4" />
-			case 'transaction':
-				return <CreditCard className="h-4 w-4" />
-			case 'user_registration':
-				return <Users className="h-4 w-4" />
-			default:
-				return <AlertCircle className="h-4 w-4" />
-		}
-	}
-
-	const getStatusBadgeVariant = (status: RecentActivity['status']) => {
-		switch (status) {
-			case 'completed':
-				return 'default'
-			case 'failed':
-				return 'destructive'
-			case 'pending':
-				return 'secondary'
-			default:
-				return 'secondary'
-		}
-	}
 
 	// Safety check - if currentUser is null, show error
 	if (!currentUser) {
