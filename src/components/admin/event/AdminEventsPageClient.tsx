@@ -172,7 +172,7 @@ interface EventsTranslations {
 // Custom filter function for multi-column searching
 const multiColumnFilterFn: FilterFn<Event> = (row, columnId, filterValue) => {
 	const searchableRowContent = `${row.original.name} ${row.original.location} ${row.original.typeCourse}`.toLowerCase()
-	const searchTerm = (filterValue ?? '').toLowerCase()
+	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
 }
 
@@ -295,7 +295,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.participants,
 				cell: ({ row }) => {
 					const count = row.getValue('participantCount')
-					return count ? count.toLocaleString() : '-'
+					return count && typeof count === 'number' && count > 0 ? count.toLocaleString() : '-'
 				},
 				accessorKey: 'participantCount',
 			},
@@ -413,24 +413,24 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 	const uniqueStatusValues = useMemo(() => {
 		const statusColumn = table.getColumn('status')
 		if (!statusColumn) return []
-		const values = Array.from(statusColumn.getFacetedUniqueValues().keys())
+		const values = Array.from(statusColumn.getFacetedUniqueValues().keys()) as string[]
 		return values.sort()
 	}, [table.getColumn('status')?.getFacetedUniqueValues()])
 
 	// Get counts for each status
 	const statusCounts = useMemo(() => {
 		const statusColumn = table.getColumn('status')
-		if (!statusColumn) return new Map()
+		if (!statusColumn) return new Map<string, number>()
 		return statusColumn.getFacetedUniqueValues()
 	}, [table.getColumn('status')?.getFacetedUniqueValues()])
 
 	const selectedStatuses = useMemo(() => {
-		const filterValue = table.getColumn('status')?.getFilterValue() as string[]
+		const filterValue = table.getColumn('status')?.getFilterValue() as string[] | undefined
 		return filterValue ?? []
 	}, [table.getColumn('status')?.getFilterValue()])
 
 	const handleStatusChange = (checked: boolean, value: string) => {
-		const filterValue = table.getColumn('status')?.getFilterValue() as string[]
+		const filterValue = table.getColumn('status')?.getFilterValue() as string[] | undefined
 		const newFilterValue = filterValue ? [...filterValue] : []
 
 		if (checked) {
@@ -957,9 +957,9 @@ function RowActions({ t, row }: { row: Row<Event>; t: EventsTranslations }) {
 		router.push(`/admin/event/edit/${row.original.id}`)
 	}
 
-	const handleDelete = async () => {
+	const handleDelete = () => {
 		// TODO: Implement delete functionality
-		console.log('Delete event:', row.original.id)
+		console.warn('Delete event:', row.original.id)
 		setShowDeleteDialog(false)
 	}
 

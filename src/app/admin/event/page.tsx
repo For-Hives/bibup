@@ -1,6 +1,7 @@
+import { requireAdminAccess } from '@/guard/adminGuard'
+
 import AdminEventsPageClient from '@/components/admin/event/AdminEventsPageClient'
 import { getTranslations } from '@/lib/getDictionary'
-import { requireAdminAccess } from '@/lib/adminGuard'
 import { getLocale } from '@/lib/getLocale'
 
 import translations from './locales.json'

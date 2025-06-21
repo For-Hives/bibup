@@ -2,11 +2,11 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { checkAdminAccess } from '@/guard/adminGuard'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { getTranslations } from '@/lib/getDictionary'
-import { checkAdminAccess } from '@/lib/adminGuard'
 import { getLocale } from '@/lib/getLocale'
 
 import pageTranslationsData from './locales.json'
