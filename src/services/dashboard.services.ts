@@ -177,7 +177,7 @@ export async function getRecentActivity(): Promise<
 			activities.push({
 				type: 'bib_validation',
 				title: `Bib #${bib.registrationNumber} for ${eventName} needs validation`,
-				timestamp: new Date(bib.created ?? new Date()),
+				timestamp: new Date(),
 				status: 'pending',
 				id: `bib-${bib.id}`,
 			})
@@ -188,7 +188,7 @@ export async function getRecentActivity(): Promise<
 			activities.push({
 				type: 'event_creation',
 				title: `New event "${request.name}" requested for approval`,
-				timestamp: new Date(request.created),
+				timestamp: new Date(),
 				status: 'pending',
 				id: `event-${request.id}`,
 			})
@@ -199,7 +199,7 @@ export async function getRecentActivity(): Promise<
 			activities.push({
 				type: 'user_registration',
 				title: `New user registered: ${user.firstName} ${user.lastName}`,
-				timestamp: new Date(user.created),
+				timestamp: user.createdAt,
 				status: 'completed',
 				id: `user-${user.id}`,
 			})
