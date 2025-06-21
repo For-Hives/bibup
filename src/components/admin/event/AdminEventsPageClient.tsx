@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Eye, Filter, Plus, Search, Settings, Users } from 'lucide-react'
+import { Calendar, Eye, Plus, Search, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -372,64 +372,35 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 							</Card>
 						</div>
 
-						{/* Action Cards */}
-						<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-							{/* Create Event Card */}
-							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-								<CardHeader className="text-center">
-									<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-colors">
-										<Plus className="h-8 w-8" />
-									</div>
-									<CardTitle className="text-xl">{t.events.actions.createEvent}</CardTitle>
-									<CardDescription>{t.events.actions.createEventDescription}</CardDescription>
-								</CardHeader>
-								<CardContent className="text-center">
-									<Link href="/admin/event/create">
-										<Button className="w-full">
-											<Plus className="mr-2 h-4 w-4" />
-											{t.events.actions.createEvent}
-										</Button>
-									</Link>
-								</CardContent>
-							</Card>
+						{/* Quick Actions Section */}
+						<div className="mb-8">
+							<div className="mb-6">
+								<h2 className="text-foreground mb-2 text-2xl font-bold">{t.events.sections.actions.title}</h2>
+								<p className="text-muted-foreground">{t.events.sections.actions.description}</p>
+							</div>
 
-							{/* Import Events Card - Disabled for now */}
-							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
-								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
-										<Settings className="h-8 w-8" />
-									</div>
-									<CardTitle className="text-xl text-gray-500">{t.events.actions.importEvents}</CardTitle>
-									<CardDescription className="text-gray-400">
-										{t.events.actions.importEventsDescription}
-									</CardDescription>
-								</CardHeader>
-								<CardContent className="text-center">
-									<Button className="w-full" disabled variant="outline">
-										<Settings className="mr-2 h-4 w-4" />
-										{t.events.ui.comingSoon}
-									</Button>
-								</CardContent>
-							</Card>
-
-							{/* Manage Categories Card - Disabled for now */}
-							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
-								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
-										<Filter className="h-8 w-8" />
-									</div>
-									<CardTitle className="text-xl text-gray-500">{t.events.actions.manageCategories}</CardTitle>
-									<CardDescription className="text-gray-400">
-										{t.events.actions.manageCategoriesDescription}
-									</CardDescription>
-								</CardHeader>
-								<CardContent className="text-center">
-									<Button className="w-full" disabled variant="outline">
-										<Filter className="mr-2 h-4 w-4" />
-										{t.events.ui.comingSoon}
-									</Button>
-								</CardContent>
-							</Card>
+							<div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
+								{/* Create Event Card */}
+								<Link href="/admin/event/create">
+									<Card className="border-border/50 bg-card/50 hover:bg-card/80 group cursor-pointer transition-all duration-300 hover:shadow-lg">
+										<CardHeader>
+											<div className="flex items-center gap-3">
+												<div className="bg-primary/10 text-primary rounded-lg p-2">
+													<Plus className="h-5 w-5" />
+												</div>
+												<div>
+													<CardTitle className="text-foreground group-hover:text-primary transition-colors">
+														{t.events.actions.createEvent}
+													</CardTitle>
+													<CardDescription className="text-muted-foreground">
+														{t.events.actions.createEventDescription}
+													</CardDescription>
+												</div>
+											</div>
+										</CardHeader>
+									</Card>
+								</Link>
+							</div>
 						</div>
 
 						{/* Events Table */}
