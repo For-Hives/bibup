@@ -33,8 +33,18 @@ export default function LanguageSelector({ currentLocale = 'en' }: LanguageSelec
 			setSelectedLocale(newLocale)
 			setIsOpen(false)
 
-			// Force page refresh to apply new locale
-			// This is the simplest approach for the current system
+			// replace the current URL with the new locale (  /en/path/to/page -> /fr/path/to/page )
+			const url = new URL(window.location.href)
+			const pathSegments = url.pathname.split('/').filter(Boolean)
+			// Replace the first segment (current locale) with the new locale
+			if (pathSegments.length > 0 && languages.some(lang => lang.code === pathSegments[0])) {
+				pathSegments[0] = newLocale
+			} else {
+				pathSegments.unshift(newLocale)
+			}
+			url.pathname = '/' + pathSegments.join('/')
+			window.history.replaceState({}, '', url.toString())
+			// Reload the page to apply the new locale
 			window.location.reload()
 		} catch (error) {
 			console.error('Error changing language:', error)
