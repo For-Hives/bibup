@@ -172,7 +172,7 @@ interface EventsTranslations {
 // Custom filter function for multi-column searching
 const multiColumnFilterFn: FilterFn<Event> = (row, columnId, filterValue) => {
 	const searchableRowContent =
-		`${row.original.name || ''} ${row.original.location || ''} ${row.original.typeCourse || ''}`.toLowerCase()
+		`${row.original.name ?? ''} ${row.original.distanceKm ?? ''} ${row.original.typeCourse ?? ''}`.toLowerCase()
 	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
 }
@@ -246,20 +246,24 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				size: 28,
 				id: 'select',
 				header: ({ table }) => (
-					<Checkbox
-						aria-label="Select all"
-						checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-						onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
-					/>
+					<div className="flex items-center justify-center">
+						<Checkbox
+							aria-label="Select all"
+							checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+							onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+						/>
+					</div>
 				),
 				enableSorting: false,
 				enableHiding: false,
 				cell: ({ row }) => (
-					<Checkbox
-						aria-label="Select row"
-						checked={row.getIsSelected()}
-						onCheckedChange={value => row.toggleSelected(!!value)}
-					/>
+					<div className="flex items-center justify-center">
+						<Checkbox
+							aria-label="Select row"
+							checked={row.getIsSelected()}
+							onCheckedChange={value => row.toggleSelected(!!value)}
+						/>
+					</div>
 				),
 			},
 			{
@@ -280,10 +284,13 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				accessorKey: 'eventDate',
 			},
 			{
-				size: 180,
-				header: t.events.table.columns.location,
-				cell: ({ row }) => <div>{row.getValue('location') ?? 'N/A'}</div>,
-				accessorKey: 'location',
+				size: 120,
+				header: 'Distance',
+				cell: ({ row }) => {
+					const distance = row.getValue('distanceKm')
+					return <div>{distance && typeof distance === 'number' ? `${distance}km` : 'N/A'}</div>
+				},
+				accessorKey: 'distanceKm',
 			},
 			{
 				size: 100,
