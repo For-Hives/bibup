@@ -340,7 +340,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								<CardTitle>{t.dashboard.recentActivity.title}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								{recentActivity.length > 0 ? (
+								{recentActivity && recentActivity.length > 0 ? (
 									<div className="space-y-4">
 										{recentActivity.slice(0, 5).map(activity => (
 											<div
@@ -351,7 +351,9 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 													<div className="bg-muted rounded-full p-2">{getActivityIcon(activity.type)}</div>
 													<div>
 														<p className="text-sm font-medium">{activity.title}</p>
-														<p className="text-muted-foreground text-xs">{activity.timestamp.toLocaleString()}</p>
+														<p className="text-muted-foreground text-xs">
+															{activity.timestamp ? activity.timestamp.toLocaleString() : 'Unknown time'}
+														</p>
 													</div>
 												</div>
 												<Badge variant={getStatusBadgeVariant(activity.status)}>{activity.status}</Badge>
