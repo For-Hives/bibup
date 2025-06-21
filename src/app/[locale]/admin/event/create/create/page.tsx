@@ -3,6 +3,9 @@ import { requireAdminAccess } from '@/guard/adminGuard'
 import AdminEventPageClient from '@/components/admin/event/AdminEventPageClient'
 import { getLocale } from '@/lib/getLocale'
 
+// Force dynamic rendering for admin routes
+export const dynamic = 'force-dynamic'
+
 export default async function AdminEventPage() {
 	// Verify admin access before rendering the page
 	// This will automatically redirect if user is not authenticated or not admin

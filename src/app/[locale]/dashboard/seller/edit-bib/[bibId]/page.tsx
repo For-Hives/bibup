@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation'
 import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
-import { generateLocaleParams } from '@/lib/generateStaticParams'
 import { fetchBibByIdForSeller } from '@/services/bib.services'
 import { fetchUserByClerkId } from '@/services/user.services'
 import { getTranslations } from '@/lib/getDictionary'
@@ -14,6 +13,9 @@ import { Locale } from '@/lib/i18n-config'
 
 import editBibTranslations from './locales.json'
 import EditBibClient from './EditBibClient'
+
+// Force dynamic rendering for dashboard routes
+export const dynamic = 'force-dynamic'
 
 export type EditBibPageProps = {
 	params: Promise<{ bibId: string; locale: Locale }>
@@ -61,9 +63,4 @@ export async function generateMetadata({ params }: EditBibPageProps): Promise<Me
 	return {
 		title: `Edit Bib ${bibId} | Seller Dashboard | Beswib`,
 	}
-}
-
-// Generate static params for all locales
-export function generateStaticParams() {
-	return generateLocaleParams()
 }
