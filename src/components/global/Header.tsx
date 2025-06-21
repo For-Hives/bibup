@@ -6,11 +6,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { getTranslations } from '@/lib/getDictionary'
+import { checkAdminAccess } from '@/lib/adminGuard'
 import { getLocale } from '@/lib/getLocale'
 
 import pageTranslationsData from './locales.json'
 
 export default async function Header() {
+	const user = await checkAdminAccess()
+
 	const locale: string = await getLocale()
 
 	const t = getTranslations(locale, pageTranslationsData)
@@ -53,6 +56,14 @@ export default async function Header() {
 										{link.label}
 									</Link>
 								))}
+								{!!user && (
+									<Link
+										className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors"
+										href="/admin"
+									>
+										Admin
+									</Link>
+								)}
 							</div>
 						</div>
 					</div>
