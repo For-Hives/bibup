@@ -1,4 +1,5 @@
 import { EventOption } from './eventOption.model'
+import { Organizer } from './organizer.model'
 
 export interface Event {
 	bibPickupLocation?: string
@@ -22,9 +23,12 @@ export interface Event {
 
 	options: EventOption[]
 
+	// Organizer relation
+	organizer: Organizer['id'] // RELATION_RECORD_ID
+
 	parcoursUrl?: string // GPX files, map links
 
-	participantCount: number
+	participantCount?: number
 
 	registrationUrl?: string // link to registration
 

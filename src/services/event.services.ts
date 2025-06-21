@@ -1,5 +1,6 @@
 'use server'
 
+import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 
 import { pb } from '@/lib/pocketbaseClient'
@@ -7,31 +8,29 @@ import { pb } from '@/lib/pocketbaseClient'
 /**
  * Creates a new event. This function is intended for use by organizers.
  * @param eventData Partial data for the new event. Fields like name, date, location, description are expected.
- * @param organizerId The ID of the user (organizer) creating the event.
  */
-export async function createEvent(eventData: Event): Promise<Event | null> {
-	if (!eventData.name || isNaN(eventData.eventDate.getTime()) || !eventData.location) {
-		console.error('Event name, date, and location are required.')
+export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event | null> {
+	if (!eventData.name || isNaN(eventData.eventDate.getTime()) || !eventData.location || !eventData.organizer) {
+		console.error('Event name, date, location, and organizer are required.')
 		return null
 	}
 
 	try {
-		const dataToCreate: Omit<Event, 'id'> = {
+		const dataToCreate = {
 			typeCourse: eventData.typeCourse ?? 'route',
 			transferDeadline: eventData.transferDeadline,
 			registrationUrl: eventData.registrationUrl,
 			participantCount: eventData.participantCount ?? 0,
 			parcoursUrl: eventData.parcoursUrl,
+			organizer: eventData.organizer,
 			options: eventData.options ?? [],
 			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
 			logo: eventData.logo,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
-
 			eventDate: new Date(eventData.eventDate),
 			elevationGainM: eventData.elevationGainM,
-			// Optional fields
 			distanceKm: eventData.distanceKm,
 			description: eventData.description ?? '',
 			bibPickupWindowEndDate: eventData.bibPickupWindowEndDate ?? new Date(),
@@ -57,11 +56,15 @@ export async function createEvent(eventData: Event): Promise<Event | null> {
 
 /**
  * Fetches all events that are approved and public.
+ * @param expandOrganizer Whether to expand organizer data
  */
-export async function fetchApprovedPublicEvents(): Promise<Event[]> {
+export async function fetchApprovedPublicEvents(
+	expandOrganizer = false
+): Promise<(Event & { expand?: { organizer?: Organizer } })[]> {
 	try {
-		const records = await pb.collection('events').getFullList<Event>({
+		const records = await pb.collection('events').getFullList<Event & { expand?: { organizer?: Organizer } }>({
 			sort: 'eventDate',
+			expand: expandOrganizer ? 'organizer' : undefined,
 		})
 
 		return records
@@ -75,28 +78,41 @@ export async function fetchApprovedPublicEvents(): Promise<Event[]> {
 /**
  * Fetches a single event by its ID.
  * @param id The ID of the event to fetch.
+ * @param expandOrganizer Whether to expand organizer data
  */
-export async function fetchEventById(id: string): Promise<Event | null> {
+export async function fetchEventById(
+	id: string,
+	expandOrganizer = false
+): Promise<(Event & { expand?: { organizer?: Organizer } }) | null> {
 	try {
-		const record = await pb.collection('events').getOne<Event>(id)
+		const record = await pb.collection('events').getOne<Event & { expand?: { organizer?: Organizer } }>(id, {
+			expand: expandOrganizer ? 'organizer' : undefined,
+		})
 		return record
 	} catch (error: unknown) {
-		throw new Error(`Error fetching event with ID "${id}": ` + (error instanceof Error ? error.message : String(error)))
+		console.error(`Error fetching event with ID "${id}":`, error)
+		return null
 	}
 }
 
 /**
  * Fetches all events submitted by a specific organizer.
  * @param organizerId The ID of the organizer whose events are to be fetched.
+ * @param expandOrganizer Whether to expand organizer data
  */
-export async function fetchEventsByOrganizer(organizerId: string): Promise<Event[]> {
+export async function fetchEventsByOrganizer(
+	organizerId: string,
+	expandOrganizer = false
+): Promise<(Event & { expand?: { organizer?: Organizer } })[]> {
 	if (organizerId === '') {
 		console.error('Organizer ID is required to fetch their events.')
 		return []
 	}
 	try {
-		const records = await pb.collection('events').getFullList<Event>({
+		const records = await pb.collection('events').getFullList<Event & { expand?: { organizer?: Organizer } }>({
 			sort: '-created',
+			filter: `organizer = "${organizerId}"`,
+			expand: expandOrganizer ? 'organizer' : undefined,
 		})
 		return records
 	} catch (error: unknown) {
@@ -110,12 +126,16 @@ export async function fetchEventsByOrganizer(organizerId: string): Promise<Event
 /**
  * Fetches all events that are approved AND partnered.
  * These are typically events for which bibs can be listed by sellers.
+ * @param expandOrganizer Whether to expand organizer data
  */
-export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
+export async function fetchPartneredApprovedEvents(
+	expandOrganizer = false
+): Promise<(Event & { expand?: { organizer?: Organizer } })[]> {
 	try {
-		const records = await pb.collection('events').getFullList<Event>({
+		const records = await pb.collection('events').getFullList<Event & { expand?: { organizer?: Organizer } }>({
 			sort: 'eventDate',
 			filter: 'isPartnered = true',
+			expand: expandOrganizer ? 'organizer' : undefined,
 		})
 		return records
 	} catch (error: unknown) {
@@ -128,11 +148,15 @@ export async function fetchPartneredApprovedEvents(): Promise<Event[]> {
 /**
  * Fetches all events for admin purposes.
  * This function should only be used by admin users.
+ * @param expandOrganizer Whether to expand organizer data
  */
-export async function getAllEvents(): Promise<Event[]> {
+export async function getAllEvents(
+	expandOrganizer = false
+): Promise<(Event & { expand?: { organizer?: Organizer } })[]> {
 	try {
-		const records = await pb.collection('events').getFullList<Event>({
+		const records = await pb.collection('events').getFullList<Event & { expand?: { organizer?: Organizer } }>({
 			sort: '-created',
+			expand: expandOrganizer ? 'organizer' : undefined,
 		})
 		return records
 	} catch (error: unknown) {

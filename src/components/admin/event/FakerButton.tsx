@@ -136,6 +136,7 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 			registrationUrl: faker.internet.url(),
 			participantCount: faker.number.int({ min: 50, max: 2000 }),
 			parcoursUrl: faker.internet.url(),
+			organizer: 'fake_organizer_id', // This will need to be replaced with actual organizer IDs
 			options: [
 				{
 					values: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
