@@ -19,12 +19,13 @@ import Link from 'next/link'
 
 import type { User } from '@/models/user.model'
 
-import { type DashboardStats, getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { type DashboardStats } from '@/services/dashboard.services'
 import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
+import { getDashboardStatsAction, getRecentActivityAction } from '../../../app/admin/actions'
 import translations from '../../../app/admin/locales.json'
 
 interface AdminDashboardClientProps {
@@ -52,9 +53,40 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 		const fetchDashboardData = async () => {
 			try {
 				setIsLoading(true)
-				const [dashboardStats, activities] = await Promise.all([getDashboardStats(), getRecentActivity()])
-				setStats(dashboardStats)
-				setRecentActivity(activities)
+				const [statsResult, activityResult] = await Promise.all([getDashboardStatsAction(), getRecentActivityAction()])
+
+				if (statsResult.success && statsResult.data) {
+					setStats(statsResult.data)
+				} else {
+					console.error('Error fetching stats:', statsResult.error)
+					// Set fallback stats in case of error
+					setStats({
+						totalUsers: 0,
+						totalTransactions: 0,
+						totalEvents: 0,
+						totalBibs: 0,
+						todaysTransactions: 0,
+						todaysRevenue: 0,
+						soldBibs: 0,
+						pendingEvents: 0,
+						pendingBibs: 0,
+						eventCreationRequests: {
+							waiting: 0,
+							total: 0,
+							rejected: 0,
+							accepted: 0,
+						},
+						availableBibs: 0,
+					})
+				}
+
+				if (activityResult.success && activityResult.data) {
+					setRecentActivity(activityResult.data)
+				} else {
+					console.error('Error fetching activity:', activityResult.error)
+					// Set empty activity in case of error
+					setRecentActivity([])
+				}
 			} catch (error) {
 				console.error('Error fetching dashboard data:', error)
 				// Set fallback data in case of error
@@ -165,7 +197,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
 			{/* Admin header with user info */}
-			<div className="bg-card/25 border-border/30 absolute top-0 right-0 left-0 z-20 mx-4 mt-24 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
+			<div className="bg-card/25 border-border/30 absolute top-0 right-0 left-0 z-20 mx-4 mt-12 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
 				<div className="flex items-center justify-between">
 					<div>
 						<p className="text-muted-foreground text-sm">Connected as</p>
@@ -263,41 +295,41 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								</CardContent>
 							</Card>
 
-							{/* View Events Card */}
-							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							{/* View Events Card - Disabled for now */}
+							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
 								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 transition-colors group-hover:bg-blue-500/20">
+									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
 										<Eye className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl">View Events</CardTitle>
-									<CardDescription>Browse and manage all racing events on the platform</CardDescription>
+									<CardTitle className="text-xl text-gray-500">View Events</CardTitle>
+									<CardDescription className="text-gray-400">
+										Browse and manage all racing events on the platform
+									</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
-									<Link href="/events">
-										<Button className="w-full" variant="outline">
-											<Eye className="mr-2 h-4 w-4" />
-											View All Events
-										</Button>
-									</Link>
+									<Button className="w-full" disabled variant="outline">
+										<Clock className="mr-2 h-4 w-4" />
+										Coming Soon
+									</Button>
 								</CardContent>
 							</Card>
 
-							{/* Validate Events Card */}
-							<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							{/* Validate Events Card - Disabled for now */}
+							<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
 								<CardHeader className="text-center">
-									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-green-500 transition-colors group-hover:bg-green-500/20">
+									<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
 										<CheckCircle className="h-8 w-8" />
 									</div>
-									<CardTitle className="text-xl">Validate Events</CardTitle>
-									<CardDescription>Review and approve events proposed by organizers</CardDescription>
+									<CardTitle className="text-xl text-gray-500">Validate Events</CardTitle>
+									<CardDescription className="text-gray-400">
+										Review and approve events proposed by organizers
+									</CardDescription>
 								</CardHeader>
 								<CardContent className="text-center">
-									<Link href="/admin/events/validate">
-										<Button className="w-full" variant="outline">
-											<CheckCircle className="mr-2 h-4 w-4" />
-											Validate Events
-										</Button>
-									</Link>
+									<Button className="w-full" disabled variant="outline">
+										<Clock className="mr-2 h-4 w-4" />
+										Coming Soon
+									</Button>
 								</CardContent>
 							</Card>
 						</div>
