@@ -44,6 +44,8 @@ import Link from 'next/link'
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 
+import { cn } from '@/lib/utils'
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -54,7 +56,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '../../ui/alert-dialog'
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -64,20 +66,18 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
-
+} from '../../ui/dropdown-menu'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card'
+import { Pagination, PaginationContent, PaginationItem } from '../../ui/pagination'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import { getAllEventsAction } from '../../../app/admin/actions'
+import { Checkbox } from '../../ui/checkbox'
+import { Button } from '../../ui/button'
+import { Badge } from '../../ui/badge'
+import { Input } from '../../ui/input'
+import { Label } from '../../ui/label'
 
 interface AdminEventsPageClientProps {
 	currentUser: null | User
@@ -171,7 +171,8 @@ interface EventsTranslations {
 
 // Custom filter function for multi-column searching
 const multiColumnFilterFn: FilterFn<Event> = (row, columnId, filterValue) => {
-	const searchableRowContent = `${row.original.name} ${row.original.location} ${row.original.typeCourse}`.toLowerCase()
+	const searchableRowContent =
+		`${row.original.name || ''} ${row.original.location || ''} ${row.original.typeCourse || ''}`.toLowerCase()
 	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
 }
@@ -266,28 +267,35 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.name,
 				filterFn: multiColumnFilterFn,
 				enableHiding: false,
-				cell: ({ row }) => <div className="font-medium">{row.getValue('name')}</div>,
+				cell: ({ row }) => <div className="font-medium">{row.getValue('name') ?? 'N/A'}</div>,
 				accessorKey: 'name',
 			},
 			{
 				size: 120,
 				header: t.events.table.columns.date,
-				cell: ({ row }) => <div>{new Date(row.getValue('eventDate')).toLocaleDateString()}</div>,
+				cell: ({ row }) => {
+					const date = row.getValue('eventDate')
+					return <div>{date ? new Date(date as string).toLocaleDateString() : 'N/A'}</div>
+				},
 				accessorKey: 'eventDate',
 			},
 			{
 				size: 180,
 				header: t.events.table.columns.location,
+				cell: ({ row }) => <div>{row.getValue('location') ?? 'N/A'}</div>,
 				accessorKey: 'location',
 			},
 			{
 				size: 100,
 				header: t.events.table.columns.type,
-				cell: ({ row }) => (
-					<Badge className="capitalize" variant="outline">
-						{row.getValue('typeCourse')}
-					</Badge>
-				),
+				cell: ({ row }) => {
+					const type = row.getValue('typeCourse')
+					return (
+						<Badge className="capitalize" variant="outline">
+							{type ?? 'N/A'}
+						</Badge>
+					)
+				},
 				accessorKey: 'typeCourse',
 			},
 			{
@@ -295,7 +303,9 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.participants,
 				cell: ({ row }) => {
 					const count = row.getValue('participantCount')
-					return count && typeof count === 'number' && count > 0 ? count.toLocaleString() : '-'
+					return count !== null && count !== undefined && typeof count === 'number' && count > 0
+						? count.toLocaleString()
+						: 'N/A'
 				},
 				accessorKey: 'participantCount',
 			},
@@ -482,7 +492,10 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 							</div>
 							<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 								{Array.from({ length: 6 }).map((_, i) => (
-									<div className="h-32 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700" key={i}></div>
+									<div
+										className="h-32 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"
+										key={`skeleton-${i}`}
+									></div>
 								))}
 							</div>
 							<div className="h-96 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"></div>
@@ -595,7 +608,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 							<div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
 								{/* Create Event Card */}
 								<Link href="/admin/event/create">
-									<Card className="border-border/50 bg-card/50 hover:bg-card/80 group cursor-pointer transition-all duration-300 hover:shadow-lg">
+									<Card className="border-border/50 bg-card/80 hover:bg-card/90 group cursor-pointer backdrop-blur-md transition-all duration-300 hover:shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.15),inset_0_0_60px_hsl(var(--accent)/0.1),0_0_50px_hsl(var(--primary)/0.25)]">
 										<CardHeader>
 											<div className="flex items-center gap-3">
 												<div className="bg-primary/10 text-primary rounded-lg p-2">
@@ -625,7 +638,12 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 									<div className="relative">
 										<Input
 											aria-label="Filter events"
-											className={cn('peer min-w-60 ps-9', Boolean(table.getColumn('name')?.getFilterValue()) && 'pe-9')}
+											className={cn(
+												'peer min-w-60 ps-9',
+												table.getColumn('name')?.getFilterValue() !== undefined &&
+													table.getColumn('name')?.getFilterValue() !== '' &&
+													'pe-9'
+											)}
 											id={`${id}-input`}
 											onChange={e => table.getColumn('name')?.setFilterValue(e.target.value)}
 											placeholder={t.events.filters.search}
@@ -636,20 +654,21 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 										<div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
 											<Search aria-hidden="true" size={16} />
 										</div>
-										{Boolean(table.getColumn('name')?.getFilterValue()) && (
-											<button
-												aria-label="Clear filter"
-												className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-												onClick={() => {
-													table.getColumn('name')?.setFilterValue('')
-													if (inputRef.current) {
-														inputRef.current.focus()
-													}
-												}}
-											>
-												<CircleX aria-hidden="true" size={16} />
-											</button>
-										)}
+										{table.getColumn('name')?.getFilterValue() !== undefined &&
+											table.getColumn('name')?.getFilterValue() !== '' && (
+												<button
+													aria-label="Clear filter"
+													className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+													onClick={() => {
+														table.getColumn('name')?.setFilterValue('')
+														if (inputRef.current) {
+															inputRef.current.focus()
+														}
+													}}
+												>
+													<CircleX aria-hidden="true" size={16} />
+												</button>
+											)}
 									</div>
 
 									{/* Filter by status */}
@@ -669,16 +688,21 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 											<div className="space-y-3">
 												<div className="text-muted-foreground text-xs font-medium">Filters</div>
 												<div className="space-y-3">
-													{uniqueStatusValues.map((value, i) => (
-														<div className="flex items-center gap-2" key={value}>
+													{uniqueStatusValues.map(value => (
+														<div className="flex items-center gap-2" key={`status-${value}`}>
 															<Checkbox
 																checked={selectedStatuses.includes(value)}
-																id={`${id}-${i}`}
+																id={`${id}-status-${value}`}
 																onCheckedChange={(checked: boolean) => handleStatusChange(checked, value)}
 															/>
-															<Label className="flex grow justify-between gap-2 font-normal" htmlFor={`${id}-${i}`}>
+															<Label
+																className="flex grow justify-between gap-2 font-normal"
+																htmlFor={`${id}-status-${value}`}
+															>
 																{value}{' '}
-																<span className="text-muted-foreground ms-2 text-xs">{statusCounts.get(value)}</span>
+																<span className="text-muted-foreground ms-2 text-xs">
+																	{statusCounts.get(value) || 0}
+																</span>
 															</Label>
 														</div>
 													))}
@@ -705,8 +729,8 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 														<DropdownMenuCheckboxItem
 															checked={column.getIsVisible()}
 															className="capitalize"
-															key={column.id}
-															onCheckedChange={value => column.toggleVisibility(!!value)}
+															key={`column-${column.id}`}
+															onCheckedChange={(value: boolean) => column.toggleVisibility(!!value)}
 															onSelect={event => event.preventDefault()}
 														>
 															{column.id}
@@ -771,7 +795,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 							</div>
 
 							{/* Table */}
-							<div className="bg-background overflow-hidden rounded-md border">
+							<div className="bg-card/80 border-border/50 overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md">
 								<Table className="table-fixed">
 									<TableHeader>
 										{table.getHeaderGroups().map(headerGroup => (
@@ -855,7 +879,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 										</SelectTrigger>
 										<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
 											{[5, 10, 25, 50].map(pageSize => (
-												<SelectItem key={pageSize} value={pageSize.toString()}>
+												<SelectItem key={`pagesize-${pageSize}`} value={pageSize.toString()}>
 													{pageSize}
 												</SelectItem>
 											))}
@@ -1003,7 +1027,8 @@ function RowActions({ t, row }: { row: Row<Event>; t: EventsTranslations }) {
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete the event "{row.original.name}".
+								This action cannot be undone. This will permanently delete the event "
+								{row.original.name || 'Unknown Event'}".
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 					</div>
