@@ -31,10 +31,17 @@
 				"totalBibs": "Total Bibs",
 				"pendingBibs": "Pending Validation",
 				"totalUsers": "Total Users",
-				"todaysTransactions": "Today's Transactions"
+				"todaysTransactions": "Today's Transactions",
+				"platformGrowth": "Platform growth",
+				"revenueToday": "revenue today"
 			},
 			"actions": {
 				"createEvent": "Create New Event",
+				"createEventDescription": "Create and configure new racing events for the platform",
+				"viewEvents": "View Events",
+				"viewEventsDescription": "Browse and manage all racing events on the platform",
+				"validateEvents": "Validate Events",
+				"validateEventsDescription": "Review and approve events proposed by organizers",
 				"reviewBibs": "Review Pending Bibs",
 				"manageUsers": "Manage Users",
 				"viewTransactions": "View All Transactions",
@@ -42,8 +49,18 @@
 			},
 			"recentActivity": {
 				"title": "Recent Activity",
+				"description": "View recent platform activity and system events",
 				"noBibsPending": "No bibs pending validation",
 				"noRecentActivity": "No recent activity"
+			},
+			"ui": {
+				"connectedAs": "Connected as",
+				"comingSoon": "Coming Soon",
+				"signIn": "Sign In"
+			},
+			"errors": {
+				"accessError": "Access Error",
+				"accessErrorMessage": "Unable to verify admin access. Please try logging in again."
 			}
 		}
 	},
@@ -79,10 +96,17 @@
 				"totalBibs": "Total des dossards",
 				"pendingBibs": "En attente de validation",
 				"totalUsers": "Total des utilisateurs",
-				"todaysTransactions": "Transactions du jour"
+				"todaysTransactions": "Transactions du jour",
+				"platformGrowth": "Croissance de la plateforme",
+				"revenueToday": "revenus aujourd'hui"
 			},
 			"actions": {
 				"createEvent": "Créer un nouvel événement",
+				"createEventDescription": "Créer et configurer de nouveaux événements de course pour la plateforme",
+				"viewEvents": "Voir les événements",
+				"viewEventsDescription": "Parcourir et gérer tous les événements de course sur la plateforme",
+				"validateEvents": "Valider les événements",
+				"validateEventsDescription": "Examiner et approuver les événements proposés par les organisateurs",
 				"reviewBibs": "Examiner les dossards en attente",
 				"manageUsers": "Gérer les utilisateurs",
 				"viewTransactions": "Voir toutes les transactions",
@@ -90,8 +114,18 @@
 			},
 			"recentActivity": {
 				"title": "Activité récente",
+				"description": "Voir l'activité récente de la plateforme et les événements système",
 				"noBibsPending": "Aucun dossard en attente de validation",
 				"noRecentActivity": "Aucune activité récente"
+			},
+			"ui": {
+				"connectedAs": "Connecté en tant que",
+				"comingSoon": "Bientôt disponible",
+				"signIn": "Se connecter"
+			},
+			"errors": {
+				"accessError": "Erreur d'accès",
+				"accessErrorMessage": "Impossible de vérifier l'accès administrateur. Veuillez vous reconnecter."
 			}
 		}
 	},
@@ -127,10 +161,17 @@
 				"totalBibs": "총 비브",
 				"pendingBibs": "검증 대기 중",
 				"totalUsers": "총 사용자",
-				"todaysTransactions": "오늘의 거래"
+				"todaysTransactions": "오늘의 거래",
+				"platformGrowth": "플랫폼 성장",
+				"revenueToday": "오늘 수익"
 			},
 			"actions": {
 				"createEvent": "새 이벤트 생성",
+				"createEventDescription": "플랫폼을 위한 새로운 레이싱 이벤트 생성 및 구성",
+				"viewEvents": "이벤트 보기",
+				"viewEventsDescription": "플랫폼의 모든 레이싱 이벤트 탐색 및 관리",
+				"validateEvents": "이벤트 검증",
+				"validateEventsDescription": "주최자가 제안한 이벤트 검토 및 승인",
 				"reviewBibs": "대기 중인 비브 검토",
 				"manageUsers": "사용자 관리",
 				"viewTransactions": "모든 거래 보기",
@@ -138,8 +179,18 @@
 			},
 			"recentActivity": {
 				"title": "최근 활동",
+				"description": "최근 플랫폼 활동 및 시스템 이벤트 보기",
 				"noBibsPending": "검증 대기 중인 비브가 없습니다",
 				"noRecentActivity": "최근 활동이 없습니다"
+			},
+			"ui": {
+				"connectedAs": "로그인:",
+				"comingSoon": "곧 출시",
+				"signIn": "로그인"
+			},
+			"errors": {
+				"accessError": "접근 오류",
+				"accessErrorMessage": "관리자 접근을 확인할 수 없습니다. 다시 로그인해 주세요."
 			}
 		}
 	}
