@@ -1,8 +1,9 @@
+import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
+
 import * as v from 'valibot'
 
-import adminTranslations from '@/app/[locale]/admin/event/create/locales.json'
+import adminTranslations from '@/app/[locale]/event/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
-import { Event } from '@/models/event.model'
 
 // Validation Schema using Valibot
 export const EventCreationSchema = v.pipe(
@@ -54,5 +55,14 @@ export const EventCreationSchema = v.pipe(
 )
 
 export type EventFormData = v.InferOutput<typeof EventCreationSchema>
+
+export interface EventSectionProps {
+	errors: FieldErrors<EventFormData>
+	formData: EventFormData
+	locale?: string
+	register: UseFormRegister<EventFormData>
+	setValue: UseFormSetValue<EventFormData>
+	translations: Translations
+}
 
 export type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>

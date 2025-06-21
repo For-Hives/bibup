@@ -1,17 +1,6 @@
-import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
-
 import { RadioGroup, RadioGroupItem } from '../../ui/radio-group'
-import { EventFormData } from './types'
+import { EventSectionProps } from './types'
 import { Label } from '../../ui/label'
-
-export interface EventSectionProps {
-	errors: FieldErrors<EventFormData>
-	formData: EventFormData
-	locale?: string
-	register: UseFormRegister<EventFormData>
-	setValue: UseFormSetValue<EventFormData>
-	translations: Translations
-}
 
 export default function PartnershipSection({ translations, setValue, formData }: EventSectionProps) {
 	return (
