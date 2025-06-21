@@ -24,7 +24,7 @@ export default function EventCreationForm({ translations, onSuccess, onCancel }:
 	const [eventOptions, setEventOptions] = useState<EventOption[]>([])
 
 	// Extract locale from translations
-	const locale = 'fr' // Use default locale for admin client component
+	const locale = 'fr' // Use default locale for admin client component //TODO: Update to use locale from translations if available
 
 	const {
 		watch,
