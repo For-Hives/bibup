@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import Translations from '@/app/[locale]/event/locales.json'
 import { EventOption } from '@/models/eventOption.model'
 import { getTranslations } from '@/lib/getDictionary'
+import { Event } from '@/models/event.model'
 import { Locale } from '@/lib/i18n-config'
 
 import EventInformationSection from './EventInformationSection'

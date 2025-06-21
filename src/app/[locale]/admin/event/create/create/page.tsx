@@ -14,5 +14,5 @@ export default async function AdminEventPage() {
 	const locale = await getLocale()
 	const t = getTranslations(locale, translations)
 
-	return <AdminEventPageClient currentUser={adminUser} translations={t} />
+	return <AdminEventPageClient currentUser={adminUser} locale={locale} />
 }
