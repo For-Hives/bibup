@@ -2,18 +2,16 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
-import { checkAdminAccess } from '@/guard/adminGuard'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
 
+import AdminLinkWrapper from './AdminLinkWrapper'
 import pageTranslationsData from './locales.json'
 
 export default async function Header({ localeParams }: { localeParams: Promise<LocaleParams> }) {
-	const user = await checkAdminAccess()
-
 	const { locale } = await localeParams
 
 	const t = getTranslations(locale, pageTranslationsData)
@@ -56,14 +54,7 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 										{link.label}
 									</Link>
 								))}
-								{!!user && (
-									<Link
-										className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors"
-										href="/admin"
-									>
-										Admin
-									</Link>
-								)}
+								<AdminLinkWrapper />
 							</div>
 						</div>
 					</div>
