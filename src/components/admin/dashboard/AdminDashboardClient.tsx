@@ -334,35 +334,22 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 							</Card>
 						</div>
 
-						{/* Recent Activity */}
-						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader>
-								<CardTitle>{t.dashboard.recentActivity.title}</CardTitle>
+						{/* Recent Activity - Disabled for now */}
+						<Card className="border-border/50 bg-card/60 cursor-not-allowed opacity-60 backdrop-blur-sm">
+							<CardHeader className="text-center">
+								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-500/10 text-gray-500">
+									<Clock className="h-8 w-8" />
+								</div>
+								<CardTitle className="text-xl text-gray-500">{t.dashboard.recentActivity.title}</CardTitle>
+								<CardDescription className="text-gray-400">
+									View recent platform activity and system events
+								</CardDescription>
 							</CardHeader>
-							<CardContent>
-								{recentActivity && recentActivity.length > 0 ? (
-									<div className="space-y-4">
-										{recentActivity.slice(0, 5).map(activity => (
-											<div
-												className="flex items-center justify-between border-b pb-4 last:border-b-0"
-												key={activity.id}
-											>
-												<div className="flex items-center space-x-3">
-													<div className="bg-muted rounded-full p-2">{getActivityIcon(activity.type)}</div>
-													<div>
-														<p className="text-sm font-medium">{activity.title}</p>
-														<p className="text-muted-foreground text-xs">
-															{activity.timestamp ? activity.timestamp.toLocaleString() : 'Unknown time'}
-														</p>
-													</div>
-												</div>
-												<Badge variant={getStatusBadgeVariant(activity.status)}>{activity.status}</Badge>
-											</div>
-										))}
-									</div>
-								) : (
-									<p className="text-muted-foreground">{t.dashboard.recentActivity.noRecentActivity}</p>
-								)}
+							<CardContent className="text-center">
+								<Button className="w-full" disabled variant="outline">
+									<Clock className="mr-2 h-4 w-4" />
+									Coming Soon
+								</Button>
 							</CardContent>
 						</Card>
 
