@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { type DashboardStats } from '@/services/dashboard.services'
 import { Button } from '@/components/ui/button'
 
-import { getDashboardStatsAction } from '../../../app/admin/actions'
+import { getDashboardStatsAction } from '../../../app/[locale]/admin/actions'
 
 interface AdminDashboardClientProps {
 	currentUser: null | User

@@ -70,7 +70,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card'
 import { Pagination, PaginationContent, PaginationItem } from '../../ui/pagination'
-import { getAllEventsAction } from '../../../app/admin/actions'
+import { getAllEventsAction } from '../../../app/[locale]/admin/actions'
 import { Checkbox } from '../../ui/checkbox'
 import { Button } from '../../ui/button'
 import { Badge } from '../../ui/badge'
