@@ -140,31 +140,40 @@ interface EventsTranslations {
 			columns: {
 				actions: string
 				date: string
-				location: string
+				distance: string
 				name: string
 				participants: string
 				partnered: string
-				status: string
 				type: string
+			}
+			controls: {
+				cancel: string
+				clearFilter: string
+				confirmDelete: string
+				deleteDescription: string
+				deleteSelected: string
+				no: string
+				rowsPerPage: string
+				selectAll: string
+				selectRow: string
+				toggleColumns: string
+				yes: string
 			}
 			empty: {
 				createButton: string
 				description: string
 				title: string
 			}
-			status: {
-				active: string
-				cancelled: string
-				draft: string
-				past: string
-				upcoming: string
-			}
 		}
 		title: string
 		ui: {
+			accessError: string
+			accessErrorDescription: string
 			comingSoon: string
+			connectedAs: string
 			loading: string
 			refreshing: string
+			signIn: string
 		}
 	}
 }
@@ -209,7 +218,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: ({ table }) => (
 					<div className="flex items-center justify-center">
 						<Checkbox
-							aria-label="Select all"
+							aria-label={t.events.table.controls.selectAll}
 							checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
 							onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
 						/>
@@ -220,7 +229,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				cell: ({ row }) => (
 					<div className="flex items-center justify-center">
 						<Checkbox
-							aria-label="Select row"
+							aria-label={t.events.table.controls.selectRow}
 							checked={row.getIsSelected()}
 							onCheckedChange={value => row.toggleSelected(!!value)}
 						/>
@@ -246,7 +255,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 			},
 			{
 				size: 120,
-				header: 'Distance',
+				header: t.events.table.columns.distance,
 				cell: ({ row }) => {
 					const distance = row.getValue('distanceKm')
 					return <div>{distance && typeof distance === 'number' ? `${distance}km` : 'N/A'}</div>
@@ -284,7 +293,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.partnered,
 				cell: ({ row }) => (
 					<Badge variant={row.getValue('isPartnered') ? 'default' : 'secondary'}>
-						{row.getValue('isPartnered') ? 'Yes' : 'No'}
+						{row.getValue('isPartnered') ? t.events.table.controls.yes : t.events.table.controls.no}
 					</Badge>
 				),
 				accessorKey: 'isPartnered',
@@ -390,15 +399,13 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				<div className="relative flex min-h-screen items-center justify-center">
 					<div className="border-border/50 bg-card/80 w-full max-w-md rounded-3xl border p-8 text-center shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--destructive)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--destructive)/0.2)] backdrop-blur-md">
 						<div className="mb-6 text-6xl text-red-600 dark:text-red-400">⚠</div>
-						<h1 className="text-foreground mb-4 text-3xl font-bold">Access Error</h1>
-						<p className="text-muted-foreground mb-6 text-lg">
-							Unable to verify admin access. Please try logging in again.
-						</p>
+						<h1 className="text-foreground mb-4 text-3xl font-bold">{t.events.ui.accessError}</h1>
+						<p className="text-muted-foreground mb-6 text-lg">{t.events.ui.accessErrorDescription}</p>
 						<button
 							className="bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 text-white"
 							onClick={() => router.push('/sign-in')}
 						>
-							Sign In
+							{t.events.ui.signIn}
 						</button>
 					</div>
 				</div>
@@ -441,7 +448,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 			<div className="bg-card/25 border-border/30 absolute top-0 right-0 left-0 z-20 mx-4 mt-12 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
 				<div className="flex items-center justify-between">
 					<div>
-						<p className="text-muted-foreground text-sm">Connected as</p>
+						<p className="text-muted-foreground text-sm">{t.events.ui.connectedAs}</p>
 						<p className="text-foreground font-medium">
 							{currentUser.firstName} {currentUser.lastName} ({currentUser.email})
 						</p>
@@ -564,7 +571,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 									{/* Filter by name, location, or type */}
 									<div className="relative">
 										<Input
-											aria-label="Filter events"
+											aria-label={t.events.filters.search}
 											className={cn(
 												'peer min-w-60 ps-9',
 												table.getColumn('name')?.getFilterValue() !== undefined &&
@@ -584,7 +591,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 										{table.getColumn('name')?.getFilterValue() !== undefined &&
 											table.getColumn('name')?.getFilterValue() !== '' && (
 												<button
-													aria-label="Clear filter"
+													aria-label={t.events.table.controls.clearFilter}
 													className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
 													onClick={() => {
 														table.getColumn('name')?.setFilterValue('')
@@ -603,11 +610,11 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 										<DropdownMenuTrigger asChild>
 											<Button variant="outline">
 												<Columns3 aria-hidden="true" className="-ms-1 opacity-60" size={16} />
-												View
+												{t.events.table.controls.toggleColumns}
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
-											<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+											<DropdownMenuLabel>{t.events.table.controls.toggleColumns}</DropdownMenuLabel>
 											{table
 												.getAllColumns()
 												.filter(column => column.getCanHide())
@@ -635,7 +642,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 											<AlertDialogTrigger asChild>
 												<Button className="ml-auto" variant="outline">
 													<Trash2 aria-hidden="true" className="-ms-1 opacity-60" size={16} />
-													Delete
+													{t.events.table.controls.deleteSelected}
 													<span className="bg-background text-muted-foreground/70 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
 														{table.getSelectedRowModel().rows.length}
 													</span>
@@ -650,21 +657,20 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 														<CircleAlert className="opacity-80" size={16} />
 													</div>
 													<AlertDialogHeader>
-														<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+														<AlertDialogTitle>{t.events.table.controls.confirmDelete}</AlertDialogTitle>
 														<AlertDialogDescription>
-															This action cannot be undone. This will permanently delete{' '}
-															{table.getSelectedRowModel().rows.length} selected{' '}
-															{table.getSelectedRowModel().rows.length === 1 ? 'event' : 'events'}.
+															{t.events.table.controls.deleteDescription} {table.getSelectedRowModel().rows.length}{' '}
+															selected {table.getSelectedRowModel().rows.length === 1 ? 'event' : 'events'}.
 														</AlertDialogDescription>
 													</AlertDialogHeader>
 												</div>
 												<AlertDialogFooter>
-													<AlertDialogCancel>Cancel</AlertDialogCancel>
+													<AlertDialogCancel>{t.events.table.controls.cancel}</AlertDialogCancel>
 													<AlertDialogAction
 														className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 														onClick={handleDeleteRows}
 													>
-														Delete
+														{t.events.table.controls.deleteSelected}
 													</AlertDialogAction>
 												</AlertDialogFooter>
 											</AlertDialogContent>
@@ -745,7 +751,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 								{/* Results per page */}
 								<div className="flex items-center gap-3">
 									<Label className="max-sm:sr-only" htmlFor={id}>
-										Rows per page
+										{t.events.table.controls.rowsPerPage}
 									</Label>
 									<Select
 										onValueChange={value => {
