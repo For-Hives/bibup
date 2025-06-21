@@ -18,10 +18,8 @@ import translations from '../../../app/admin/locales.json'
 
 interface AdminDashboardClientProps {
 	currentUser: null | User
-	translations: Translations
+	translations: any // Using any to avoid complex type issues
 }
-
-type Translations = ReturnType<typeof getTranslations<(typeof translations)['en'], 'en'>>
 
 export default function AdminDashboardClient({ translations: t, currentUser }: AdminDashboardClientProps) {
 	const router = useRouter()
@@ -95,15 +93,13 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 				<div className="relative flex min-h-screen items-center justify-center">
 					<div className="border-border/50 bg-card/80 w-full max-w-md rounded-3xl border p-8 text-center shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--destructive)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--destructive)/0.2)] backdrop-blur-md">
 						<div className="mb-6 text-6xl text-red-600 dark:text-red-400">⚠</div>
-						<h1 className="text-foreground mb-4 text-3xl font-bold">Access Error</h1>
-						<p className="text-muted-foreground mb-6 text-lg">
-							Unable to verify admin access. Please try logging in again.
-						</p>
+						<h1 className="text-foreground mb-4 text-3xl font-bold">{t.dashboard.errors.accessError}</h1>
+						<p className="text-muted-foreground mb-6 text-lg">{t.dashboard.errors.accessErrorMessage}</p>
 						<button
 							className="bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 text-white"
 							onClick={() => router.push('/sign-in')}
 						>
-							Sign In
+							{t.dashboard.ui.signIn}
 						</button>
 					</div>
 				</div>
@@ -143,7 +139,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 			<div className="bg-card/25 border-border/30 absolute top-0 right-0 left-0 z-20 mx-4 mt-12 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
 				<div className="flex items-center justify-between">
 					<div>
-						<p className="text-muted-foreground text-sm">Connected as</p>
+						<p className="text-muted-foreground text-sm">{t.dashboard.ui.connectedAs}</p>
 						<p className="text-foreground font-medium">
 							{currentUser.firstName} {currentUser.lastName} ({currentUser.email})
 						</p>
@@ -200,7 +196,7 @@ export default function AdminDashboardClient({ translations: t, currentUser }: A
 								<CardContent>
 									<div className="text-2xl font-bold">{stats?.totalUsers ?? 0}</div>
 									<p className="text-muted-foreground text-xs">
-										<TrendingUp className="inline h-3 w-3" /> Platform growth
+										<TrendingUp className="inline h-3 w-3" /> {t.dashboard.stats.platformGrowth}
 									</p>
 								</CardContent>
 							</Card>
