@@ -7,6 +7,12 @@
 				"totalOrganizers": "Total Organizers",
 				"partneredOrganizers": "Partnered Organizers"
 			},
+			"sections": {
+				"actions": {
+					"title": "Quick Actions",
+					"description": "Common administrative tasks for organizer management"
+				}
+			},
 			"actions": {
 				"createOrganizer": "Create New Organizer",
 				"createOrganizerDescription": "Add new event organizers to the platform"
@@ -24,7 +30,30 @@
 						"partner": "Partner",
 						"standard": "Standard"
 					}
+				},
+				"controls": {
+					"selectAll": "Select all",
+					"selectRow": "Select row",
+					"toggleColumns": "Toggle columns",
+					"clearFilter": "Clear filter",
+					"deleteSelected": "Delete Selected",
+					"confirmDelete": "Are you absolutely sure?",
+					"deleteDescription": "This action cannot be undone. This will permanently delete",
+					"cancel": "Cancel",
+					"rowsPerPage": "Rows per page"
+				},
+				"empty": {
+					"title": "No organizers found",
+					"description": "Get started by creating your first organizer",
+					"createButton": "Create New Organizer"
 				}
+			},
+			"ui": {
+				"connectedAs": "Connected as",
+				"loading": "Loading...",
+				"accessError": "Access Error",
+				"accessErrorDescription": "Unable to verify admin access. Please try logging in again.",
+				"signIn": "Sign In"
 			},
 			"create": {
 				"title": "Create New Organizer",
@@ -88,6 +117,12 @@
 				"totalOrganizers": "Total Organisateurs",
 				"partneredOrganizers": "Organisateurs Partenaires"
 			},
+			"sections": {
+				"actions": {
+					"title": "Actions Rapides",
+					"description": "Tâches administratives courantes pour la gestion des organisateurs"
+				}
+			},
 			"actions": {
 				"createOrganizer": "Créer un Nouvel Organisateur",
 				"createOrganizerDescription": "Ajouter de nouveaux organisateurs d'événements à la plateforme"
@@ -105,7 +140,30 @@
 						"partner": "Partenaire",
 						"standard": "Standard"
 					}
+				},
+				"controls": {
+					"selectAll": "Tout sélectionner",
+					"selectRow": "Sélectionner la ligne",
+					"toggleColumns": "Basculer les colonnes",
+					"clearFilter": "Effacer le filtre",
+					"deleteSelected": "Supprimer la sélection",
+					"confirmDelete": "Êtes-vous absolument sûr ?",
+					"deleteDescription": "Cette action ne peut pas être annulée. Cela supprimera définitivement",
+					"cancel": "Annuler",
+					"rowsPerPage": "Lignes par page"
+				},
+				"empty": {
+					"title": "Aucun organisateur trouvé",
+					"description": "Commencez par créer votre premier organisateur",
+					"createButton": "Créer un Nouvel Organisateur"
 				}
+			},
+			"ui": {
+				"connectedAs": "Connecté en tant que",
+				"loading": "Chargement...",
+				"accessError": "Erreur d'accès",
+				"accessErrorDescription": "Impossible de vérifier l'accès administrateur. Veuillez vous reconnecter.",
+				"signIn": "Se connecter"
 			},
 			"create": {
 				"title": "Créer un Nouvel Organisateur",
