@@ -4,8 +4,65 @@ import { checkAdminAccess } from '@/guard/adminGuard'
 
 import { getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
 import { createOrganizer, fetchAllOrganizers } from '@/services/organizer.services'
-import { getAllEvents } from '@/services/event.services'
+import { createEvent, getAllEvents } from '@/services/event.services'
 import { Organizer } from '@/models/organizer.model'
+import { Event } from '@/models/event.model'
+
+/**
+ * Server action to create a new event (admin only)
+ * Verifies authentication via Clerk, platform registration, and admin permissions
+ */
+export async function createEventAction(eventData: Omit<Event, 'id'>): Promise<{
+	data?: Event
+	error?: string
+	success: boolean
+}> {
+	try {
+		// Verify admin access (checks Clerk auth, platform registration, and admin role)
+		const adminUser = await checkAdminAccess()
+
+		if (!adminUser) {
+			return {
+				success: false,
+				error: 'Unauthorized: Admin access required',
+			}
+		}
+
+		// Validate required fields
+		if (!eventData.name || !eventData.location || !eventData.description || !eventData.organizer) {
+			return {
+				success: false,
+				error: 'Name, location, description, and organizer are required',
+			}
+		}
+
+		if (!eventData.eventDate || isNaN(eventData.eventDate.getTime())) {
+			return {
+				success: false,
+				error: 'Valid event date is required',
+			}
+		}
+
+		// Create the event with PocketBase service
+		const result = await createEvent(eventData)
+
+		if (result) {
+			console.info(`Admin ${adminUser.email} created event: ${result.name}`)
+			return {
+				success: true,
+				data: result,
+			}
+		} else {
+			throw new Error('Failed to create event')
+		}
+	} catch (error) {
+		console.error('Error in createEventAction:', error)
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : 'Failed to create event',
+		}
+	}
+}
 
 /**
  * Server action to create a new organizer (admin only)

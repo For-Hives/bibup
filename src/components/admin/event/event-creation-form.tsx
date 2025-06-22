@@ -7,6 +7,7 @@ import * as React from 'react'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { toast } from 'sonner'
 
+import { createEventAction } from '@/app/[locale]/admin/actions'
 import Translations from '@/app/[locale]/event/locales.json'
 import { EventOption } from '@/models/eventOption.model'
 import { getTranslations } from '@/lib/getDictionary'
@@ -52,77 +53,45 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 
 	const formData = watch()
 
-	const onSubmit = (data: EventFormData) => {
+	const onSubmit = async (data: EventFormData) => {
 		setIsLoading(true)
 
-		const submitData = async () => {
-			try {
-				// Create FormData for multipart/form-data submission
-				const formDataToSend = new FormData()
-
-				// Add all form fields
-				formDataToSend.append('name', data.name)
-				formDataToSend.append('location', data.location)
-				formDataToSend.append('eventDate', new Date(data.eventDate).toISOString())
-				formDataToSend.append('description', data.description)
-				formDataToSend.append('typeCourse', data.typeCourse)
-				formDataToSend.append('organizer', data.organizer)
-				formDataToSend.append('options', JSON.stringify(data.options))
-
-				// Add participant count if provided
-				if (data.participants !== undefined) {
-					formDataToSend.append('participantCount', data.participants.toString())
-				}
-
-				formDataToSend.append('bibPickupWindowBeginDate', new Date(data.bibPickupWindowBeginDate).toISOString())
-				formDataToSend.append('bibPickupWindowEndDate', new Date(data.bibPickupWindowEndDate).toISOString())
-
-				// Add optional fields
-				if (data.distanceKm !== undefined) {
-					formDataToSend.append('distanceKm', data.distanceKm.toString())
-				}
-				if (data.elevationGainM !== undefined) {
-					formDataToSend.append('elevationGainM', data.elevationGainM.toString())
-				}
-				if (data.officialStandardPrice !== undefined) {
-					formDataToSend.append('officialStandardPrice', data.officialStandardPrice.toString())
-				}
-				if (data.transferDeadline !== undefined && data.transferDeadline !== null && data.transferDeadline !== '') {
-					formDataToSend.append('transferDeadline', new Date(data.transferDeadline).toISOString())
-				}
-				if (data.parcoursUrl !== undefined && data.parcoursUrl !== null && data.parcoursUrl !== '') {
-					formDataToSend.append('parcoursUrl', data.parcoursUrl)
-				}
-				if (data.registrationUrl !== undefined && data.registrationUrl !== null && data.registrationUrl !== '') {
-					formDataToSend.append('registrationUrl', data.registrationUrl)
-				}
-				if (data.bibPickupLocation !== undefined && data.bibPickupLocation !== null && data.bibPickupLocation !== '') {
-					formDataToSend.append('bibPickupLocation', data.bibPickupLocation)
-				}
-
-				// Call the server action to create the event
-				const response = await fetch('/api/admin/events', {
-					method: 'POST',
-					body: formDataToSend,
-				})
-
-				if (!response.ok) {
-					const errorData = await response.json()
-					throw new Error(errorData.message ?? 'Failed to create event')
-				}
-
-				const createdEvent = await response.json()
-				toast.success('Event created successfully!')
-				onSuccess?.(createdEvent)
-			} catch (error) {
-				console.error('Error creating event:', error)
-				toast.error(error instanceof Error ? error.message : 'Failed to create event')
-			} finally {
-				setIsLoading(false)
+		try {
+			// Prepare event data - convert to proper types for PocketBase
+			const eventData: Omit<Event, 'id'> = {
+				typeCourse: data.typeCourse,
+				transferDeadline: data.transferDeadline ? new Date(data.transferDeadline) : undefined,
+				registrationUrl: data.registrationUrl ?? undefined,
+				participants: data.participants,
+				parcoursUrl: data.parcoursUrl ?? undefined,
+				organizer: data.organizer,
+				options: data.options,
+				officialStandardPrice: data.officialStandardPrice,
+				name: data.name,
+				location: data.location,
+				eventDate: new Date(data.eventDate),
+				elevationGainM: data.elevationGainM,
+				distanceKm: data.distanceKm,
+				description: data.description,
+				bibPickupWindowEndDate: new Date(data.bibPickupWindowEndDate),
+				bibPickupWindowBeginDate: new Date(data.bibPickupWindowBeginDate),
+				bibPickupLocation: data.bibPickupLocation ?? undefined,
 			}
-		}
 
-		void submitData()
+			const result = await createEventAction(eventData)
+
+			if (result.success && result.data) {
+				toast.success('Event created successfully!')
+				onSuccess?.(result.data)
+			} else {
+				throw new Error(result.error ?? 'Failed to create event')
+			}
+		} catch (error) {
+			console.error('Error creating event:', error)
+			toast.error(error instanceof Error ? error.message : 'Failed to create event')
+		} finally {
+			setIsLoading(false)
+		}
 	}
 
 	return (
