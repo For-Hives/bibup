@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
 import { fetchPartneredApprovedEvents } from '@/services/event.services'
@@ -23,9 +23,8 @@ export default async function SellBibPage({ params }: { params: Promise<LocalePa
 	const t = getTranslations(locale, sellBibTranslations)
 
 	const { userId: clerkUserId } = await auth()
-	const clerkUser = await currentUser()
 
-	if (!clerkUserId || !clerkUser) {
+	if (!clerkUserId) {
 		redirect('/sign-in')
 	}
 
