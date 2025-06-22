@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, dashboardTranslations)
+	const t = getTranslations(locale, dashboardTranslations) as any
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
@@ -31,5 +31,18 @@ export default async function DashboardPage({ params }: { params: Promise<Locale
 	// Fetch user data from our database
 	const beswibUser = await fetchUserByClerkId(userId)
 
-	return <DashboardClient clerkUser={clerkUser} translations={t} user={beswibUser} />
+	// Extract only serializable properties from clerkUser
+	const serializedClerkUser = {
+		username: clerkUser.username,
+		lastName: clerkUser.lastName,
+		imageUrl: clerkUser.imageUrl,
+		id: clerkUser.id,
+		firstName: clerkUser.firstName,
+		emailAddresses: clerkUser.emailAddresses.map(email => ({
+			id: email.id,
+			emailAddress: email.emailAddress,
+		})),
+	}
+
+	return <DashboardClient clerkUser={serializedClerkUser} translations={t} user={beswibUser} />
 }

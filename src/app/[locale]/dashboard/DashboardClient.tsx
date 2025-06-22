@@ -1,7 +1,5 @@
 'use client'
 
-import type { User as ClerkUser } from '@clerk/nextjs/server'
-
 import { Calendar, Clock, List, MapPin, Plus, Search, ShoppingCart, Tag, TrendingUp, Users, Zap } from 'lucide-react'
 
 import Link from 'next/link'
@@ -12,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 
 interface DashboardClientProps {
-	clerkUser: ClerkUser
+	clerkUser: SerializedClerkUser
 	translations: DashboardTranslations
 	user: null | User
 }
@@ -26,16 +24,21 @@ interface DashboardTranslations {
 			description: string
 			title: string
 		}
-		organizer: {
-			description: string
-			title: string
-		}
 		seller: {
 			description: string
 			title: string
 		}
 		title: string
 	}
+}
+
+interface SerializedClerkUser {
+	emailAddresses: { emailAddress: string; id: string }[]
+	firstName: null | string
+	id: string
+	imageUrl: string
+	lastName: null | string
+	username: null | string
 }
 
 export default function DashboardClient({ translations: t, clerkUser }: DashboardClientProps) {
@@ -66,24 +69,24 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 					{/* Header */}
 					<div className="mb-12 space-y-2 text-center">
 						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t.dashboard.title}</h1>
-						<p className="text-muted-foreground text-lg">Choose your path to get started with Beswib</p>
+						<p className="text-muted-foreground text-lg">Choose how you want to use Beswib</p>
 					</div>
 
-					{/* Main Dashboard Cards */}
-					<div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+					{/* Main Dashboard Cards - Only Buyer and Seller */}
+					<div className="mx-auto mb-12 grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
 						{/* Buyer Dashboard */}
-						<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+						<Card className="border-border/50 bg-card/80 flex h-full flex-col justify-between backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
 							<CardHeader className="text-center">
-								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 transition-colors group-hover:bg-blue-500/20">
-									<ShoppingCart className="h-8 w-8" />
+								<div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 transition-colors group-hover:bg-blue-500/20">
+									<ShoppingCart className="h-10 w-10" />
 								</div>
-								<CardTitle className="text-xl">{t.dashboard.buyer.title}</CardTitle>
-								<CardDescription>{t.dashboard.buyer.description}</CardDescription>
+								<CardTitle className="text-2xl">{t.dashboard.buyer.title}</CardTitle>
+								<CardDescription className="text-base">{t.dashboard.buyer.description}</CardDescription>
 							</CardHeader>
 							<CardContent className="text-center">
 								<Link href="/dashboard/buyer">
-									<Button className="w-full">
-										<ShoppingCart className="mr-2 h-4 w-4" />
+									<Button className="w-full" size="lg">
+										<ShoppingCart className="mr-2 h-5 w-5" />
 										Access Buyer Dashboard
 									</Button>
 								</Link>
@@ -91,40 +94,23 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 						</Card>
 
 						{/* Seller Dashboard */}
-						<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+						<Card className="border-border/50 bg-card/80 hover:bg-card/90 group flex h-full flex-col justify-between backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
 							<CardHeader className="text-center">
-								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-green-500 transition-colors group-hover:bg-green-500/20">
-									<Tag className="h-8 w-8" />
+								<div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-500/10 text-green-500 transition-colors group-hover:bg-green-500/20">
+									<Tag className="h-10 w-10" />
 								</div>
-								<CardTitle className="text-xl">{t.dashboard.seller.title}</CardTitle>
-								<CardDescription>{t.dashboard.seller.description}</CardDescription>
+								<CardTitle className="text-2xl">{t.dashboard.seller.title}</CardTitle>
+								<CardDescription className="text-base">{t.dashboard.seller.description}</CardDescription>
 							</CardHeader>
 							<CardContent className="text-center">
-								<Link href="/dashboard/seller">
-									<Button className="w-full">
-										<Tag className="mr-2 h-4 w-4" />
-										Access Seller Dashboard
-									</Button>
-								</Link>
-							</CardContent>
-						</Card>
-
-						{/* Organizer Dashboard */}
-						<Card className="border-border/50 bg-card/80 hover:bg-card/90 group backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-							<CardHeader className="text-center">
-								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/10 text-purple-500 transition-colors group-hover:bg-purple-500/20">
-									<Users className="h-8 w-8" />
+								<div className="flex h-full w-full flex-col items-center justify-end">
+									<Link className="w-full" href="/dashboard/seller">
+										<Button className="w-full" size="lg">
+											<Tag className="mr-2 h-5 w-5" />
+											Access Seller Dashboard
+										</Button>
+									</Link>
 								</div>
-								<CardTitle className="text-xl">{t.dashboard.organizer.title}</CardTitle>
-								<CardDescription>{t.dashboard.organizer.description}</CardDescription>
-							</CardHeader>
-							<CardContent className="text-center">
-								<Link href="/admin">
-									<Button className="w-full">
-										<Users className="mr-2 h-4 w-4" />
-										Access Organizer Panel
-									</Button>
-								</Link>
 							</CardContent>
 						</Card>
 					</div>

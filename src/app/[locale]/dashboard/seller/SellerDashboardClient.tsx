@@ -1,78 +1,84 @@
 'use client'
 
-import type { User as ClerkUser } from '@clerk/nextjs/server'
-
-import { AlertCircle, Edit, Eye, Package, Plus, Tag, TrendingUp, Users } from 'lucide-react'
+import { Edit3, List, Plus, Search, Tag, Users } from 'lucide-react'
 
 import Link from 'next/link'
 
 import type { Event } from '@/models/event.model'
-import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 interface SellerDashboardClientProps {
-	clerkUser: ClerkUser
-	errorMessage: null | string
-	listedBibs: (Bib & { expand?: { eventId: Event } })[]
-	successMessage: null | string
+	clerkUser: SerializedClerkUser
+	sellerBibs: (Bib & { expand?: { eventId: Event } })[]
 	translations: SellerTranslations
-	user: null | User
 }
 
 interface SellerTranslations {
-	bibFor: string
-	editBib: string
-	gender: string
-	listNewBib: string
-	manageBibListings: string
+	availableBibs: string
+	bibListed: string
+	bibManagement: {
+		editButton: string
+		gender: string
+		price: string
+		size: string
+		status: string
+	}
+	myListings: string
 	noBibsListed: string
-	originalPrice: string
-	pleaseSignIn: string
-	price: string
+	quickActions: string
 	registrationNumber: string
-	sellBib: string
-	size: string
-	status: string
+	revenue: string
+	sellFirstBib: string
+	statistics: {
+		availableBibs: string
+		revenue: string
+		soldBibs: string
+		totalListings: string
+	}
 	title: string
-	welcomeMessage: string
-	yourListedBibs: string
+	totalListings: string
+	totalSold: string
+	welcome: string
 }
 
-// Helper to get status styling
-const getBibStatusStyle = (status: Bib['status']) => {
+interface SerializedClerkUser {
+	emailAddresses: { emailAddress: string; id: string }[]
+	firstName: null | string
+	id: string
+	imageUrl: string
+	lastName: null | string
+	username: null | string
+}
+
+// Status display mapping
+const getStatusDisplay = (status: string) => {
 	switch (status) {
 		case 'available':
-			return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+			return { label: 'Available', color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' }
 		case 'expired':
-			return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
-
+			return { label: 'Expired', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400' }
 		case 'sold':
-			return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+			return { label: 'Sold', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' }
 		case 'validation_failed':
-			return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+			return { label: 'Validation Failed', color: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' }
 		case 'withdrawn':
-			return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+			return { label: 'Withdrawn', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' }
 		default:
-			return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+			return { label: status, color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400' }
 	}
 }
 
-export default function SellerDashboardClient({
-	translations: t,
-	successMessage,
-	listedBibs,
-	errorMessage,
-	clerkUser,
-}: SellerDashboardClientProps) {
+export default function SellerDashboardClient({ translations: t, sellerBibs, clerkUser }: SellerDashboardClientProps) {
 	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Seller'
 
-	// Calculate stats
-	const availableBibs = listedBibs.filter(bib => bib.status === 'available').length
-	const soldBibs = listedBibs.filter(bib => bib.status === 'sold').length
-	const totalRevenue = listedBibs.filter(bib => bib.status === 'sold').reduce((sum, bib) => sum + bib.price, 0)
+	// Calculate statistics
+	const totalListings = sellerBibs.length
+	const availableBibs = sellerBibs.filter(bib => bib.status === 'available').length
+	const soldBibs = sellerBibs.filter(bib => bib.status === 'sold').length
+	const totalRevenue = sellerBibs.filter(bib => bib.status === 'sold').reduce((sum, bib) => sum + (bib.price || 0), 0)
 
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
@@ -97,241 +103,172 @@ export default function SellerDashboardClient({
 
 			<div className="relative pt-32 pb-12">
 				<div className="container mx-auto max-w-6xl p-6">
-					{/* Header */}
-					<div className="mb-12 space-y-2 text-center">
-						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t.title}</h1>
-						<p className="text-muted-foreground text-lg">
-							{t.welcomeMessage}, {userName}!
-						</p>
-					</div>
-
-					{/* Messages */}
-					{successMessage && (
-						<div className="mb-8 rounded-lg border border-green-300 bg-green-50 p-4 dark:border-green-900/50 dark:bg-green-900/20">
-							<div className="flex items-center gap-3">
-								<Package className="h-6 w-6 text-green-600 dark:text-green-400" />
-								<p className="font-medium text-green-800 dark:text-green-200">{successMessage}</p>
-							</div>
-						</div>
-					)}
-
-					{errorMessage && (
-						<div className="mb-8 rounded-lg border border-red-300 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-900/20">
-							<div className="flex items-center gap-3">
-								<AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
-								<p className="font-medium text-red-800 dark:text-red-200">Error: {errorMessage}</p>
-							</div>
-						</div>
-					)}
-
-					{/* Stats Cards */}
-					<div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-4">
+					{/* Statistics Cards */}
+					<div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Total Listings</CardTitle>
-								<Package className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalListings}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">{listedBibs.length}</div>
-								<p className="text-muted-foreground text-xs">Bibs listed for sale</p>
+								<div className="text-2xl font-bold">{totalListings}</div>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Available</CardTitle>
-								<Eye className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.availableBibs}</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{availableBibs}</div>
-								<p className="text-muted-foreground text-xs">Currently for sale</p>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Sold</CardTitle>
-								<TrendingUp className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.soldBibs}</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{soldBibs}</div>
-								<p className="text-muted-foreground text-xs">Successfully sold</p>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Revenue</CardTitle>
-								<TrendingUp className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.revenue}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
-								<p className="text-muted-foreground text-xs">Total earned</p>
+								<div className="text-2xl font-bold">€{totalRevenue.toFixed(2)}</div>
 							</CardContent>
 						</Card>
 					</div>
 
 					{/* Quick Actions */}
-					<div className="mb-12">
-						<h2 className="text-foreground mb-6 text-xl font-bold">Quick Actions</h2>
-						<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<div className="mb-8">
+						<h2 className="text-foreground mb-6 text-xl font-bold">{t.quickActions}</h2>
+						<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 							<Link href="/dashboard/seller/sell-bib">
-								<Card className="border-border/50 bg-card/80 hover:bg-card/90 group cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-									<CardContent className="flex items-center p-6">
-										<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mr-4 flex h-12 w-12 items-center justify-center rounded-full transition-colors">
+								<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
+									<CardContent className="flex flex-col items-center p-4 text-center">
+										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
 											<Plus className="h-6 w-6" />
 										</div>
-										<div>
-											<p className="font-medium">{t.sellBib}</p>
-											<p className="text-muted-foreground text-sm">Quick multi-step form</p>
-										</div>
+										<p className="text-sm font-medium">Sell New Bib</p>
 									</CardContent>
 								</Card>
 							</Link>
 
 							<Link href="/dashboard/seller/list-bib">
-								<Card className="border-border/50 bg-card/80 hover:bg-card/90 group cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-									<CardContent className="flex items-center p-6">
-										<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mr-4 flex h-12 w-12 items-center justify-center rounded-full transition-colors">
-											<Package className="h-6 w-6" />
+								<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
+									<CardContent className="flex flex-col items-center p-4 text-center">
+										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+											<List className="h-6 w-6" />
 										</div>
-										<div>
-											<p className="font-medium">{t.listNewBib}</p>
-											<p className="text-muted-foreground text-sm">Advanced listing form</p>
-										</div>
+										<p className="text-sm font-medium">My Listings</p>
 									</CardContent>
 								</Card>
 							</Link>
 
 							<Link href="/marketplace">
-								<Card className="border-border/50 bg-card/80 hover:bg-card/90 group cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-									<CardContent className="flex items-center p-6">
-										<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mr-4 flex h-12 w-12 items-center justify-center rounded-full transition-colors">
-											<Eye className="h-6 w-6" />
+								<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
+									<CardContent className="flex flex-col items-center p-4 text-center">
+										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+											<Search className="h-6 w-6" />
 										</div>
-										<div>
-											<p className="font-medium">View Marketplace</p>
-											<p className="text-muted-foreground text-sm">See what's selling</p>
-										</div>
+										<p className="text-sm font-medium">View Marketplace</p>
 									</CardContent>
 								</Card>
 							</Link>
 
 							<Link href="/dashboard">
-								<Card className="border-border/50 bg-card/80 hover:bg-card/90 group cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
-									<CardContent className="flex items-center p-6">
-										<div className="bg-primary/10 text-primary group-hover:bg-primary/20 mr-4 flex h-12 w-12 items-center justify-center rounded-full transition-colors">
+								<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
+									<CardContent className="flex flex-col items-center p-4 text-center">
+										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
 											<Users className="h-6 w-6" />
 										</div>
-										<div>
-											<p className="font-medium">Main Dashboard</p>
-											<p className="text-muted-foreground text-sm">Back to overview</p>
-										</div>
+										<p className="text-sm font-medium">Main Dashboard</p>
 									</CardContent>
 								</Card>
 							</Link>
 						</div>
 					</div>
 
-					{/* My Listings */}
+					{/* Bib Listings */}
 					<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
-								<Package className="h-5 w-5" />
-								{t.yourListedBibs}
+								<Tag className="h-5 w-5" />
+								{t.myListings}
 							</CardTitle>
-							<CardDescription>Manage your race bib listings</CardDescription>
+							<CardDescription>Manage your race bib listings and track performance</CardDescription>
 						</CardHeader>
 						<CardContent>
-							{listedBibs.length > 0 ? (
+							{sellerBibs.length > 0 ? (
 								<div className="space-y-4">
-									{listedBibs.map(bib => {
-										const eventName = bib.expand?.eventId?.name
-										const eventIdDisplay = bib.eventId && bib.eventId !== '' ? bib.eventId : 'N/A'
-										const displayBibName = eventName ?? `Event ID: ${eventIdDisplay}`
-										const canEdit = ['available', 'expired', 'sold', 'validation_failed', 'withdrawn'].includes(
-											bib.status
-										)
-
+									{sellerBibs.map(bib => {
+										const statusDisplay = getStatusDisplay(bib.status)
 										return (
-											<div
-												className="border-border/50 bg-background/50 rounded-lg border p-4 backdrop-blur-sm"
-												key={bib.id}
-											>
-												<div className="flex items-start justify-between">
-													<div className="flex-1">
-														<div className="mb-2 flex items-center gap-3">
-															<h4 className="font-semibold">
-																{t.bibFor} {displayBibName}
-															</h4>
-															<span
-																className={`rounded-full px-2 py-1 text-xs font-medium ${getBibStatusStyle(bib.status)}`}
-															>
-																{bib.status.replace(/_/g, ' ').toUpperCase()}
-															</span>
-														</div>
-
-														<div className="text-muted-foreground grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
-															<div>
-																<p className="font-medium">{t.registrationNumber}</p>
-																<p>{bib.registrationNumber}</p>
-															</div>
-															<div>
-																<p className="font-medium">{t.price}</p>
-																<p>${bib.price.toFixed(2)}</p>
-															</div>
-															{bib.originalPrice && bib.originalPrice !== 0 && !isNaN(bib.originalPrice) && (
-																<div>
-																	<p className="font-medium">{t.originalPrice}</p>
-																	<p>${bib.originalPrice.toFixed(2)}</p>
-																</div>
-															)}
-															{bib.optionValues?.size && (
-																<div>
-																	<p className="font-medium">{t.size}</p>
-																	<p>{bib.optionValues.size}</p>
-																</div>
-															)}
-														</div>
-
-														{bib.optionValues?.gender && (
-															<p className="text-muted-foreground mt-2 text-sm">
-																{t.gender}: {bib.optionValues.gender}
-															</p>
-														)}
+											<div className="rounded-lg border p-4" key={bib.id}>
+												<div className="mb-3 flex items-start justify-between">
+													<div>
+														<h4 className="font-semibold">{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}</h4>
+														<p className="text-muted-foreground text-sm">
+															{t.registrationNumber}: {bib.registrationNumber}
+														</p>
 													</div>
+													<span className={`rounded-full px-3 py-1 text-xs font-medium ${statusDisplay.color}`}>
+														{statusDisplay.label}
+													</span>
+												</div>
 
-													{canEdit && (
+												<div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
+													<div>
+														<p className="text-muted-foreground">{t.bibManagement.price}</p>
+														<p className="font-medium">€{bib.price?.toFixed(2) ?? 'N/A'}</p>
+													</div>
+													<div>
+														<p className="text-muted-foreground">{t.bibManagement.size}</p>
+														<p className="font-medium">{bib.optionValues?.size ?? 'N/A'}</p>
+													</div>
+													<div>
+														<p className="text-muted-foreground">{t.bibManagement.gender}</p>
+														<p className="font-medium">{bib.optionValues?.gender ?? 'N/A'}</p>
+													</div>
+													<div>
+														<p className="text-muted-foreground">Event Date</p>
+														<p className="font-medium">
+															{bib.expand?.eventId
+																? new Date(bib.expand.eventId.eventDate).toLocaleDateString()
+																: 'N/A'}
+														</p>
+													</div>
+												</div>
+
+												{/* Edit button - only show for certain statuses */}
+												{(bib.status === 'available' || bib.status === 'validation_failed') && (
+													<div className="mt-3 flex justify-end">
 														<Link href={`/dashboard/seller/edit-bib/${bib.id}`}>
 															<Button size="sm" variant="outline">
-																<Edit className="mr-2 h-4 w-4" />
-																{t.editBib}
+																<Edit3 className="mr-2 h-4 w-4" />
+																{t.bibManagement.editButton}
 															</Button>
 														</Link>
-													)}
-												</div>
+													</div>
+												)}
 											</div>
 										)
 									})}
 								</div>
 							) : (
 								<div className="py-12 text-center">
-									<Package className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-									<p className="text-muted-foreground mb-6 text-lg">{t.noBibsListed}</p>
-									<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-										<Link href="/dashboard/seller/sell-bib">
-											<Button>
-												<Plus className="mr-2 h-4 w-4" />
-												{t.sellBib}
-											</Button>
-										</Link>
-										<Link href="/dashboard/seller/list-bib">
-											<Button variant="outline">
-												<Package className="mr-2 h-4 w-4" />
-												{t.listNewBib}
-											</Button>
-										</Link>
-									</div>
+									<Tag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+									<h3 className="mb-2 text-lg font-semibold">{t.noBibsListed}</h3>
+									<p className="text-muted-foreground mb-6">{t.sellFirstBib}</p>
+									<Link href="/dashboard/seller/sell-bib">
+										<Button size="lg">
+											<Plus className="mr-2 h-4 w-4" />
+											List Your First Bib
+										</Button>
+									</Link>
 								</div>
 							)}
 						</CardContent>
