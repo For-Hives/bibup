@@ -32,11 +32,11 @@
 			"table": {
 				"columns": {
 					"name": "Event Name",
+					"organizer": "Organizer",
 					"date": "Date",
 					"distance": "Distance",
 					"type": "Type",
 					"participants": "Participants",
-					"partnered": "Partnered",
 					"actions": "Actions"
 				},
 				"status": {
@@ -123,11 +123,11 @@
 			"table": {
 				"columns": {
 					"name": "Nom de l'Événement",
+					"organizer": "Organisateur",
 					"date": "Date",
 					"distance": "Distance",
 					"type": "Type",
 					"participants": "Participants",
-					"partnered": "Partenaire",
 					"actions": "Actions"
 				},
 				"status": {
@@ -214,11 +214,11 @@
 			"table": {
 				"columns": {
 					"name": "이벤트 이름",
+					"organizer": "주최자",
 					"date": "날짜",
 					"distance": "거리",
 					"type": "유형",
 					"participants": "참가자",
-					"partnered": "파트너",
 					"actions": "작업"
 				},
 				"status": {
