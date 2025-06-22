@@ -421,7 +421,16 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 													<div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
 														<div className="flex items-center gap-2">
 															<Calendar className="h-4 w-4" />
-															{formatDateForDisplay(event.eventDate.toISOString().split('T')[0])}
+															{(() => {
+																const eventDate = event.eventDate
+																const dateStr =
+																	typeof eventDate === 'string'
+																		? eventDate
+																		: eventDate instanceof Date
+																			? eventDate.toISOString()
+																			: new Date(eventDate).toISOString()
+																return formatDateForDisplay(dateStr.split('T')[0])
+															})()}
 														</div>
 														<div className="flex items-center gap-2">
 															<MapPin className="h-4 w-4" />
