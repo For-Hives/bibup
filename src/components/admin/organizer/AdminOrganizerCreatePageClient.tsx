@@ -32,6 +32,12 @@ interface AdminOrganizerCreatePageClientProps {
 					websiteLabel: string
 					websitePlaceholder: string
 				}
+				sections: {
+					basicInformation: {
+						description: string
+						title: string
+					}
+				}
 				subtitle: string
 				success: {
 					backButton: string
