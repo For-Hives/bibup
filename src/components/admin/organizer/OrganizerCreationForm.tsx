@@ -96,11 +96,11 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 		if (files.length > 0) {
 			const file = files[0]
 			// Validate file type and size
-			const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+			const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml', 'image/webp']
 			const maxSize = 5 * 1024 * 1024 // 5MB
 
 			if (!allowedTypes.includes(file.type)) {
-				toast.error('Invalid file type. Please upload PNG, JPG, or SVG files only.')
+				toast.error('Invalid file type. Please upload PNG, JPG, WEBP, or SVG files only.')
 				return
 			}
 
