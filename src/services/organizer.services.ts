@@ -3,30 +3,31 @@ import { pb } from '@/lib/pocketbaseClient'
 
 /**
  * Create a new organizer
+ * Uses multipart/form-data for file upload as per PocketBase documentation
  */
 export async function createOrganizer(
 	organizerData: Omit<Organizer, 'created' | 'id' | 'updated'> & { logoFile?: File }
 ): Promise<null | Organizer> {
 	try {
-		// Prepare form data for PocketBase
+		// Prepare form data for PocketBase (multipart/form-data)
 		const formData = new FormData()
 
-		// Add text fields
+		// Add required text fields
 		formData.append('name', organizerData.name)
 		formData.append('email', organizerData.email)
 		formData.append('isPartnered', String(organizerData.isPartnered))
 
-		if (organizerData.website) {
-			formData.append('website', organizerData.website)
+		// Add optional fields only if they exist
+		if (organizerData.website?.trim()) {
+			formData.append('website', organizerData.website.trim())
 		}
 
-		// Handle logo file upload
-		if (organizerData.logoFile) {
+		// Handle logo file upload - PocketBase expects File instance for new uploads
+		if (organizerData.logoFile instanceof File) {
 			formData.append('logo', organizerData.logoFile)
-		} else if (organizerData.logo && typeof organizerData.logo === 'string') {
-			formData.append('logo', organizerData.logo)
 		}
 
+		// Create record using multipart/form-data
 		const record = await pb.collection('organizer').create(formData)
 
 		return {
@@ -54,6 +55,24 @@ export async function deleteOrganizer(id: string): Promise<boolean> {
 		return true
 	} catch (error) {
 		console.error('Error deleting organizer:', error)
+		return false
+	}
+}
+
+/**
+ * Delete logo file from an organizer
+ * @param id - The organizer ID
+ * @returns Success status
+ */
+export async function deleteOrganizerLogo(id: string): Promise<boolean> {
+	try {
+		// Set logo field to empty array to delete the file
+		await pb.collection('organizer').update(id, {
+			logo: [],
+		})
+		return true
+	} catch (error) {
+		console.error('Error deleting organizer logo:', error)
 		return false
 	}
 }
@@ -133,24 +152,76 @@ export async function fetchPartneredOrganizers(): Promise<Organizer[]> {
 }
 
 /**
+ * Get logo URL for an organizer according to PocketBase file handling
+ * @param organizer - The organizer record
+ * @param thumbSize - Optional thumbnail size (e.g., '100x100', '200x0')
+ * @returns The full URL to the logo file
+ */
+export function getOrganizerLogoUrl(organizer: Organizer, thumbSize?: string): null | string {
+	if (!organizer.logo) return null
+
+	// Generate file URL using PocketBase pattern:
+	// http://127.0.0.1:8090/api/files/COLLECTION_ID_OR_NAME/RECORD_ID/FILENAME
+	const baseUrl = pb.baseUrl
+	let url = `${baseUrl}/api/files/organizer/${organizer.id}/${organizer.logo}`
+
+	// Add thumbnail parameter if specified
+	if (thumbSize) {
+		url += `?thumb=${thumbSize}`
+	}
+
+	return url
+}
+
+/**
  * Update organizer
  */
 export async function updateOrganizer(
 	id: string,
-	organizerData: Partial<Omit<Organizer, 'created' | 'id' | 'updated'>>
+	organizerData: Partial<Omit<Organizer, 'created' | 'id' | 'updated'>> & { logoFile?: File }
 ): Promise<null | Organizer> {
 	try {
-		const record = await pb.collection('organizer').update(id, organizerData)
+		// For updates with file uploads, use FormData
+		if (organizerData.logoFile instanceof File) {
+			const formData = new FormData()
 
-		return {
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
-			id: record.id,
-			email: record.email,
-			created: new Date(record.created),
+			// Add text fields if provided
+			if (organizerData.name) formData.append('name', organizerData.name)
+			if (organizerData.email) formData.append('email', organizerData.email)
+			if (organizerData.isPartnered !== undefined) formData.append('isPartnered', String(organizerData.isPartnered))
+			if (organizerData.website?.trim()) formData.append('website', organizerData.website.trim())
+
+			// Add logo file
+			formData.append('logo', organizerData.logoFile)
+
+			const record = await pb.collection('organizer').update(id, formData)
+
+			return {
+				website: record.website,
+				updated: new Date(record.updated),
+				name: record.name,
+				logo: record.logo,
+				isPartnered: record.isPartnered,
+				id: record.id,
+				email: record.email,
+				created: new Date(record.created),
+			}
+		} else {
+			// For updates without files, use regular JSON
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { logoFile, ...dataWithoutFile } = organizerData
+			const record = await pb.collection('organizer').update(id, dataWithoutFile)
+
+			return {
+				website: record.website,
+				updated: new Date(record.updated),
+				name: record.name,
+				logo: record.logo,
+				isPartnered: record.isPartnered,
+				id: record.id,
+				email: record.email,
+				created: new Date(record.created),
+			}
 		}
 	} catch (error) {
 		console.error('Error updating organizer:', error)
