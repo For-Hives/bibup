@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 
+import type { Organizer } from '@/models/organizer.model'
+import type { Event } from '@/models/event.model'
+
 import { fetchPartneredApprovedEvents } from '@/services/event.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
@@ -24,7 +27,19 @@ export default async function ListNewBibServerWrapper({ params }: { params: Prom
 	const { locale } = await params
 	const t = getTranslations(locale, translations)
 
-	const partneredEvents = await fetchPartneredApprovedEvents()
+	// Safely fetch partnered events with error handling
+	let partneredEvents: (Event & { expand?: { organizer?: Organizer } })[] = []
+	try {
+		partneredEvents = await fetchPartneredApprovedEvents()
+		// Ensure we always have an array
+		if (!Array.isArray(partneredEvents)) {
+			partneredEvents = []
+		}
+	} catch (error) {
+		console.error('Failed to fetch partnered events:', error)
+		// Fallback to empty array if fetch fails
+		partneredEvents = []
+	}
 
 	return <ListNewBibClientPage partneredEvents={partneredEvents} translations={t} />
 }
