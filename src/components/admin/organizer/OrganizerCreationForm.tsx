@@ -8,7 +8,6 @@ import { toast } from 'sonner'
 import * as v from 'valibot'
 
 import { createOrganizer } from '@/services/organizer.services'
-import { Separator } from '@/components/ui/separator'
 import { Organizer } from '@/models/organizer.model'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
@@ -46,6 +45,12 @@ export interface OrganizerCreationFormProps {
 					submitButton: string
 					websiteLabel: string
 					websitePlaceholder: string
+				}
+				sections: {
+					basicInformation: {
+						description: string
+						title: string
+					}
 				}
 				subtitle: string
 				title: string
@@ -125,12 +130,19 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 					)}
 
 					{/* Basic Information Section */}
-					<div className="space-y-8">
+					<div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-3">
 						<div>
-							<h3 className="text-foreground mb-6 text-2xl font-semibold">Basic Information</h3>
-							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+							<h2 className="text-foreground text-2xl font-semibold">
+								{translations.organizers.create.sections.basicInformation.title}
+							</h2>
+							<p className="text-muted-foreground mt-2 text-base leading-7">
+								{translations.organizers.create.sections.basicInformation.description}
+							</p>
+						</div>
+						<div className="sm:max-w-4xl md:col-span-2">
+							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
 								{/* Organizer Name */}
-								<div>
+								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="name">
 										{translations.organizers.create.form.nameLabel} *
 									</Label>
@@ -144,7 +156,7 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 								</div>
 
 								{/* Email */}
-								<div>
+								<div className="col-span-full sm:col-span-3">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="email">
 										{translations.organizers.create.form.emailLabel} *
 									</Label>
@@ -158,19 +170,11 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
 									)}
 								</div>
-							</div>
-						</div>
 
-						<Separator className="my-8" />
-
-						{/* Contact Information Section */}
-						<div>
-							<h3 className="text-foreground mb-6 text-2xl font-semibold">Contact Information</h3>
-							<div className="grid grid-cols-1 gap-6">
 								{/* Website */}
-								<div>
+								<div className="col-span-full">
 									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="website">
-										{translations.organizers.create.form.websiteLabel} (Optional)
+										{translations.organizers.create.form.websiteLabel}
 									</Label>
 									<Input
 										id="website"
@@ -182,28 +186,24 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.website.message}</p>
 									)}
 								</div>
-							</div>
-						</div>
 
-						<Separator className="my-8" />
-
-						{/* Partnership Section */}
-						<div>
-							<h3 className="text-foreground mb-6 text-2xl font-semibold">Partnership Status</h3>
-							<div className="space-y-4">
-								<div className="flex items-center space-x-3">
-									<Checkbox
-										checked={formData.isPartnered}
-										id="isPartnered"
-										onCheckedChange={checked => setValue('isPartnered', !!checked)}
-									/>
-									<Label className="text-foreground text-base font-medium" htmlFor="isPartnered">
-										{translations.organizers.create.form.partnerLabel}
-									</Label>
+								<div className="col-span-full">
+									<div className="space-y-4">
+										<div className="flex items-center space-x-3">
+											<Checkbox
+												checked={formData.isPartnered}
+												id="isPartnered"
+												onCheckedChange={checked => setValue('isPartnered', !!checked)}
+											/>
+											<Label className="text-foreground text-base font-medium" htmlFor="isPartnered">
+												{translations.organizers.create.form.partnerLabel}
+											</Label>
+										</div>
+										<p className="text-muted-foreground text-sm">
+											{translations.organizers.create.form.partnerDescription}
+										</p>
+									</div>
 								</div>
-								<p className="text-muted-foreground text-sm">
-									{translations.organizers.create.form.partnerDescription}
-								</p>
 							</div>
 						</div>
 					</div>

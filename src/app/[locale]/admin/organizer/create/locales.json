@@ -1,0 +1,113 @@
+{
+	"en": {
+		"organizers": {
+			"create": {
+				"title": "Add New Organizer",
+				"subtitle": "Register event organizers to enable bib resale functionality for their races",
+				"sections": {
+					"basicInformation": {
+						"title": "Organizer Information",
+						"description": "Enter the basic information about the event organizer to identify which races will be available for bib resale on the platform."
+					}
+				},
+				"form": {
+					"nameLabel": "Organizer Name",
+					"namePlaceholder": "Marathon de Paris",
+					"emailLabel": "Contact Email",
+					"emailPlaceholder": "contact@marathon-paris.com",
+					"websiteLabel": "Website (Optional)",
+					"websitePlaceholder": "https://www.marathon-paris.com",
+					"partnerLabel": "Enable Bib Resale",
+					"partnerDescription": "Check this option to allow bib resale for events organized by this organizer. This will make their events available on the Beswib marketplace.",
+					"submitButton": "Add Organizer",
+					"cancelButton": "Cancel"
+				},
+				"success": {
+					"title": "Organizer Added Successfully!",
+					"message": "The organizer \"{organizerName}\" has been added to the platform. Their events will now be available for bib resale management.",
+					"backButton": "Back to Dashboard"
+				},
+				"errors": {
+					"nameRequired": "Organizer name is required",
+					"emailInvalid": "Please enter a valid email address",
+					"websiteInvalid": "Please enter a valid website URL",
+					"createFailed": "Failed to add organizer. Please try again."
+				}
+			}
+		}
+	},
+	"fr": {
+		"organizers": {
+			"create": {
+				"title": "Ajouter un Organisateur",
+				"subtitle": "Enregistrer les organisateurs d'événements pour activer la revente de dossards sur leurs courses",
+				"sections": {
+					"basicInformation": {
+						"title": "Informations Organisateur",
+						"description": "Saisissez les informations de base sur l'organisateur d'événements pour identifier quelles courses seront disponibles pour la revente de dossards sur la plateforme."
+					}
+				},
+				"form": {
+					"nameLabel": "Nom de l'Organisateur",
+					"namePlaceholder": "Marathon de Paris",
+					"emailLabel": "Email de Contact",
+					"emailPlaceholder": "contact@marathon-paris.com",
+					"websiteLabel": "Site Web (Optionnel)",
+					"websitePlaceholder": "https://www.marathon-paris.com",
+					"partnerLabel": "Activer la Revente de Dossards",
+					"partnerDescription": "Cochez cette option pour permettre la revente de dossards pour les événements organisés par cet organisateur. Cela rendra leurs événements disponibles sur la marketplace Beswib.",
+					"submitButton": "Ajouter l'Organisateur",
+					"cancelButton": "Annuler"
+				},
+				"success": {
+					"title": "Organisateur Ajouté avec Succès !",
+					"message": "L'organisateur \"{organizerName}\" a été ajouté à la plateforme. Leurs événements seront maintenant disponibles pour la gestion de revente de dossards.",
+					"backButton": "Retour au Tableau de Bord"
+				},
+				"errors": {
+					"nameRequired": "Le nom de l'organisateur est requis",
+					"emailInvalid": "Veuillez entrer une adresse email valide",
+					"websiteInvalid": "Veuillez entrer une URL de site web valide",
+					"createFailed": "Échec de l'ajout de l'organisateur. Veuillez réessayer."
+				}
+			}
+		}
+	},
+	"ko": {
+		"organizers": {
+			"create": {
+				"title": "주최자 추가",
+				"subtitle": "이벤트 주최자를 등록하여 대회의 배번 재판매 기능을 활성화합니다",
+				"sections": {
+					"basicInformation": {
+						"title": "주최자 정보",
+						"description": "플랫폼에서 배번 재판매가 가능한 대회를 식별하기 위해 이벤트 주최자의 기본 정보를 입력하세요."
+					}
+				},
+				"form": {
+					"nameLabel": "주최자 이름",
+					"namePlaceholder": "파리 마라톤",
+					"emailLabel": "연락처 이메일",
+					"emailPlaceholder": "contact@marathon-paris.com",
+					"websiteLabel": "웹사이트 (선택사항)",
+					"websitePlaceholder": "https://www.marathon-paris.com",
+					"partnerLabel": "배번 재판매 활성화",
+					"partnerDescription": "이 주최자가 주관하는 이벤트의 배번 재판매를 허용하려면 이 옵션을 선택하세요. 해당 이벤트들이 Beswib 마켓플레이스에서 이용 가능해집니다.",
+					"submitButton": "주최자 추가",
+					"cancelButton": "취소"
+				},
+				"success": {
+					"title": "주최자가 성공적으로 추가되었습니다!",
+					"message": "주최자 \"{organizerName}\"가 플랫폼에 추가되었습니다. 이제 해당 이벤트들의 배번 재판매 관리가 가능합니다.",
+					"backButton": "대시보드로 돌아가기"
+				},
+				"errors": {
+					"nameRequired": "주최자 이름이 필요합니다",
+					"emailInvalid": "유효한 이메일 주소를 입력하세요",
+					"websiteInvalid": "유효한 웹사이트 URL을 입력하세요",
+					"createFailed": "주최자 추가에 실패했습니다. 다시 시도해주세요."
+				}
+			}
+		}
+	}
+}

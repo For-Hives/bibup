@@ -2,20 +2,20 @@
 	"en": {
 		"organizers": {
 			"title": "Organizers Management",
-			"subtitle": "Manage all event organizers and partnerships",
+			"subtitle": "Manage event organizers to control which races are available for bib resale",
 			"stats": {
 				"totalOrganizers": "Total Organizers",
-				"partneredOrganizers": "Partnered Organizers"
+				"partneredOrganizers": "Bib Resale Enabled"
 			},
 			"sections": {
 				"actions": {
 					"title": "Quick Actions",
-					"description": "Common administrative tasks for organizer management"
+					"description": "Add or manage event organizers for bib resale control"
 				}
 			},
 			"actions": {
-				"createOrganizer": "Create New Organizer",
-				"createOrganizerDescription": "Add new event organizers to the platform"
+				"createOrganizer": "Add New Organizer",
+				"createOrganizerDescription": "Register event organizers to enable bib resale for their races"
 			},
 			"table": {
 				"search": "Search organizers...",
@@ -65,8 +65,8 @@
 					"emailPlaceholder": "contact@marathon-paris.com",
 					"websiteLabel": "Website",
 					"websitePlaceholder": "https://www.marathon-paris.com",
-					"partnerLabel": "Partner Organizer",
-					"partnerDescription": "Partner organizers can enable bib resale for their events and access additional platform features.",
+					"partnerLabel": "Enable Bib Resale",
+					"partnerDescription": "Check this option to allow bib resale for events organized by this organizer. This will make their events available on the Beswib marketplace.",
 					"submitButton": "Create Organizer",
 					"cancelButton": "Cancel"
 				},
@@ -112,20 +112,20 @@
 	"fr": {
 		"organizers": {
 			"title": "Gestion des Organisateurs",
-			"subtitle": "Gérer tous les organisateurs d'événements et les partenariats",
+			"subtitle": "Gérer les organisateurs d'événements pour contrôler quelles courses sont disponibles pour la revente de dossards",
 			"stats": {
 				"totalOrganizers": "Total Organisateurs",
-				"partneredOrganizers": "Organisateurs Partenaires"
+				"partneredOrganizers": "Revente de Dossards Activée"
 			},
 			"sections": {
 				"actions": {
 					"title": "Actions Rapides",
-					"description": "Tâches administratives courantes pour la gestion des organisateurs"
+					"description": "Ajouter ou gérer les organisateurs d'événements pour le contrôle de la revente de dossards"
 				}
 			},
 			"actions": {
-				"createOrganizer": "Créer un Nouvel Organisateur",
-				"createOrganizerDescription": "Ajouter de nouveaux organisateurs d'événements à la plateforme"
+				"createOrganizer": "Ajouter un Organisateur",
+				"createOrganizerDescription": "Enregistrer les organisateurs d'événements pour activer la revente de dossards sur leurs courses"
 			},
 			"table": {
 				"search": "Rechercher des organisateurs...",
@@ -175,8 +175,8 @@
 					"emailPlaceholder": "contact@marathon-paris.com",
 					"websiteLabel": "Site Web",
 					"websitePlaceholder": "https://www.marathon-paris.com",
-					"partnerLabel": "Organisateur Partenaire",
-					"partnerDescription": "Les organisateurs partenaires peuvent activer la revente de dossards pour leurs événements et accéder à des fonctionnalités supplémentaires de la plateforme.",
+					"partnerLabel": "Activer la Revente de Dossards",
+					"partnerDescription": "Cochez cette option pour permettre la revente de dossards pour les événements organisés par cet organisateur. Cela rendra leurs événements disponibles sur la marketplace Beswib.",
 					"submitButton": "Créer l'Organisateur",
 					"cancelButton": "Annuler"
 				},
