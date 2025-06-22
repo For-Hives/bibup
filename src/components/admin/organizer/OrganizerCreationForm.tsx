@@ -15,6 +15,8 @@ import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 
+import OrganizerFakerButton from './OrganizerFakerButton'
+
 // Validation Schema using Valibot
 const OrganizerCreationSchema = v.object({
 	website: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
@@ -148,6 +150,9 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 					// eslint-disable-next-line @typescript-eslint/no-misused-promises
 					onSubmit={handleSubmit(onSubmit)}
 				>
+					{/* Faker Button - Development only */}
+					<OrganizerFakerButton setValue={setValue} />
+
 					<div className="mb-12 text-left">
 						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
 							{translations.organizers.create.title}
