@@ -102,9 +102,14 @@ export default async function SellerDashboardPage({
 				{/* Manage Bib Listings Box (takes more space) */}
 				<div className="bento-box md:col-span-2">
 					<h2 className="mb-4 text-xl font-semibold text-[var(--text-dark)]">{t.manageBibListings}</h2>
-					<Link className="btn btn-primary mb-6 w-full md:w-auto" href="/dashboard/seller/list-bib">
-						{t.listNewBib}
-					</Link>
+					<div className="mb-6 flex flex-col gap-4 sm:flex-row">
+						<Link className="btn btn-primary w-full sm:w-auto" href="/dashboard/seller/sell-bib">
+							{t.sellBib}
+						</Link>
+						<Link className="btn btn-secondary w-full sm:w-auto" href="/dashboard/seller/list-bib">
+							{t.listNewBib}
+						</Link>
+					</div>
 
 					<h3 className="mt-6 mb-3 text-lg font-semibold text-[var(--text-dark)]">{t.yourListedBibs}</h3>
 					{listedBibs.length > 0 ? (
