@@ -32,10 +32,9 @@ export async function POST(request: NextRequest) {
 		const eventDate = formData.get('eventDate') as string
 		const description = formData.get('description') as string
 		const typeCourse = formData.get('typeCourse') as 'route' | 'trail' | 'triathlon' | 'ultra'
-		const participants = parseInt(formData.get('participantCount') as string, 10) || undefined
+		const participants = parseInt(formData.get('participants') as string, 10) || undefined
 		const bibPickupWindowBeginDate = formData.get('bibPickupWindowBeginDate') as string
 		const bibPickupWindowEndDate = formData.get('bibPickupWindowEndDate') as string
-		const isPartnered = formData.get('isPartnered') === 'true'
 		const organizer = formData.get('organizer') as string
 
 		// Extract optional fields
@@ -87,7 +86,6 @@ export async function POST(request: NextRequest) {
 			officialStandardPrice,
 			name,
 			location,
-			isPartnered,
 			eventDate: new Date(eventDate),
 			elevationGainM,
 			distanceKm,

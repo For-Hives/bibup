@@ -14,7 +14,6 @@ export interface Event {
 
 	eventDate: Date
 	id: string
-	isPartnered: boolean
 	location: string
 	name: string
 
