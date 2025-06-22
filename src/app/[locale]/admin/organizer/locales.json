@@ -43,7 +43,7 @@
 				},
 				"success": {
 					"title": "Organizer Created Successfully!",
-					"description": "\"{name}\" has been created and is now available on the platform.",
+					"message": "\"{organizerName}\" has been created and is now available on the platform.",
 					"backButton": "Back to Dashboard"
 				},
 				"errors": {
@@ -124,7 +124,7 @@
 				},
 				"success": {
 					"title": "Organisateur Créé avec Succès !",
-					"description": "\"{name}\" a été créé et est maintenant disponible sur la plateforme.",
+					"message": "\"{organizerName}\" a été créé et est maintenant disponible sur la plateforme.",
 					"backButton": "Retour au Tableau de Bord"
 				},
 				"errors": {
