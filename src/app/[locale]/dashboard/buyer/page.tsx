@@ -3,10 +3,6 @@ import type { Metadata } from 'next'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
-import type { Waitlist } from '@/models/waitlist.model'
-import type { Event } from '@/models/event.model'
-import type { Bib } from '@/models/bib.model'
-
 import { fetchUserWaitlists } from '@/services/waitlist.services'
 import { fetchBibsByBuyer } from '@/services/bib.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
@@ -23,41 +19,50 @@ export const metadata: Metadata = {
 }
 
 export default async function BuyerDashboardPage({
-	searchParams: searchParamsPromise,
+	searchParams,
 	params,
 }: {
 	params: Promise<LocaleParams>
-	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
+	searchParams: Promise<{ purchase_success?: string }>
 }) {
 	const { locale } = await params
-	const t = getTranslations(locale, buyerTranslations)
+	const { purchase_success } = await searchParams
+	const t = getTranslations(locale, buyerTranslations) as any
 
-	const { userId: clerkUserId } = await auth()
+	const { userId } = await auth()
 	const clerkUser = await currentUser()
-	const searchParams = await searchParamsPromise
 
-	if (!clerkUserId || !clerkUser) {
+	if (!userId || !clerkUser) {
 		redirect('/sign-in')
 	}
 
-	let purchasedBibs: (Bib & { expand?: { eventId: Event } })[] = []
-	let userWaitlists: (Waitlist & { expand?: { eventId: Event } })[] = []
+	// Fetch all required data
+	const [purchasedBibs, userWaitlists] = await Promise.all([fetchBibsByBuyer(userId), fetchUserWaitlists(userId)])
 
-	if (clerkUserId) {
-		purchasedBibs = await fetchBibsByBuyer(clerkUserId)
-		userWaitlists = await fetchUserWaitlists(clerkUserId)
+	// Extract only serializable properties from clerkUser
+	const serializedClerkUser = {
+		username: clerkUser.username,
+		lastName: clerkUser.lastName,
+		imageUrl: clerkUser.imageUrl,
+		id: clerkUser.id,
+		firstName: clerkUser.firstName,
+		emailAddresses: clerkUser.emailAddresses.map(email => ({
+			id: email.id,
+			emailAddress: email.emailAddress,
+		})),
 	}
 
-	const purchaseSuccess = searchParams?.purchase_success === 'true'
-	const eventNameForSuccessMsg =
-		typeof searchParams?.event_name === 'string' ? decodeURIComponent(searchParams.event_name) : ''
+	// Handle purchase success
+	const purchaseSuccess = purchase_success === 'true'
+	const successEventName =
+		purchaseSuccess && purchasedBibs.length > 0 ? (purchasedBibs[0]?.expand?.eventId?.name ?? 'Event') : ''
 
 	return (
 		<BuyerDashboardClient
-			clerkUser={clerkUser}
+			clerkUser={serializedClerkUser}
 			purchasedBibs={purchasedBibs}
 			purchaseSuccess={purchaseSuccess}
-			successEventName={eventNameForSuccessMsg}
+			successEventName={successEventName}
 			translations={t}
 			userWaitlists={userWaitlists}
 		/>

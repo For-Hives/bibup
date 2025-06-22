@@ -1,8 +1,6 @@
 'use client'
 
-import type { User as ClerkUser } from '@clerk/nextjs/server'
-
-import { Calendar, CheckCircle, Clock, Package, ShoppingCart, TrendingUp, Users } from 'lucide-react'
+import { Calendar, CheckCircle, Clock, Package, ShoppingCart, Users } from 'lucide-react'
 
 import Link from 'next/link'
 
@@ -14,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 
 interface BuyerDashboardClientProps {
-	clerkUser: ClerkUser
+	clerkUser: SerializedClerkUser
 	purchasedBibs: (Bib & { expand?: { eventId: Event } })[]
 	purchaseSuccess: boolean
 	successEventName: string
@@ -24,24 +22,33 @@ interface BuyerDashboardClientProps {
 
 interface BuyerTranslations {
 	bibForLabel: string
-	browseEvents: string
-	browseEventsWaitlist: string
 	dateAddedToWaitlist: string
 	dateOfEvent: string
-	eventLabel: string
 	keepRecords: string
-	myPurchases: string
 	noPurchases: string
 	noWaitlistEntries: string
-	pleaseSignIn: string
-	pricePaid: string
+	price: string
+	purchaseHistory: string
 	purchaseSuccess: string
 	purchaseSuccessDetails: string
 	registrationNumber: string
-	title: string
-	waitlistEntries: string
+	statistics: {
+		totalPurchases: string
+		totalSpent: string
+		waitlistEntries: string
+	}
+	waitlist: string
 	waitlistJoinText: string
 	welcome: string
+}
+
+interface SerializedClerkUser {
+	emailAddresses: { emailAddress: string; id: string }[]
+	firstName: null | string
+	id: string
+	imageUrl: string
+	lastName: null | string
+	username: null | string
 }
 
 export default function BuyerDashboardClient({
@@ -53,6 +60,11 @@ export default function BuyerDashboardClient({
 	clerkUser,
 }: BuyerDashboardClientProps) {
 	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
+
+	// Calculate statistics
+	const totalPurchases = purchasedBibs.length
+	const totalSpent = purchasedBibs.reduce((sum, bib) => sum + (bib.price || 0), 0)
+	const waitlistEntries = userWaitlists.length
 
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
@@ -77,14 +89,6 @@ export default function BuyerDashboardClient({
 
 			<div className="relative pt-32 pb-12">
 				<div className="container mx-auto max-w-6xl p-6">
-					{/* Header */}
-					<div className="mb-12 space-y-2 text-center">
-						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t.title}</h1>
-						<p className="text-muted-foreground text-lg">
-							{t.welcome}, {userName}!
-						</p>
-					</div>
-
 					{/* Success Message */}
 					{purchaseSuccess && successEventName && (
 						<div className="mb-8 rounded-lg border border-green-300 bg-green-50 p-4 dark:border-green-900/50 dark:bg-green-900/20">
@@ -100,63 +104,52 @@ export default function BuyerDashboardClient({
 						</div>
 					)}
 
-					{/* Stats Cards */}
-					<div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+					{/* Statistics Cards */}
+					<div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Total Purchases</CardTitle>
-								<Package className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalPurchases}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">{purchasedBibs.length}</div>
-								<p className="text-muted-foreground text-xs">Bibs purchased successfully</p>
+								<div className="text-2xl font-bold">{totalPurchases}</div>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Waitlist Entries</CardTitle>
-								<Clock className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.waitlistEntries}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">{userWaitlists.length}</div>
-								<p className="text-muted-foreground text-xs">Events you're waiting for</p>
+								<div className="text-2xl font-bold">{waitlistEntries}</div>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-								<TrendingUp className="text-muted-foreground h-4 w-4" />
+							<CardHeader className="pb-2">
+								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalSpent}</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">
-									${purchasedBibs.reduce((sum, bib) => sum + bib.price, 0).toFixed(2)}
-								</div>
-								<p className="text-muted-foreground text-xs">On race bibs</p>
+								<div className="text-2xl font-bold">€{totalSpent.toFixed(2)}</div>
 							</CardContent>
 						</Card>
 					</div>
 
-					{/* Main Content Grid */}
+					{/* Main Content */}
 					<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-						{/* My Purchases */}
+						{/* Purchase History */}
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
-									<Package className="h-5 w-5" />
-									{t.myPurchases}
+									<ShoppingCart className="h-5 w-5" />
+									{t.purchaseHistory}
 								</CardTitle>
-								<CardDescription>Your successfully purchased race bibs</CardDescription>
+								<CardDescription>Track your race bib purchases and transfers</CardDescription>
 							</CardHeader>
 							<CardContent>
 								{purchasedBibs.length > 0 ? (
 									<div className="space-y-4">
 										{purchasedBibs.map(bib => (
-											<div
-												className="border-border/50 bg-background/50 rounded-lg border p-4 backdrop-blur-sm"
-												key={bib.id}
-											>
+											<div className="rounded-lg border p-4" key={bib.id}>
 												<div className="mb-2 flex items-start justify-between">
 													<h4 className="font-semibold">
 														{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
@@ -172,10 +165,10 @@ export default function BuyerDashboardClient({
 														{bib.expand?.eventId ? new Date(bib.expand.eventId.eventDate).toLocaleDateString() : 'N/A'}
 													</p>
 													<p>
-														{t.pricePaid}: ${bib.price.toFixed(2)}
+														{t.registrationNumber}: {bib.registrationNumber}
 													</p>
 													<p>
-														{t.registrationNumber}: {bib.registrationNumber}
+														{t.price}: €{bib.price?.toFixed(2) ?? 'N/A'}
 													</p>
 												</div>
 												<p className="text-muted-foreground mt-2 text-xs">{t.keepRecords}</p>
@@ -187,33 +180,27 @@ export default function BuyerDashboardClient({
 										<Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
 										<p className="text-muted-foreground mb-4">{t.noPurchases}</p>
 										<Link href="/events">
-											<Button>
-												<Calendar className="mr-2 h-4 w-4" />
-												{t.browseEvents}
-											</Button>
+											<Button>Browse Events</Button>
 										</Link>
 									</div>
 								)}
 							</CardContent>
 						</Card>
 
-						{/* Waitlist Entries */}
+						{/* Waitlist */}
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<Clock className="h-5 w-5" />
-									{t.waitlistEntries}
+									{t.waitlist}
 								</CardTitle>
-								<CardDescription>Events you're waiting to purchase bibs for</CardDescription>
+								<CardDescription>Events you're waiting for available bibs</CardDescription>
 							</CardHeader>
 							<CardContent>
 								{userWaitlists.length > 0 ? (
 									<div className="space-y-4">
 										{userWaitlists.map(waitlistEntry => (
-											<div
-												className="border-border/50 bg-background/50 rounded-lg border p-4 backdrop-blur-sm"
-												key={waitlistEntry.id}
-											>
+											<div className="rounded-lg border p-4" key={waitlistEntry.id}>
 												<div className="mb-2 flex items-start justify-between">
 													<h4 className="font-semibold">
 														<Link className="text-primary hover:underline" href={`/events/${waitlistEntry.eventId}`}>
@@ -236,10 +223,7 @@ export default function BuyerDashboardClient({
 										<Clock className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
 										<p className="text-muted-foreground mb-4">{t.noWaitlistEntries}</p>
 										<Link href="/events">
-											<Button variant="outline">
-												<Users className="mr-2 h-4 w-4" />
-												{t.browseEventsWaitlist}
-											</Button>
+											<Button variant="outline">Browse Events</Button>
 										</Link>
 										<p className="text-muted-foreground mt-2 text-xs">{t.waitlistJoinText}</p>
 									</div>
@@ -249,7 +233,7 @@ export default function BuyerDashboardClient({
 					</div>
 
 					{/* Quick Actions */}
-					<div className="mt-12">
+					<div className="mt-8">
 						<h2 className="text-foreground mb-6 text-xl font-bold">Quick Actions</h2>
 						<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 							<Link href="/marketplace">
