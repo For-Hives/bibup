@@ -16,7 +16,6 @@ export interface Event {
 	id: string
 	isPartnered: boolean
 	location: string
-	logo: File
 	name: string
 
 	officialStandardPrice?: number
