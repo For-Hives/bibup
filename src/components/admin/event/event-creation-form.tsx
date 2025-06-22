@@ -17,7 +17,6 @@ import EventInformationSection from './EventInformationSection'
 import { EventCreationSchema, EventFormData } from './types'
 import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
-import PartnershipSection from './PartnershipSection'
 import BibPickupSection from './BibPickupSection'
 import OrganizerSection from './OrganizerSection'
 import { Separator } from '../../ui/separator'
@@ -46,9 +45,8 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 		resolver: valibotResolver(EventCreationSchema),
 		defaultValues: {
 			typeCourse: 'route',
-			participantCount: 1,
+			participants: 1,
 			options: [],
-			isPartnered: false,
 		},
 	})
 
@@ -69,12 +67,11 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 				formDataToSend.append('description', data.description)
 				formDataToSend.append('typeCourse', data.typeCourse)
 				formDataToSend.append('organizer', data.organizer)
-				formDataToSend.append('isPartnered', data.isPartnered.toString())
 				formDataToSend.append('options', JSON.stringify(data.options))
 
 				// Add participant count if provided
-				if (data.participantCount !== undefined) {
-					formDataToSend.append('participantCount', data.participantCount.toString())
+				if (data.participants !== undefined) {
+					formDataToSend.append('participantCount', data.participants.toString())
 				}
 
 				formDataToSend.append('bibPickupWindowBeginDate', new Date(data.bibPickupWindowBeginDate).toISOString())
@@ -195,17 +192,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 						errors={errors}
 						formData={formData}
 						locale={locale}
-						register={register}
-						setValue={setValue}
-						translations={translations}
-					/>
-
-					<Separator className="my-12" />
-
-					{/* Partnership Settings Section */}
-					<PartnershipSection
-						errors={errors}
-						formData={formData}
 						register={register}
 						setValue={setValue}
 						translations={translations}

@@ -156,7 +156,7 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 				| 'ultra',
 			transferDeadline: transferDeadline.toISOString().split('T')[0],
 			registrationUrl: faker.internet.url(),
-			participantCount: faker.number.int({ min: 50, max: 2000 }),
+			participants: faker.number.int({ min: 50, max: 2000 }),
 			parcoursUrl: faker.internet.url(),
 			organizer: randomOrganizer?.id ?? '', // Use actual organizer ID
 			options: [

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 		const eventDate = formData.get('eventDate') as string
 		const description = formData.get('description') as string
 		const typeCourse = formData.get('typeCourse') as 'route' | 'trail' | 'triathlon' | 'ultra'
-		const participantCount = parseInt(formData.get('participantCount') as string, 10) || undefined
+		const participants = parseInt(formData.get('participantCount') as string, 10) || undefined
 		const bibPickupWindowBeginDate = formData.get('bibPickupWindowBeginDate') as string
 		const bibPickupWindowEndDate = formData.get('bibPickupWindowEndDate') as string
 		const isPartnered = formData.get('isPartnered') === 'true'
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 			typeCourse,
 			transferDeadline: transferDeadline ? new Date(transferDeadline) : undefined,
 			registrationUrl,
-			participantCount,
+			participants,
 			parcoursUrl,
 			organizer,
 			options,

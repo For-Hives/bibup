@@ -27,7 +27,7 @@ export interface Event {
 
 	parcoursUrl?: string // GPX files, map links
 
-	participantCount?: number
+	participants?: number
 
 	registrationUrl?: string // link to registration
 

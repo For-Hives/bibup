@@ -47,7 +47,7 @@ export default function OrganizerSection({ translations, setValue, formData, err
 			</div>
 			<div className="sm:max-w-4xl md:col-span-2">
 				<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
-					<div className="col-span-full">
+					<div className="col-span-3">
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="organizer">
 							{translations.event.fields.organizer.label} *
 						</Label>

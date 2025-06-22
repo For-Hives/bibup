@@ -11,7 +11,7 @@ export const EventCreationSchema = v.pipe(
 		typeCourse: v.picklist(['route', 'trail', 'triathlon', 'ultra']),
 		transferDeadline: v.optional(v.string()),
 		registrationUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
-		participantCount: v.pipe(v.number(), v.minValue(1, 'Participant count must be at least 1')),
+		participants: v.pipe(v.number(), v.minValue(1, 'Participant count must be at least 1')),
 		parcoursUrl: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
 		organizer: v.pipe(v.string(), v.minLength(1, 'Organizer is required')),
 		options: v.array(

@@ -59,17 +59,17 @@ export default function EventDetailsSection({ translations, register, locale = '
 						)}
 					</div>
 					<div className="col-span-full sm:col-span-3">
-						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="participantCount">
+						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="participants">
 							{translations.event.fields.participantCount.label} *
 						</Label>
 						<Input
-							id="participantCount"
-							{...register('participantCount', { valueAsNumber: true })}
+							id="participants"
+							{...register('participants', { valueAsNumber: true })}
 							placeholder={translations.event.fields.participantCount.placeholder}
 							type="number"
 						/>
-						{errors.participantCount && (
-							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.participantCount.message}</p>
+						{errors.participants && (
+							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.participants.message}</p>
 						)}
 					</div>
 					<div className="col-span-full sm:col-span-3">

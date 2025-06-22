@@ -20,20 +20,19 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			typeCourse: eventData.typeCourse ?? 'route',
 			transferDeadline: eventData.transferDeadline,
 			registrationUrl: eventData.registrationUrl,
-			participantCount: eventData.participantCount ?? 0,
+			participants: eventData.participants ?? 0, // PocketBase uses 'participants', not 'participantCount'
 			parcoursUrl: eventData.parcoursUrl,
 			organizer: eventData.organizer,
-			options: eventData.options ?? [],
+			options: JSON.stringify(eventData.options ?? []), // PocketBase expects JSON string
 			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
 			location: eventData.location,
-			isPartnered: eventData.isPartnered ?? false,
-			eventDate: new Date(eventData.eventDate),
+			eventDate: eventData.eventDate,
 			elevationGainM: eventData.elevationGainM,
 			distanceKm: eventData.distanceKm,
 			description: eventData.description ?? '',
-			bibPickupWindowEndDate: eventData.bibPickupWindowEndDate ?? new Date(),
-			bibPickupWindowBeginDate: eventData.bibPickupWindowBeginDate ?? new Date(),
+			bibPickupWindowEndDate: eventData.bibPickupWindowEndDate,
+			bibPickupWindowBeginDate: eventData.bibPickupWindowBeginDate,
 			bibPickupLocation: eventData.bibPickupLocation,
 		}
 
