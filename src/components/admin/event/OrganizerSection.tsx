@@ -58,50 +58,52 @@ export default function OrganizerSection({ translations, setValue, formData, err
 							</div>
 						)}
 
-						<Select
-							disabled={isLoading}
-							onValueChange={(value: string) => setValue('organizer', value)}
-							value={formData.organizer ?? ''}
-						>
-							<SelectTrigger
-								className="ring-foreground/40 h-10 bg-gray-50 ring-2 dark:bg-zinc-800 dark:ring-slate-700"
-								id="organizer"
+						{organizers.length > 0 && (
+							<Select
+								disabled={isLoading}
+								onValueChange={(value: string) => setValue('organizer', value)}
+								value={formData.organizer ?? ''}
 							>
-								<SelectValue
-									placeholder={
-										isLoading
-											? translations.event.fields.organizer.loading
-											: translations.event.fields.organizer.placeholder
-									}
-								/>
-							</SelectTrigger>
-							<SelectContent>
-								{!isLoading &&
-									organizers.length > 0 &&
-									organizers.map(organizer => (
-										<SelectItem key={organizer.id} value={organizer.id}>
-											<div className="flex items-center gap-2">
-												<span>{organizer.name ?? 'Unnamed Organizer'}</span>
-												{organizer.isPartnered && (
-													<span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs font-medium">
-														{translations.event.fields.organizer.partnered}
-													</span>
-												)}
-											</div>
+								<SelectTrigger
+									className="shadow-input dark:placeholder-text-neutral-600 h-10 border-none bg-gray-50 transition duration-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none dark:bg-zinc-800 dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600"
+									id="organizer"
+								>
+									<SelectValue
+										placeholder={
+											isLoading
+												? translations.event.fields.organizer.loading
+												: translations.event.fields.organizer.placeholder
+										}
+									/>
+								</SelectTrigger>
+								<SelectContent>
+									{!isLoading &&
+										organizers.length > 0 &&
+										organizers.map(organizer => (
+											<SelectItem key={organizer.id} value={organizer.id}>
+												<div className="flex items-center gap-2">
+													<span>{organizer.name ?? 'Unnamed Organizer'}</span>
+													{organizer.isPartnered && (
+														<span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs font-medium">
+															{translations.event.fields.organizer.partnered}
+														</span>
+													)}
+												</div>
+											</SelectItem>
+										))}
+									{!isLoading && organizers.length === 0 && !error && (
+										<SelectItem disabled value="">
+											{translations.event.fields.organizer.noOrganizers}
 										</SelectItem>
-									))}
-								{!isLoading && organizers.length === 0 && !error && (
-									<SelectItem disabled value="">
-										{translations.event.fields.organizer.noOrganizers}
-									</SelectItem>
-								)}
-								{isLoading && (
-									<SelectItem disabled value="">
-										{translations.event.fields.organizer.loading}
-									</SelectItem>
-								)}
-							</SelectContent>
-						</Select>
+									)}
+									{isLoading && (
+										<SelectItem disabled value="">
+											{translations.event.fields.organizer.loading}
+										</SelectItem>
+									)}
+								</SelectContent>
+							</Select>
+						)}
 						{errors.organizer && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.organizer.message}</p>
 						)}
