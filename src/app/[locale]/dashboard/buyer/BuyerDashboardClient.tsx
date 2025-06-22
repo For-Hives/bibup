@@ -52,19 +52,19 @@ interface SerializedClerkUser {
 }
 
 export default function BuyerDashboardClient({
-	userWaitlists,
+	userWaitlists = [],
 	translations: t,
 	successEventName,
 	purchaseSuccess,
-	purchasedBibs,
+	purchasedBibs = [],
 	clerkUser,
 }: BuyerDashboardClientProps) {
-	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Buyer'
+	const userName = clerkUser?.firstName ?? clerkUser?.emailAddresses?.[0]?.emailAddress ?? 'Buyer'
 
-	// Calculate statistics
-	const totalPurchases = purchasedBibs.length
-	const totalSpent = purchasedBibs.reduce((sum, bib) => sum + (bib.price || 0), 0)
-	const waitlistEntries = userWaitlists.length
+	// Calculate statistics with safety checks
+	const totalPurchases = Array.isArray(purchasedBibs) ? purchasedBibs.length : 0
+	const totalSpent = Array.isArray(purchasedBibs) ? purchasedBibs.reduce((sum, bib) => sum + (bib?.price || 0), 0) : 0
+	const waitlistEntries = Array.isArray(userWaitlists) ? userWaitlists.length : 0
 
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
@@ -78,7 +78,7 @@ export default function BuyerDashboardClient({
 						<p className="text-foreground flex items-center gap-2 font-medium">
 							<ShoppingCart className="h-4 w-4" />
 							{userName}
-							{clerkUser.emailAddresses[0] && (
+							{clerkUser?.emailAddresses?.[0] && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>
@@ -146,34 +146,39 @@ export default function BuyerDashboardClient({
 								<CardDescription>Track your race bib purchases and transfers</CardDescription>
 							</CardHeader>
 							<CardContent>
-								{purchasedBibs.length > 0 ? (
+								{totalPurchases > 0 ? (
 									<div className="space-y-4">
-										{purchasedBibs.map(bib => (
-											<div className="rounded-lg border p-4" key={bib.id}>
-												<div className="mb-2 flex items-start justify-between">
-													<h4 className="font-semibold">
-														{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
-													</h4>
-													<span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
-														Purchased
-													</span>
+										{purchasedBibs.map(bib => {
+											if (!bib || !bib.id) return null
+											return (
+												<div className="rounded-lg border p-4" key={bib.id}>
+													<div className="mb-2 flex items-start justify-between">
+														<h4 className="font-semibold">
+															{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
+														</h4>
+														<span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
+															Purchased
+														</span>
+													</div>
+													<div className="text-muted-foreground space-y-1 text-sm">
+														<p className="flex items-center gap-2">
+															<Calendar className="h-4 w-4" />
+															{t.dateOfEvent}:{' '}
+															{bib.expand?.eventId
+																? new Date(bib.expand.eventId.eventDate).toLocaleDateString()
+																: 'N/A'}
+														</p>
+														<p>
+															{t.registrationNumber}: {bib.registrationNumber}
+														</p>
+														<p>
+															{t.price}: €{bib.price?.toFixed(2) ?? 'N/A'}
+														</p>
+													</div>
+													<p className="text-muted-foreground mt-2 text-xs">{t.keepRecords}</p>
 												</div>
-												<div className="text-muted-foreground space-y-1 text-sm">
-													<p className="flex items-center gap-2">
-														<Calendar className="h-4 w-4" />
-														{t.dateOfEvent}:{' '}
-														{bib.expand?.eventId ? new Date(bib.expand.eventId.eventDate).toLocaleDateString() : 'N/A'}
-													</p>
-													<p>
-														{t.registrationNumber}: {bib.registrationNumber}
-													</p>
-													<p>
-														{t.price}: €{bib.price?.toFixed(2) ?? 'N/A'}
-													</p>
-												</div>
-												<p className="text-muted-foreground mt-2 text-xs">{t.keepRecords}</p>
-											</div>
-										))}
+											)
+										})}
 									</div>
 								) : (
 									<div className="py-8 text-center">
@@ -197,26 +202,29 @@ export default function BuyerDashboardClient({
 								<CardDescription>Events you're waiting for available bibs</CardDescription>
 							</CardHeader>
 							<CardContent>
-								{userWaitlists.length > 0 ? (
+								{waitlistEntries > 0 ? (
 									<div className="space-y-4">
-										{userWaitlists.map(waitlistEntry => (
-											<div className="rounded-lg border p-4" key={waitlistEntry.id}>
-												<div className="mb-2 flex items-start justify-between">
-													<h4 className="font-semibold">
-														<Link className="text-primary hover:underline" href={`/events/${waitlistEntry.eventId}`}>
-															{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
-														</Link>
-													</h4>
-													<span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-														Waiting
-													</span>
+										{userWaitlists.map(waitlistEntry => {
+											if (!waitlistEntry || !waitlistEntry.id) return null
+											return (
+												<div className="rounded-lg border p-4" key={waitlistEntry.id}>
+													<div className="mb-2 flex items-start justify-between">
+														<h4 className="font-semibold">
+															<Link className="text-primary hover:underline" href={`/events/${waitlistEntry.eventId}`}>
+																{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
+															</Link>
+														</h4>
+														<span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+															Waiting
+														</span>
+													</div>
+													<p className="text-muted-foreground flex items-center gap-2 text-sm">
+														<Clock className="h-4 w-4" />
+														{t.dateAddedToWaitlist}: {new Date(waitlistEntry.addedAt).toLocaleDateString()}
+													</p>
 												</div>
-												<p className="text-muted-foreground flex items-center gap-2 text-sm">
-													<Clock className="h-4 w-4" />
-													{t.dateAddedToWaitlist}: {new Date(waitlistEntry.addedAt).toLocaleDateString()}
-												</p>
-											</div>
-										))}
+											)
+										})}
 									</div>
 								) : (
 									<div className="py-8 text-center">
