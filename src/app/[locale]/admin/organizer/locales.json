@@ -24,6 +24,7 @@
 				"columns": {
 					"name": "Organizer Name",
 					"email": "Email",
+					"eventsCount": "Events",
 					"partnership": "Partnership",
 					"created": "Created",
 					"status": {
@@ -134,6 +135,7 @@
 				"columns": {
 					"name": "Nom de l'Organisateur",
 					"email": "Email",
+					"eventsCount": "Événements",
 					"partnership": "Partenariat",
 					"created": "Créé le",
 					"status": {
