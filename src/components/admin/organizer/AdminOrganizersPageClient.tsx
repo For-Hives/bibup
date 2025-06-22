@@ -62,7 +62,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '@/components/ui/selectAlt'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
@@ -643,23 +643,23 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 									<Label className="max-sm:sr-only" htmlFor={id}>
 										{t.organizers.table.controls.rowsPerPage}
 									</Label>
-									<Select
-										onValueChange={value => {
+									<SelectAlt
+										onValueChange={(value: string) => {
 											table.setPageSize(Number(value))
 										}}
 										value={table.getState().pagination.pageSize.toString()}
 									>
-										<SelectTrigger className="w-fit whitespace-nowrap" id={id}>
-											<SelectValue placeholder="Select number of results" />
-										</SelectTrigger>
-										<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
+										<SelectTriggerAlt className="w-fit whitespace-nowrap" id={id}>
+											<SelectValueAlt placeholder="Select number of results" />
+										</SelectTriggerAlt>
+										<SelectContentAlt className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
 											{[5, 10, 25, 50].map(pageSize => (
-												<SelectItem key={`pagesize-${pageSize}`} value={pageSize.toString()}>
+												<SelectItemAlt key={`pagesize-${pageSize}`} value={pageSize.toString()}>
 													{pageSize}
-												</SelectItem>
+												</SelectItemAlt>
 											))}
-										</SelectContent>
-									</Select>
+										</SelectContentAlt>
+									</SelectAlt>
 								</div>
 
 								{/* Page number information */}

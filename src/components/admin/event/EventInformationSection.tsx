@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
 import { Textarea } from '../../ui/textareaAlt'
 import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
@@ -64,25 +64,22 @@ export default function EventInformationSection({
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="typeCourse">
 							{translations.event.fields.eventType.label} *
 						</Label>
-						<Select
+						<SelectAlt
 							onValueChange={(value: string) =>
 								setValue('typeCourse', value as 'route' | 'trail' | 'triathlon' | 'ultra')
 							}
 							value={formData.typeCourse ?? 'route'}
 						>
-							<SelectTrigger
-								className="ring-foreground/40 h-10 bg-gray-50 ring-2 dark:bg-zinc-800 dark:ring-slate-700"
-								id="typeCourse"
-							>
-								<SelectValue placeholder={translations.event.fields.eventType.placeholder} />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="route">{translations.event.fields.eventType.options.route}</SelectItem>
-								<SelectItem value="trail">{translations.event.fields.eventType.options.trail}</SelectItem>
-								<SelectItem value="triathlon">{translations.event.fields.eventType.options.triathlon}</SelectItem>
-								<SelectItem value="ultra">{translations.event.fields.eventType.options.ultra}</SelectItem>
-							</SelectContent>
-						</Select>
+							<SelectTriggerAlt id="typeCourse">
+								<SelectValueAlt placeholder={translations.event.fields.eventType.placeholder} />
+							</SelectTriggerAlt>
+							<SelectContentAlt>
+								<SelectItemAlt value="route">{translations.event.fields.eventType.options.route}</SelectItemAlt>
+								<SelectItemAlt value="trail">{translations.event.fields.eventType.options.trail}</SelectItemAlt>
+								<SelectItemAlt value="triathlon">{translations.event.fields.eventType.options.triathlon}</SelectItemAlt>
+								<SelectItemAlt value="ultra">{translations.event.fields.eventType.options.ultra}</SelectItemAlt>
+							</SelectContentAlt>
+						</SelectAlt>
 						{errors.typeCourse && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{String(errors.typeCourse.message)}</p>
 						)}
