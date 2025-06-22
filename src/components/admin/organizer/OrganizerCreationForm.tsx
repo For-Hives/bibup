@@ -7,7 +7,7 @@ import { valibotResolver } from '@hookform/resolvers/valibot'
 import { toast } from 'sonner'
 import * as v from 'valibot'
 
-import { createOrganizer } from '@/services/organizer.services'
+import { createOrganizerAction } from '@/app/[locale]/admin/actions'
 import { Organizer } from '@/models/organizer.model'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
@@ -90,13 +90,13 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 				email: data.email,
 			}
 
-			const result = await createOrganizer(organizerData)
+			const result = await createOrganizerAction(organizerData)
 
-			if (result) {
+			if (result.success && result.data) {
 				toast.success('Organizer created successfully!')
-				onSuccess?.(result)
+				onSuccess?.(result.data)
 			} else {
-				throw new Error('Failed to create organizer')
+				throw new Error(result.error ?? 'Failed to create organizer')
 			}
 		} catch (error) {
 			console.error('Error creating organizer:', error)
