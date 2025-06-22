@@ -14,8 +14,27 @@ interface AdminOrganizerCreatePageClientProps {
 	translations: {
 		organizers: {
 			create: {
+				errors: {
+					createFailed: string
+					emailInvalid: string
+					nameRequired: string
+					websiteInvalid: string
+				}
+				form: {
+					cancelButton: string
+					emailLabel: string
+					emailPlaceholder: string
+					nameLabel: string
+					namePlaceholder: string
+					partnerDescription: string
+					partnerLabel: string
+					submitButton: string
+					websiteLabel: string
+					websitePlaceholder: string
+				}
 				subtitle: string
 				success: {
+					backButton: string
 					message: string
 					title: string
 				}
@@ -81,7 +100,7 @@ export default function AdminOrganizerCreatePageClient({
 							className="bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 text-white"
 							onClick={() => router.push('/admin/organizer')}
 						>
-							Back to Organizers
+							{translations.organizers.create.success.backButton}
 						</button>
 					</div>
 				</div>

@@ -3,7 +3,9 @@
 import { UseFormSetValue } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 
+import { getAllOrganizersAction } from '@/app/[locale]/admin/actions'
 import { EventOption } from '@/models/eventOption.model'
+import { Organizer } from '@/models/organizer.model'
 import { Button } from '@/components/ui/button'
 
 import { EventFormData, Translations } from './types'
@@ -105,9 +107,25 @@ const isDevelopment = () => {
 
 export default function FakerButton({ setValue, setEventOptions }: FakerButtonProps) {
 	const [showFaker, setShowFaker] = useState(false)
+	const [organizers, setOrganizers] = useState<Organizer[]>([])
 
 	useEffect(() => {
 		setShowFaker(isDevelopment())
+
+		// Load organizers for faker
+		if (isDevelopment()) {
+			const loadOrganizers = async () => {
+				try {
+					const result = await getAllOrganizersAction()
+					if (result.success && result.data) {
+						setOrganizers(result.data)
+					}
+				} catch (error) {
+					console.error('Error loading organizers for faker:', error)
+				}
+			}
+			void loadOrganizers()
+		}
 	}, [])
 
 	const fillWithFakeData = () => {
@@ -126,6 +144,10 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 		const transferDeadline = new Date(eventDateObj)
 		transferDeadline.setDate(transferDeadline.getDate() - faker.number.int({ min: 1, max: 14 }))
 
+		// Select a random organizer if available
+		const randomOrganizer =
+			organizers.length > 0 ? organizers[faker.number.int({ min: 0, max: organizers.length - 1 })] : null
+
 		const fakeData: Partial<EventFormData> = {
 			typeCourse: ['route', 'trail', 'triathlon', 'ultra'][faker.number.int({ min: 0, max: 3 })] as
 				| 'route'
@@ -136,7 +158,7 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 			registrationUrl: faker.internet.url(),
 			participantCount: faker.number.int({ min: 50, max: 2000 }),
 			parcoursUrl: faker.internet.url(),
-			organizer: 'fake_organizer_id', // This will need to be replaced with actual organizer IDs
+			organizer: randomOrganizer?.id ?? '', // Use actual organizer ID
 			options: [
 				{
 					values: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],

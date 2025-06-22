@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { fetchAllOrganizers } from '@/services/organizer.services'
+import { getAllOrganizersAction } from '@/app/[locale]/admin/actions'
 import { Organizer } from '@/models/organizer.model'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
@@ -10,15 +10,25 @@ import { Label } from '../../ui/label'
 export default function OrganizerSection({ translations, setValue, formData, errors }: EventSectionProps) {
 	const [organizers, setOrganizers] = useState<Organizer[]>([])
 	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<null | string>(null)
 
 	useEffect(() => {
 		const loadOrganizers = async () => {
 			try {
 				setIsLoading(true)
-				const organizersList = await fetchAllOrganizers()
-				setOrganizers(organizersList)
+				setError(null)
+				const result = await getAllOrganizersAction()
+
+				if (result.success && result.data) {
+					setOrganizers(result.data)
+				} else {
+					setError(result.error ?? 'Failed to load organizers')
+					setOrganizers([])
+				}
 			} catch (error) {
 				console.error('Error loading organizers:', error)
+				setError('Failed to load organizers')
+				setOrganizers([])
 			} finally {
 				setIsLoading(false)
 			}
@@ -41,6 +51,13 @@ export default function OrganizerSection({ translations, setValue, formData, err
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="organizer">
 							{translations.event.fields.organizer.label} *
 						</Label>
+
+						{error !== null && error !== '' && (
+							<div className="mb-4 rounded-lg bg-red-50 p-3 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+								{error}
+							</div>
+						)}
+
 						<Select
 							disabled={isLoading}
 							onValueChange={(value: string) => setValue('organizer', value)}
@@ -59,21 +76,28 @@ export default function OrganizerSection({ translations, setValue, formData, err
 								/>
 							</SelectTrigger>
 							<SelectContent>
-								{organizers.map(organizer => (
-									<SelectItem key={organizer.id} value={organizer.id}>
-										<div className="flex items-center gap-2">
-											<span>{organizer.name}</span>
-											{organizer.isPartnered && (
-												<span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs font-medium">
-													{translations.event.fields.organizer.partnered}
-												</span>
-											)}
-										</div>
-									</SelectItem>
-								))}
-								{organizers.length === 0 && !isLoading && (
+								{!isLoading &&
+									organizers.length > 0 &&
+									organizers.map(organizer => (
+										<SelectItem key={organizer.id} value={organizer.id}>
+											<div className="flex items-center gap-2">
+												<span>{organizer.name ?? 'Unnamed Organizer'}</span>
+												{organizer.isPartnered && (
+													<span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs font-medium">
+														{translations.event.fields.organizer.partnered}
+													</span>
+												)}
+											</div>
+										</SelectItem>
+									))}
+								{!isLoading && organizers.length === 0 && !error && (
 									<SelectItem disabled value="">
 										{translations.event.fields.organizer.noOrganizers}
+									</SelectItem>
+								)}
+								{isLoading && (
+									<SelectItem disabled value="">
+										{translations.event.fields.organizer.loading}
 									</SelectItem>
 								)}
 							</SelectContent>
