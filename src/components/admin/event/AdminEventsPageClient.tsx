@@ -39,6 +39,7 @@ import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 
@@ -136,7 +137,8 @@ interface EventsTranslations {
 				date: string
 				distance: string
 				name: string
-				partnered: string
+				organizer: string
+				participants: string
 				type: string
 			}
 			controls: {
@@ -172,9 +174,10 @@ interface EventsTranslations {
 }
 
 // Custom filter function for multi-column searching
-const multiColumnFilterFn: FilterFn<Event> = (row, columnId, filterValue) => {
+const multiColumnFilterFn: FilterFn<Event & { expand?: { organizer?: Organizer } }> = (row, columnId, filterValue) => {
+	const organizerName = row.original.expand?.organizer?.name ?? ''
 	const searchableRowContent =
-		`${row.original.name ?? ''} ${row.original.distanceKm ?? ''} ${row.original.typeCourse ?? ''}`.toLowerCase()
+		`${row.original.name ?? ''} ${row.original.distanceKm ?? ''} ${row.original.typeCourse ?? ''} ${organizerName}`.toLowerCase()
 	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
 }
@@ -184,7 +187,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 	const id = useId()
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	const [events, setEvents] = useState<Event[]>([])
+	const [events, setEvents] = useState<(Event & { expand?: { organizer?: Organizer } })[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [stats, setStats] = useState<EventsStats | null>(null)
 
@@ -203,7 +206,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 	])
 
 	// Define columns
-	const columns: ColumnDef<Event>[] = useMemo(
+	const columns: ColumnDef<Event & { expand?: { organizer?: Organizer } }>[] = useMemo(
 		() => [
 			{
 				size: 28,
@@ -236,6 +239,16 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				enableHiding: false,
 				cell: ({ row }) => <div className="font-medium">{row.getValue('name') ?? 'N/A'}</div>,
 				accessorKey: 'name',
+			},
+			{
+				size: 180,
+				header: t.events.table.columns.organizer,
+				cell: ({ row }) => {
+					const event = row.original as Event & { expand?: { organizer?: Organizer } }
+					const organizerName = event.expand?.organizer?.name
+					return <div className="font-medium">{organizerName ?? 'N/A'}</div>
+				},
+				accessorKey: 'expand.organizer.name',
 			},
 			{
 				size: 120,
@@ -272,13 +285,16 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 			},
 			{
 				size: 100,
-				header: t.events.table.columns.partnered,
-				cell: ({ row }: { row: Row<Event> }) => (
-					<Badge variant={Boolean(row.getValue('isPartnered')) ? 'default' : 'secondary'}>
-						{row.getValue('isPartnered') ? t.events.table.controls.yes : t.events.table.controls.no}
-					</Badge>
-				),
-				accessorKey: 'isPartnered',
+				header: t.events.table.columns.participants,
+				cell: ({ row }) => {
+					const participants = row.getValue('participants')
+					return (
+						<div>
+							{Boolean(participants) && typeof participants === 'number' ? participants.toLocaleString() : 'N/A'}
+						</div>
+					)
+				},
+				accessorKey: 'participants',
 			},
 			{
 				size: 60,
@@ -442,7 +458,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 						</div>
 
 						{/* Stats Grid */}
-						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6">
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-3">
 							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 									<CardTitle className="text-sm font-medium">{t.events.stats.totalEvents}</CardTitle>
