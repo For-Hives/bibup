@@ -1,0 +1,260 @@
+{
+	"en": {
+		"title": "Sell Your Bib",
+		"subtitle": "List your race bib for sale in a few simple steps",
+		"steps": {
+			"eventSelection": {
+				"title": "Select Event",
+				"description": "Choose the event for which you want to sell your bib"
+			},
+			"bibDetails": {
+				"title": "Bib Details",
+				"description": "Provide details about your race bib"
+			},
+			"pricing": {
+				"title": "Set Price",
+				"description": "Set your selling price and preferences"
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"description": "Review your listing before publishing"
+			}
+		},
+		"form": {
+			"eventSelection": {
+				"searchPlaceholder": "Search for events...",
+				"noEventsFound": "No events found matching your search",
+				"selectEvent": "Select this event",
+				"eventSelected": "Event selected",
+				"eventInfo": "Event Information",
+				"date": "Date",
+				"location": "Location",
+				"distance": "Distance",
+				"elevation": "Elevation",
+				"participants": "Participants"
+			},
+			"bibDetails": {
+				"registrationNumber": "Registration Number",
+				"registrationNumberPlaceholder": "Enter your bib number",
+				"registrationNumberHelp": "The number on your race bib",
+				"bibOptions": "Bib Options",
+				"originalPrice": "Original Price (Optional)",
+				"originalPricePlaceholder": "Price you paid for registration",
+				"originalPriceHelp": "This helps buyers understand the value"
+			},
+			"pricing": {
+				"sellingPrice": "Selling Price",
+				"sellingPricePlaceholder": "Enter your selling price",
+				"sellingPriceHelp": "Set a competitive price for your bib",
+				"listingType": "Listing Type",
+				"publicListing": "Public Listing",
+				"privateListing": "Private Listing",
+				"publicListingHelp": "Anyone can see and buy your bib",
+				"privateListingHelp": "Only people with the direct link can buy",
+				"currency": "$"
+			},
+			"confirmation": {
+				"reviewTitle": "Review Your Listing",
+				"event": "Event",
+				"bibNumber": "Bib Number",
+				"originalPrice": "Original Price",
+				"sellingPrice": "Selling Price",
+				"listingType": "Listing Type",
+				"public": "Public",
+				"private": "Private",
+				"terms": "I confirm that I own this bib and have the right to sell it",
+				"termsRequired": "You must accept the terms to continue"
+			}
+		},
+		"actions": {
+			"next": "Next",
+			"previous": "Previous",
+			"finish": "List My Bib",
+			"cancel": "Cancel"
+		},
+		"messages": {
+			"success": "Your bib has been listed successfully!",
+			"error": "There was an error listing your bib. Please try again.",
+			"loading": "Creating your listing..."
+		},
+		"validation": {
+			"eventRequired": "Please select an event",
+			"registrationNumberRequired": "Registration number is required",
+			"priceRequired": "Selling price is required",
+			"priceMinimum": "Price must be greater than $0",
+			"priceFormat": "Please enter a valid price"
+		}
+	},
+	"fr": {
+		"title": "Vendre votre dossard",
+		"subtitle": "Mettez votre dossard de course en vente en quelques étapes simples",
+		"steps": {
+			"eventSelection": {
+				"title": "Sélectionner l'événement",
+				"description": "Choisissez l'événement pour lequel vous souhaitez vendre votre dossard"
+			},
+			"bibDetails": {
+				"title": "Détails du dossard",
+				"description": "Fournissez les détails de votre dossard de course"
+			},
+			"pricing": {
+				"title": "Fixer le prix",
+				"description": "Définissez votre prix de vente et vos préférences"
+			},
+			"confirmation": {
+				"title": "Confirmation",
+				"description": "Vérifiez votre annonce avant publication"
+			}
+		},
+		"form": {
+			"eventSelection": {
+				"searchPlaceholder": "Rechercher des événements...",
+				"noEventsFound": "Aucun événement trouvé correspondant à votre recherche",
+				"selectEvent": "Sélectionner cet événement",
+				"eventSelected": "Événement sélectionné",
+				"eventInfo": "Informations sur l'événement",
+				"date": "Date",
+				"location": "Lieu",
+				"distance": "Distance",
+				"elevation": "Dénivelé",
+				"participants": "Participants"
+			},
+			"bibDetails": {
+				"registrationNumber": "Numéro d'inscription",
+				"registrationNumberPlaceholder": "Entrez votre numéro de dossard",
+				"registrationNumberHelp": "Le numéro sur votre dossard de course",
+				"bibOptions": "Options du dossard",
+				"originalPrice": "Prix d'origine (Optionnel)",
+				"originalPricePlaceholder": "Prix que vous avez payé pour l'inscription",
+				"originalPriceHelp": "Cela aide les acheteurs à comprendre la valeur"
+			},
+			"pricing": {
+				"sellingPrice": "Prix de vente",
+				"sellingPricePlaceholder": "Entrez votre prix de vente",
+				"sellingPriceHelp": "Fixez un prix compétitif pour votre dossard",
+				"listingType": "Type d'annonce",
+				"publicListing": "Annonce publique",
+				"privateListing": "Annonce privée",
+				"publicListingHelp": "Tout le monde peut voir et acheter votre dossard",
+				"privateListingHelp": "Seules les personnes avec le lien direct peuvent acheter",
+				"currency": "€"
+			},
+			"confirmation": {
+				"reviewTitle": "Vérifiez votre annonce",
+				"event": "Événement",
+				"bibNumber": "Numéro de dossard",
+				"originalPrice": "Prix d'origine",
+				"sellingPrice": "Prix de vente",
+				"listingType": "Type d'annonce",
+				"public": "Publique",
+				"private": "Privée",
+				"terms": "Je confirme que je possède ce dossard et que j'ai le droit de le vendre",
+				"termsRequired": "Vous devez accepter les conditions pour continuer"
+			}
+		},
+		"actions": {
+			"next": "Suivant",
+			"previous": "Précédent",
+			"finish": "Mettre en vente",
+			"cancel": "Annuler"
+		},
+		"messages": {
+			"success": "Votre dossard a été mis en vente avec succès !",
+			"error": "Il y a eu une erreur lors de la mise en vente de votre dossard. Veuillez réessayer.",
+			"loading": "Création de votre annonce..."
+		},
+		"validation": {
+			"eventRequired": "Veuillez sélectionner un événement",
+			"registrationNumberRequired": "Le numéro d'inscription est requis",
+			"priceRequired": "Le prix de vente est requis",
+			"priceMinimum": "Le prix doit être supérieur à 0€",
+			"priceFormat": "Veuillez entrer un prix valide"
+		}
+	},
+	"ko": {
+		"title": "비브 판매하기",
+		"subtitle": "몇 가지 간단한 단계로 레이스 비브를 판매하세요",
+		"steps": {
+			"eventSelection": {
+				"title": "이벤트 선택",
+				"description": "비브를 판매할 이벤트를 선택하세요"
+			},
+			"bibDetails": {
+				"title": "비브 세부정보",
+				"description": "레이스 비브에 대한 세부정보를 제공하세요"
+			},
+			"pricing": {
+				"title": "가격 설정",
+				"description": "판매 가격과 선호도를 설정하세요"
+			},
+			"confirmation": {
+				"title": "확인",
+				"description": "게시하기 전에 리스팅을 검토하세요"
+			}
+		},
+		"form": {
+			"eventSelection": {
+				"searchPlaceholder": "이벤트 검색...",
+				"noEventsFound": "검색과 일치하는 이벤트가 없습니다",
+				"selectEvent": "이 이벤트 선택",
+				"eventSelected": "이벤트 선택됨",
+				"eventInfo": "이벤트 정보",
+				"date": "날짜",
+				"location": "위치",
+				"distance": "거리",
+				"elevation": "고도",
+				"participants": "참가자"
+			},
+			"bibDetails": {
+				"registrationNumber": "등록 번호",
+				"registrationNumberPlaceholder": "비브 번호를 입력하세요",
+				"registrationNumberHelp": "레이스 비브의 번호",
+				"bibOptions": "비브 옵션",
+				"originalPrice": "원래 가격 (선택사항)",
+				"originalPricePlaceholder": "등록에 지불한 가격",
+				"originalPriceHelp": "구매자가 가치를 이해하는 데 도움이 됩니다"
+			},
+			"pricing": {
+				"sellingPrice": "판매 가격",
+				"sellingPricePlaceholder": "판매 가격을 입력하세요",
+				"sellingPriceHelp": "비브에 경쟁력 있는 가격을 설정하세요",
+				"listingType": "리스팅 유형",
+				"publicListing": "공개 리스팅",
+				"privateListing": "비공개 리스팅",
+				"publicListingHelp": "누구든지 비브를 보고 구매할 수 있습니다",
+				"privateListingHelp": "직접 링크가 있는 사람만 구매할 수 있습니다",
+				"currency": "₩"
+			},
+			"confirmation": {
+				"reviewTitle": "리스팅 검토",
+				"event": "이벤트",
+				"bibNumber": "비브 번호",
+				"originalPrice": "원래 가격",
+				"sellingPrice": "판매 가격",
+				"listingType": "리스팅 유형",
+				"public": "공개",
+				"private": "비공개",
+				"terms": "이 비브를 소유하고 있으며 판매할 권리가 있음을 확인합니다",
+				"termsRequired": "계속하려면 약관에 동의해야 합니다"
+			}
+		},
+		"actions": {
+			"next": "다음",
+			"previous": "이전",
+			"finish": "비브 등록하기",
+			"cancel": "취소"
+		},
+		"messages": {
+			"success": "비브가 성공적으로 등록되었습니다!",
+			"error": "비브 등록 중 오류가 발생했습니다. 다시 시도해 주세요.",
+			"loading": "리스팅 생성 중..."
+		},
+		"validation": {
+			"eventRequired": "이벤트를 선택해 주세요",
+			"registrationNumberRequired": "등록 번호가 필요합니다",
+			"priceRequired": "판매 가격이 필요합니다",
+			"priceMinimum": "가격은 ₩0보다 커야 합니다",
+			"priceFormat": "유효한 가격을 입력해 주세요"
+		}
+	}
+}
