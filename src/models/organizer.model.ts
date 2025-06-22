@@ -8,3 +8,8 @@ export interface Organizer {
 	updated: Date
 	website?: string
 }
+
+// For creation forms that include file upload
+export interface OrganizerWithLogoFile extends Omit<Organizer, 'created' | 'id' | 'updated'> {
+	logoFile?: File
+}

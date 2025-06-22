@@ -26,7 +26,6 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			options: eventData.options ?? [],
 			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
-			logo: eventData.logo,
 			location: eventData.location,
 			isPartnered: eventData.isPartnered ?? false,
 			eventDate: new Date(eventData.eventDate),

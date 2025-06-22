@@ -11,7 +11,9 @@ import { Organizer } from '@/models/organizer.model'
  * Server action to create a new organizer (admin only)
  * Verifies authentication via Clerk, platform registration, and admin permissions
  */
-export async function createOrganizerAction(organizerData: Omit<Organizer, 'created' | 'id' | 'updated'>): Promise<{
+export async function createOrganizerAction(
+	organizerData: Omit<Organizer, 'created' | 'id' | 'updated'> & { logoFile?: File }
+): Promise<{
 	data?: Organizer
 	error?: string
 	success: boolean
@@ -31,28 +33,30 @@ export async function createOrganizerAction(organizerData: Omit<Organizer, 'crea
 		if (!organizerData.name || !organizerData.email) {
 			return {
 				success: false,
-				error: 'Name and email are required fields',
+				error: 'Name and email are required',
 			}
 		}
 
-		// Create the organizer
-		const newOrganizer = await createOrganizer(organizerData)
+		// Prepare organizer data for creation
+		const { logoFile, ...baseOrganizerData } = organizerData
 
-		if (!newOrganizer) {
+		// Create the organizer with PocketBase service
+		const result = await createOrganizer({
+			...baseOrganizerData,
+			logoFile: logoFile, // PocketBase service will handle the file upload
+		})
+
+		if (result) {
+			console.info(`Admin ${adminUser.email} created organizer: ${result.name}`)
 			return {
-				success: false,
-				error: 'Failed to create organizer',
+				success: true,
+				data: result,
 			}
-		}
-
-		console.info(`Admin ${adminUser.email} created organizer: ${newOrganizer.name}`)
-
-		return {
-			success: true,
-			data: newOrganizer,
+		} else {
+			throw new Error('Failed to create organizer')
 		}
 	} catch (error) {
-		console.error('Error creating organizer:', error)
+		console.error('Error in createOrganizerAction:', error)
 		return {
 			success: false,
 			error: error instanceof Error ? error.message : 'Failed to create organizer',

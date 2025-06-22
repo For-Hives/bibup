@@ -1,39 +1,9 @@
-import { toast } from 'sonner'
-
-import { FileUpload } from '../../ui/file-upload'
 import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
-export default function EventDetailsSection({
-	translations,
-	setValue,
-	register,
-	locale = 'en',
-	errors,
-}: EventSectionProps) {
-	const handleFileUploadWithValidation = (files: File[]) => {
-		if (files.length > 0) {
-			const file = files[0]
-			// Validate file type and size
-			const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
-			const maxSize = 5 * 1024 * 1024 // 5MB
-
-			if (!allowedTypes.includes(file.type)) {
-				toast.error('Invalid file type. Please upload PNG, JPG, or SVG files only.')
-				return
-			}
-
-			if (file.size > maxSize) {
-				toast.error('File size too large. Maximum size is 5MB.')
-				return
-			}
-
-			setValue('logoFile', file)
-		}
-	}
-
+export default function EventDetailsSection({ translations, register, locale = 'en', errors }: EventSectionProps) {
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div>
@@ -137,21 +107,6 @@ export default function EventDetailsSection({
 						/>
 						{errors.registrationUrl && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.registrationUrl.message}</p>
-						)}
-					</div>
-					<div className="col-span-full">
-						<Label className="text-foreground mb-2 block text-base font-medium">
-							{translations.event.fields.logoUpload.label}
-						</Label>
-						<p className="text-muted-foreground mb-4 text-sm">{translations.event.fields.logoUpload.description}</p>
-						<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
-							<FileUpload
-								onChange={handleFileUploadWithValidation}
-								translations={translations.event.fields.logoUpload}
-							/>
-						</div>
-						{errors.logoFile && (
-							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.logoFile.message}</p>
 						)}
 					</div>
 				</div>

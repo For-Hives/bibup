@@ -24,7 +24,6 @@ export const EventCreationSchema = v.pipe(
 		),
 		officialStandardPrice: v.optional(v.pipe(v.number(), v.minValue(0, 'Price must be positive'))),
 		name: v.pipe(v.string(), v.minLength(1, 'Event name is required')),
-		logoFile: v.optional(v.instance(File)),
 		location: v.pipe(v.string(), v.minLength(1, 'Location is required')),
 		isPartnered: v.boolean(),
 		eventDate: v.pipe(v.string(), v.minLength(1, 'Event date is required')),
