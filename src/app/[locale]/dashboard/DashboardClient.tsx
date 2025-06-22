@@ -1,6 +1,18 @@
 'use client'
 
-import { Calendar, Clock, List, MapPin, Plus, Search, ShoppingCart, Tag, TrendingUp, Zap } from 'lucide-react'
+import {
+	Calendar,
+	Clock,
+	List,
+	MapPin,
+	Plus,
+	Search,
+	ShoppingBag,
+	ShoppingCart,
+	Tag,
+	TrendingUp,
+	Zap,
+} from 'lucide-react'
 
 import Link from 'next/link'
 
@@ -73,7 +85,7 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 					</div>
 
 					{/* Main Dashboard Cards - Only Buyer and Seller */}
-					<div className="mx-auto mb-12 grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+					<div className="mx-auto mb-12 grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
 						{/* Buyer Dashboard */}
 						<Card className="border-border/50 bg-card/80 flex h-full flex-col justify-between backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
 							<CardHeader className="text-center">
@@ -83,11 +95,16 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 								<CardTitle className="text-2xl">{t.dashboard.buyer.title}</CardTitle>
 								<CardDescription className="text-base">{t.dashboard.buyer.description}</CardDescription>
 							</CardHeader>
-							<CardContent className="text-center">
+							<CardContent className="flex justify-center gap-4 text-center">
 								<Link href="/dashboard/buyer">
 									<Button className="w-full" size="lg">
+										<ShoppingBag className="mr-2 h-5 w-5" />I want to buy a bib
+									</Button>
+								</Link>
+								<Link href="/dashboard/buyer">
+									<Button className="w-full" size="lg" variant="outline">
 										<ShoppingCart className="mr-2 h-5 w-5" />
-										Access Buyer Dashboard
+										Access my Buyer Dashboard
 									</Button>
 								</Link>
 							</CardContent>
@@ -104,12 +121,19 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 							</CardHeader>
 							<CardContent className="text-center">
 								<div className="flex h-full w-full flex-col items-center justify-end">
-									<Link className="w-full" href="/dashboard/seller">
-										<Button className="w-full" size="lg">
-											<Tag className="mr-2 h-5 w-5" />
-											Access Seller Dashboard
-										</Button>
-									</Link>
+									<div className="flex justify-between gap-4">
+										<Link className="w-full" href="/dashboard/seller/sell-bib">
+											<Button className="w-full" size="lg">
+												<Tag className="mr-2 h-5 w-5" />I want to sell a bib
+											</Button>
+										</Link>
+										<Link className="w-full" href="/dashboard/seller">
+											<Button className="w-full" size="lg" variant="outline">
+												<Tag className="mr-2 h-5 w-5" />
+												Access my Seller Dashboard
+											</Button>
+										</Link>
+									</div>
 								</div>
 							</CardContent>
 						</Card>
