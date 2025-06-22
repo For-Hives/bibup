@@ -19,7 +19,7 @@ import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
 import PartnershipSection from './PartnershipSection'
 import BibPickupSection from './BibPickupSection'
-// import OrganizerSection from './OrganizerSection'
+import OrganizerSection from './OrganizerSection'
 import { Separator } from '../../ui/separator'
 import { Button } from '../../ui/button'
 import FakerButton from './FakerButton'
@@ -68,7 +68,7 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 				formDataToSend.append('eventDate', new Date(data.eventDate).toISOString())
 				formDataToSend.append('description', data.description)
 				formDataToSend.append('typeCourse', data.typeCourse)
-				// formDataToSend.append('organizer', data.organizer)
+				formDataToSend.append('organizer', data.organizer)
 				formDataToSend.append('isPartnered', data.isPartnered.toString())
 				formDataToSend.append('options', JSON.stringify(data.options))
 
@@ -167,14 +167,14 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 					<Separator className="my-12" />
 
 					{/* Organizer Section */}
-					{/* <OrganizerSection
+					<OrganizerSection
 						errors={errors}
 						formData={formData}
 						locale={locale}
 						register={register}
 						setValue={setValue}
 						translations={translations}
-					/> */}
+					/>
 
 					<Separator className="my-12" />
 
