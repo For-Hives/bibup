@@ -107,6 +107,7 @@ interface OrganizersTranslations {
 			columns: {
 				created: string
 				email: string
+				eventsCount: string
 				name: string
 				partnership: string
 				status: {
@@ -146,7 +147,7 @@ interface OrganizersTranslations {
 }
 
 // Custom filter function for multi-column searching
-const multiColumnFilterFn: FilterFn<Organizer> = (row, columnId, filterValue) => {
+const multiColumnFilterFn: FilterFn<Organizer & { eventsCount: number }> = (row, columnId, filterValue) => {
 	const searchableRowContent = `${row.original.name ?? ''} ${row.original.email ?? ''}`.toLowerCase()
 	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
@@ -157,7 +158,7 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 	const id = useId()
 	const inputRef = useRef<HTMLInputElement>(null)
 
-	const [organizers, setOrganizers] = useState<Organizer[]>([])
+	const [organizers, setOrganizers] = useState<(Organizer & { eventsCount: number })[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [stats, setStats] = useState<null | OrganizersStats>(null)
 
@@ -176,7 +177,7 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 	])
 
 	// Define columns
-	const columns: ColumnDef<Organizer>[] = [
+	const columns: ColumnDef<Organizer & { eventsCount: number }>[] = [
 		{
 			size: 28,
 			id: 'select',
@@ -222,6 +223,19 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 				)
 			},
 			accessorKey: 'email',
+		},
+		{
+			size: 100,
+			header: t.organizers.table.columns.eventsCount,
+			cell: ({ row }) => {
+				const eventsCount = row.getValue('eventsCount')
+				return (
+					<div className="flex items-center justify-center">
+						<Badge variant="outline">{typeof eventsCount === 'number' ? eventsCount : 0}</Badge>
+					</div>
+				)
+			},
+			accessorKey: 'eventsCount',
 		},
 		{
 			size: 120,

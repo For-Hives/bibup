@@ -2,8 +2,8 @@
 
 import { checkAdminAccess } from '@/guard/adminGuard'
 
+import { createOrganizer, fetchAllOrganizersWithEventsCount } from '@/services/organizer.services'
 import { getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
-import { createOrganizer, fetchAllOrganizers } from '@/services/organizer.services'
 import { createEvent, getAllEvents } from '@/services/event.services'
 import { Organizer } from '@/models/organizer.model'
 import { Event } from '@/models/event.model'
@@ -145,7 +145,7 @@ export async function getAllEventsAction(expandOrganizer = true) {
  */
 export async function getAllOrganizersAction() {
 	try {
-		const organizers = await fetchAllOrganizers()
+		const organizers = await fetchAllOrganizersWithEventsCount()
 
 		return {
 			success: true,

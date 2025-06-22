@@ -103,6 +103,33 @@ export async function fetchAllOrganizers(): Promise<Organizer[]> {
 }
 
 /**
+ * Fetch all organizers with their events count
+ */
+export async function fetchAllOrganizersWithEventsCount(): Promise<(Organizer & { eventsCount: number })[]> {
+	try {
+		const records = await pb.collection('organizer').getFullList({
+			sort: 'name',
+			expand: 'events_via_organizer',
+		})
+
+		return records.map(record => ({
+			website: record.website,
+			updated: new Date(record.updated),
+			name: record.name,
+			logo: record.logo,
+			isPartnered: record.isPartnered,
+			id: record.id,
+			eventsCount: record.expand?.events_via_organizer ? record.expand.events_via_organizer.length : 0,
+			email: record.email,
+			created: new Date(record.created),
+		}))
+	} catch (error) {
+		console.error('Error fetching organizers with events count:', error)
+		return []
+	}
+}
+
+/**
  * Fetch organizer by ID
  */
 export async function fetchOrganizerById(id: string): Promise<null | Organizer> {
