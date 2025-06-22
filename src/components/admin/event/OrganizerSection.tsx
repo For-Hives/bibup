@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { getAllOrganizersAction } from '@/app/[locale]/admin/actions'
 import { Organizer } from '@/models/organizer.model'
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
 import { EventSectionProps } from './types'
 import { Label } from '../../ui/label'
 
@@ -59,28 +59,25 @@ export default function OrganizerSection({ translations, setValue, formData, err
 						)}
 
 						{organizers.length > 0 && (
-							<Select
+							<SelectAlt
 								disabled={isLoading}
 								onValueChange={(value: string) => setValue('organizer', value)}
 								value={formData.organizer ?? ''}
 							>
-								<SelectTrigger
-									className="shadow-input dark:placeholder-text-neutral-600 h-10 w-full border-none bg-gray-50 px-3 py-2 text-sm transition duration-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none data-[size=default]:h-10 dark:bg-zinc-800 dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600"
-									id="organizer"
-								>
-									<SelectValue
+								<SelectTriggerAlt id="organizer">
+									<SelectValueAlt
 										placeholder={
 											isLoading
 												? translations.event.fields.organizer.loading
 												: translations.event.fields.organizer.placeholder
 										}
 									/>
-								</SelectTrigger>
-								<SelectContent>
+								</SelectTriggerAlt>
+								<SelectContentAlt>
 									{!isLoading &&
 										organizers.length > 0 &&
 										organizers.map(organizer => (
-											<SelectItem key={organizer.id} value={organizer.id}>
+											<SelectItemAlt key={organizer.id} value={organizer.id}>
 												<div className="flex items-center gap-2">
 													<span>{organizer.name ?? 'Unnamed Organizer'}</span>
 													{organizer.isPartnered && (
@@ -89,20 +86,20 @@ export default function OrganizerSection({ translations, setValue, formData, err
 														</span>
 													)}
 												</div>
-											</SelectItem>
+											</SelectItemAlt>
 										))}
 									{!isLoading && organizers.length === 0 && !error && (
-										<SelectItem disabled value="">
+										<SelectItemAlt disabled value="">
 											{translations.event.fields.organizer.noOrganizers}
-										</SelectItem>
+										</SelectItemAlt>
 									)}
 									{isLoading && (
-										<SelectItem disabled value="">
+										<SelectItemAlt disabled value="">
 											{translations.event.fields.organizer.loading}
-										</SelectItem>
+										</SelectItemAlt>
 									)}
-								</SelectContent>
-							</Select>
+								</SelectContentAlt>
+							</SelectAlt>
 						)}
 						{errors.organizer && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.organizer.message}</p>
