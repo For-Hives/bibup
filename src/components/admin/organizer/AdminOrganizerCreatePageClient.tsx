@@ -24,6 +24,15 @@ interface AdminOrganizerCreatePageClientProps {
 					cancelButton: string
 					emailLabel: string
 					emailPlaceholder: string
+					logoUpload: {
+						description: string
+						dropText: string
+						fileModified: string
+						fileSizeUnit: string
+						label: string
+						uploadSubtext: string
+						uploadText: string
+					}
 					nameLabel: string
 					namePlaceholder: string
 					partnerDescription: string

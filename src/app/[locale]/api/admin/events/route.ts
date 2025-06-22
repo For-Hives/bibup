@@ -57,9 +57,6 @@ export async function POST(request: NextRequest) {
 		const registrationUrl = (formData.get('registrationUrl') as string) ?? undefined
 		const bibPickupLocation = (formData.get('bibPickupLocation') as string) ?? undefined
 
-		// Handle logo file
-		const logoFile = formData.get('logo') as File | null
-
 		// Handle options
 		const optionsJson = formData.get('options') as string
 		let options = []
@@ -89,7 +86,6 @@ export async function POST(request: NextRequest) {
 			options,
 			officialStandardPrice,
 			name,
-			logo: logoFile ?? new File([], ''),
 			location,
 			isPartnered,
 			eventDate: new Date(eventDate),

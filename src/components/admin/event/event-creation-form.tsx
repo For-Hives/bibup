@@ -102,9 +102,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 				if (data.bibPickupLocation !== undefined && data.bibPickupLocation !== null && data.bibPickupLocation !== '') {
 					formDataToSend.append('bibPickupLocation', data.bibPickupLocation)
 				}
-				if (data.logoFile) {
-					formDataToSend.append('logo', data.logoFile)
-				}
 
 				// Call the server action to create the event
 				const response = await fetch('/api/admin/events', {

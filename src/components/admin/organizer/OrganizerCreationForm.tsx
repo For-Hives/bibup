@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import * as v from 'valibot'
 
 import { createOrganizerAction } from '@/app/[locale]/admin/actions'
+import { FileUpload } from '@/components/ui/file-upload'
 import { Organizer } from '@/models/organizer.model'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
@@ -18,6 +19,7 @@ import { Label } from '@/components/ui/label'
 const OrganizerCreationSchema = v.object({
 	website: v.optional(v.union([v.pipe(v.string(), v.url('Must be a valid URL')), v.literal('')])),
 	name: v.pipe(v.string(), v.minLength(1, 'Organizer name is required')),
+	logoFile: v.optional(v.instance(File)),
 	isPartnered: v.boolean(),
 	email: v.pipe(v.string(), v.email('Please enter a valid email address')),
 })
@@ -38,6 +40,15 @@ export interface OrganizerCreationFormProps {
 					cancelButton: string
 					emailLabel: string
 					emailPlaceholder: string
+					logoUpload: {
+						description: string
+						dropText: string
+						fileModified: string
+						fileSizeUnit: string
+						label: string
+						uploadSubtext: string
+						uploadText: string
+					}
 					nameLabel: string
 					namePlaceholder: string
 					partnerDescription: string
@@ -79,6 +90,27 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 
 	const formData = watch()
 
+	const handleFileUploadWithValidation = (files: File[]) => {
+		if (files.length > 0) {
+			const file = files[0]
+			// Validate file type and size
+			const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+			const maxSize = 5 * 1024 * 1024 // 5MB
+
+			if (!allowedTypes.includes(file.type)) {
+				toast.error('Invalid file type. Please upload PNG, JPG, or SVG files only.')
+				return
+			}
+
+			if (file.size > maxSize) {
+				toast.error('File size too large. Maximum size is 5MB.')
+				return
+			}
+
+			setValue('logoFile', file)
+		}
+	}
+
 	const onSubmit = async (data: OrganizerFormData) => {
 		setIsLoading(true)
 
@@ -86,6 +118,7 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 			const organizerData = {
 				website: data.website ?? undefined,
 				name: data.name,
+				logoFile: data.logoFile,
 				isPartnered: data.isPartnered,
 				email: data.email,
 			}
@@ -184,6 +217,25 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 									/>
 									{errors.website && (
 										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.website.message}</p>
+									)}
+								</div>
+
+								{/* Logo Upload */}
+								<div className="col-span-full">
+									<Label className="text-foreground mb-2 block text-base font-medium">
+										{translations.organizers.create.form.logoUpload.label}
+									</Label>
+									<p className="text-muted-foreground mb-4 text-sm">
+										{translations.organizers.create.form.logoUpload.description}
+									</p>
+									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
+										<FileUpload
+											onChange={handleFileUploadWithValidation}
+											translations={translations.organizers.create.form.logoUpload}
+										/>
+									</div>
+									{errors.logoFile && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.logoFile.message}</p>
 									)}
 								</div>
 

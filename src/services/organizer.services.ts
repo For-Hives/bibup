@@ -5,10 +5,29 @@ import { pb } from '@/lib/pocketbaseClient'
  * Create a new organizer
  */
 export async function createOrganizer(
-	organizerData: Omit<Organizer, 'created' | 'id' | 'updated'>
+	organizerData: Omit<Organizer, 'created' | 'id' | 'updated'> & { logoFile?: File }
 ): Promise<null | Organizer> {
 	try {
-		const record = await pb.collection('organizer').create(organizerData)
+		// Prepare form data for PocketBase
+		const formData = new FormData()
+
+		// Add text fields
+		formData.append('name', organizerData.name)
+		formData.append('email', organizerData.email)
+		formData.append('isPartnered', String(organizerData.isPartnered))
+
+		if (organizerData.website) {
+			formData.append('website', organizerData.website)
+		}
+
+		// Handle logo file upload
+		if (organizerData.logoFile) {
+			formData.append('logo', organizerData.logoFile)
+		} else if (organizerData.logo && typeof organizerData.logo === 'string') {
+			formData.append('logo', organizerData.logo)
+		}
+
+		const record = await pb.collection('organizer').create(formData)
 
 		return {
 			website: record.website,
