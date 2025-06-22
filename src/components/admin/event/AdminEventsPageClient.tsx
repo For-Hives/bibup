@@ -33,7 +33,6 @@ import {
 	Plus,
 	Search,
 	Trash2,
-	Users,
 } from 'lucide-react'
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 
@@ -83,9 +82,6 @@ interface AdminEventsPageClientProps {
 }
 
 interface EventsStats {
-	activeEvents: number
-	draftEvents: number
-	partneredEvents: number
 	pastEvents: number
 	totalEvents: number
 	upcomingEvents: number
@@ -312,10 +308,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 						upcomingEvents: eventsData.filter((event: Event) => new Date(event.eventDate) >= now).length,
 						totalEvents: eventsData.length,
 						pastEvents: eventsData.filter((event: Event) => new Date(event.eventDate) < now).length,
-						partneredEvents: eventsData.filter((event: Event) => event.isPartnered).length,
-						draftEvents: 0,
-						activeEvents: eventsData.filter((event: Event) => new Date(event.eventDate) >= now && event.isPartnered)
-							.length,
 					}
 					setStats(statsData)
 				} else {
@@ -325,9 +317,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 						upcomingEvents: 0,
 						totalEvents: 0,
 						pastEvents: 0,
-						partneredEvents: 0,
-						draftEvents: 0,
-						activeEvents: 0,
 					})
 				}
 			} catch (error) {
@@ -337,9 +326,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 					upcomingEvents: 0,
 					totalEvents: 0,
 					pastEvents: 0,
-					partneredEvents: 0,
-					draftEvents: 0,
-					activeEvents: 0,
 				})
 			} finally {
 				setIsLoading(false)
@@ -469,16 +455,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 
 							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">{t.events.stats.activeEvents}</CardTitle>
-									<Eye className="text-muted-foreground h-4 w-4" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">{stats?.activeEvents ?? 0}</div>
-								</CardContent>
-							</Card>
-
-							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 									<CardTitle className="text-sm font-medium">{t.events.stats.upcomingEvents}</CardTitle>
 									<Calendar className="text-muted-foreground h-4 w-4" />
 								</CardHeader>
@@ -494,26 +470,6 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 								</CardHeader>
 								<CardContent>
 									<div className="text-2xl font-bold">{stats?.pastEvents ?? 0}</div>
-								</CardContent>
-							</Card>
-
-							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">{t.events.stats.partneredEvents}</CardTitle>
-									<Users className="text-muted-foreground h-4 w-4" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">{stats?.partneredEvents ?? 0}</div>
-								</CardContent>
-							</Card>
-
-							<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">{t.events.stats.draftEvents}</CardTitle>
-									<Search className="text-muted-foreground h-4 w-4" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">{stats?.draftEvents ?? 0}</div>
 								</CardContent>
 							</Card>
 						</div>
