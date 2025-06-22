@@ -1,7 +1,7 @@
 'use server'
 
 import { getDashboardStats, getRecentActivity } from '@/services/dashboard.services'
-import { fetchAllOrganizers } from '@/services/organizer.services'
+import { createOrganizer, fetchAllOrganizers } from '@/services/organizer.services'
 import { getAllEvents } from '@/services/event.services'
 
 /**
@@ -29,6 +29,51 @@ export async function getAllEventsAction(expandOrganizer = true) {
 export async function getAllOrganizersAction() {
 	try {
 		const organizers = await fetchAllOrganizers()
+
+		// If no organizers exist, create some test organizers
+		if (organizers.length === 0) {
+			console.info('No organizers found, creating test organizers...')
+
+			const testOrganizers = [
+				{
+					website: 'https://www.marathondeparis.com',
+					name: 'Marathon de Paris',
+					isPartnered: true,
+					email: 'contact@marathondeparis.com',
+				},
+				{
+					website: 'https://www.traildestempliers.com',
+					name: 'Trail des Templiers',
+					isPartnered: true,
+					email: 'info@traildestempliers.com',
+				},
+				{
+					website: 'https://utmb.world',
+					name: 'Ultra Trail du Mont-Blanc',
+					isPartnered: false,
+					email: 'contact@utmb.world',
+				},
+				{
+					name: 'Course Locale',
+					isPartnered: false,
+					email: 'contact@courselocale.fr',
+				},
+			]
+
+			const createdOrganizers = []
+			for (const organizerData of testOrganizers) {
+				const created = await createOrganizer(organizerData)
+				if (created) {
+					createdOrganizers.push(created)
+				}
+			}
+
+			return {
+				success: true,
+				data: createdOrganizers,
+			}
+		}
+
 		return {
 			success: true,
 			data: organizers,
