@@ -17,31 +17,26 @@ interface SellerDashboardClientProps {
 }
 
 interface SellerTranslations {
-	availableBibs: string
-	bibListed: string
-	bibManagement: {
-		editButton: string
-		gender: string
-		price: string
-		size: string
-		status: string
-	}
-	myListings: string
+	bibFor: string
+	description: string
+	editBib: string
+	gender: string
+	listNewBib: string
+	manageBibListings: string
+	myBibs: string
+	noBibs: string
 	noBibsListed: string
-	quickActions: string
+	originalPrice: string
+	pleaseSignIn: string
+	price: string
 	registrationNumber: string
-	revenue: string
-	sellFirstBib: string
-	statistics: {
-		availableBibs: string
-		revenue: string
-		soldBibs: string
-		totalListings: string
-	}
+	sellBib: string
+	size: string
+	status: string
 	title: string
-	totalListings: string
-	totalSold: string
 	welcome: string
+	welcomeMessage: string
+	yourListedBibs: string
 }
 
 interface SerializedClerkUser {
@@ -71,14 +66,20 @@ const getStatusDisplay = (status: string) => {
 	}
 }
 
-export default function SellerDashboardClient({ translations: t, sellerBibs, clerkUser }: SellerDashboardClientProps) {
-	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'Seller'
+export default function SellerDashboardClient({
+	translations: t,
+	sellerBibs = [],
+	clerkUser,
+}: SellerDashboardClientProps) {
+	const userName = clerkUser?.firstName ?? clerkUser?.emailAddresses?.[0]?.emailAddress ?? 'Seller'
 
-	// Calculate statistics
-	const totalListings = sellerBibs.length
-	const availableBibs = sellerBibs.filter(bib => bib.status === 'available').length
-	const soldBibs = sellerBibs.filter(bib => bib.status === 'sold').length
-	const totalRevenue = sellerBibs.filter(bib => bib.status === 'sold').reduce((sum, bib) => sum + (bib.price || 0), 0)
+	// Calculate statistics with safety checks
+	const totalListings = Array.isArray(sellerBibs) ? sellerBibs.length : 0
+	const availableBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib?.status === 'available').length : 0
+	const soldBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib?.status === 'sold').length : 0
+	const totalRevenue = Array.isArray(sellerBibs)
+		? sellerBibs.filter(bib => bib?.status === 'sold').reduce((sum, bib) => sum + (bib?.price || 0), 0)
+		: 0
 
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
@@ -92,7 +93,7 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 						<p className="text-foreground flex items-center gap-2 font-medium">
 							<Tag className="h-4 w-4" />
 							{userName}
-							{clerkUser.emailAddresses[0] && (
+							{clerkUser?.emailAddresses?.[0] && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>
@@ -103,48 +104,60 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 
 			<div className="relative pt-32 pb-12">
 				<div className="container mx-auto max-w-6xl p-6">
+					{/* Header */}
+					<div className="mb-12 space-y-2 text-center">
+						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t?.title || 'Seller Dashboard'}</h1>
+						<p className="text-muted-foreground text-lg">
+							{t?.welcome || 'Welcome to your seller dashboard'}, {userName}!
+						</p>
+					</div>
+
 					{/* Statistics Cards */}
 					<div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalListings}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Total Listings</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{totalListings}</div>
+								<p className="text-muted-foreground text-xs">Bibs listed for sale</p>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.availableBibs}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Available</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{availableBibs}</div>
+								<p className="text-muted-foreground text-xs">Currently for sale</p>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.soldBibs}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Sold</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{soldBibs}</div>
+								<p className="text-muted-foreground text-xs">Successfully sold</p>
 							</CardContent>
 						</Card>
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.revenue}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Revenue</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">€{totalRevenue.toFixed(2)}</div>
+								<p className="text-muted-foreground text-xs">Total earned</p>
 							</CardContent>
 						</Card>
 					</div>
 
 					{/* Quick Actions */}
 					<div className="mb-8">
-						<h2 className="text-foreground mb-6 text-xl font-bold">{t.quickActions}</h2>
+						<h2 className="text-foreground mb-6 text-xl font-bold">Quick Actions</h2>
 						<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 							<Link href="/dashboard/seller/sell-bib">
 								<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
@@ -152,7 +165,7 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
 											<Plus className="h-6 w-6" />
 										</div>
-										<p className="text-sm font-medium">Sell New Bib</p>
+										<p className="text-sm font-medium">{t?.sellBib || 'Sell New Bib'}</p>
 									</CardContent>
 								</Card>
 							</Link>
@@ -197,22 +210,29 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<Tag className="h-5 w-5" />
-								{t.myListings}
+								{t?.yourListedBibs || 'Your Listed Bibs'}
 							</CardTitle>
-							<CardDescription>Manage your race bib listings and track performance</CardDescription>
+							<CardDescription>
+								{t?.manageBibListings || 'Manage your race bib listings and track performance'}
+							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							{sellerBibs.length > 0 ? (
+							{totalListings > 0 ? (
 								<div className="space-y-4">
 									{sellerBibs.map(bib => {
-										const statusDisplay = getStatusDisplay(bib.status)
+										if (!bib || !bib.id) return null
+
+										const statusDisplay = getStatusDisplay(bib.status || 'unknown')
 										return (
 											<div className="rounded-lg border p-4" key={bib.id}>
 												<div className="mb-3 flex items-start justify-between">
 													<div>
-														<h4 className="font-semibold">{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}</h4>
+														<h4 className="font-semibold">
+															{t?.bibFor ?? 'Bib for'}{' '}
+															{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId ?? 'Unknown'}`}
+														</h4>
 														<p className="text-muted-foreground text-sm">
-															{t.registrationNumber}: {bib.registrationNumber}
+															{t?.registrationNumber || 'Registration Number'}: {bib.registrationNumber || 'N/A'}
 														</p>
 													</div>
 													<span className={`rounded-full px-3 py-1 text-xs font-medium ${statusDisplay.color}`}>
@@ -222,21 +242,21 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 
 												<div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
 													<div>
-														<p className="text-muted-foreground">{t.bibManagement.price}</p>
-														<p className="font-medium">€{bib.price?.toFixed(2) ?? 'N/A'}</p>
+														<p className="text-muted-foreground">{t?.price || 'Price'}</p>
+														<p className="font-medium">€{bib.price?.toFixed(2) || '0.00'}</p>
 													</div>
 													<div>
-														<p className="text-muted-foreground">{t.bibManagement.size}</p>
-														<p className="font-medium">{bib.optionValues?.size ?? 'N/A'}</p>
+														<p className="text-muted-foreground">{t?.size || 'Size'}</p>
+														<p className="font-medium">{bib.optionValues?.size || 'N/A'}</p>
 													</div>
 													<div>
-														<p className="text-muted-foreground">{t.bibManagement.gender}</p>
-														<p className="font-medium">{bib.optionValues?.gender ?? 'N/A'}</p>
+														<p className="text-muted-foreground">{t?.gender || 'Gender'}</p>
+														<p className="font-medium">{bib.optionValues?.gender || 'N/A'}</p>
 													</div>
 													<div>
 														<p className="text-muted-foreground">Event Date</p>
 														<p className="font-medium">
-															{bib.expand?.eventId
+															{bib.expand?.eventId?.eventDate
 																? new Date(bib.expand.eventId.eventDate).toLocaleDateString()
 																: 'N/A'}
 														</p>
@@ -249,7 +269,7 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 														<Link href={`/dashboard/seller/edit-bib/${bib.id}`}>
 															<Button size="sm" variant="outline">
 																<Edit3 className="mr-2 h-4 w-4" />
-																{t.bibManagement.editButton}
+																{t?.editBib || 'Edit Bib'}
 															</Button>
 														</Link>
 													</div>
@@ -261,12 +281,12 @@ export default function SellerDashboardClient({ translations: t, sellerBibs, cle
 							) : (
 								<div className="py-12 text-center">
 									<Tag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-									<h3 className="mb-2 text-lg font-semibold">{t.noBibsListed}</h3>
-									<p className="text-muted-foreground mb-6">{t.sellFirstBib}</p>
+									<h3 className="mb-2 text-lg font-semibold">{t?.noBibsListed || 'No bibs listed yet'}</h3>
+									<p className="text-muted-foreground mb-6">Start selling your race bibs to connect with runners</p>
 									<Link href="/dashboard/seller/sell-bib">
 										<Button size="lg">
 											<Plus className="mr-2 h-4 w-4" />
-											List Your First Bib
+											{t?.sellBib || 'List Your First Bib'}
 										</Button>
 									</Link>
 								</div>
