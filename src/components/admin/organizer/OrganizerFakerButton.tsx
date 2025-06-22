@@ -115,13 +115,13 @@ export default function OrganizerFakerButton({ setValue }: OrganizerFakerButtonP
 	return (
 		<div className="absolute top-4 right-4 z-50">
 			<Button
-				className="rounded-md border border-purple-500 bg-purple-600 px-3 py-1.5 text-xs text-white shadow-lg hover:bg-purple-700"
+				className="border-yellow-300 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:border-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400 dark:hover:bg-yellow-900/30"
 				onClick={fillWithFakeData}
 				size="sm"
 				type="button"
 				variant="outline"
 			>
-				🎭 Faker
+				🎲 Fill with test data
 			</Button>
 		</div>
 	)
