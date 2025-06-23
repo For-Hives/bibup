@@ -56,9 +56,11 @@ export default function ConfirmationStep({
 	createdBib,
 }: ConfirmationStepProps) {
 	const generatePrivateLink = () => {
-		if (!createdBib) return ''
+		if (!createdBib?.privateListingToken) return ''
 		const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-		return `${baseUrl}/marketplace/private/${createdBib.id}`
+		// Get current locale from URL or default to 'fr'
+		const currentLocale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] || 'fr' : 'fr'
+		return `${baseUrl}/${currentLocale}/marketplace/${createdBib.id}?tkn=${createdBib.privateListingToken}`
 	}
 
 	const copyPrivateLink = async () => {
