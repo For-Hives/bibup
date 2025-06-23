@@ -8,5 +8,5 @@ export default async function FAQ({ localeParams }: { localeParams: Promise<Loca
 	const { locale } = await localeParams
 	const t = getTranslations(locale, translations)
 
-	return <FAQClient translations={t} />
+	return <FAQClient translations={t} locale={locale} />
 }
