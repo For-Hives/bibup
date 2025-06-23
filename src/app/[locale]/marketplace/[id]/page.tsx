@@ -51,8 +51,6 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 		notFound()
 	}
 
-	// Check if bib is available for purchase
-	const isAvailable = bib.status === 'available' && bib.validated === true
 	const event = bib.expand?.eventId
 
 	return (
@@ -134,23 +132,21 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 
 						{/* Status indicators */}
 						<div className="mb-6">
-							{bib.listed === 'private' && (
-								<div className="mb-2 inline-block rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-800">
-									Private Listing
-								</div>
-							)}
+							<div className="flex items-start gap-2">
+								{bib.listed === 'private' && (
+									<div className="inline-block rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-800">
+										Private Listing
+									</div>
+								)}
 
-							<div
-								className={`inline-block rounded-full px-3 py-1 text-sm ${
-									isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-								}`}
-							>
-								{isAvailable ? 'Available' : 'Not Available'}
+								<div className={`inline-block rounded-full bg-green-100 px-3 py-1 text-sm text-green-800`}>
+									{bib.status}
+								</div>
 							</div>
 						</div>
 
 						{/* Purchase button */}
-						{isAvailable ? (
+						{bib.status === 'available' ? (
 							<div className="space-y-4">
 								{clerkId ? (
 									<Link
@@ -184,8 +180,8 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 					</div>
 
 					{/* Security notice for private listings */}
-					{bib.listed === 'private' && (
-						<div className="bento-box border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+					{bib.listed === 'private'  && (
+						<div className="bento-box border-l-4 border-yellow-500 bg-yellow-50 py-4 pl-4 dark:bg-yellow-900/20">
 							<h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Private Listing</h3>
 							<p className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
 								This is a private listing. Only people with the direct link can view and purchase this bib. Do not share
