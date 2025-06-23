@@ -190,7 +190,7 @@ export default function ConfirmationStep({
 			{/* Right Column - Preview */}
 			<div>
 				<h3 className="text-foreground mb-6 text-xl font-semibold">{t.marketplacePreview}</h3>
-				<div className="flex justify-center">
+				<div className="pointer-events-none flex justify-center">
 					{bibSalePreview && (
 						<CardMarket
 							bibSale={bibSalePreview}

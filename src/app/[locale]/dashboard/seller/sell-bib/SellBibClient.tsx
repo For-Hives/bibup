@@ -18,7 +18,7 @@ import {
 	PricingStep,
 	ProgressSteps,
 	StepNavigation,
-} from './components'
+} from '../../../../../components/admin/dashboard/sell-bib'
 
 interface FormData {
 	acceptedTerms: boolean

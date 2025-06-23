@@ -111,7 +111,9 @@ export default function EventSelectionStep({
 												<p className="text-muted-foreground mt-2 text-xs">by {event.expand.organizer.name}</p>
 											)}
 										</div>
-										{selectedEvent?.id === event.id && <CheckCircle className="text-primary mt-1 h-6 w-6" />}
+										{selectedEvent?.id === event.id && (
+											<CheckCircle className="text-primary absolute top-0 right-0 m-4 h-6 w-6" />
+										)}
 									</div>
 								</CardContent>
 							</Card>
