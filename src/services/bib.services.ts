@@ -28,18 +28,21 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 	let finalEventId: string = bibData.eventId
 
 	try {
+		// Generate private listing token if this is a private listing
+		const privateListingToken = bibData.listed === 'private' ? generatePrivateListingToken() : undefined
+
 		const dataToCreate: Omit<Bib, 'id'> = {
 			validated: false,
 
 			status: status,
 			sellerUserId: bibData.sellerUserId,
 			registrationNumber: bibData.registrationNumber,
-			privateListingToken: undefined,
+			privateListingToken: privateListingToken,
 
 			price: bibData.price,
 			originalPrice: bibData.originalPrice,
 			optionValues: bibData.optionValues,
-			listed: null,
+			listed: bibData.listed,
 			eventId: finalEventId,
 
 			buyerUserId: undefined,
@@ -149,6 +152,38 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 	} catch (error: unknown) {
 		throw new Error(
 			`Error fetching bibs for seller ID "${sellerUserId}": ` + (error instanceof Error ? error.message : String(error))
+		)
+	}
+}
+
+/**
+ * Fetches a private bib by its ID and token for secure access.
+ * @param bibId The ID of the bib to fetch.
+ * @param token The private listing token.
+ */
+export async function fetchPrivateBibByToken(
+	bibId: string,
+	token: string
+): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
+	if (bibId === '' || token === '') {
+		console.error('Bib ID and token are required.')
+		return null
+	}
+	try {
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
+			expand: 'eventId',
+		})
+
+		// Verify the token matches and this is a private listing
+		if (record.listed !== 'private' || record.privateListingToken !== token) {
+			console.warn(`Invalid token access attempt for bib ${bibId}`)
+			return null
+		}
+
+		return record
+	} catch (error: unknown) {
+		throw new Error(
+			`Error fetching private bib with ID "${bibId}": ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
 }
@@ -341,4 +376,17 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 			`Error updating bib ${bibId} status by admin: ` + (error instanceof Error ? error.message : String(error))
 		)
 	}
+}
+
+/**
+ * Generates a cryptographically secure random token for private listings
+ * @returns A 32-character random string
+ */
+function generatePrivateListingToken(): string {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+	let result = ''
+	for (let i = 0; i < 32; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length))
+	}
+	return result
 }
