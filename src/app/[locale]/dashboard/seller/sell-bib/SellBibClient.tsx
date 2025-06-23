@@ -246,7 +246,7 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 					<div className="space-y-6">
 						{/* Selected Event Info */}
 						{formData.selectedEvent && (
-							<Card className="border-primary/20 bg-primary/5 border-border/50 backdrop-blur-sm">
+							<Card className="border-primary/20 bg-primary/5 backdrop-blur-sm">
 								<CardContent className="p-4">
 									<div className="flex items-center gap-3">
 										<div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
@@ -418,7 +418,7 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 											<div className="flex items-start justify-between">
 												<div className="flex-1">
 													<h3 className="mb-2 text-lg font-semibold">{event.name}</h3>
-													<div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+													<div className="grid grid-cols-2 gap-4 text-sm text-gray-200">
 														<div className="flex items-center gap-2">
 															<Calendar className="h-4 w-4" />
 															{(() => {
