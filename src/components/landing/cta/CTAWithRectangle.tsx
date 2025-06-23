@@ -4,22 +4,22 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface CTAProps {
-	actions: Array<{
-		href: string
-		text: string
-		variant?: 'default' | 'outline' | 'secondary'
-	}>
 	className?: string
-	translations?: {
-		ctaSection: {
-			description: string
-			title: string
-		}
-	}
+
+	locale: Locale
+
 	withGlow?: boolean
 }
+import Link from 'next/link'
 
-export function CTASection({ withGlow = true, translations, className, actions }: CTAProps) {
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
+import Translations from './locales.json'
+
+export function CTASection({ withGlow = true, locale, className }: CTAProps) {
+	const translations = getTranslations(locale, Translations)
+
 	return (
 		<div className="px-4 xl:px-0">
 			<section
@@ -42,11 +42,13 @@ export function CTASection({ withGlow = true, translations, className, actions }
 
 					{/* Action Buttons */}
 					<div className="animate-fade-in-up flex flex-col gap-4 opacity-0 delay-500 sm:flex-row">
-						{actions.map((action, index) => (
-							<Button asChild className="text-base" key={index} size="lg" variant={action.variant ?? 'default'}>
-								<a href={action.href}>{action.text}</a>
-							</Button>
-						))}
+						<Button asChild className="text-base" size="lg" variant={'outline'}>
+							<Link href={'/dashboard/organizer'}>{translations.cta.organizerButton}</Link>
+						</Button>
+
+						<Button asChild className="text-base" size="lg" variant={'default'}>
+							<Link href={'/marketplace'}>{translations.cta.webAppButton}</Link>
+						</Button>
 					</div>
 
 					{/* Glow Effect */}
