@@ -51,6 +51,22 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 		notFound()
 	}
 
+	// Check if bib can be purchased
+	const canPurchase = (() => {
+		// Must be available status
+		if (bib.status !== 'available') return false
+
+		// If it's a public listing, it's purchasable
+		if (bib.listed === 'public') return true
+
+		// If it's a private listing, must have valid token
+		if (bib.listed === 'private') {
+			return privateToken != null && bib.privateListingToken === privateToken
+		}
+
+		return false
+	})()
+
 	const event = bib.expand?.eventId
 
 	return (
@@ -139,14 +155,29 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 									</div>
 								)}
 
-								<div className={`inline-block rounded-full bg-green-100 px-3 py-1 text-sm text-green-800`}>
-									{bib.status}
+								<div
+									className={`inline-block rounded-full px-3 py-1 text-sm ${
+										bib.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+									}`}
+								>
+									{bib.status === 'available' ? 'Available' : bib.status}
 								</div>
+
+								{/* Token validation status for private listings */}
+								{bib.listed === 'private' && bib.status === 'available' && (
+									<div
+										className={`inline-block rounded-full px-3 py-1 text-sm ${
+											canPurchase ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+										}`}
+									>
+										{canPurchase ? 'Access Granted' : 'Invalid Token'}
+									</div>
+								)}
 							</div>
 						</div>
 
 						{/* Purchase button */}
-						{bib.status === 'available' ? (
+						{canPurchase ? (
 							<div className="space-y-4">
 								{clerkId ? (
 									<Link
@@ -169,18 +200,38 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 							</div>
 						) : (
 							<div className="text-center">
-								<p className="mb-4 text-gray-600">This bib is no longer available for purchase.</p>
-								{event && (
-									<Link className="btn btn-secondary" href={`/${locale}/events/${event.id}`}>
-										View Event & Join Waitlist
-									</Link>
+								{bib.status !== 'available' ? (
+									<>
+										<p className="mb-4 text-gray-600">This bib is no longer available for purchase.</p>
+										{event && (
+											<Link className="btn btn-secondary" href={`/${locale}/events/${event.id}`}>
+												View Event & Join Waitlist
+											</Link>
+										)}
+									</>
+								) : bib.listed === 'private' && (!privateToken || bib.privateListingToken !== privateToken) ? (
+									<>
+										<p className="mb-4 font-medium text-red-600">Access Denied</p>
+										<p className="mb-4 text-gray-600">
+											This is a private listing. You need a valid access token to purchase this bib.
+										</p>
+									</>
+								) : (
+									<>
+										<p className="mb-4 text-gray-600">This bib cannot be purchased at the moment.</p>
+										{event && (
+											<Link className="btn btn-secondary" href={`/${locale}/events/${event.id}`}>
+												View Event & Join Waitlist
+											</Link>
+										)}
+									</>
 								)}
 							</div>
 						)}
 					</div>
 
 					{/* Security notice for private listings */}
-					{bib.listed === 'private'  && (
+					{bib.listed === 'private' && canPurchase && (
 						<div className="bento-box border-l-4 border-yellow-500 bg-yellow-50 py-4 pl-4 dark:bg-yellow-900/20">
 							<h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Private Listing</h3>
 							<p className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
