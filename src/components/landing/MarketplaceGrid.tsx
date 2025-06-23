@@ -130,12 +130,10 @@ const runsExample: BibSale[] = [
 // const runsExample: BibSale[] = generateFakeBibSales(5)
 
 export default function MarketplaceGrid({ locale }: { locale: Locale }) {
-	const t = getTranslations(locale, marketplaceTranslations)
-
 	return (
 		<div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 py-32 md:grid-cols-2 lg:grid-cols-4">
 			{runsExample.map((run, index) => (
-				<CardMarket bibSale={run} key={index} translations={t} locale={locale} />
+				<CardMarket bibSale={run} key={index} locale={locale} />
 			))}
 		</div>
 	)
