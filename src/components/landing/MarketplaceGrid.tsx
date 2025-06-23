@@ -7,10 +7,8 @@ import {
 	getRandomParticipantCount,
 	// generateFakeBibSales // Uncomment to use fully random data
 } from '@/lib/utils'
-import { getTranslations } from '@/lib/getDictionary'
 import { Locale } from '@/lib/i18n-config'
 
-import marketplaceTranslations from '../marketplace/locales.json'
 import CardMarket, { BibSale } from '../marketplace/CardMarket'
 
 // Get distributed colors for our 5 examples to ensure each bib has a different color

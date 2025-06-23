@@ -66,7 +66,8 @@ const sortBibs = (bibs: BibSale[], sort: string) => {
 }
 
 // --- Main client component for the marketplace grid and filters
-export default function MarketplaceClient({ bibs }: MarketplaceClientProps) {
+
+export default function MarketplaceClient({ locale, bibs }: MarketplaceClientProps) {
 	// TODO: translations -> locale
 	// --- State for sorting, search term, selected sport, selected distance, and advanced filters
 	const [sort, setSort] = useState('date') // Current sort option
