@@ -125,8 +125,9 @@
 				"distance": "Distance",
 				"elevation": "Dénivelé",
 				"participants": "Participants",
-				"requestNewEvent": "Demander un nouvel événement",
-				"requestNewEventDescription": "Vous ne trouvez pas votre événement ? Demandez à ce qu'il soit répertorié - nous nous occupons de tout !"
+				"requestNewEvent": "Vous ne trouvez pas votre événement ?",
+				"requestNewEventDescription": "Demandez à ce qu'il soit répertorié - nous nous occupons de tout !",
+				"requestNewEventButton": "Demander un nouvel événement"
 			},
 			"bibDetails": {
 				"registrationNumber": "Numéro d'inscription",

@@ -21,6 +21,7 @@ interface EventSelectionStepProps {
 		eventInfo: string
 		noEventsFound: string
 		requestNewEvent: string
+		requestNewEventButton: string
 		requestNewEventDescription: string
 		searchPlaceholder: string
 	}
@@ -136,7 +137,7 @@ export default function EventSelectionStep({
 							<Link href="/dashboard/seller/request-event">
 								<Button className="gap-2" variant="outline">
 									<Plus className="h-4 w-4" />
-									{t.requestNewEvent}
+									{t.requestNewEventButton}
 								</Button>
 							</Link>
 						</CardContent>
