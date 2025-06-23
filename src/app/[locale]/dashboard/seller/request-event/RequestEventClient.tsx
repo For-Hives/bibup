@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, Calendar, MapPin, MessageSquare, Send, User } from 'lucide-react'
+import { ArrowLeft, Send } from 'lucide-react'
 import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -9,8 +9,9 @@ import Link from 'next/link'
 import type { Locale } from '@/lib/i18n-config'
 
 import { createEventCreationRequest } from '@/services/eventCreationRequest.services'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DateInput } from '@/components/ui/date-input'
 import { Textarea } from '@/components/ui/textareaAlt'
+import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -146,125 +147,158 @@ export default function RequestEventClient({ userId, translations: t, locale }: 
 
 	if (showSuccess) {
 		return (
-			<div className="mx-auto max-w-2xl p-4">
-				<Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
-					<CardContent className="p-8 text-center">
-						<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
-							<Send className="h-8 w-8 text-green-600 dark:text-green-300" />
+			<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br pt-24">
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+				<div className="relative flex items-center justify-center p-6 md:p-10">
+					<div className="border-border/50 bg-card/80 relative w-full max-w-4xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12">
+						<div className="text-center">
+							<div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
+								<Send className="h-10 w-10 text-green-600 dark:text-green-300" />
+							</div>
+							<h2 className="text-foreground mb-4 text-3xl font-bold">{t.title}</h2>
+							<p className="text-muted-foreground mb-8 text-lg">{t.messages.success}</p>
+							<Link href={`/${locale}/dashboard/seller/sell-bib`}>
+								<Button size="lg">
+									<ArrowLeft className="mr-2 h-4 w-4" />
+									{t.actions.goBack}
+								</Button>
+							</Link>
 						</div>
-						<h2 className="mb-2 text-xl font-semibold text-green-800 dark:text-green-200">{t.title}</h2>
-						<p className="text-green-700 dark:text-green-300">{t.messages.success}</p>
-					</CardContent>
-				</Card>
+					</div>
+				</div>
 			</div>
 		)
 	}
 
 	return (
-		<div className="mx-auto max-w-2xl p-4">
-			{/* Header */}
-			<div className="mb-6">
-				<Link
-					className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-					href={`/${locale}/dashboard/seller/sell-bib`}
+		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br pt-24">
+			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+			<div className="relative flex items-center justify-center p-6 md:p-10">
+				<form
+					className="border-border/50 bg-card/80 relative w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
+					onSubmit={handleSubmit}
 				>
-					<ArrowLeft className="h-4 w-4" />
-					{t.actions.goBack}
-				</Link>
-				<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t.title}</h1>
-				<p className="mt-2 text-gray-600 dark:text-gray-400">{t.subtitle}</p>
-			</div>
+					{/* Back Link */}
+					<div className="mb-8">
+						<Link
+							className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm transition-colors"
+							href={`/${locale}/dashboard/seller/sell-bib`}
+						>
+							<ArrowLeft className="h-4 w-4" />
+							{t.actions.goBack}
+						</Link>
+					</div>
 
-			{/* Form */}
-			<Card>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<User className="h-5 w-5" />
-						{t.title}
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<form className="space-y-6" onSubmit={handleSubmit}>
-						{/* Event Name */}
-						<div className="space-y-2">
-							<Label htmlFor="eventName">{t.form.eventName}</Label>
-							<Input
-								id="eventName"
-								onChange={e => handleInputChange('name', e.target.value)}
-								placeholder={t.form.eventNamePlaceholder}
-								type="text"
-								value={formData.name}
-							/>
-							<p className="text-xs text-gray-500">{t.form.eventNameHelp}</p>
-							{errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+					{/* Header */}
+					<div className="mb-12 text-left">
+						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">{t.title}</h1>
+						<p className="text-muted-foreground mt-4 text-lg">{t.subtitle}</p>
+					</div>
+
+					{/* Event Information Section */}
+					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+						<div>
+							<h2 className="text-foreground text-2xl font-semibold">Event Information</h2>
+							<p className="text-muted-foreground mt-2 text-base leading-7">
+								Provide the basic information about the event you want to request.
+							</p>
 						</div>
+						<div className="sm:max-w-4xl md:col-span-2">
+							<div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
+								{/* Event Name */}
+								<div className="col-span-full sm:col-span-3">
+									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventName">
+										{t.form.eventName} *
+									</Label>
+									<Input
+										id="eventName"
+										onChange={e => handleInputChange('name', e.target.value)}
+										placeholder={t.form.eventNamePlaceholder}
+										type="text"
+										value={formData.name}
+									/>
+									{errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
+								</div>
 
-						{/* Location */}
-						<div className="space-y-2">
-							<Label htmlFor="location">{t.form.location}</Label>
-							<div className="relative">
-								<MapPin className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-								<Input
-									className="pl-10"
-									id="location"
-									onChange={e => handleInputChange('location', e.target.value)}
-									placeholder={t.form.locationPlaceholder}
-									type="text"
-									value={formData.location}
-								/>
+								{/* Location */}
+								<div className="col-span-full sm:col-span-3">
+									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="location">
+										{t.form.location} *
+									</Label>
+									<Input
+										id="location"
+										onChange={e => handleInputChange('location', e.target.value)}
+										placeholder={t.form.locationPlaceholder}
+										type="text"
+										value={formData.location}
+									/>
+									{errors.location && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location}</p>}
+								</div>
+
+								{/* Event Date */}
+								<div className="col-span-full sm:col-span-3">
+									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="eventDate">
+										{t.form.eventDate} *
+									</Label>
+									<DateInput
+										id="eventDate"
+										locale={locale}
+										min={new Date().toISOString().split('T')[0]}
+										onChange={e => handleInputChange('eventDate', e.target.value)}
+										showHelper={false}
+										value={formData.eventDate}
+									/>
+									{errors.eventDate && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.eventDate}</p>
+									)}
+								</div>
 							</div>
-							<p className="text-xs text-gray-500">{t.form.locationHelp}</p>
-							{errors.location && <p className="text-sm text-red-600">{errors.location}</p>}
 						</div>
+					</div>
 
-						{/* Event Date */}
-						<div className="space-y-2">
-							<Label htmlFor="eventDate">{t.form.eventDate}</Label>
-							<div className="relative">
-								<Calendar className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-								<Input
-									className="pl-10"
-									id="eventDate"
-									min={new Date().toISOString().split('T')[0]}
-									onChange={e => handleInputChange('eventDate', e.target.value)}
-									type="date"
-									value={formData.eventDate}
-								/>
+					<Separator className="my-12" />
+
+					{/* Additional Information Section */}
+					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+						<div>
+							<h2 className="text-foreground text-2xl font-semibold">Additional Information</h2>
+							<p className="text-muted-foreground mt-2 text-base leading-7">
+								Provide any extra details that might help us add this event to our platform.
+							</p>
+						</div>
+						<div className="sm:max-w-4xl md:col-span-2">
+							<div className="grid grid-cols-1 gap-6">
+								<div className="col-span-full">
+									<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="message">
+										{t.form.message}
+									</Label>
+									<Textarea
+										id="message"
+										onChange={e => handleInputChange('message', e.target.value)}
+										placeholder={t.form.messagePlaceholder}
+										rows={4}
+										value={formData.message}
+									/>
+								</div>
 							</div>
-							<p className="text-xs text-gray-500">{t.form.eventDateHelp}</p>
-							{errors.eventDate && <p className="text-sm text-red-600">{errors.eventDate}</p>}
 						</div>
+					</div>
 
-						{/* Additional Message */}
-						<div className="space-y-2">
-							<Label htmlFor="message">{t.form.message}</Label>
-							<div className="relative">
-								<MessageSquare className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
-								<Textarea
-									className="min-h-[100px] pl-10"
-									id="message"
-									onChange={e => handleInputChange('message', e.target.value)}
-									placeholder={t.form.messagePlaceholder}
-									value={formData.message}
-								/>
-							</div>
-							<p className="text-xs text-gray-500">{t.form.messageHelp}</p>
-						</div>
+					<Separator className="my-12" />
 
-						{/* Actions */}
-						<div className="flex gap-4 pt-4">
-							<Button className="flex-1" disabled={isSubmitting} type="submit">
-								{isSubmitting ? t.messages.loading : t.actions.submit}
+					{/* Form Actions */}
+					<div className="flex items-center justify-end space-x-6 pt-8">
+						<Link href={`/${locale}/dashboard/seller/sell-bib`}>
+							<Button disabled={isSubmitting} size="lg" type="button" variant="outline">
+								{t.actions.cancel}
 							</Button>
-							<Link href={`/${locale}/dashboard/seller/sell-bib`}>
-								<Button type="button" variant="outline">
-									{t.actions.cancel}
-								</Button>
-							</Link>
-						</div>
-					</form>
-				</CardContent>
-			</Card>
+						</Link>
+						<Button disabled={isSubmitting} size="lg" type="submit">
+							{isSubmitting ? t.messages.loading : t.actions.submit}
+						</Button>
+					</div>
+				</form>
+			</div>
 		</div>
 	)
 }
