@@ -1,5 +1,7 @@
-import { Calendar, CheckCircle, MapPin, Search, TrendingUp, Users } from 'lucide-react'
+import { Calendar, CheckCircle, MapPin, Plus, Search, TrendingUp, Users } from 'lucide-react'
 import { useState } from 'react'
+
+import Link from 'next/link'
 
 import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
@@ -7,6 +9,7 @@ import type { Event } from '@/models/event.model'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatDateForDisplay } from '@/lib/dateUtils'
 import { Input } from '@/components/ui/inputAlt'
+import { Button } from '@/components/ui/button'
 
 interface EventSelectionStepProps {
 	availableEvents: (Event & { expand?: { organizer?: Organizer } })[]
@@ -17,6 +20,8 @@ interface EventSelectionStepProps {
 		description: string
 		eventInfo: string
 		noEventsFound: string
+		requestNewEvent: string
+		requestNewEventDescription: string
 		searchPlaceholder: string
 	}
 }
@@ -119,6 +124,23 @@ export default function EventSelectionStep({
 							</Card>
 						))
 					)}
+				</div>
+
+				{/* Request New Event Section */}
+				<div className="mt-6 border-t pt-6">
+					<Card className="border-2 border-dashed border-gray-300 bg-gray-50/50 dark:border-gray-600 dark:bg-gray-800/50">
+						<CardContent className="p-6 text-center">
+							<Plus className="mx-auto mb-3 h-8 w-8 text-gray-400" />
+							<h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">{t.requestNewEvent}</h3>
+							<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t.requestNewEventDescription}</p>
+							<Link href="/dashboard/seller/request-event">
+								<Button className="gap-2" variant="outline">
+									<Plus className="h-4 w-4" />
+									{t.requestNewEvent}
+								</Button>
+							</Link>
+						</CardContent>
+					</Card>
 				</div>
 
 				{error && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>}

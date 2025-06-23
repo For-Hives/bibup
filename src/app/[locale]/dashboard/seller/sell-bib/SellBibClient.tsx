@@ -78,6 +78,8 @@ interface SellBibTranslations {
 			location: string
 			noEventsFound: string
 			participants: string
+			requestNewEvent: string
+			requestNewEventDescription: string
 			searchPlaceholder: string
 			selectEvent: string
 		}
@@ -292,6 +294,8 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 						selectedEvent={formData.selectedEvent}
 						translations={{
 							searchPlaceholder: t.form.eventSelection.searchPlaceholder,
+							requestNewEventDescription: t.form.eventSelection.requestNewEventDescription,
+							requestNewEvent: t.form.eventSelection.requestNewEvent,
 							noEventsFound: t.form.eventSelection.noEventsFound,
 							eventInfo: t.form.eventSelection.eventInfo,
 							description: t.steps.eventSelection.description,
