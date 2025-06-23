@@ -26,7 +26,7 @@ interface FormData {
 	optionValues: Record<string, string>
 	originalPrice: string
 	registrationNumber: string
-	selectedEvent: Event | null
+	selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 	sellingPrice: string
 }
 
@@ -286,7 +286,9 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 					<EventSelectionStep
 						availableEvents={availableEvents}
 						error={errors.selectedEvent}
-						onEventSelect={event => updateFormData({ selectedEvent: event })}
+						onEventSelect={(event: Event & { expand?: { organizer?: Organizer } }) =>
+							updateFormData({ selectedEvent: event })
+						}
 						selectedEvent={formData.selectedEvent}
 						translations={{
 							searchPlaceholder: t.form.eventSelection.searchPlaceholder,

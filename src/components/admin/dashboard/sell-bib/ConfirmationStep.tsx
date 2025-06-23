@@ -2,11 +2,13 @@ import { Copy, ExternalLink } from 'lucide-react'
 
 import { toast } from 'sonner'
 
+import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
 import CardMarket, { type BibSale } from '@/components/marketplace/CardMarket'
+import { getOrganizerLogoUrl } from '@/services/organizer.services'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
@@ -21,7 +23,7 @@ interface ConfirmationStepProps {
 		listingType: 'private' | 'public'
 		originalPrice: string
 		registrationNumber: string
-		selectedEvent: Event | null
+		selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 		sellingPrice: string
 	}
 	onChange: (data: Partial<ConfirmationStepProps['formData']>) => void
@@ -73,6 +75,11 @@ export default function ConfirmationStep({
 	const getBibSaleForPreview = (): BibSale | null => {
 		if (!formData.selectedEvent) return null
 
+		// Get organizer logo URL or fallback to default image
+		const organizerLogoUrl = formData.selectedEvent.expand?.organizer
+			? getOrganizerLogoUrl(formData.selectedEvent.expand.organizer)
+			: null
+
 		return {
 			user: {
 				lastName: user.lastName,
@@ -90,7 +97,7 @@ export default function ConfirmationStep({
 				participantCount: formData.selectedEvent.participants ?? 0,
 				name: formData.selectedEvent.name,
 				location: formData.selectedEvent.location,
-				image: '/landing/background.jpg', // Default image
+				image: organizerLogoUrl ?? '/landing/background.jpg', // Use organizer logo or fallback
 				id: formData.selectedEvent.id,
 				distanceUnit: 'km' as const,
 				distance: formData.selectedEvent.distanceKm ?? 0,

@@ -1,5 +1,6 @@
 import { CheckCircle, DollarSign, Euro } from 'lucide-react'
 
+import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 
 import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '@/components/ui/selectAlt'
@@ -13,7 +14,7 @@ interface BibDetailsStepProps {
 		optionValues: Record<string, string>
 		originalPrice: string
 		registrationNumber: string
-		selectedEvent: Event | null
+		selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 	}
 	onChange: (data: Partial<BibDetailsStepProps['formData']>) => void
 	translations: {

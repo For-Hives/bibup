@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/inputAlt'
 interface EventSelectionStepProps {
 	availableEvents: (Event & { expand?: { organizer?: Organizer } })[]
 	error?: string
-	onEventSelect: (event: Event) => void
-	selectedEvent: Event | null
+	onEventSelect: (event: Event & { expand?: { organizer?: Organizer } }) => void
+	selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 	translations: {
 		description: string
 		eventInfo: string
