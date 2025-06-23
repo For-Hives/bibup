@@ -171,7 +171,7 @@ function getFallbackTranslation<T, LocaleKey extends string>(
  *   return (
  *     <nav>
  *       <h1>{t.GLOBAL.appName}</h1>
- *       <a href="/">{t.navbar.homeLink}</a>
+ *       <Link href="/">{t.navbar.homeLink}</Link>
  *     </nav>
  *   )
  * }
