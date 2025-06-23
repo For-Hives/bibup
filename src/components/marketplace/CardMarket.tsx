@@ -2,11 +2,11 @@
 
 import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 
-import { DateTime } from 'luxon'
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
 
+import { formatDateWithLocale } from '@/lib/dateUtils'
 import { cn } from '@/lib/utils'
 
 export interface BibSale {
@@ -34,14 +34,16 @@ export interface BibSale {
 
 interface CardMarketProps {
 	bibSale: BibSale
-	translations?: {
-		participants: string
-		soldBy: string
-		wantThisBib: string
-	}
+	locale: Locale
 }
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
-export default function CardMarket({ translations, bibSale }: CardMarketProps) {
+import marketplaceTranslations from '../marketplace/locales.json'
+
+export default function CardMarket({ locale, bibSale }: CardMarketProps) {
+	const translations = getTranslations(locale, marketplaceTranslations)
+
 	return (
 		<div className="h-full w-full max-w-xs">
 			<div className="bg-card/80 border-border relative flex h-full flex-col overflow-hidden rounded-2xl border shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md transition-all duration-300 hover:border-white/35">
@@ -110,7 +112,9 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 					</div>
 					<div className="flex items-center gap-3">
 						<Calendar className="h-5 w-5" />
-						<p className="text-muted-foreground text-xs leading-relaxed">{formatDateWithLocale(bibSale.event.date)}</p>
+						<p className="text-muted-foreground text-xs leading-relaxed">
+							{formatDateWithLocale(bibSale.event.date, locale)}
+						</p>
 					</div>
 					<div className="flex items-center gap-3">
 						<MapPinned className="h-5 w-5" />
@@ -128,7 +132,7 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 					<div className="flex items-center gap-2">
 						<User className="h-5 w-5" />
 						<p className="text-muted-foreground text-xs leading-relaxed">
-							{formatParticipantCount(bibSale.event.participantCount)} {translations?.participants ?? 'participants'}
+							{formatParticipantCount(bibSale.event.participantCount)} {translations.participants ?? 'participants'}
 						</p>
 					</div>
 					<div className="flex h-full items-end justify-center py-2">
@@ -137,7 +141,7 @@ export default function CardMarket({ translations, bibSale }: CardMarketProps) {
 							href={`/marketplace/${bibSale.id}`}
 						>
 							<ShoppingCart className="h-5 w-5" />
-							{translations?.wantThisBib ?? 'I want this bib'}
+							{translations.wantThisBib ?? 'I want this bib'}
 						</Link>
 					</div>
 				</div>
@@ -160,31 +164,6 @@ function bgFromType(type: BibSale['event']['type']) {
 			return 'bg-yellow-500/15 border-yellow-500/50'
 		case 'triathlon':
 			return 'bg-purple-500/15 border-purple-500/50'
-	}
-}
-
-// Helper function to format date with Luxon safely
-function formatDateWithLocale(date: Date, locale?: null | string): string {
-	try {
-		const dt = DateTime.fromJSDate(date)
-		if (!dt.isValid) {
-			return new Date(date).toLocaleDateString()
-		}
-
-		// Use provided locale, or automatically detect browser locale
-		const targetLocaleFromPath = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
-		const dateTime = dt.setLocale(targetLocaleFromPath)
-
-		// Check if locale is valid after configuration
-		if (!dateTime.isValid) {
-			// If locale is not supported, use default locale
-			return dt.toLocaleString(DateTime.DATE_MED)
-		}
-
-		return dateTime.toLocaleString(DateTime.DATE_MED)
-	} catch {
-		// Fallback to native JavaScript Date formatting
-		return new Date(date).toLocaleDateString()
 	}
 }
 
