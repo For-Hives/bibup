@@ -63,7 +63,11 @@
 				"public": "Public",
 				"private": "Private",
 				"terms": "I confirm that I own this bib and have the right to sell it",
-				"termsRequired": "You must accept the terms to continue"
+				"termsRequired": "You must accept the terms to continue",
+				"privateLink": "Private Link",
+				"privateLinkHelp": "Share this link to allow others to purchase your bib privately",
+				"copyLink": "Copy Link",
+				"marketplacePreview": "Marketplace Preview"
 			}
 		},
 		"actions": {
@@ -75,7 +79,8 @@
 		"messages": {
 			"success": "Your bib has been listed successfully!",
 			"error": "There was an error listing your bib. Please try again.",
-			"loading": "Creating your listing..."
+			"loading": "Creating your listing...",
+			"linkCopied": "Link copied to clipboard!"
 		},
 		"validation": {
 			"eventRequired": "Please select an event",
@@ -149,7 +154,11 @@
 				"public": "Publique",
 				"private": "Privée",
 				"terms": "Je confirme que je possède ce dossard et que j'ai le droit de le vendre",
-				"termsRequired": "Vous devez accepter les conditions pour continuer"
+				"termsRequired": "Vous devez accepter les conditions pour continuer",
+				"privateLink": "Lien privé",
+				"privateLinkHelp": "Partagez ce lien pour permettre aux autres d'acheter votre dossard en privé",
+				"copyLink": "Copier le lien",
+				"marketplacePreview": "Aperçu marketplace"
 			}
 		},
 		"actions": {
@@ -161,7 +170,8 @@
 		"messages": {
 			"success": "Votre dossard a été mis en vente avec succès !",
 			"error": "Il y a eu une erreur lors de la mise en vente de votre dossard. Veuillez réessayer.",
-			"loading": "Création de votre annonce..."
+			"loading": "Création de votre annonce...",
+			"linkCopied": "Lien copié dans le presse-papiers !"
 		},
 		"validation": {
 			"eventRequired": "Veuillez sélectionner un événement",
@@ -212,17 +222,17 @@
 				"bibOptions": "비브 옵션",
 				"originalPrice": "원래 가격 (선택사항)",
 				"originalPricePlaceholder": "등록에 지불한 가격",
-				"originalPriceHelp": "구매자가 가치를 이해하는 데 도움이 됩니다"
+				"originalPriceHelp": "이것은 구매자가 가치를 이해하는 데 도움이 됩니다"
 			},
 			"pricing": {
 				"sellingPrice": "판매 가격",
 				"sellingPricePlaceholder": "판매 가격을 입력하세요",
-				"sellingPriceHelp": "비브에 경쟁력 있는 가격을 설정하세요",
+				"sellingPriceHelp": "비브에 대한 경쟁력 있는 가격을 설정하세요",
 				"listingType": "리스팅 유형",
 				"publicListing": "공개 리스팅",
 				"privateListing": "비공개 리스팅",
-				"publicListingHelp": "누구든지 비브를 보고 구매할 수 있습니다",
-				"privateListingHelp": "직접 링크가 있는 사람만 구매할 수 있습니다",
+				"publicListingHelp": "누구나 비브를 보고 구매할 수 있습니다",
+				"privateListingHelp": "직접 링크를 가진 사람만 구매할 수 있습니다",
 				"currency": "₩"
 			},
 			"confirmation": {
@@ -235,26 +245,31 @@
 				"public": "공개",
 				"private": "비공개",
 				"terms": "이 비브를 소유하고 있으며 판매할 권리가 있음을 확인합니다",
-				"termsRequired": "계속하려면 약관에 동의해야 합니다"
+				"termsRequired": "계속하려면 약관에 동의해야 합니다",
+				"privateLink": "비공개 링크",
+				"privateLinkHelp": "이 링크를 공유하여 다른 사람들이 비공개로 비브를 구매할 수 있게 하세요",
+				"copyLink": "링크 복사",
+				"marketplacePreview": "마켓플레이스 미리보기"
 			}
 		},
 		"actions": {
 			"next": "다음",
 			"previous": "이전",
-			"finish": "비브 등록하기",
+			"finish": "내 비브 등록",
 			"cancel": "취소"
 		},
 		"messages": {
 			"success": "비브가 성공적으로 등록되었습니다!",
-			"error": "비브 등록 중 오류가 발생했습니다. 다시 시도해 주세요.",
-			"loading": "리스팅 생성 중..."
+			"error": "비브 등록 중 오류가 발생했습니다. 다시 시도해주세요.",
+			"loading": "리스팅 생성 중...",
+			"linkCopied": "링크가 클립보드에 복사되었습니다!"
 		},
 		"validation": {
-			"eventRequired": "이벤트를 선택해 주세요",
+			"eventRequired": "이벤트를 선택해주세요",
 			"registrationNumberRequired": "등록 번호가 필요합니다",
 			"priceRequired": "판매 가격이 필요합니다",
 			"priceMinimum": "가격은 ₩0보다 커야 합니다",
-			"priceFormat": "유효한 가격을 입력해 주세요"
+			"priceFormat": "유효한 가격을 입력해주세요"
 		}
 	}
 }
