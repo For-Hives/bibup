@@ -7,7 +7,11 @@ import Link from 'next/link'
 
 import { checkIsCurrentUserAdmin } from './adminActions'
 
-export default function AdminLinkWrapper() {
+interface AdminLinkWrapperProps {
+	variant?: 'dropdown' | 'navbar'
+}
+
+export default function AdminLinkWrapper({ variant = 'navbar' }: AdminLinkWrapperProps) {
 	const { user: clerkUser, isLoaded } = useUser()
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [isLoading, setIsLoading] = useState(true)
@@ -38,11 +42,13 @@ export default function AdminLinkWrapper() {
 		return null
 	}
 
+	const navbarClasses =
+		'text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors'
+	const dropdownClasses =
+		'text-foreground hover:bg-accent block px-4 py-2 text-sm transition-colors data-[focus]:bg-accent'
+
 	return (
-		<Link
-			className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors"
-			href="/admin"
-		>
+		<Link className={variant === 'navbar' ? navbarClasses : dropdownClasses} href="/admin">
 			Admin
 		</Link>
 	)

@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { LocaleParams } from '@/lib/generateStaticParams'
 import { getTranslations } from '@/lib/getDictionary'
 
+import DashboardDropdown from './DashboardDropdown'
 import AdminLinkWrapper from './AdminLinkWrapper'
 import pageTranslationsData from './locales.json'
 
@@ -54,30 +55,15 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 										{link.label}
 									</Link>
 								))}
-								<AdminLinkWrapper />
 							</div>
 						</div>
 					</div>
 					<div className="hidden sm:ml-6 sm:block">
 						<div className="text-foreground flex items-center">
 							<div className="flex items-center gap-4">
-								{/* Using page-specific translation for a navigation link */}
 								<SignedIn>
-									<Link href="/marketplace">
-										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
-											{t.navbar.buyBibLink}
-										</button>
-									</Link>
-									<Link href="/dashboard/seller/sell-bib">
-										<button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-2 text-sm font-medium transition-colors">
-											{t.navbar.sellBibLink}
-										</button>
-									</Link>
-									<Link href="/dashboard">
-										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
-											{t.navbar.dashboardLink}
-										</button>
-									</Link>
+									{/* Dashboard Dropdown Menu */}
+									<DashboardDropdown translations={t} />
 									<UserButton />
 								</SignedIn>
 								<SignedOut>
@@ -128,6 +114,17 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 					<div className="border-border border-t pt-4 pb-3">
 						<div className="flex flex-col space-y-2 px-2">
 							<SignedIn>
+								{/* Dashboard Section Header */}
+								<div className="text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wide uppercase">
+									Dashboard
+								</div>
+								<DisclosureButton
+									as={Link}
+									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
+									href="/dashboard"
+								>
+									{t.navbar.dashboardLink}
+								</DisclosureButton>
 								<DisclosureButton
 									as={Link}
 									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
@@ -142,13 +139,7 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 								>
 									{t.navbar.sellBibLink}
 								</DisclosureButton>
-								<DisclosureButton
-									as={Link}
-									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
-									href="/dashboard"
-								>
-									{t.navbar.dashboardLink}
-								</DisclosureButton>
+								<AdminLinkWrapper variant="navbar" />
 								<div className="px-3 py-2">
 									<UserButton />
 								</div>
