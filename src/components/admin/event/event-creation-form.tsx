@@ -155,7 +155,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Reado
 						locale={locale}
 						register={register}
 						setValue={setValue}
-						translations={translations}
 					/>
 
 					<Separator className="my-12" />
@@ -167,7 +166,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Reado
 						locale={locale}
 						register={register}
 						setValue={setValue}
-						translations={translations}
 					/>
 
 					<Separator className="my-12" />
@@ -177,10 +175,10 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Reado
 						errors={errors}
 						eventOptions={eventOptions}
 						formData={formData}
+						locale={locale}
 						register={register}
 						setEventOptions={setEventOptions}
 						setValue={setValue}
-						translations={translations}
 					/>
 
 					<Separator className="my-12" />

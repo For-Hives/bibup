@@ -11,12 +11,17 @@ interface EventOptionsSectionProps extends EventSectionProps {
 	setEventOptions: (options: EventOption[]) => void
 }
 
+import Translations from '@/app/[locale]/event/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+
 export default function EventOptionsSection({
-	translations,
+	locale,
 	setValue,
 	setEventOptions,
 	eventOptions,
-}: EventOptionsSectionProps) {
+}: Readonly<EventOptionsSectionProps>) {
+	const translations = getTranslations(locale, Translations)
+
 	const addEventOption = () => {
 		const newOption: EventOption = {
 			values: [''],
