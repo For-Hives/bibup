@@ -200,8 +200,8 @@ export default function FakerButton({ setValue, setEventOptions }: FakerButtonPr
 		})
 
 		// Update event options state if setEventOptions is provided
-		if (setEventOptions) {
-			setEventOptions(fakeData.options ?? [])
+		if (setEventOptions && fakeData.options) {
+			setEventOptions(fakeData.options as EventOption[])
 		}
 	}
 
