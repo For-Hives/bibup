@@ -29,5 +29,5 @@ export default async function RequestEventPage({ params }: RequestEventPageProps
 
 	const dict = locales[locale as keyof typeof locales] ?? locales.en
 
-	return <RequestEventClient locale={locale} translations={dict} userId={userId} />
+	return <RequestEventClient locale={locale} translations={dict} />
 }

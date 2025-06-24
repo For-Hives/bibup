@@ -8,13 +8,14 @@ import Link from 'next/link'
 
 import type { Locale } from '@/lib/i18n-config'
 
-import { createEventCreationRequest } from '@/services/eventCreationRequest.services'
 import { DateInput } from '@/components/ui/date-input'
 import { Textarea } from '@/components/ui/textareaAlt'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+
+import { handleCreateEventCreationRequest } from './actions'
 
 interface FormData {
 	eventDate: string
@@ -64,10 +65,9 @@ interface RequestEventClientProps {
 			locationRequired: string
 		}
 	}
-	userId: string
 }
 
-export default function RequestEventClient({ userId, translations: t, locale }: RequestEventClientProps) {
+export default function RequestEventClient({ translations: t, locale }: RequestEventClientProps) {
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [showSuccess, setShowSuccess] = useState(false)
@@ -114,7 +114,7 @@ export default function RequestEventClient({ userId, translations: t, locale }: 
 		}
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
 		if (!validateForm()) {
@@ -123,26 +123,30 @@ export default function RequestEventClient({ userId, translations: t, locale }: 
 
 		setIsSubmitting(true)
 
-		void createEventCreationRequest({
-			userId,
-			name: formData.name.trim(),
-			message: formData.message.trim() || undefined,
-			location: formData.location.trim(),
-			eventDate: new Date(formData.eventDate),
-		})
-			.then(() => {
+		try {
+			// Create FormData for server action
+			const formDataToSubmit = new FormData()
+			formDataToSubmit.append('name', formData.name.trim())
+			formDataToSubmit.append('location', formData.location.trim())
+			formDataToSubmit.append('eventDate', formData.eventDate)
+			formDataToSubmit.append('message', formData.message.trim())
+
+			const result = await handleCreateEventCreationRequest(formDataToSubmit)
+
+			if (result.success) {
 				setShowSuccess(true)
 				setTimeout(() => {
 					router.push(`/${locale}/dashboard/seller/sell-bib`)
 				}, 3000)
-			})
-			.catch(error => {
-				console.error('Error submitting event request:', error)
-				alert(t.messages.error)
-			})
-			.finally(() => {
-				setIsSubmitting(false)
-			})
+			} else {
+				setErrors({ name: result.error ?? t.messages.error })
+			}
+		} catch (error) {
+			console.error('Error submitting event request:', error)
+			setErrors({ name: error instanceof Error ? error.message : t.messages.error })
+		} finally {
+			setIsSubmitting(false)
+		}
 	}
 
 	if (showSuccess) {
@@ -176,7 +180,7 @@ export default function RequestEventClient({ userId, translations: t, locale }: 
 			<div className="relative flex items-center justify-center p-6 md:p-10">
 				<form
 					className="border-border/50 bg-card/80 relative w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
-					onSubmit={handleSubmit}
+					onSubmit={e => void handleSubmit(e)}
 				>
 					{/* Back Link */}
 					<div className="mb-8">
