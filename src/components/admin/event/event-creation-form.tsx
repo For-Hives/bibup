@@ -30,7 +30,7 @@ export interface EventCreationFormProps {
 	onSuccess?: (event: Event) => void
 }
 
-export default function EventCreationForm({ onSuccess, onCancel, locale }: EventCreationFormProps) {
+export default function EventCreationForm({ onSuccess, onCancel, locale }: Readonly<EventCreationFormProps>) {
 	const translations = getTranslations(locale, Translations)
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -144,7 +144,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 						locale={locale}
 						register={register}
 						setValue={setValue}
-						translations={translations}
 					/>
 
 					<Separator className="my-12" />
