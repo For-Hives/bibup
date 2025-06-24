@@ -1,9 +1,14 @@
+import Translations from '@/app/[locale]/event/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+
 import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
 import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
-export default function BibPickupSection({ translations, register, locale = 'en', errors }: EventSectionProps) {
+export default function BibPickupSection({ register, locale, errors }: Readonly<EventSectionProps>) {
+	const translations = getTranslations(locale, Translations)
+
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div>
