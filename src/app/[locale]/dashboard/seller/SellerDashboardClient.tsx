@@ -13,7 +13,35 @@ import { Button } from '@/components/ui/button'
 interface SellerDashboardClientProps {
 	clerkUser: SerializedClerkUser
 	sellerBibs: (Bib & { expand?: { eventId: Event } })[]
-	translations: Record<string, string>
+	translations: SellerTranslations
+}
+
+// Simplified type for translations to avoid complex type conflicts
+interface SellerTranslations {
+	[key: string]: any
+	availableBibs?: string
+	dateOfEvent?: string
+	eventLabel?: string
+	// Global translations object
+	GLOBAL?: {
+		appName?: string
+		errors?: {
+			unexpected?: string
+		}
+		logoAltText?: string
+		welcomeMessage?: string
+	}
+	listNewBib?: string
+	myListings?: string
+	noListings?: string
+	price?: string
+	registrationNumber?: string
+	soldBibs?: string
+	status?: string
+	title?: string
+	totalListings?: string
+	// Page-specific translations
+	welcome?: string
 }
 
 interface SerializedClerkUser {
@@ -142,7 +170,7 @@ export default function SellerDashboardClient({
 										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
 											<Plus className="h-6 w-6" />
 										</div>
-										<p className="text-sm font-medium">{t?.sellBib || 'Sell New Bib'}</p>
+										<p className="text-sm font-medium">{t?.sellBib ?? 'Sell New Bib'}</p>
 									</CardContent>
 								</Card>
 							</Link>
@@ -187,10 +215,10 @@ export default function SellerDashboardClient({
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<Tag className="h-5 w-5" />
-								{t?.yourListedBibs || 'Your Listed Bibs'}
+								{t?.yourListedBibs ?? 'Your Listed Bibs'}
 							</CardTitle>
 							<CardDescription>
-								{t?.manageBibListings || 'Manage your race bib listings and track performance'}
+								{t?.manageBibListings ?? 'Manage your race bib listings and track performance'}
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -199,7 +227,7 @@ export default function SellerDashboardClient({
 									{sellerBibs.map(bib => {
 										if (!bib?.id) return null
 
-										const statusDisplay = getStatusDisplay(bib.status || 'unknown')
+										const statusDisplay = getStatusDisplay(bib.status ?? 'unknown')
 										return (
 											<div className="rounded-lg border p-4" key={bib.id}>
 												<div className="mb-3 flex items-start justify-between">
@@ -209,7 +237,7 @@ export default function SellerDashboardClient({
 															{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId ?? 'Unknown'}`}
 														</h4>
 														<p className="text-muted-foreground text-sm">
-															{t?.registrationNumber || 'Registration Number'}: {bib.registrationNumber || 'N/A'}
+															{t?.registrationNumber ?? 'Registration Number'}: {bib.registrationNumber ?? 'N/A'}
 														</p>
 													</div>
 													<span className={`rounded-full px-3 py-1 text-xs font-medium ${statusDisplay.color}`}>
@@ -219,16 +247,16 @@ export default function SellerDashboardClient({
 
 												<div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
 													<div>
-														<p className="text-muted-foreground">{t?.price || 'Price'}</p>
-														<p className="font-medium">€{bib.price?.toFixed(2) || '0.00'}</p>
+														<p className="text-muted-foreground">{t?.price ?? 'Price'}</p>
+														<p className="font-medium">€{bib.price?.toFixed(2) ?? '0.00'}</p>
 													</div>
 													<div>
-														<p className="text-muted-foreground">{t?.size || 'Size'}</p>
-														<p className="font-medium">{bib.optionValues?.size || 'N/A'}</p>
+														<p className="text-muted-foreground">{t?.size ?? 'Size'}</p>
+														<p className="font-medium">{bib.optionValues?.size ?? 'N/A'}</p>
 													</div>
 													<div>
-														<p className="text-muted-foreground">{t?.gender || 'Gender'}</p>
-														<p className="font-medium">{bib.optionValues?.gender || 'N/A'}</p>
+														<p className="text-muted-foreground">{t?.gender ?? 'Gender'}</p>
+														<p className="font-medium">{bib.optionValues?.gender ?? 'N/A'}</p>
 													</div>
 													<div>
 														<p className="text-muted-foreground">Event Date</p>
@@ -246,7 +274,7 @@ export default function SellerDashboardClient({
 														<Link href={`/dashboard/seller/edit-bib/${bib.id}`}>
 															<Button size="sm" variant="outline">
 																<Edit3 className="mr-2 h-4 w-4" />
-																{t?.editBib || 'Edit Bib'}
+																{t?.editBib ?? 'Edit Bib'}
 															</Button>
 														</Link>
 													</div>
@@ -258,12 +286,12 @@ export default function SellerDashboardClient({
 							) : (
 								<div className="py-12 text-center">
 									<Tag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-									<h3 className="mb-2 text-lg font-semibold">{t?.noBibsListed || 'No bibs listed yet'}</h3>
+									<h3 className="mb-2 text-lg font-semibold">{t?.noBibsListed ?? 'No bibs listed yet'}</h3>
 									<p className="text-muted-foreground mb-6">Start selling your race bibs to connect with runners</p>
 									<Link href="/dashboard/seller/sell-bib">
 										<Button size="lg">
 											<Plus className="mr-2 h-4 w-4" />
-											{t?.sellBib || 'List Your First Bib'}
+											{t?.sellBib ?? 'List Your First Bib'}
 										</Button>
 									</Link>
 								</div>

@@ -23,7 +23,7 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			participants: eventData.participants ?? 0,
 			parcoursUrl: eventData.parcoursUrl,
 			organizer: eventData.organizer,
-			options: eventData.options?.length > 0 ? JSON.stringify(eventData.options) : null,
+			options: eventData.options && eventData.options.length > 0 ? JSON.stringify(eventData.options) : null,
 			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
 			location: eventData.location,

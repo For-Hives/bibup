@@ -16,8 +16,39 @@ interface BuyerDashboardClientProps {
 	purchasedBibs: (Bib & { expand?: { eventId: Event } })[]
 	purchaseSuccess: boolean
 	successEventName: string
-	translations: Record<string, string | { [key: string]: string }>
+	translations: BuyerTranslations
 	userWaitlists: (Waitlist & { expand?: { eventId: Event } })[]
+}
+
+// Simplified type for translations to avoid complex type conflicts
+interface BuyerTranslations {
+	[key: string]: any
+	bibForLabel?: string
+	browseEventsWaitlist?: string
+	dateAddedToWaitlist?: string
+	dateOfEvent?: string
+	// Global translations object
+	GLOBAL?: {
+		appName?: string
+		errors?: {
+			unexpected?: string
+		}
+		logoAltText?: string
+		welcomeMessage?: string
+	}
+	keepRecords?: string
+	myPurchases?: string
+	noPurchases?: string
+	noWaitlistEntries?: string
+	pricePaid?: string
+	// Page-specific translations
+	purchaseSuccess?: string
+	purchaseSuccessDetails?: string
+	registrationNumber?: string
+	status?: string
+	waitingForNotification?: string
+	waitlistEntries?: string
+	waitlistJoinText?: string
 }
 
 interface SerializedClerkUser {
@@ -74,11 +105,11 @@ export default function BuyerDashboardClient({
 								<CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
 								<div>
 									<p className="font-medium text-green-800 dark:text-green-200">
-										{(t.purchaseSuccess as string) ?? 'Congratulations! You have successfully purchased the bib for'}{' '}
+										{t.purchaseSuccess ?? 'Congratulations! You have successfully purchased the bib for'}{' '}
 										<strong>{successEventName}</strong>
 									</p>
 									<p className="text-sm text-green-700 dark:text-green-300">
-										{(t.purchaseSuccessDetails as string) ?? 'Your new bib details are listed below.'}
+										{t.purchaseSuccessDetails ?? 'Your new bib details are listed below.'}
 									</p>
 								</div>
 							</div>
@@ -122,7 +153,7 @@ export default function BuyerDashboardClient({
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<ShoppingCart className="h-5 w-5" />
-									{(t.myPurchases as string) ?? 'My Purchases'}
+									{t.myPurchases ?? 'My Purchases'}
 								</CardTitle>
 								<CardDescription>Track your race bib purchases and transfers</CardDescription>
 							</CardHeader>
@@ -135,8 +166,7 @@ export default function BuyerDashboardClient({
 												<div className="rounded-lg border p-4" key={bib.id}>
 													<div className="mb-2 flex items-start justify-between">
 														<h4 className="font-semibold">
-															{(t.bibForLabel as string) ?? 'Bib for'}{' '}
-															{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
+															{t.bibForLabel ?? 'Bib for'} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 														</h4>
 														<span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
 															Purchased
@@ -145,20 +175,20 @@ export default function BuyerDashboardClient({
 													<div className="text-muted-foreground space-y-1 text-sm">
 														<p className="flex items-center gap-2">
 															<Calendar className="h-4 w-4" />
-															{(t.dateOfEvent as string) ?? 'Date of Event'}:{' '}
+															{t.dateOfEvent ?? 'Date of Event'}:{' '}
 															{bib.expand?.eventId
 																? new Date(bib.expand.eventId.eventDate).toLocaleDateString()
 																: 'N/A'}
 														</p>
 														<p>
-															{(t.registrationNumber as string) ?? 'Registration Number'}: {bib.registrationNumber}
+															{t.registrationNumber ?? 'Registration Number'}: {bib.registrationNumber}
 														</p>
 														<p>
-															{(t.pricePaid as string) ?? 'Price Paid'}: €{bib.price?.toFixed(2) ?? 'N/A'}
+															{t.pricePaid ?? 'Price Paid'}: €{bib.price?.toFixed(2) ?? 'N/A'}
 														</p>
 													</div>
 													<p className="text-muted-foreground mt-2 text-xs">
-														{(t.keepRecords as string) ?? '(Keep this for your records)'}
+														{t.keepRecords ?? '(Keep this for your records)'}
 													</p>
 												</div>
 											)
@@ -168,7 +198,7 @@ export default function BuyerDashboardClient({
 									<div className="py-8 text-center">
 										<Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
 										<p className="text-muted-foreground mb-4">
-											{(t.noPurchases as string) ?? "You haven't made any purchases yet"}
+											{t.noPurchases ?? "You haven't made any purchases yet"}
 										</p>
 										<Link href="/events">
 											<Button>Browse Events</Button>
@@ -183,15 +213,15 @@ export default function BuyerDashboardClient({
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<Clock className="h-5 w-5" />
-									{(t.waitlistEntries as string) ?? 'Your Waitlist Entries'}
+									{t.waitlistEntries ?? 'Your Waitlist Entries'}
 								</CardTitle>
 								<CardDescription>
 									Events you're waiting for bibs to become available
 									<br />
 									<Link className="text-primary hover:underline" href="/events">
-										{(t.browseEventsWaitlist as string) ?? 'Browse events'}
+										{t.browseEventsWaitlist ?? 'Browse events'}
 									</Link>{' '}
-									{(t.waitlistJoinText as string) ?? 'to join a waitlist if no bibs are available.'}
+									{t.waitlistJoinText ?? 'to join a waitlist if no bibs are available.'}
 								</CardDescription>
 							</CardHeader>
 							<CardContent>
@@ -212,19 +242,18 @@ export default function BuyerDashboardClient({
 													<div className="text-muted-foreground space-y-1 text-sm">
 														<p className="flex items-center gap-2">
 															<Calendar className="h-4 w-4" />
-															{(t.dateOfEvent as string) ?? 'Date of Event'}:{' '}
+															{t.dateOfEvent ?? 'Date of Event'}:{' '}
 															{waitlist.expand?.eventId
 																? new Date(waitlist.expand.eventId.eventDate).toLocaleDateString()
 																: 'N/A'}
 														</p>
 														<p>
-															{(t.dateAddedToWaitlist as string) ?? 'Date Added to Waitlist'}:{' '}
+															{t.dateAddedToWaitlist ?? 'Date Added to Waitlist'}:{' '}
 															{new Date(waitlist.addedAt).toLocaleDateString()}
 														</p>
 														<p className="flex items-center gap-2">
 															<Users className="h-4 w-4" />
-															{(t.status as string) ?? 'Status'}:{' '}
-															{(t.waitingForNotification as string) ?? 'Waiting for notification'}
+															{t.status ?? 'Status'}: {t.waitingForNotification ?? 'Waiting for notification'}
 														</p>
 													</div>
 												</div>
@@ -235,7 +264,7 @@ export default function BuyerDashboardClient({
 									<div className="py-8 text-center">
 										<Clock className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
 										<p className="text-muted-foreground mb-4">
-											{(t.noWaitlistEntries as string) ?? 'You are not currently on any waitlists.'}
+											{t.noWaitlistEntries ?? 'You are not currently on any waitlists.'}
 										</p>
 										<Link href="/events">
 											<Button variant="outline">Browse Events</Button>
