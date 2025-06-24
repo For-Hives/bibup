@@ -13,7 +13,6 @@ import { EventFormData, Translations } from './types'
 interface FakerButtonProps {
 	setEventOptions?: (options: EventOption[]) => void
 	setValue: UseFormSetValue<EventFormData>
-	translations: Translations
 }
 
 // Simple faker functions without external dependencies
@@ -105,7 +104,7 @@ const isDevelopment = () => {
 	return isDev && isLocalhost
 }
 
-export default function FakerButton({ setValue, setEventOptions }: FakerButtonProps) {
+export default function FakerButton({ setValue, setEventOptions }: Readonly<FakerButtonProps>) {
 	const [showFaker, setShowFaker] = useState(false)
 	const [organizers, setOrganizers] = useState<Organizer[]>([])
 

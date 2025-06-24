@@ -63,10 +63,9 @@ export type EventFormData = v.InferOutput<typeof EventCreationSchema>
 export interface EventSectionProps {
 	errors: FieldErrors<EventFormData>
 	formData: EventFormData
-	locale?: string
+	locale: string
 	register: UseFormRegister<EventFormData>
 	setValue: UseFormSetValue<EventFormData>
-	translations: Translations
 }
 
 export type Translations = ReturnType<typeof getTranslations<(typeof adminTranslations)['en'], 'en'>>

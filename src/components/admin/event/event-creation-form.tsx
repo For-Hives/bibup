@@ -110,7 +110,7 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 					onSubmit={handleSubmit(onSubmit)}
 				>
 					{/* Faker Button - Development only */}
-					<FakerButton setEventOptions={setEventOptions} setValue={setValue} translations={translations} />
+					<FakerButton setEventOptions={setEventOptions} setValue={setValue} />
 
 					<div className="mb-12 text-left">
 						<h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
@@ -133,7 +133,6 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 						locale={locale}
 						register={register}
 						setValue={setValue}
-						translations={translations}
 					/>
 
 					<Separator className="my-12" />
