@@ -36,13 +36,6 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			bibPickupLocation: eventData.bibPickupLocation,
 		}
 
-		console.info('Creating event with PocketBase:', {
-			url: pb.baseUrl,
-			hasAuth: !!pb.authStore.token,
-			eventName: dataToCreate.name,
-		})
-
-		console.log('dataToCreate', dataToCreate)
 		const record = await pb.collection('events').create<Event>(dataToCreate)
 
 		console.info('Event created successfully:', record.id)
