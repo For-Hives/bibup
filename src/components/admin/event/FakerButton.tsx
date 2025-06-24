@@ -8,7 +8,7 @@ import { EventOption } from '@/models/eventOption.model'
 import { Organizer } from '@/models/organizer.model'
 import { Button } from '@/components/ui/button'
 
-import { EventFormData, Translations } from './types'
+import { EventFormData } from './types'
 
 interface FakerButtonProps {
 	setEventOptions?: (options: EventOption[]) => void
