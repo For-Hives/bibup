@@ -254,7 +254,6 @@ export async function updateOrganizer(
 			}
 		} else {
 			// For updates without files, use regular JSON
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { logoFile, ...dataWithoutFile } = organizerData
 			const record = await pb.collection('organizer').update(id, dataWithoutFile)
 
