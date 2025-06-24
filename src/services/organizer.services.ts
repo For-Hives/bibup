@@ -254,8 +254,9 @@ export async function updateOrganizer(
 			}
 		} else {
 			// For updates without files, use regular JSON
-			const { logoFile, ...dataWithoutFile } = organizerData
-			const record = await pb.collection('organizer').update(id, dataWithoutFile)
+			const dataForUpdate = { ...organizerData }
+			delete dataForUpdate.logoFile
+			const record = await pb.collection('organizer').update(id, dataForUpdate)
 
 			return {
 				website: (record.website as string) ?? null,

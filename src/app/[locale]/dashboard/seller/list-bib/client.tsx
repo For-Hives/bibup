@@ -45,14 +45,16 @@ export default function ListNewBibClientPage({
 				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Validation error' }))
 			} else {
 				setFieldErrors(prev => {
-					const { [name]: _, ...rest } = prev
-					return rest
+					const newErrors = { ...prev }
+					delete newErrors[name]
+					return newErrors
 				})
 			}
 		} else {
 			setFieldErrors(prev => {
-				const { [name]: _, ...rest } = prev
-				return rest
+				const newErrors = { ...prev }
+				delete newErrors[name]
+				return newErrors
 			})
 		}
 	}
