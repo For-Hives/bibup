@@ -147,6 +147,7 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 			<div className="relative flex items-center justify-center p-6 md:p-10">
 				<form
 					className="border-border/50 bg-card/80 relative w-full max-w-7xl rounded-3xl border p-8 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:p-12"
+					// eslint-disable-next-line @typescript-eslint/no-misused-promises
 					onSubmit={handleSubmit(onSubmit)}
 				>
 					{/* Faker Button - Development only */}
