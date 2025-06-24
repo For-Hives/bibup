@@ -27,12 +27,13 @@ export default async function BuyerDashboardPage({
 }) {
 	const { locale } = await params
 	const { purchase_success } = await searchParams
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const t = getTranslations(locale, buyerTranslations) as any
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
 
-	if (!userId || !clerkUser) {
+	if (userId === null || userId === undefined || clerkUser === null) {
 		redirect('/sign-in')
 	}
 
@@ -54,6 +55,7 @@ export default async function BuyerDashboardPage({
 
 	// Handle purchase success
 	const purchaseSuccess = purchase_success === 'true'
+
 	const successEventName =
 		purchaseSuccess && purchasedBibs.length > 0 ? (purchasedBibs[0]?.expand?.eventId?.name ?? 'Event') : ''
 

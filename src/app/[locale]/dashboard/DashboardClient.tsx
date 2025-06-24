@@ -67,7 +67,7 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 						<p className="text-muted-foreground text-sm">Welcome back</p>
 						<p className="text-foreground font-medium">
 							{userName}
-							{clerkUser.emailAddresses[0] && (
+							{clerkUser.emailAddresses[0] !== undefined && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>

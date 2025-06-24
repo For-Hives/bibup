@@ -109,7 +109,7 @@ export default function RequestEventClient({ translations: t, locale }: RequestE
 	const handleInputChange = (field: keyof FormData, value: string) => {
 		setFormData(prev => ({ ...prev, [field]: value }))
 		// Clear error for this field when user starts typing
-		if (errors[field as keyof FormErrors]) {
+		if (errors[field as keyof FormErrors] !== null && errors[field as keyof FormErrors] !== undefined) {
 			setErrors(prev => ({ ...prev, [field]: undefined }))
 		}
 	}
@@ -221,7 +221,9 @@ export default function RequestEventClient({ translations: t, locale }: RequestE
 										type="text"
 										value={formData.name}
 									/>
-									{errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
+									{errors.name !== null && errors.name !== undefined && errors.name !== '' && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
+									)}
 								</div>
 
 								{/* Location */}
@@ -236,7 +238,9 @@ export default function RequestEventClient({ translations: t, locale }: RequestE
 										type="text"
 										value={formData.location}
 									/>
-									{errors.location && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location}</p>}
+									{errors.location !== null && errors.location !== undefined && errors.location !== '' && (
+										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location}</p>
+									)}
 								</div>
 
 								{/* Event Date */}
@@ -252,7 +256,7 @@ export default function RequestEventClient({ translations: t, locale }: RequestE
 										showHelper={false}
 										value={formData.eventDate}
 									/>
-									{errors.eventDate && (
+									{errors.eventDate !== null && errors.eventDate !== undefined && errors.eventDate !== '' && (
 										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.eventDate}</p>
 									)}
 								</div>

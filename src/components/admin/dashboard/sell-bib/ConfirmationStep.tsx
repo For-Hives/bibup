@@ -56,7 +56,12 @@ export default function ConfirmationStep({
 	createdBib,
 }: ConfirmationStepProps) {
 	const generatePrivateLink = () => {
-		if (!createdBib?.privateListingToken) return ''
+		if (
+			createdBib?.privateListingToken === null ||
+			createdBib?.privateListingToken === undefined ||
+			createdBib?.privateListingToken === ''
+		)
+			return ''
 		const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
 		// Get current locale from URL or default to 'fr'
 		const currentLocale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] || 'fr' : 'fr'
@@ -127,15 +132,17 @@ export default function ConfirmationStep({
 								<Label className="text-muted-foreground text-sm font-medium">{t.bibNumber}</Label>
 								<p className="text-foreground font-semibold">{formData.registrationNumber}</p>
 							</div>
-							{formData.originalPrice && (
-								<div className="space-y-2">
-									<Label className="text-muted-foreground text-sm font-medium">{t.originalPrice}</Label>
-									<p className="text-foreground font-semibold">
-										{t.currency}
-										{parseFloat(formData.originalPrice).toFixed(2)}
-									</p>
-								</div>
-							)}
+							{formData.originalPrice !== null &&
+								formData.originalPrice !== undefined &&
+								formData.originalPrice !== '' && (
+									<div className="space-y-2">
+										<Label className="text-muted-foreground text-sm font-medium">{t.originalPrice}</Label>
+										<p className="text-foreground font-semibold">
+											{t.currency}
+											{parseFloat(formData.originalPrice).toFixed(2)}
+										</p>
+									</div>
+								)}
 							<div className="space-y-2">
 								<Label className="text-muted-foreground text-sm font-medium">{t.sellingPrice}</Label>
 								<p className="text-primary text-lg font-semibold">
@@ -154,7 +161,7 @@ export default function ConfirmationStep({
 				</Card>
 
 				{/* Private Link - Only after creation */}
-				{createdBib && formData.listingType === 'private' && (
+				{createdBib !== null && createdBib !== undefined && formData.listingType === 'private' && (
 					<Card className="border-border/50 bg-card/80 mb-8 backdrop-blur-sm">
 						<CardContent className="space-y-4 p-6">
 							<Label className="text-foreground text-base font-medium">{t.privateLink}</Label>
@@ -180,7 +187,7 @@ export default function ConfirmationStep({
 						<Checkbox
 							checked={formData.acceptedTerms}
 							id="terms"
-							onCheckedChange={checked => onChange({ acceptedTerms: !!checked })}
+							onCheckedChange={checked => onChange({ acceptedTerms: checked === true })}
 						/>
 						<Label className="text-foreground text-sm leading-relaxed" htmlFor="terms">
 							{t.terms}
@@ -200,7 +207,7 @@ export default function ConfirmationStep({
 			<div>
 				<h3 className="text-foreground mb-6 text-xl font-semibold">{t.marketplacePreview}</h3>
 				<div className="pointer-events-none flex justify-center">
-					{bibSalePreview && (
+					{bibSalePreview !== null && bibSalePreview !== undefined && (
 						<CardMarket
 							bibSale={bibSalePreview}
 							translations={{

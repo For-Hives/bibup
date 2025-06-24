@@ -30,7 +30,7 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 	let bib: (Bib & { expand?: { eventId: Event } }) | null = null
 
 	try {
-		if (privateToken) {
+		if (privateToken !== null && privateToken !== undefined && privateToken !== '') {
 			// Access via private token
 			bib = await fetchPrivateBibByToken(bibId, privateToken)
 		} else {
@@ -95,7 +95,9 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 								<p>
 									<strong>Location:</strong> {event.location}
 								</p>
-								{event.description && <p className="mt-4">{event.description}</p>}
+								{event.description !== null && event.description !== undefined && event.description !== '' && (
+									<p className="mt-4">{event.description}</p>
+								)}
 							</div>
 						)}
 					</div>
@@ -109,22 +111,27 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 								<span>{bib.registrationNumber}</span>
 							</div>
 
-							{bib.optionValues.size && (
-								<div className="flex justify-between">
-									<span className="font-medium">Size:</span>
-									<span>{bib.optionValues.size}</span>
-								</div>
-							)}
+							{bib.optionValues.size !== null &&
+								bib.optionValues.size !== undefined &&
+								bib.optionValues.size !== '' && (
+									<div className="flex justify-between">
+										<span className="font-medium">Size:</span>
+										<span>{bib.optionValues.size}</span>
+									</div>
+								)}
 
-							{bib.optionValues.gender && (
-								<div className="flex justify-between">
-									<span className="font-medium">Gender:</span>
-									<span>{bib.optionValues.gender}</span>
-								</div>
-							)}
+							{bib.optionValues.gender !== null &&
+								bib.optionValues.gender !== undefined &&
+								bib.optionValues.gender !== '' && (
+									<div className="flex justify-between">
+										<span className="font-medium">Gender:</span>
+										<span>{bib.optionValues.gender}</span>
+									</div>
+								)}
 
 							{Object.entries(bib.optionValues).map(([key, value]) => {
-								if (key === 'size' || key === 'gender' || !value) return null
+								if (key === 'size' || key === 'gender' || value === null || value === undefined || value === '')
+									return null
 								return (
 									<div className="flex justify-between" key={key}>
 										<span className="font-medium capitalize">{key}:</span>
@@ -141,7 +148,7 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 					<div className="bento-box">
 						<div className="mb-6">
 							<div className="text-3xl font-bold text-[var(--accent-sporty)]">${bib.price.toFixed(2)}</div>
-							{bib.originalPrice && bib.originalPrice !== bib.price && (
+							{bib.originalPrice !== null && bib.originalPrice !== undefined && bib.originalPrice !== bib.price && (
 								<div className="text-lg text-gray-500 line-through">Original: ${bib.originalPrice.toFixed(2)}</div>
 							)}
 						</div>
@@ -179,10 +186,10 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 						{/* Purchase button */}
 						{canPurchase ? (
 							<div className="space-y-4">
-								{clerkId ? (
+								{clerkId !== null && clerkId !== undefined && clerkId !== '' ? (
 									<Link
 										className="btn btn-primary w-full text-center"
-										href={`/${locale}/purchase/${bib.id}${privateToken ? `?tkn=${privateToken}` : ''}`}
+										href={`/${locale}/purchase/${bib.id}${privateToken !== null && privateToken !== undefined && privateToken !== '' ? `?tkn=${privateToken}` : ''}`}
 									>
 										Purchase This Bib
 									</Link>
@@ -191,7 +198,7 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 										<p className="text-sm text-gray-600">Sign in to purchase this bib</p>
 										<Link
 											className="btn btn-primary w-full text-center"
-											href={`/${locale}/sign-in?redirect_url=/${locale}/marketplace/${bib.id}${privateToken ? `?tkn=${privateToken}` : ''}`}
+											href={`/${locale}/sign-in?redirect_url=/${locale}/marketplace/${bib.id}${privateToken !== null && privateToken !== undefined && privateToken !== '' ? `?tkn=${privateToken}` : ''}`}
 										>
 											Sign In to Purchase
 										</Link>
@@ -209,7 +216,11 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 											</Link>
 										)}
 									</>
-								) : bib.listed === 'private' && (!privateToken || bib.privateListingToken !== privateToken) ? (
+								) : bib.listed === 'private' &&
+								  (privateToken === null ||
+										privateToken === undefined ||
+										privateToken === '' ||
+										bib.privateListingToken !== privateToken) ? (
 									<>
 										<p className="mb-4 font-medium text-red-600">Access Denied</p>
 										<p className="mb-4 text-gray-600">
@@ -231,7 +242,7 @@ export default async function BibDetailPage({ searchParams, params }: BibDetailP
 					</div>
 
 					{/* Security notice for private listings */}
-					{bib.listed === 'private' && canPurchase && (
+					{bib.listed === 'private' && canPurchase === true && (
 						<div className="bento-box border-l-4 border-yellow-500 bg-yellow-50 py-4 pl-4 dark:bg-yellow-900/20">
 							<h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Private Listing</h3>
 							<p className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
@@ -254,7 +265,7 @@ export async function generateMetadata({ searchParams, params }: BibDetailPagePr
 	try {
 		let bib: (Bib & { expand?: { eventId: Event } }) | null = null
 
-		if (privateToken) {
+		if (privateToken !== null && privateToken !== undefined && privateToken !== '') {
 			bib = await fetchPrivateBibByToken(id, privateToken)
 		} else {
 			bib = await fetchBibById(id)

@@ -24,7 +24,7 @@ export default async function SellerDashboardPage({ params }: { params: Promise<
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
 
-	if (!userId || !clerkUser) {
+	if (userId === null || userId === undefined || clerkUser === null) {
 		redirect('/sign-in')
 	}
 
@@ -32,6 +32,7 @@ export default async function SellerDashboardPage({ params }: { params: Promise<
 	const sellerBibs = await fetchBibsBySeller(userId)
 
 	// Extract only serializable properties from clerkUser
+
 	const serializedClerkUser = {
 		username: clerkUser.username,
 		lastName: clerkUser.lastName,

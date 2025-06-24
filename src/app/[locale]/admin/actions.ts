@@ -21,7 +21,7 @@ export async function createEventAction(eventData: Omit<Event, 'id'>): Promise<{
 		// Verify admin access (checks Clerk auth, platform registration, and admin role)
 		const adminUser = await checkAdminAccess()
 
-		if (!adminUser) {
+		if (adminUser === null) {
 			return {
 				success: false,
 				error: 'Unauthorized: Admin access required',
@@ -36,7 +36,7 @@ export async function createEventAction(eventData: Omit<Event, 'id'>): Promise<{
 			}
 		}
 
-		if (!eventData.eventDate || isNaN(eventData.eventDate.getTime())) {
+		if (eventData.eventDate === null || eventData.eventDate === undefined || isNaN(eventData.eventDate.getTime())) {
 			return {
 				success: false,
 				error: 'Valid event date is required',
@@ -46,7 +46,7 @@ export async function createEventAction(eventData: Omit<Event, 'id'>): Promise<{
 		// Create the event with PocketBase service
 		const result = await createEvent(eventData)
 
-		if (result) {
+		if (result !== null) {
 			console.info(`Admin ${adminUser.email} created event: ${result.name}`)
 			return {
 				success: true,
@@ -79,7 +79,7 @@ export async function createOrganizerAction(
 		// Verify admin access (checks Clerk auth, platform registration, and admin role)
 		const adminUser = await checkAdminAccess()
 
-		if (!adminUser) {
+		if (adminUser === null) {
 			return {
 				success: false,
 				error: 'Unauthorized: Admin access required',
@@ -103,7 +103,7 @@ export async function createOrganizerAction(
 			logoFile: logoFile, // PocketBase service will handle the file upload
 		})
 
-		if (result) {
+		if (result !== null) {
 			console.info(`Admin ${adminUser.email} created organizer: ${result.name}`)
 			return {
 				success: true,

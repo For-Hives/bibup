@@ -18,7 +18,7 @@ export async function createOrganizer(
 		formData.append('isPartnered', String(organizerData.isPartnered))
 
 		// Add optional fields only if they exist
-		if (organizerData.website?.trim()) {
+		if (organizerData.website !== null && organizerData.website !== undefined && organizerData.website.trim() !== '') {
 			formData.append('website', organizerData.website.trim())
 		}
 
@@ -31,14 +31,14 @@ export async function createOrganizer(
 		const record = await pb.collection('organizer').create(formData)
 
 		return {
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
+			website: (record.website as string) ?? null,
+			updated: new Date(record.updated as string),
+			name: record.name as string,
+			logo: (record.logo as string) ?? null,
+			isPartnered: record.isPartnered as boolean,
 			id: record.id,
-			email: record.email,
-			created: new Date(record.created),
+			email: record.email as string,
+			created: new Date(record.created as string),
 		}
 	} catch (error) {
 		console.error('Error creating organizer:', error)
@@ -87,14 +87,14 @@ export async function fetchAllOrganizers(): Promise<Organizer[]> {
 		})
 
 		return records.map(record => ({
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
+			website: (record.website as string) ?? null,
+			updated: new Date(record.updated as string),
+			name: record.name as string,
+			logo: (record.logo as string) ?? null,
+			isPartnered: record.isPartnered as boolean,
 			id: record.id,
-			email: record.email,
-			created: new Date(record.created),
+			email: record.email as string,
+			created: new Date(record.created as string),
 		}))
 	} catch (error) {
 		console.error('Error fetching organizers:', error)
@@ -113,15 +113,20 @@ export async function fetchAllOrganizersWithEventsCount(): Promise<(Organizer & 
 		})
 
 		return records.map(record => ({
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
+			website: (record.website as string) ?? null,
+			updated: new Date(record.updated as string),
+			name: record.name as string,
+			logo: (record.logo as string) ?? null,
+			isPartnered: record.isPartnered as boolean,
 			id: record.id,
-			eventsCount: record.expand?.events_via_organizer ? record.expand.events_via_organizer.length : 0,
-			email: record.email,
-			created: new Date(record.created),
+			eventsCount:
+				record.expand?.events_via_organizer !== null &&
+				record.expand?.events_via_organizer !== undefined &&
+				Array.isArray(record.expand.events_via_organizer)
+					? record.expand.events_via_organizer.length
+					: 0,
+			email: record.email as string,
+			created: new Date(record.created as string),
 		}))
 	} catch (error) {
 		console.error('Error fetching organizers with events count:', error)
@@ -137,14 +142,14 @@ export async function fetchOrganizerById(id: string): Promise<null | Organizer> 
 		const record = await pb.collection('organizer').getOne(id)
 
 		return {
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
+			website: (record.website as string) ?? null,
+			updated: new Date(record.updated as string),
+			name: record.name as string,
+			logo: (record.logo as string) ?? null,
+			isPartnered: record.isPartnered as boolean,
 			id: record.id,
-			email: record.email,
-			created: new Date(record.created),
+			email: record.email as string,
+			created: new Date(record.created as string),
 		}
 	} catch (error) {
 		console.error('Error fetching organizer by ID:', error)
@@ -163,14 +168,14 @@ export async function fetchPartneredOrganizers(): Promise<Organizer[]> {
 		})
 
 		return records.map(record => ({
-			website: record.website,
-			updated: new Date(record.updated),
-			name: record.name,
-			logo: record.logo,
-			isPartnered: record.isPartnered,
+			website: (record.website as string) ?? null,
+			updated: new Date(record.updated as string),
+			name: record.name as string,
+			logo: (record.logo as string) ?? null,
+			isPartnered: record.isPartnered as boolean,
 			id: record.id,
-			email: record.email,
-			created: new Date(record.created),
+			email: record.email as string,
+			created: new Date(record.created as string),
 		}))
 	} catch (error) {
 		console.error('Error fetching partnered organizers:', error)
@@ -185,7 +190,9 @@ export async function fetchPartneredOrganizers(): Promise<Organizer[]> {
  * @returns The full URL to the logo file
  */
 export function getOrganizerLogoUrl(organizer: Organizer, thumbSize?: string): null | string {
-	if (!organizer.logo) return null
+	if (organizer.logo === null || organizer.logo === undefined || organizer.logo === '') {
+		return null
+	}
 
 	// Generate file URL using PocketBase pattern:
 	// http://127.0.0.1:8090/api/files/COLLECTION_ID_OR_NAME/RECORD_ID/FILENAME
@@ -193,7 +200,7 @@ export function getOrganizerLogoUrl(organizer: Organizer, thumbSize?: string): n
 	let url = `${baseUrl}/api/files/organizer/${organizer.id}/${organizer.logo}`
 
 	// Add thumbnail parameter if specified
-	if (thumbSize) {
+	if (thumbSize !== null && thumbSize !== undefined && thumbSize !== '') {
 		url += `?thumb=${thumbSize}`
 	}
 
@@ -213,10 +220,22 @@ export async function updateOrganizer(
 			const formData = new FormData()
 
 			// Add text fields if provided
-			if (organizerData.name) formData.append('name', organizerData.name)
-			if (organizerData.email) formData.append('email', organizerData.email)
-			if (organizerData.isPartnered !== undefined) formData.append('isPartnered', String(organizerData.isPartnered))
-			if (organizerData.website?.trim()) formData.append('website', organizerData.website.trim())
+			if (organizerData.name !== null && organizerData.name !== undefined) {
+				formData.append('name', organizerData.name)
+			}
+			if (organizerData.email !== null && organizerData.email !== undefined) {
+				formData.append('email', organizerData.email)
+			}
+			if (organizerData.isPartnered !== undefined) {
+				formData.append('isPartnered', String(organizerData.isPartnered))
+			}
+			if (
+				organizerData.website !== null &&
+				organizerData.website !== undefined &&
+				organizerData.website.trim() !== ''
+			) {
+				formData.append('website', organizerData.website.trim())
+			}
 
 			// Add logo file
 			formData.append('logo', organizerData.logoFile)
@@ -224,14 +243,14 @@ export async function updateOrganizer(
 			const record = await pb.collection('organizer').update(id, formData)
 
 			return {
-				website: record.website,
-				updated: new Date(record.updated),
-				name: record.name,
-				logo: record.logo,
-				isPartnered: record.isPartnered,
+				website: (record.website as string) ?? null,
+				updated: new Date(record.updated as string),
+				name: record.name as string,
+				logo: (record.logo as string) ?? null,
+				isPartnered: record.isPartnered as boolean,
 				id: record.id,
-				email: record.email,
-				created: new Date(record.created),
+				email: record.email as string,
+				created: new Date(record.created as string),
 			}
 		} else {
 			// For updates without files, use regular JSON
@@ -240,14 +259,14 @@ export async function updateOrganizer(
 			const record = await pb.collection('organizer').update(id, dataWithoutFile)
 
 			return {
-				website: record.website,
-				updated: new Date(record.updated),
-				name: record.name,
-				logo: record.logo,
-				isPartnered: record.isPartnered,
+				website: (record.website as string) ?? null,
+				updated: new Date(record.updated as string),
+				name: record.name as string,
+				logo: (record.logo as string) ?? null,
+				isPartnered: record.isPartnered as boolean,
 				id: record.id,
-				email: record.email,
-				created: new Date(record.created),
+				email: record.email as string,
+				created: new Date(record.created as string),
 			}
 		}
 	} catch (error) {

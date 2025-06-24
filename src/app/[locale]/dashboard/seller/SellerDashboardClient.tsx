@@ -93,7 +93,7 @@ export default function SellerDashboardClient({
 						<p className="text-foreground flex items-center gap-2 font-medium">
 							<Tag className="h-4 w-4" />
 							{userName}
-							{clerkUser?.emailAddresses?.[0] && (
+							{clerkUser?.emailAddresses?.[0] !== null && clerkUser?.emailAddresses?.[0] !== undefined && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>
@@ -220,7 +220,7 @@ export default function SellerDashboardClient({
 							{totalListings > 0 ? (
 								<div className="space-y-4">
 									{sellerBibs.map(bib => {
-										if (!bib || !bib.id) return null
+										if (!bib?.id) return null
 
 										const statusDisplay = getStatusDisplay(bib.status || 'unknown')
 										return (

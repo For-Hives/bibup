@@ -78,7 +78,7 @@ export default function BuyerDashboardClient({
 						<p className="text-foreground flex items-center gap-2 font-medium">
 							<ShoppingCart className="h-4 w-4" />
 							{userName}
-							{clerkUser?.emailAddresses?.[0] && (
+							{clerkUser?.emailAddresses?.[0] !== undefined && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>
@@ -149,7 +149,7 @@ export default function BuyerDashboardClient({
 								{totalPurchases > 0 ? (
 									<div className="space-y-4">
 										{purchasedBibs.map(bib => {
-											if (!bib || !bib.id) return null
+											if (!bib?.id) return null
 											return (
 												<div className="rounded-lg border p-4" key={bib.id}>
 													<div className="mb-2 flex items-start justify-between">
@@ -205,7 +205,7 @@ export default function BuyerDashboardClient({
 								{waitlistEntries > 0 ? (
 									<div className="space-y-4">
 										{userWaitlists.map(waitlistEntry => {
-											if (!waitlistEntry || !waitlistEntry.id) return null
+											if (!waitlistEntry?.id) return null
 											return (
 												<div className="rounded-lg border p-4" key={waitlistEntry.id}>
 													<div className="mb-2 flex items-start justify-between">
