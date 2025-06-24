@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function SellerDashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, sellerTranslations) as any
+	const t = getTranslations(locale, sellerTranslations)
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()

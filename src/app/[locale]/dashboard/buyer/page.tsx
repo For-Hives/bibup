@@ -27,8 +27,7 @@ export default async function BuyerDashboardPage({
 }) {
 	const { locale } = await params
 	const { purchase_success } = await searchParams
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const t = getTranslations(locale, buyerTranslations) as any
+	const t = getTranslations(locale, buyerTranslations)
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()

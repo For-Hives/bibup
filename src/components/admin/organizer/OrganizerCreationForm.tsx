@@ -250,7 +250,7 @@ export default function OrganizerCreationForm({ translations, onSuccess, onCance
 											<Checkbox
 												checked={formData.isPartnered}
 												id="isPartnered"
-												onCheckedChange={checked => setValue('isPartnered', !!checked)}
+												onCheckedChange={checked => setValue('isPartnered', checked === true)}
 											/>
 											<Label className="text-foreground text-base font-medium" htmlFor="isPartnered">
 												{translations.organizers.create.form.partnerLabel}

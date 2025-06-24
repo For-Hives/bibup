@@ -60,12 +60,18 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 			// Prepare event data - convert to proper types for PocketBase
 			const eventData: Omit<Event, 'id'> = {
 				typeCourse: data.typeCourse,
-				transferDeadline: data.transferDeadline ? new Date(data.transferDeadline) : undefined,
+				transferDeadline:
+					data.transferDeadline !== null && data.transferDeadline !== undefined && data.transferDeadline !== ''
+						? new Date(data.transferDeadline)
+						: undefined,
 				registrationUrl: data.registrationUrl ?? undefined,
 				participants: data.participants,
 				parcoursUrl: data.parcoursUrl ?? undefined,
 				organizer: data.organizer,
-				options: data?.options?.length > 0 ? data.options : null,
+				options:
+					data.options !== null && data.options !== undefined && data.options.length > 0
+						? (data.options.filter(option => option !== undefined) as EventOption[])
+						: null,
 				officialStandardPrice: data.officialStandardPrice,
 				name: data.name,
 				location: data.location,

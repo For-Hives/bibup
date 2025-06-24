@@ -13,30 +13,7 @@ import { Button } from '@/components/ui/button'
 interface SellerDashboardClientProps {
 	clerkUser: SerializedClerkUser
 	sellerBibs: (Bib & { expand?: { eventId: Event } })[]
-	translations: SellerTranslations
-}
-
-interface SellerTranslations {
-	bibFor: string
-	description: string
-	editBib: string
-	gender: string
-	listNewBib: string
-	manageBibListings: string
-	myBibs: string
-	noBibs: string
-	noBibsListed: string
-	originalPrice: string
-	pleaseSignIn: string
-	price: string
-	registrationNumber: string
-	sellBib: string
-	size: string
-	status: string
-	title: string
-	welcome: string
-	welcomeMessage: string
-	yourListedBibs: string
+	translations: Record<string, string>
 }
 
 interface SerializedClerkUser {
@@ -75,8 +52,8 @@ export default function SellerDashboardClient({
 
 	// Calculate statistics with safety checks
 	const totalListings = Array.isArray(sellerBibs) ? sellerBibs.length : 0
-	const availableBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib?.status === 'available').length : 0
-	const soldBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib?.status === 'sold').length : 0
+	const availableBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib.status === 'available').length : 0
+	const soldBibs = Array.isArray(sellerBibs) ? sellerBibs.filter(bib => bib.status === 'sold').length : 0
 	const totalRevenue = Array.isArray(sellerBibs)
 		? sellerBibs.filter(bib => bib?.status === 'sold').reduce((sum, bib) => sum + (bib?.price || 0), 0)
 		: 0
@@ -93,7 +70,7 @@ export default function SellerDashboardClient({
 						<p className="text-foreground flex items-center gap-2 font-medium">
 							<Tag className="h-4 w-4" />
 							{userName}
-							{clerkUser?.emailAddresses?.[0] !== null && clerkUser?.emailAddresses?.[0] !== undefined && (
+							{clerkUser?.emailAddresses?.[0] !== undefined && (
 								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
 							)}
 						</p>
@@ -106,9 +83,9 @@ export default function SellerDashboardClient({
 				<div className="container mx-auto max-w-6xl p-6">
 					{/* Header */}
 					<div className="mb-12 space-y-2 text-center">
-						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t?.title || 'Seller Dashboard'}</h1>
+						<h1 className="text-foreground text-4xl font-bold tracking-tight">{t.title ?? 'Seller Dashboard'}</h1>
 						<p className="text-muted-foreground text-lg">
-							{t?.welcome || 'Welcome to your seller dashboard'}, {userName}!
+							{t.welcome ?? 'Welcome to your seller dashboard'}, {userName}!
 						</p>
 					</div>
 
