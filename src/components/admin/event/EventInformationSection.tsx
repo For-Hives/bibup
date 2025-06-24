@@ -1,3 +1,6 @@
+import Translations from '@/app/[locale]/event/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+
 import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
 import { Textarea } from '../../ui/textareaAlt'
 import { DateInput } from '../../ui/date-input'
@@ -6,13 +9,14 @@ import { Input } from '../../ui/inputAlt'
 import { Label } from '../../ui/label'
 
 export default function EventInformationSection({
-	translations,
 	setValue,
 	register,
-	locale = 'en',
+	locale,
 	formData,
 	errors,
-}: EventSectionProps) {
+}: Readonly<EventSectionProps>) {
+	const translations = getTranslations(locale, Translations)
+
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div>
