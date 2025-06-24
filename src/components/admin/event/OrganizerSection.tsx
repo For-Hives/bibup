@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
 
 import { getAllOrganizersAction } from '@/app/[locale]/admin/actions'
+import Translations from '@/app/[locale]/event/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
 import { Organizer } from '@/models/organizer.model'
 
 import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
 import { EventSectionProps } from './types'
 import { Label } from '../../ui/label'
 
-export default function OrganizerSection({ translations, setValue, formData, errors }: EventSectionProps) {
+export default function OrganizerSection({ setValue, locale, formData, errors }: Readonly<EventSectionProps>) {
+	const translations = getTranslations(locale, Translations)
+
 	const [organizers, setOrganizers] = useState<Organizer[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<null | string>(null)
