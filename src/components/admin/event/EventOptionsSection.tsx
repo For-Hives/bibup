@@ -15,9 +15,9 @@ import Translations from '@/app/[locale]/event/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 
 export default function EventOptionsSection({
-	locale,
 	setValue,
 	setEventOptions,
+	locale,
 	eventOptions,
 }: Readonly<EventOptionsSectionProps>) {
 	const translations = getTranslations(locale, Translations)
