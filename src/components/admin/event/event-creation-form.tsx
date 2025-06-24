@@ -65,7 +65,7 @@ export default function EventCreationForm({ onSuccess, onCancel, locale }: Event
 				participants: data.participants,
 				parcoursUrl: data.parcoursUrl ?? undefined,
 				organizer: data.organizer,
-				options: data.options,
+				options: data?.options?.length > 0 ? data.options : null,
 				officialStandardPrice: data.officialStandardPrice,
 				name: data.name,
 				location: data.location,

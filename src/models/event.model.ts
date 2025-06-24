@@ -19,7 +19,7 @@ export interface Event {
 
 	officialStandardPrice?: number
 
-	options: EventOption[]
+	options: EventOption[] | null
 
 	// Organizer relation
 	organizer: Organizer['id'] // RELATION_RECORD_ID
