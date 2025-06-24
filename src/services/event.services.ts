@@ -20,10 +20,10 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			typeCourse: eventData.typeCourse ?? 'route',
 			transferDeadline: eventData.transferDeadline,
 			registrationUrl: eventData.registrationUrl,
-			participants: eventData.participants ?? 0, // PocketBase uses 'participants', not 'participantCount'
+			participants: eventData.participants ?? 0,
 			parcoursUrl: eventData.parcoursUrl,
 			organizer: eventData.organizer,
-			options: JSON.stringify(eventData.options ?? []), // PocketBase expects JSON string
+			options: eventData.options?.length > 0 ? JSON.stringify(eventData.options) : null,
 			officialStandardPrice: eventData.officialStandardPrice,
 			name: eventData.name,
 			location: eventData.location,
@@ -42,6 +42,7 @@ export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event |
 			eventName: dataToCreate.name,
 		})
 
+		console.log('dataToCreate', dataToCreate)
 		const record = await pb.collection('events').create<Event>(dataToCreate)
 
 		console.info('Event created successfully:', record.id)
