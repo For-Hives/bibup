@@ -216,7 +216,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 						<Checkbox
 							aria-label={t.events.table.controls.selectAll}
 							checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-							onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+							onCheckedChange={value => table.toggleAllPageRowsSelected(value === true)}
 						/>
 					</div>
 				),
@@ -227,7 +227,7 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 						<Checkbox
 							aria-label={t.events.table.controls.selectRow}
 							checked={row.getIsSelected()}
-							onCheckedChange={value => row.toggleSelected(!!value)}
+							onCheckedChange={value => row.toggleSelected(value === true)}
 						/>
 					</div>
 				),
@@ -255,7 +255,13 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.date,
 				cell: ({ row }) => {
 					const date = row.getValue('eventDate')
-					return <div>{Boolean(date) ? new Date(date as string).toLocaleDateString() : 'N/A'}</div>
+					return (
+						<div>
+							{date !== null && date !== undefined && date !== ''
+								? new Date(date as string).toLocaleDateString()
+								: 'N/A'}
+						</div>
+					)
 				},
 				accessorKey: 'eventDate',
 			},
@@ -264,7 +270,11 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 				header: t.events.table.columns.distance,
 				cell: ({ row }) => {
 					const distance = row.getValue('distanceKm')
-					return <div>{Boolean(distance) && typeof distance === 'number' ? `${distance}km` : 'N/A'}</div>
+					return (
+						<div>
+							{distance !== null && distance !== undefined && typeof distance === 'number' ? `${distance}km` : 'N/A'}
+						</div>
+					)
 				},
 				accessorKey: 'distanceKm',
 			},
@@ -290,7 +300,9 @@ export default function AdminEventsPageClient({ translations: t, currentUser }: 
 					const participants = row.getValue('participants')
 					return (
 						<div>
-							{Boolean(participants) && typeof participants === 'number' ? participants.toLocaleString() : 'N/A'}
+							{participants !== null && participants !== undefined && typeof participants === 'number'
+								? participants.toLocaleString()
+								: 'N/A'}
 						</div>
 					)
 				},

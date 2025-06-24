@@ -16,30 +16,8 @@ interface BuyerDashboardClientProps {
 	purchasedBibs: (Bib & { expand?: { eventId: Event } })[]
 	purchaseSuccess: boolean
 	successEventName: string
-	translations: BuyerTranslations
+	translations: Record<string, string | { [key: string]: string }>
 	userWaitlists: (Waitlist & { expand?: { eventId: Event } })[]
-}
-
-interface BuyerTranslations {
-	bibForLabel: string
-	dateAddedToWaitlist: string
-	dateOfEvent: string
-	keepRecords: string
-	noPurchases: string
-	noWaitlistEntries: string
-	price: string
-	purchaseHistory: string
-	purchaseSuccess: string
-	purchaseSuccessDetails: string
-	registrationNumber: string
-	statistics: {
-		totalPurchases: string
-		totalSpent: string
-		waitlistEntries: string
-	}
-	waitlist: string
-	waitlistJoinText: string
-	welcome: string
 }
 
 interface SerializedClerkUser {
@@ -96,9 +74,12 @@ export default function BuyerDashboardClient({
 								<CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
 								<div>
 									<p className="font-medium text-green-800 dark:text-green-200">
-										{t.purchaseSuccess} <strong>{successEventName}</strong>
+										{(t.purchaseSuccess as string) ?? 'Congratulations! You have successfully purchased the bib for'}{' '}
+										<strong>{successEventName}</strong>
 									</p>
-									<p className="text-sm text-green-700 dark:text-green-300">{t.purchaseSuccessDetails}</p>
+									<p className="text-sm text-green-700 dark:text-green-300">
+										{(t.purchaseSuccessDetails as string) ?? 'Your new bib details are listed below.'}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -108,7 +89,7 @@ export default function BuyerDashboardClient({
 					<div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalPurchases}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Total Purchases</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{totalPurchases}</div>
@@ -117,7 +98,7 @@ export default function BuyerDashboardClient({
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.waitlistEntries}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Waitlist Entries</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{waitlistEntries}</div>
@@ -126,7 +107,7 @@ export default function BuyerDashboardClient({
 
 						<Card className="border-border/50 bg-card/80 backdrop-blur-sm">
 							<CardHeader className="pb-2">
-								<CardTitle className="text-muted-foreground text-sm">{t.statistics.totalSpent}</CardTitle>
+								<CardTitle className="text-muted-foreground text-sm">Total Spent</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">€{totalSpent.toFixed(2)}</div>
@@ -141,7 +122,7 @@ export default function BuyerDashboardClient({
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<ShoppingCart className="h-5 w-5" />
-									{t.purchaseHistory}
+									{(t.myPurchases as string) ?? 'My Purchases'}
 								</CardTitle>
 								<CardDescription>Track your race bib purchases and transfers</CardDescription>
 							</CardHeader>
@@ -154,7 +135,8 @@ export default function BuyerDashboardClient({
 												<div className="rounded-lg border p-4" key={bib.id}>
 													<div className="mb-2 flex items-start justify-between">
 														<h4 className="font-semibold">
-															{t.bibForLabel} {bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
+															{(t.bibForLabel as string) ?? 'Bib for'}{' '}
+															{bib.expand?.eventId?.name ?? `Event ID: ${bib.eventId}`}
 														</h4>
 														<span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
 															Purchased
@@ -163,19 +145,21 @@ export default function BuyerDashboardClient({
 													<div className="text-muted-foreground space-y-1 text-sm">
 														<p className="flex items-center gap-2">
 															<Calendar className="h-4 w-4" />
-															{t.dateOfEvent}:{' '}
+															{(t.dateOfEvent as string) ?? 'Date of Event'}:{' '}
 															{bib.expand?.eventId
 																? new Date(bib.expand.eventId.eventDate).toLocaleDateString()
 																: 'N/A'}
 														</p>
 														<p>
-															{t.registrationNumber}: {bib.registrationNumber}
+															{(t.registrationNumber as string) ?? 'Registration Number'}: {bib.registrationNumber}
 														</p>
 														<p>
-															{t.price}: €{bib.price?.toFixed(2) ?? 'N/A'}
+															{(t.pricePaid as string) ?? 'Price Paid'}: €{bib.price?.toFixed(2) ?? 'N/A'}
 														</p>
 													</div>
-													<p className="text-muted-foreground mt-2 text-xs">{t.keepRecords}</p>
+													<p className="text-muted-foreground mt-2 text-xs">
+														{(t.keepRecords as string) ?? '(Keep this for your records)'}
+													</p>
 												</div>
 											)
 										})}
@@ -183,7 +167,9 @@ export default function BuyerDashboardClient({
 								) : (
 									<div className="py-8 text-center">
 										<Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-										<p className="text-muted-foreground mb-4">{t.noPurchases}</p>
+										<p className="text-muted-foreground mb-4">
+											{(t.noPurchases as string) ?? "You haven't made any purchases yet"}
+										</p>
 										<Link href="/events">
 											<Button>Browse Events</Button>
 										</Link>
@@ -197,31 +183,50 @@ export default function BuyerDashboardClient({
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<Clock className="h-5 w-5" />
-									{t.waitlist}
+									{(t.waitlistEntries as string) ?? 'Your Waitlist Entries'}
 								</CardTitle>
-								<CardDescription>Events you're waiting for available bibs</CardDescription>
+								<CardDescription>
+									Events you're waiting for bibs to become available
+									<br />
+									<Link className="text-primary hover:underline" href="/events">
+										{(t.browseEventsWaitlist as string) ?? 'Browse events'}
+									</Link>{' '}
+									{(t.waitlistJoinText as string) ?? 'to join a waitlist if no bibs are available.'}
+								</CardDescription>
 							</CardHeader>
 							<CardContent>
 								{waitlistEntries > 0 ? (
 									<div className="space-y-4">
-										{userWaitlists.map(waitlistEntry => {
-											if (!waitlistEntry?.id) return null
+										{userWaitlists.map(waitlist => {
+											if (!waitlist?.id) return null
 											return (
-												<div className="rounded-lg border p-4" key={waitlistEntry.id}>
+												<div className="rounded-lg border p-4" key={waitlist.id}>
 													<div className="mb-2 flex items-start justify-between">
 														<h4 className="font-semibold">
-															<Link className="text-primary hover:underline" href={`/events/${waitlistEntry.eventId}`}>
-																{waitlistEntry.expand?.eventId?.name ?? `Event ID: ${waitlistEntry.eventId}`}
-															</Link>
+															{waitlist.expand?.eventId?.name ?? `Event ID: ${waitlist.eventId}`}
 														</h4>
 														<span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
 															Waiting
 														</span>
 													</div>
-													<p className="text-muted-foreground flex items-center gap-2 text-sm">
-														<Clock className="h-4 w-4" />
-														{t.dateAddedToWaitlist}: {new Date(waitlistEntry.addedAt).toLocaleDateString()}
-													</p>
+													<div className="text-muted-foreground space-y-1 text-sm">
+														<p className="flex items-center gap-2">
+															<Calendar className="h-4 w-4" />
+															{(t.dateOfEvent as string) ?? 'Date of Event'}:{' '}
+															{waitlist.expand?.eventId
+																? new Date(waitlist.expand.eventId.eventDate).toLocaleDateString()
+																: 'N/A'}
+														</p>
+														<p>
+															{(t.dateAddedToWaitlist as string) ?? 'Date Added to Waitlist'}:{' '}
+															{new Date(waitlist.addedAt).toLocaleDateString()}
+														</p>
+														<p className="flex items-center gap-2">
+															<Users className="h-4 w-4" />
+															{(t.status as string) ?? 'Status'}:{' '}
+															{(t.waitingForNotification as string) ?? 'Waiting for notification'}
+														</p>
+													</div>
 												</div>
 											)
 										})}
@@ -229,11 +234,12 @@ export default function BuyerDashboardClient({
 								) : (
 									<div className="py-8 text-center">
 										<Clock className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-										<p className="text-muted-foreground mb-4">{t.noWaitlistEntries}</p>
+										<p className="text-muted-foreground mb-4">
+											{(t.noWaitlistEntries as string) ?? 'You are not currently on any waitlists.'}
+										</p>
 										<Link href="/events">
 											<Button variant="outline">Browse Events</Button>
 										</Link>
-										<p className="text-muted-foreground mt-2 text-xs">{t.waitlistJoinText}</p>
 									</div>
 								)}
 							</CardContent>

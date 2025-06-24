@@ -186,7 +186,7 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 					<Checkbox
 						aria-label={t.organizers.table.controls.selectAll}
 						checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-						onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+						onCheckedChange={value => table.toggleAllPageRowsSelected(value === true)}
 					/>
 				</div>
 			),
@@ -197,7 +197,7 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 					<Checkbox
 						aria-label={t.organizers.table.controls.selectRow}
 						checked={row.getIsSelected()}
-						onCheckedChange={value => row.toggleSelected(!!value)}
+						onCheckedChange={value => row.toggleSelected(value === true)}
 					/>
 				</div>
 			),
@@ -241,8 +241,8 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 			size: 120,
 			header: t.organizers.table.columns.partnership,
 			cell: ({ row }: { row: Row<Organizer> }) => (
-				<Badge variant={Boolean(row.getValue('isPartnered')) ? 'default' : 'secondary'}>
-					{row.getValue('isPartnered')
+				<Badge variant={row.getValue('isPartnered') === true ? 'default' : 'secondary'}>
+					{row.getValue('isPartnered') === true
 						? t.organizers.table.columns.status.partner
 						: t.organizers.table.columns.status.standard}
 				</Badge>
@@ -254,7 +254,11 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 			header: t.organizers.table.columns.created,
 			cell: ({ row }) => {
 				const date = row.getValue('created')
-				return <div>{Boolean(date) ? new Date(date as string).toLocaleDateString() : 'N/A'}</div>
+				return (
+					<div>
+						{date !== null && date !== undefined && date !== '' ? new Date(date as string).toLocaleDateString() : 'N/A'}
+					</div>
+				)
 			},
 			accessorKey: 'created',
 		},
@@ -336,7 +340,7 @@ export default function AdminOrganizersPageClient({ translations: t, currentUser
 	})
 
 	// Safety check - if currentUser is null, show error
-	if (!currentUser) {
+	if (currentUser === null || currentUser === undefined) {
 		return (
 			<div className="from-background via-destructive/5 to-background relative min-h-screen bg-gradient-to-br">
 				<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
