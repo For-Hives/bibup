@@ -3,6 +3,8 @@
 		"navbar": {
 			"homeLink": "Home",
 			"dashboardLink": "Dashboard",
+			"buyBibLink": "Buy a Bib",
+			"sellBibLink": "Sell a Bib",
 			"racesLink": "Races",
 			"calendarLink": "Calendar",
 			"marketplaceLink": "Marketplace",
@@ -63,6 +65,8 @@
 		"navbar": {
 			"homeLink": "Accueil",
 			"dashboardLink": "Tableau de bord",
+			"buyBibLink": "Acheter un dossard",
+			"sellBibLink": "Vendre un dossard",
 			"racesLink": "Courses",
 			"calendarLink": "Calendrier",
 			"marketplaceLink": "Marché",
@@ -123,6 +127,8 @@
 		"navbar": {
 			"homeLink": "홈",
 			"dashboardLink": "대시보드",
+			"buyBibLink": "경주번호표 구매",
+			"sellBibLink": "경주번호표 판매",
 			"racesLink": "레이스",
 			"calendarLink": "캘린더",
 			"marketplaceLink": "마켓플레이스",

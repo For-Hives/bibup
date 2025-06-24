@@ -63,6 +63,16 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 							<div className="flex items-center gap-4">
 								{/* Using page-specific translation for a navigation link */}
 								<SignedIn>
+									<Link href="/marketplace">
+										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
+											{t.navbar.buyBibLink}
+										</button>
+									</Link>
+									<Link href="/dashboard/seller/sell-bib">
+										<button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-2 text-sm font-medium transition-colors">
+											{t.navbar.sellBibLink}
+										</button>
+									</Link>
 									<Link href="/dashboard">
 										<button className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors">
 											{t.navbar.dashboardLink}
@@ -118,6 +128,20 @@ export default async function Header({ localeParams }: { localeParams: Promise<L
 					<div className="border-border border-t pt-4 pb-3">
 						<div className="flex flex-col space-y-2 px-2">
 							<SignedIn>
+								<DisclosureButton
+									as={Link}
+									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
+									href="/marketplace"
+								>
+									{t.navbar.buyBibLink}
+								</DisclosureButton>
+								<DisclosureButton
+									as={Link}
+									className="bg-primary text-primary-foreground hover:bg-primary/90 block rounded-md px-3 py-2 text-base font-medium transition-colors"
+									href="/dashboard/seller/sell-bib"
+								>
+									{t.navbar.sellBibLink}
+								</DisclosureButton>
 								<DisclosureButton
 									as={Link}
 									className="text-muted-foreground hover:bg-accent hover:text-accent-foreground block rounded-md px-3 py-2 text-base font-medium transition-colors"
