@@ -23,7 +23,7 @@ export default async function RequestEventPage({ params }: RequestEventPageProps
 	const { userId } = await auth()
 	const { locale } = await params
 
-	if (!userId) {
+	if (userId === null || userId === undefined) {
 		redirect(`/${locale}/sign-in?redirect_url=/${locale}/dashboard/seller/request-event`)
 	}
 

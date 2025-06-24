@@ -10,6 +10,9 @@ import { getTranslations } from '@/lib/getDictionary'
 import dashboardTranslations from './locales.json'
 import DashboardClient from './DashboardClient'
 
+// Define proper types for translations
+type DashboardTranslations = typeof dashboardTranslations.en
+
 // Force dynamic rendering for dashboard routes
 export const dynamic = 'force-dynamic'
 
@@ -19,12 +22,12 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, dashboardTranslations)
+	const t = getTranslations(locale, dashboardTranslations) as DashboardTranslations
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
 
-	if (!userId || !clerkUser) {
+	if (userId === null || userId === undefined || clerkUser === null) {
 		redirect('/sign-in')
 	}
 
