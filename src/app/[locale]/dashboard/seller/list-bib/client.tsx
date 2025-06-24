@@ -45,14 +45,12 @@ export default function ListNewBibClientPage({
 				setFieldErrors(prev => ({ ...prev, [name]: flatErrors.root?.[0] ?? 'Validation error' }))
 			} else {
 				setFieldErrors(prev => {
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					const { [name]: _, ...rest } = prev
 					return rest
 				})
 			}
 		} else {
 			setFieldErrors(prev => {
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const { [name]: _, ...rest } = prev
 				return rest
 			})
