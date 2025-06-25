@@ -14,26 +14,24 @@ import { Button } from '@/components/ui/button'
 interface EventSelectionStepProps {
 	availableEvents: (Event & { expand?: { organizer?: Organizer } })[]
 	error?: string
+	locale: Locale
 	onEventSelect: (event: Event & { expand?: { organizer?: Organizer } }) => void
 	selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
-	translations: {
-		description: string
-		eventInfo: string
-		noEventsFound: string
-		requestNewEvent: string
-		requestNewEventButton: string
-		requestNewEventDescription: string
-		searchPlaceholder: string
-	}
 }
 
+import sellBibTranslations from '@/app/[locale]/dashboard/seller/sell-bib/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
 export default function EventSelectionStep({
-	translations: t,
 	selectedEvent,
 	onEventSelect,
+	locale,
 	error,
 	availableEvents,
-}: EventSelectionStepProps) {
+}: Readonly<EventSelectionStepProps>) {
+	const t = getTranslations(locale, sellBibTranslations)
+
 	const [searchQuery, setSearchQuery] = useState('')
 
 	// Filter events based on search query
@@ -47,8 +45,8 @@ export default function EventSelectionStep({
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			{/* Section Header */}
 			<div>
-				<h2 className="text-foreground text-2xl font-semibold">{t.eventInfo}</h2>
-				<p className="text-muted-foreground mt-2 text-base leading-7">{t.description}</p>
+				<h2 className="text-foreground text-2xl font-semibold">{t.form.eventSelection.eventInfo}</h2>
+				<p className="text-muted-foreground mt-2 text-base leading-7">{t.steps.eventSelection.description}</p>
 			</div>
 
 			{/* Event Selection Content */}
@@ -59,7 +57,7 @@ export default function EventSelectionStep({
 					<Input
 						className="pl-10"
 						onChange={e => setSearchQuery(e.target.value)}
-						placeholder={t.searchPlaceholder}
+						placeholder={t.form.eventSelection.searchPlaceholder}
 						type="text"
 						value={searchQuery}
 					/>
@@ -68,7 +66,7 @@ export default function EventSelectionStep({
 				{/* Events List */}
 				<div className="max-h-96 space-y-4 overflow-y-auto">
 					{filteredEvents.length === 0 ? (
-						<div className="text-muted-foreground py-8 text-center">{t.noEventsFound}</div>
+						<div className="text-muted-foreground py-8 text-center">{t.form.eventSelection.noEventsFound}</div>
 					) : (
 						filteredEvents.map(event => (
 							<Card
@@ -87,12 +85,16 @@ export default function EventSelectionStep({
 													<Calendar className="h-4 w-4" />
 													{(() => {
 														const eventDate = event.eventDate
-														const dateStr =
-															typeof eventDate === 'string'
-																? eventDate
-																: eventDate instanceof Date
-																	? eventDate.toISOString()
-																	: new Date(eventDate).toISOString()
+														const getDateString = (date: typeof eventDate): string => {
+															if (typeof date === 'string') {
+																return date
+															}
+															if (date instanceof Date) {
+																return date.toISOString()
+															}
+															return new Date(date).toISOString()
+														}
+														const dateStr = getDateString(eventDate)
 														return formatDateForDisplay(dateStr.split('T')[0])
 													})()}
 												</div>
@@ -132,12 +134,16 @@ export default function EventSelectionStep({
 					<Card className="border-2 border-dashed border-gray-300 bg-gray-50/50 dark:border-gray-600 dark:bg-gray-800/50">
 						<CardContent className="p-6 text-center">
 							<Plus className="mx-auto mb-3 h-8 w-8 text-gray-400" />
-							<h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">{t.requestNewEvent}</h3>
-							<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t.requestNewEventDescription}</p>
+							<h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
+								{t.form.eventSelection.requestNewEvent}
+							</h3>
+							<p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+								{t.form.eventSelection.requestNewEventDescription}
+							</p>
 							<Link href="/dashboard/seller/request-event">
 								<Button className="gap-2" variant="outline">
 									<Plus className="h-4 w-4" />
-									{t.requestNewEventButton}
+									{t.form.eventSelection.requestNewEventButton}
 								</Button>
 							</Link>
 						</CardContent>

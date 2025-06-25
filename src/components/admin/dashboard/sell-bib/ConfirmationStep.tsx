@@ -26,35 +26,25 @@ interface ConfirmationStepProps {
 		selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 		sellingPrice: string
 	}
+	locale: Locale
 	onChange: (data: Partial<ConfirmationStepProps['formData']>) => void
-	translations: {
-		bibNumber: string
-		copyLink: string
-		currency: string
-		event: string
-		listingType: string
-		marketplacePreview: string
-		originalPrice: string
-		private: string
-		privateLink: string
-		privateLinkHelp: string
-		public: string
-		reviewTitle: string
-		sellingPrice: string
-		terms: string
-		termsRequired: string
-	}
 	user: User
 }
 
+import sellBibTranslations from '@/app/[locale]/dashboard/seller/sell-bib/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
 export default function ConfirmationStep({
 	user,
-	translations: t,
 	onChange,
+	locale,
 	formData,
 	errors,
 	createdBib,
-}: ConfirmationStepProps) {
+}: Readonly<ConfirmationStepProps>) {
+	const t = getTranslations(locale, sellBibTranslations)
+
 	const generatePrivateLink = () => {
 		if (
 			createdBib?.privateListingToken === null ||
@@ -119,41 +109,43 @@ export default function ConfirmationStep({
 		<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
 			{/* Left Column - Summary */}
 			<div>
-				<h2 className="text-foreground mb-6 text-2xl font-semibold">{t.reviewTitle}</h2>
+				<h2 className="text-foreground mb-6 text-2xl font-semibold">{t.form.confirmation.reviewTitle}</h2>
 
 				<Card className="border-border/50 bg-card/80 mb-8 backdrop-blur-sm">
 					<CardContent className="space-y-6 p-6">
 						<div className="grid grid-cols-1 gap-6">
 							<div className="space-y-2">
-								<Label className="text-muted-foreground text-sm font-medium">{t.event}</Label>
+								<Label className="text-muted-foreground text-sm font-medium">{t.form.confirmation.event}</Label>
 								<p className="text-foreground font-semibold">{formData.selectedEvent?.name}</p>
 							</div>
 							<div className="space-y-2">
-								<Label className="text-muted-foreground text-sm font-medium">{t.bibNumber}</Label>
+								<Label className="text-muted-foreground text-sm font-medium">{t.form.confirmation.bibNumber}</Label>
 								<p className="text-foreground font-semibold">{formData.registrationNumber}</p>
 							</div>
 							{formData.originalPrice !== null &&
 								formData.originalPrice !== undefined &&
 								formData.originalPrice !== '' && (
 									<div className="space-y-2">
-										<Label className="text-muted-foreground text-sm font-medium">{t.originalPrice}</Label>
+										<Label className="text-muted-foreground text-sm font-medium">
+											{t.form.confirmation.originalPrice}
+										</Label>
 										<p className="text-foreground font-semibold">
-											{t.currency}
+											{t.form.pricing.currency}
 											{parseFloat(formData.originalPrice).toFixed(2)}
 										</p>
 									</div>
 								)}
 							<div className="space-y-2">
-								<Label className="text-muted-foreground text-sm font-medium">{t.sellingPrice}</Label>
+								<Label className="text-muted-foreground text-sm font-medium">{t.form.pricing.sellingPrice}</Label>
 								<p className="text-primary text-lg font-semibold">
-									{t.currency}
+									{t.form.pricing.currency}
 									{parseFloat(formData.sellingPrice).toFixed(2)}
 								</p>
 							</div>
 							<div className="space-y-2">
-								<Label className="text-muted-foreground text-sm font-medium">{t.listingType}</Label>
+								<Label className="text-muted-foreground text-sm font-medium">{t.form.pricing.listingType}</Label>
 								<p className="text-foreground font-semibold">
-									{formData.listingType === 'public' ? t.public : t.private}
+									{formData.listingType === 'public' ? t.form.confirmation.public : t.form.confirmation.private}
 								</p>
 							</div>
 						</div>
@@ -164,7 +156,7 @@ export default function ConfirmationStep({
 				{createdBib !== null && createdBib !== undefined && formData.listingType === 'private' && (
 					<Card className="border-border/50 bg-card/80 mb-8 backdrop-blur-sm">
 						<CardContent className="space-y-4 p-6">
-							<Label className="text-foreground text-base font-medium">{t.privateLink}</Label>
+							<Label className="text-foreground text-base font-medium">{t.form.confirmation.privateLink}</Label>
 							<div className="flex gap-2">
 								<Input className="flex-1" readOnly value={generatePrivateLink()} />
 								<Button onClick={() => void copyPrivateLink()} size="sm" variant="outline">
@@ -176,7 +168,7 @@ export default function ConfirmationStep({
 									</a>
 								</Button>
 							</div>
-							<p className="text-muted-foreground text-sm">{t.privateLinkHelp}</p>
+							<p className="text-muted-foreground text-sm">{t.form.confirmation.privateLinkHelp}</p>
 						</CardContent>
 					</Card>
 				)}
@@ -205,17 +197,10 @@ export default function ConfirmationStep({
 
 			{/* Right Column - Preview */}
 			<div>
-				<h3 className="text-foreground mb-6 text-xl font-semibold">{t.marketplacePreview}</h3>
+				<h3 className="text-foreground mb-6 text-xl font-semibold">{t.form.confirmation.marketplacePreview}</h3>
 				<div className="pointer-events-none flex justify-center">
 					{bibSalePreview !== null && bibSalePreview !== undefined && (
-						<CardMarket
-							bibSale={bibSalePreview}
-							translations={{
-								wantThisBib: 'Je veux ce dossard',
-								soldBy: 'vendu par',
-								participants: 'participants',
-							}}
-						/>
+						<CardMarket bibSale={bibSalePreview} locale={locale} />
 					)}
 				</div>
 			</div>

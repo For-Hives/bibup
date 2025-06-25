@@ -16,28 +16,22 @@ interface BibDetailsStepProps {
 		registrationNumber: string
 		selectedEvent: (Event & { expand?: { organizer?: Organizer } }) | null
 	}
+	locale: Locale
 	onChange: (data: Partial<BibDetailsStepProps['formData']>) => void
-	translations: {
-		bibOptions: string
-		currency: string
-		description: string
-		originalPrice: string
-		originalPriceHelp: string
-		originalPricePlaceholder: string
-		registrationNumber: string
-		registrationNumberHelp: string
-		registrationNumberPlaceholder: string
-		title: string
-	}
 }
 
-export default function BibDetailsStep({ translations: t, onChange, formData, errors }: BibDetailsStepProps) {
+import sellBibTranslations from '@/app/[locale]/dashboard/seller/sell-bib/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
+export default function BibDetailsStep({ onChange, locale, formData, errors }: Readonly<BibDetailsStepProps>) {
+	const t = getTranslations(locale, sellBibTranslations)
 	return (
 		<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
 			{/* Section Header */}
 			<div>
-				<h2 className="text-foreground text-2xl font-semibold">{t.title}</h2>
-				<p className="text-muted-foreground mt-2 text-base leading-7">{t.description}</p>
+				<h2 className="text-foreground text-2xl font-semibold">{t.steps.bibDetails.title}</h2>
+				<p className="text-muted-foreground mt-2 text-base leading-7">{t.steps.bibDetails.description}</p>
 			</div>
 
 			{/* Bib Details Content */}
@@ -63,17 +57,17 @@ export default function BibDetailsStep({ translations: t, onChange, formData, er
 					{/* Registration Number */}
 					<div className="col-span-full sm:col-span-3">
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="registrationNumber">
-							{t.registrationNumber} *
+							{t.form.bibDetails.registrationNumber} *
 						</Label>
 						<Input
 							className={errors.registrationNumber ? 'border-red-500' : ''}
 							id="registrationNumber"
 							onChange={e => onChange({ registrationNumber: e.target.value })}
-							placeholder={t.registrationNumberPlaceholder}
+							placeholder={t.form.bibDetails.registrationNumberPlaceholder}
 							type="text"
 							value={formData.registrationNumber}
 						/>
-						<p className="text-muted-foreground mt-1 text-sm">{t.registrationNumberHelp}</p>
+						<p className="text-muted-foreground mt-1 text-sm">{t.form.bibDetails.registrationNumberHelp}</p>
 						{errors.registrationNumber && (
 							<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.registrationNumber}</p>
 						)}
@@ -82,30 +76,30 @@ export default function BibDetailsStep({ translations: t, onChange, formData, er
 					{/* Original Price */}
 					<div className="col-span-full sm:col-span-3">
 						<Label className="text-foreground mb-2 block text-base font-medium" htmlFor="originalPrice">
-							{t.originalPrice}
+							{t.form.bibDetails.originalPrice}
 						</Label>
 						<div className="relative">
 							<span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
-								{t.currency === '$' ? <DollarSign className="h-4 w-4" /> : <Euro className="h-4 w-4" />}
+								{t.form.pricing.currency === '$' ? <DollarSign className="h-4 w-4" /> : <Euro className="h-4 w-4" />}
 							</span>
 							<Input
 								className="pl-10"
 								id="originalPrice"
 								min="0"
 								onChange={e => onChange({ originalPrice: e.target.value })}
-								placeholder={t.originalPricePlaceholder}
+								placeholder={t.form.bibDetails.originalPricePlaceholder}
 								step="0.01"
 								type="number"
 								value={formData.originalPrice}
 							/>
 						</div>
-						<p className="text-muted-foreground mt-1 text-sm">{t.originalPriceHelp}</p>
+						<p className="text-muted-foreground mt-1 text-sm">{t.form.bibDetails.originalPriceHelp}</p>
 					</div>
 
 					{/* Event Options */}
 					{formData.selectedEvent?.options && formData.selectedEvent.options.length > 0 && (
 						<div className="col-span-full">
-							<Label className="text-foreground mb-4 block text-base font-medium">{t.bibOptions}</Label>
+							<Label className="text-foreground mb-4 block text-base font-medium">{t.form.bibDetails.bibOptions}</Label>
 							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 								{formData.selectedEvent.options.map(option => (
 									<div key={option.key}>
