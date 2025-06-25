@@ -22,5 +22,5 @@ export default async function AdminOrganizersPage({ params }: { params: Promise<
 	const { locale } = await params
 	const t = getTranslations(locale, organizerTranslations)
 
-	return <AdminOrganizersPageClient currentUser={adminUser} translations={t} />
+	return <AdminOrganizersPageClient currentUser={adminUser} locale={locale} />
 }
