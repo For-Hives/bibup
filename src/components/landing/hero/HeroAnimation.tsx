@@ -93,7 +93,7 @@ export const HeroAnimation = ({
 									rotate: getRotationForIndex(index),
 									opacity: 1,
 								}}
-								key={index}
+								key={run.id}
 								transition={{
 									ease: 'easeInOut',
 									duration: 0.4,

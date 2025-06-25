@@ -20,6 +20,7 @@ export interface BibSaleSimplified {
 		name: string
 		participantCount: number
 	}
+	id: string
 	originalPrice: number
 	price: number
 }
