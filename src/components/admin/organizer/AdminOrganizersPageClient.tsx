@@ -78,7 +78,7 @@ import { cn } from '@/lib/utils'
 
 interface AdminOrganizersPageClientProps {
 	currentUser: null | User
-	translations: OrganizersTranslations
+	locale: Locale
 }
 
 interface OrganizersStats {
@@ -86,74 +86,19 @@ interface OrganizersStats {
 	totalOrganizers: number
 }
 
-interface OrganizersTranslations {
-	organizers: {
-		actions: {
-			createOrganizer: string
-			createOrganizerDescription: string
-		}
-		sections: {
-			actions: {
-				description: string
-				title: string
-			}
-		}
-		stats: {
-			partneredOrganizers: string
-			totalOrganizers: string
-		}
-		subtitle: string
-		table: {
-			columns: {
-				created: string
-				email: string
-				eventsCount: string
-				name: string
-				partnership: string
-				status: {
-					partner: string
-					standard: string
-				}
-			}
-			controls: {
-				cancel: string
-				clearFilter: string
-				confirmDelete: string
-				deleteDescription: string
-				deleteSelected: string
-				rowsPerPage: string
-				selectAll: string
-				selectRow: string
-				toggleColumns: string
-			}
-			empty: {
-				createButton: string
-				description: string
-				title: string
-			}
-			noResults: string
-			noResultsDescription: string
-			search: string
-		}
-		title: string
-		ui: {
-			accessError: string
-			accessErrorDescription: string
-			connectedAs: string
-			loading: string
-			signIn: string
-		}
-	}
-}
-
 // Custom filter function for multi-column searching
-const multiColumnFilterFn: FilterFn<Organizer & { eventsCount: number }> = (row, columnId, filterValue) => {
+const multiColumnFilterFn: FilterFn<Organizer & { eventsCount: number }> = (row, _columnId, filterValue) => {
 	const searchableRowContent = `${row.original.name ?? ''} ${row.original.email ?? ''}`.toLowerCase()
 	const searchTerm = String(filterValue ?? '').toLowerCase()
 	return searchableRowContent.includes(searchTerm)
 }
+import organizerTranslations from '@/app/[locale]/admin/organizer/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
-export default function AdminOrganizersPageClient({ translations: t, currentUser }: AdminOrganizersPageClientProps) {
+export default function AdminOrganizersPageClient({ locale, currentUser }: Readonly<AdminOrganizersPageClientProps>) {
+	const t = getTranslations(locale, organizerTranslations)
+
 	const router = useRouter()
 	const id = useId()
 	const inputRef = useRef<HTMLInputElement>(null)

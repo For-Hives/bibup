@@ -15,35 +15,7 @@ import { User } from '@/models/user.model'
 
 interface AdminOrganizerValidatePageClientProps {
 	currentUser: null | User
-	translations: {
-		organizers: {
-			validate: {
-				messages: {
-					approveError: string
-					approveSuccess: string
-					rejectError: string
-					rejectSuccess: string
-				}
-				pending: {
-					actions: {
-						approve: string
-						reject: string
-						viewWebsite: string
-					}
-					noResults: string
-					noResultsDescription: string
-					title: string
-				}
-				stats: {
-					approvedPartners: string
-					pendingValidation: string
-					totalOrganizers: string
-				}
-				subtitle: string
-				title: string
-			}
-		}
-	}
+	locale: Locale
 }
 
 interface ValidationStats {
@@ -51,10 +23,15 @@ interface ValidationStats {
 	totalOrganizers: number
 }
 
+import organizerTranslations from '@/app/[locale]/admin/organizer/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 export default function AdminOrganizerValidatePageClient({
-	translations,
+	locale,
 	currentUser,
-}: AdminOrganizerValidatePageClientProps) {
+}: Readonly<AdminOrganizerValidatePageClientProps>) {
+	const translations = getTranslations(locale, organizerTranslations)
+
 	const router = useRouter()
 
 	const [organizers, setOrganizers] = useState<Organizer[]>([])
