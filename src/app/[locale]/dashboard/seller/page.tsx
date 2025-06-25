@@ -5,10 +5,8 @@ import { redirect } from 'next/navigation'
 
 import { fetchBibsBySeller } from '@/services/bib.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
 
 import SellerDashboardClient from './SellerDashboardClient'
-import sellerTranslations from './locales.json'
 
 // Force dynamic rendering for dashboard routes
 export const dynamic = 'force-dynamic'
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
 
 export default async function SellerDashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, sellerTranslations)
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
@@ -45,5 +42,5 @@ export default async function SellerDashboardPage({ params }: { params: Promise<
 		})),
 	}
 
-	return <SellerDashboardClient clerkUser={serializedClerkUser} sellerBibs={sellerBibs} translations={t} />
+	return <SellerDashboardClient clerkUser={serializedClerkUser} locale={locale} sellerBibs={sellerBibs} />
 }
