@@ -2,9 +2,6 @@ import { requireAdminAccess } from '@/guard/adminGuard'
 
 import AdminOrganizersPageClient from '@/components/admin/organizer/AdminOrganizersPageClient'
 import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
-
-import organizerTranslations from './locales.json'
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -20,7 +17,6 @@ export default async function AdminOrganizersPage({ params }: { params: Promise<
 	const adminUser = await requireAdminAccess()
 
 	const { locale } = await params
-	const t = getTranslations(locale, organizerTranslations)
 
 	return <AdminOrganizersPageClient currentUser={adminUser} locale={locale} />
 }

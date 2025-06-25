@@ -43,6 +43,7 @@ import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 
+import { getTranslations } from '@/lib/getDictionary'
 import { cn } from '@/lib/utils'
 
 import {
@@ -79,7 +80,7 @@ import { Label } from '../../ui/label'
 
 interface AdminEventsPageClientProps {
 	currentUser: null | User
-	translations: EventsTranslations
+	locale: Locale
 }
 
 interface EventsStats {
@@ -182,7 +183,12 @@ const multiColumnFilterFn: FilterFn<Event & { expand?: { organizer?: Organizer }
 	return searchableRowContent.includes(searchTerm)
 }
 
-export default function AdminEventsPageClient({ translations: t, currentUser }: AdminEventsPageClientProps) {
+import translations from '@/app/[locale]/admin/event/locales.json'
+import { Locale } from '@/lib/i18n-config'
+
+export default function AdminEventsPageClient({ locale, currentUser }: AdminEventsPageClientProps) {
+	const t = getTranslations(locale, translations)
+
 	const router = useRouter()
 	const id = useId()
 	const inputRef = useRef<HTMLInputElement>(null)

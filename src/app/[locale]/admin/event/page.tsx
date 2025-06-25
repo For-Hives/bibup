@@ -2,9 +2,6 @@ import { requireAdminAccess } from '@/guard/adminGuard'
 
 import AdminEventsPageClient from '@/components/admin/event/AdminEventsPageClient'
 import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
-
-import translations from './locales.json'
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -20,7 +17,6 @@ export default async function AdminEventsPage({ params }: { params: Promise<Loca
 	const adminUser = await requireAdminAccess()
 
 	const { locale } = await params
-	const t = getTranslations(locale, translations)
 
-	return <AdminEventsPageClient currentUser={adminUser} translations={t} />
+	return <AdminEventsPageClient currentUser={adminUser} locale={locale} />
 }
