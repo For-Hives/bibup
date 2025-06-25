@@ -98,7 +98,7 @@ export default function AdminOrganizerCreatePageClient({
 					</div>
 				</div>
 			</div>
-			<OrganizerCreationForm onCancel={handleCancel} onSuccess={handleSuccess} translations={translations} />
+			<OrganizerCreationForm locale={locale} onCancel={handleCancel} onSuccess={handleSuccess} />
 		</div>
 	)
 }
