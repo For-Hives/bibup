@@ -127,11 +127,11 @@ const runsExample: BibSale[] = [
 // Uncomment the lines below and comment out the runsExample above to use fully random data:
 // const runsExample: BibSale[] = generateFakeBibSales(5)
 
-export default function MarketplaceGrid({ locale }: { locale: Locale }) {
+export default function MarketplaceGrid({ locale }: Readonly<{ locale: Locale }>) {
 	return (
 		<div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 py-32 md:grid-cols-2 lg:grid-cols-4">
-			{runsExample.map((run, index) => (
-				<CardMarket bibSale={run} key={index} locale={locale} />
+			{runsExample.map(run => (
+				<CardMarket bibSale={run} key={run.id} locale={locale} />
 			))}
 		</div>
 	)
