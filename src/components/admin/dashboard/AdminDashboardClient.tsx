@@ -27,64 +27,16 @@ import { getDashboardStatsAction } from '../../../app/[locale]/admin/actions'
 
 interface AdminDashboardClientProps {
 	currentUser: null | User
-	translations: DashboardTranslations
+	locale: Locale
 }
 
-interface DashboardTranslations {
-	dashboard: {
-		actions: {
-			createEvent: string
-			createEventDescription: string
-			createOrganizer: string
-			createOrganizerDescription: string
-			validateOrganizer: string
-			validateOrganizerDescription: string
-			viewEvents: string
-			viewEventsDescription: string
-			viewOrganizers: string
-			viewOrganizersDescription: string
-		}
-		errors: {
-			accessError: string
-			accessErrorMessage: string
-		}
-		recentActivity: {
-			description: string
-			title: string
-		}
-		sections: {
-			organizers: {
-				description: string
-				title: string
-			}
-			transactions: {
-				description: string
-				title: string
-			}
-		}
-		stats: {
-			partneredOrganizers: string
-			pendingBibs: string
-			pendingEvents: string
-			platformGrowth: string
-			revenueToday: string
-			todaysTransactions: string
-			totalBibs: string
-			totalEvents: string
-			totalOrganizers: string
-			totalUsers: string
-		}
-		subtitle: string
-		title: string
-		ui: {
-			comingSoon: string
-			connectedAs: string
-			signIn: string
-		}
-	}
-}
+import translations from '@/app/[locale]/admin/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
-export default function AdminDashboardClient({ translations: t, currentUser }: AdminDashboardClientProps) {
+export default function AdminDashboardClient({ locale, currentUser }: Readonly<AdminDashboardClientProps>) {
+	const t = getTranslations(locale, translations)
+
 	const router = useRouter()
 	const [stats, setStats] = useState<DashboardStats | null>(null)
 	const [isLoading, setIsLoading] = useState(true)

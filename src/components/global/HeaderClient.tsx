@@ -126,7 +126,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 						<div className="border-border border-t pt-4 pb-3">
 							<div className="flex flex-col space-y-2 px-2">
 								<SignedIn>
-									<MobileDashboardLinks t={t} />
+									<MobileDashboardLinks locale={locale} />
 								</SignedIn>
 								<SignedOut>
 									<SignInButton>
@@ -150,7 +150,9 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 }
 
 // Mobile Dashboard Component
-function MobileDashboardLinks({ t }: { t: TranslationProps }) {
+function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
+	const t = getTranslations(locale, pageTranslationsData)
+
 	const { user: clerkUser, isLoaded } = useUser()
 	const [isAdmin, setIsAdmin] = useState(false)
 

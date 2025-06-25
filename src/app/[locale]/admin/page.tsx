@@ -2,9 +2,6 @@ import { requireAdminAccess } from '@/guard/adminGuard'
 
 import AdminDashboardClient from '@/components/admin/dashboard/AdminDashboardClient'
 import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
-
-import translations from './locales.json'
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -20,7 +17,6 @@ export default async function AdminDashboardPage({ params }: { params: Promise<L
 	const adminUser = await requireAdminAccess()
 
 	const { locale } = await params
-	const t = getTranslations(locale, translations)
 
-	return <AdminDashboardClient currentUser={adminUser} translations={t} />
+	return <AdminDashboardClient currentUser={adminUser} locale={locale} />
 }
