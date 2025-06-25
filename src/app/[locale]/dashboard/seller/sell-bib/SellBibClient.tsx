@@ -159,25 +159,7 @@ export default function SellBibClient({ user, locale, availableEvents }: SellBib
 	const renderStepContent = () => {
 		switch (currentStep) {
 			case 'bibDetails':
-				return (
-					<BibDetailsStep
-						errors={errors}
-						formData={formData}
-						onChange={updateFormData}
-						translations={{
-							title: t.steps.bibDetails.title,
-							registrationNumberPlaceholder: t.form.bibDetails.registrationNumberPlaceholder,
-							registrationNumberHelp: t.form.bibDetails.registrationNumberHelp,
-							registrationNumber: t.form.bibDetails.registrationNumber,
-							originalPricePlaceholder: t.form.bibDetails.originalPricePlaceholder,
-							originalPriceHelp: t.form.bibDetails.originalPriceHelp,
-							originalPrice: t.form.bibDetails.originalPrice,
-							description: t.steps.bibDetails.description,
-							currency: t.form.pricing.currency,
-							bibOptions: t.form.bibDetails.bibOptions,
-						}}
-					/>
-				)
+				return <BibDetailsStep errors={errors} formData={formData} locale={locale} onChange={updateFormData} />
 
 			case 'confirmation':
 				return (
@@ -185,24 +167,8 @@ export default function SellBibClient({ user, locale, availableEvents }: SellBib
 						createdBib={createdBib}
 						errors={errors}
 						formData={formData}
+						locale={locale}
 						onChange={updateFormData}
-						translations={{
-							termsRequired: t.form.confirmation.termsRequired,
-							terms: t.form.confirmation.terms,
-							sellingPrice: t.form.confirmation.sellingPrice,
-							reviewTitle: t.form.confirmation.reviewTitle,
-							public: t.form.confirmation.public,
-							privateLinkHelp: t.form.confirmation.privateLinkHelp,
-							privateLink: t.form.confirmation.privateLink,
-							private: t.form.confirmation.private,
-							originalPrice: t.form.confirmation.originalPrice,
-							marketplacePreview: t.form.confirmation.marketplacePreview,
-							listingType: t.form.confirmation.listingType,
-							event: t.form.confirmation.event,
-							currency: t.form.pricing.currency,
-							copyLink: t.form.confirmation.copyLink,
-							bibNumber: t.form.confirmation.bibNumber,
-						}}
 						user={user}
 					/>
 				)
@@ -212,43 +178,16 @@ export default function SellBibClient({ user, locale, availableEvents }: SellBib
 					<EventSelectionStep
 						availableEvents={availableEvents}
 						error={errors.selectedEvent}
+						locale={locale}
 						onEventSelect={(event: Event & { expand?: { organizer?: Organizer } }) =>
 							updateFormData({ selectedEvent: event })
 						}
 						selectedEvent={formData.selectedEvent}
-						translations={{
-							searchPlaceholder: t.form.eventSelection.searchPlaceholder,
-							requestNewEventDescription: t.form.eventSelection.requestNewEventDescription,
-							requestNewEventButton: t.form.eventSelection.requestNewEventButton,
-							requestNewEvent: t.form.eventSelection.requestNewEvent,
-							noEventsFound: t.form.eventSelection.noEventsFound,
-							eventInfo: t.form.eventSelection.eventInfo,
-							description: t.steps.eventSelection.description,
-						}}
 					/>
 				)
 
 			case 'pricing':
-				return (
-					<PricingStep
-						errors={errors}
-						formData={formData}
-						onChange={updateFormData}
-						translations={{
-							title: t.steps.pricing.title,
-							sellingPricePlaceholder: t.form.pricing.sellingPricePlaceholder,
-							sellingPriceHelp: t.form.pricing.sellingPriceHelp,
-							sellingPrice: t.form.pricing.sellingPrice,
-							publicListingHelp: t.form.pricing.publicListingHelp,
-							publicListing: t.form.pricing.publicListing,
-							privateListingHelp: t.form.pricing.privateListingHelp,
-							privateListing: t.form.pricing.privateListing,
-							listingType: t.form.pricing.listingType,
-							description: t.steps.pricing.description,
-							currency: t.form.pricing.currency,
-						}}
-					/>
-				)
+				return <PricingStep errors={errors} formData={formData} locale={locale} onChange={updateFormData} />
 		}
 	}
 
@@ -312,13 +251,10 @@ export default function SellBibClient({ user, locale, availableEvents }: SellBib
 							isFirstStep={isFirstStep}
 							isLastStep={isLastStep}
 							isSubmitting={isSubmitting}
+							locale={locale}
 							onNext={handleNext}
 							onPrevious={handlePrevious}
 							onSubmit={handleSubmit}
-							translations={{
-								...t.actions,
-								loading: t.messages.loading,
-							}}
 						/>
 					</div>
 				</div>

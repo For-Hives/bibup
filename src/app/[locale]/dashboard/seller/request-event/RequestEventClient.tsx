@@ -32,42 +32,14 @@ interface FormErrors {
 
 interface RequestEventClientProps {
 	locale: Locale
-	translations: {
-		actions: {
-			cancel: string
-			goBack: string
-			submit: string
-		}
-		form: {
-			eventDate: string
-			eventDateHelp: string
-			eventName: string
-			eventNameHelp: string
-			eventNamePlaceholder: string
-			location: string
-			locationHelp: string
-			locationPlaceholder: string
-			message: string
-			messageHelp: string
-			messagePlaceholder: string
-		}
-		messages: {
-			error: string
-			loading: string
-			success: string
-		}
-		subtitle: string
-		title: string
-		validation: {
-			eventDateInPast: string
-			eventDateRequired: string
-			eventNameRequired: string
-			locationRequired: string
-		}
-	}
 }
 
-export default function RequestEventClient({ translations: t, locale }: RequestEventClientProps) {
+import requestEventTranslations from '@/app/[locale]/dashboard/seller/request-event/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
+
+export default function RequestEventClient({ locale }: RequestEventClientProps) {
+	const t = getTranslations(locale, requestEventTranslations)
+
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [showSuccess, setShowSuccess] = useState(false)

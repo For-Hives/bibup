@@ -6,7 +6,6 @@ import type { Locale } from '@/lib/i18n-config'
 import { generateLocaleParams } from '@/lib/generateStaticParams'
 
 import RequestEventClient from './RequestEventClient'
-import locales from './locales.json'
 
 type RequestEventPageProps = {
 	params: Promise<{
@@ -27,7 +26,5 @@ export default async function RequestEventPage({ params }: RequestEventPageProps
 		redirect(`/${locale}/sign-in?redirect_url=/${locale}/dashboard/seller/request-event`)
 	}
 
-	const dict = locales[locale as keyof typeof locales] ?? locales.en
-
-	return <RequestEventClient locale={locale} translations={dict} />
+	return <RequestEventClient locale={locale} />
 }
