@@ -20,17 +20,18 @@ export default function ProgressSteps({ steps, locale, currentStepIndex }: Reado
 					const isCompleted = index < currentStepIndex
 					const stepData = t[step as keyof typeof t]
 
+					let stepClasses = 'bg-muted text-muted-foreground'
+					if (isCompleted) {
+						stepClasses = 'bg-primary text-primary-foreground shadow-lg'
+					} else if (isActive) {
+						stepClasses = 'bg-primary/20 text-primary border-primary border-2 shadow-md'
+					}
+
 					return (
 						<div className="flex items-center" key={step}>
 							<div className="flex flex-col items-center">
 								<div
-									className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-medium transition-all duration-200 ${
-										isCompleted
-											? 'bg-primary text-primary-foreground shadow-lg'
-											: isActive
-												? 'bg-primary/20 text-primary border-primary border-2 shadow-md'
-												: 'bg-muted text-muted-foreground'
-									} `}
+									className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-medium transition-all duration-200 ${stepClasses} `}
 								>
 									{isCompleted ? <CheckCircle className="h-6 w-6" /> : index + 1}
 								</div>

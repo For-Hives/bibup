@@ -8,40 +8,13 @@ import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 
 interface SellerDashboardClientProps {
 	clerkUser: SerializedClerkUser
+	locale: Locale
 	sellerBibs: (Bib & { expand?: { eventId: Event } })[]
-	translations: SellerTranslations
-}
-
-// Simplified type for translations to avoid complex type conflicts
-interface SellerTranslations {
-	[key: string]: any
-	availableBibs?: string
-	dateOfEvent?: string
-	eventLabel?: string
-	// Global translations object
-	GLOBAL?: {
-		appName?: string
-		errors?: {
-			unexpected?: string
-		}
-		logoAltText?: string
-		welcomeMessage?: string
-	}
-	listNewBib?: string
-	myListings?: string
-	noListings?: string
-	price?: string
-	registrationNumber?: string
-	soldBibs?: string
-	status?: string
-	title?: string
-	totalListings?: string
-	// Page-specific translations
-	welcome?: string
 }
 
 interface SerializedClerkUser {
@@ -71,11 +44,13 @@ const getStatusDisplay = (status: string) => {
 	}
 }
 
-export default function SellerDashboardClient({
-	translations: t,
-	sellerBibs = [],
-	clerkUser,
-}: SellerDashboardClientProps) {
+import { Locale } from '@/lib/i18n-config'
+
+import sellerTranslations from './locales.json'
+
+export default function SellerDashboardClient({ sellerBibs = [], locale, clerkUser }: SellerDashboardClientProps) {
+	const t = getTranslations(locale, sellerTranslations)
+
 	const userName = clerkUser?.firstName ?? clerkUser?.emailAddresses?.[0]?.emailAddress ?? 'Seller'
 
 	// Calculate statistics with safety checks
