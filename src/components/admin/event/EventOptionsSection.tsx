@@ -27,7 +27,7 @@ export default function EventOptionsSection({
 			values: [''],
 			required: false,
 			label: '',
-			key: '',
+			key: `option-${Date.now()}-${Math.random()}`,
 		}
 		setEventOptions([...eventOptions, newOption])
 	}
@@ -85,7 +85,8 @@ export default function EventOptionsSection({
 				<div className="space-y-8">
 					{eventOptions.map((option, optionIndex) => (
 						<EventOptionCard
-							key={optionIndex}
+							key={option.key || `option-${optionIndex}`}
+							locale={locale}
 							onAddValue={addOptionValue}
 							onRemove={removeEventOption}
 							onRemoveValue={removeOptionValue}
@@ -93,7 +94,6 @@ export default function EventOptionsSection({
 							onUpdateValue={updateOptionValue}
 							option={option}
 							optionIndex={optionIndex}
-							translations={translations}
 						/>
 					))}
 

@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { Locale } from '@/lib/i18n-config'
 
 import OrganizerFakerButton from './OrganizerFakerButton'
 
@@ -27,55 +28,18 @@ const OrganizerCreationSchema = v.object({
 })
 
 export interface OrganizerCreationFormProps {
+	locale: Locale
 	onCancel?: () => void
 	onSuccess?: (organizer: Organizer) => void
-	translations: {
-		organizers: {
-			create: {
-				errors: {
-					createFailed: string
-					emailInvalid: string
-					nameRequired: string
-					websiteInvalid: string
-				}
-				form: {
-					cancelButton: string
-					emailLabel: string
-					emailPlaceholder: string
-					logoUpload: {
-						description: string
-						dropText: string
-						fileModified: string
-						fileSizeUnit: string
-						label: string
-						uploadSubtext: string
-						uploadText: string
-					}
-					nameLabel: string
-					namePlaceholder: string
-					partnerDescription: string
-					partnerLabel: string
-					submitButton: string
-					websiteLabel: string
-					websitePlaceholder: string
-				}
-				sections: {
-					basicInformation: {
-						description: string
-						title: string
-					}
-				}
-				subtitle: string
-				title: string
-			}
-		}
-	}
 }
-
+import organizerCreateTranslations from '@/app/[locale]/admin/organizer/create/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
 type OrganizerFormData = v.InferOutput<typeof OrganizerCreationSchema>
 
-export default function OrganizerCreationForm({ translations, onSuccess, onCancel }: OrganizerCreationFormProps) {
+export default function OrganizerCreationForm({ onSuccess, onCancel, locale }: Readonly<OrganizerCreationFormProps>) {
 	const [isLoading, setIsLoading] = useState(false)
+
+	const translations = getTranslations(locale, organizerCreateTranslations)
 
 	const {
 		watch,
