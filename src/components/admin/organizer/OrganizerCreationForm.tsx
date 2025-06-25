@@ -198,10 +198,7 @@ export default function OrganizerCreationForm({ onSuccess, onCancel, locale }: R
 										{translations.organizers.create.form.logoUpload.description}
 									</p>
 									<div className="bg-card/50 border-border/30 rounded-xl border backdrop-blur-sm">
-										<FileUpload
-											onChange={handleFileUploadWithValidation}
-											translations={translations.organizers.create.form.logoUpload}
-										/>
+										<FileUpload locale={locale} onChange={handleFileUploadWithValidation} />
 									</div>
 									{errors.logoFile && (
 										<p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.logoFile.message}</p>

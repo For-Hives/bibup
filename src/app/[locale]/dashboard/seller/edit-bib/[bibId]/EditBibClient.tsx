@@ -24,12 +24,7 @@ interface EditBibClientProps {
 type Translations = ReturnType<typeof getTranslations<(typeof editBibTranslations)['en'], 'en'>>
 
 // TODO: create loading.tsx skeleton for this page
-export default function EditBibClient({
-	translations: t,
-	initialError,
-	initialBibWithEvent,
-	bibId,
-}: EditBibClientProps) {
+export default function EditBibClient({ locale, initialError, initialBibWithEvent, bibId }: EditBibClientProps) {
 	const router = useRouter()
 	const [bib, setBib] = useState<(Bib & { expand?: { eventId?: Event } }) | null>(initialBibWithEvent)
 	const [isLoading, setIsLoading] = useState(false)

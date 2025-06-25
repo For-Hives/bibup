@@ -3,6 +3,8 @@ import React, { useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { motion } from 'motion/react'
 
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 import { cn } from '@/lib/utils'
 
 const mainVariant = {
@@ -26,34 +28,15 @@ const secondaryVariant = {
 	},
 }
 
-interface FileUploadTranslations {
-	dropText: string
-	fileModified: string
-	fileSizeUnit: string
-	uploadSubtext: string
-	uploadText: string
-}
+import organizerCreateTranslations from '@/app/[locale]/admin/organizer/create/locales.json'
 
-export const FileUpload = ({
-	translations,
-	onChange,
-}: {
-	onChange?: (files: File[]) => void
-	translations?: FileUploadTranslations
-}) => {
+export const FileUpload = ({ onChange, locale }: { locale: Locale; onChange?: (files: File[]) => void }) => {
+	const translations = getTranslations(locale, organizerCreateTranslations)
+
 	const [files, setFiles] = useState<File[]>([])
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
-	// Default translations
-	const defaultTranslations: FileUploadTranslations = {
-		uploadText: 'Upload file',
-		uploadSubtext: 'Drag or drop your files here or click to upload',
-		fileSizeUnit: 'MB',
-		fileModified: 'modified',
-		dropText: 'Drop it',
-	}
-
-	const t = translations ?? defaultTranslations
+	const t = translations.organizers.create.form.logoUpload
 
 	const handleFileChange = (newFiles: File[]) => {
 		setFiles(prevFiles => [...prevFiles, ...newFiles])

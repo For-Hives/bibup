@@ -4,37 +4,16 @@ import { DollarSign, ShoppingCart } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FeatureSteps } from '@/components/ui/FeatureSteps'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
+import translations from './locales.json'
 interface JourneyTabsClientProps {
-	translations: {
-		journey: {
-			buyer: {
-				step1: { content: string; title: string }
-				step2: { content: string; title: string }
-				step3: { content: string; title: string }
-				step4: { content: string; title: string }
-				step5: { content: string; title: string }
-			}
-			buyerTab: string
-			seller: {
-				step1: { content: string; title: string }
-				step2: { content: string; title: string }
-				step3: { content: string; title: string }
-				step4: { content: string; title: string }
-				step5: { content: string; title: string }
-			}
-			sellerTab: string
-			subtitle: string
-			title: string
-		}
-		steps: {
-			step: string
-		}
-	}
+	locale: Locale
 }
 
-export default function JourneyTabsClient({ translations }: JourneyTabsClientProps) {
-	const t = translations
+export default function JourneyTabsClient({ locale }: Readonly<JourneyTabsClientProps>) {
+	const t = getTranslations(locale, translations)
 
 	const sellerJourney = [
 		{
