@@ -16,7 +16,18 @@ export default async function CalendarPage({ params }: { params: Promise<LocaleP
 	const { locale } = await params
 	const t = getTranslations(locale, calendarTranslations)
 
-	const events: Event[] = await fetchApprovedPublicEvents()
+	// Handle PocketBase errors gracefully during build time
+	let events: Event[] = []
+	try {
+		events = await fetchApprovedPublicEvents()
+	} catch (error) {
+		console.warn(
+			'Failed to fetch events during build (this is normal in CI/CD):',
+			error instanceof Error ? error.message : String(error)
+		)
+		// Return empty events array to allow build to continue
+		events = []
+	}
 
 	const groupedEvents = events.reduce((acc, event) => {
 		const date = new Date(event.eventDate)
@@ -83,3 +94,6 @@ export default async function CalendarPage({ params }: { params: Promise<LocaleP
 export function generateStaticParams() {
 	return generateLocaleParams()
 }
+
+// Disable static generation to avoid build failures when PocketBase is unavailable
+export const dynamic = 'force-dynamic'
