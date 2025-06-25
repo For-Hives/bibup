@@ -1,121 +1,133 @@
+import {
+	generatePricing,
+	getBibColorsDistributed,
+	getRandomFirstName,
+	getRandomFutureDate,
+	getRandomLastName,
+	getRandomParticipantCount,
+	// generateFakeBibSales // Uncomment to use fully random data
+} from '@/lib/utils'
 import { getTranslations } from '@/lib/getDictionary'
 import { Locale } from '@/lib/i18n-config'
 
 import marketplaceTranslations from '../marketplace/locales.json'
 import CardMarket, { BibSale } from '../marketplace/CardMarket'
 
+// Get distributed colors for our 5 examples to ensure each bib has a different color
+const bibColors = getBibColorsDistributed(5)
+
+// --- Predefined examples with controlled content for consistent demo
 const runsExample: BibSale[] = [
 	{
 		user: {
-			lastName: 'Doe',
+			lastName: getRandomLastName(),
 			id: '1',
-			firstName: 'John',
+			firstName: getRandomFirstName(),
 		},
 		status: 'available',
-		price: 79.99,
-		originalPrice: 100,
+		...generatePricing(100),
 		id: '1',
 		event: {
 			type: 'running',
-			participantCount: 10000,
+			participantCount: getRandomParticipantCount('running', 42),
 			name: 'Marathon de Nantes',
 			location: 'Nantes',
-			image: '/bib-red.png',
+			image: bibColors[0], // First distributed color
 			id: '1',
 			distanceUnit: 'km',
 			distance: 42,
-			date: new Date(),
+			date: getRandomFutureDate(),
 		},
 	},
 	{
 		user: {
-			lastName: 'Doe',
+			lastName: getRandomLastName(),
 			id: '2',
-			firstName: 'John',
+			firstName: getRandomFirstName(),
 		},
 		status: 'available',
-		price: 440,
-		originalPrice: 500,
+		...generatePricing(525),
 		id: '2',
 		event: {
-			type: 'running',
-			participantCount: 64000,
+			type: 'triathlon',
+			participantCount: getRandomParticipantCount('triathlon', 226),
 			name: 'Ironman Nice',
 			location: 'Nice',
-			image: '/bib-green.png',
+			image: bibColors[1], // Second distributed color
 			id: '2',
 			distanceUnit: 'km',
 			distance: 226,
-			date: new Date(),
+			date: getRandomFutureDate(),
 		},
 	},
 	{
 		user: {
-			lastName: 'Doe',
+			lastName: getRandomLastName(),
 			id: '3',
-			firstName: 'John',
+			firstName: getRandomFirstName(),
 		},
 		status: 'available',
-		price: 9.99,
-		originalPrice: 15,
+		...generatePricing(25),
 		id: '3',
 		event: {
 			type: 'running',
-			participantCount: 2630,
+			participantCount: getRandomParticipantCount('running', 21),
 			name: 'Semi-marathon de Thonon',
 			location: 'Thonon-les-bains',
-			image: '/bib-pink.png',
+			image: bibColors[2], // Third distributed color
 			id: '3',
 			distanceUnit: 'km',
 			distance: 21,
-			date: new Date(),
+			date: getRandomFutureDate(),
 		},
 	},
 	{
 		user: {
-			lastName: 'Doe',
-			id: '3',
-			firstName: 'John',
-		},
-		status: 'available',
-		price: 79.99,
-		originalPrice: 100,
-		id: '3',
-		event: {
-			type: 'running',
-			participantCount: 10000,
-			name: 'Marathon de Paris',
-			location: 'Paris',
-			image: '/bib-blue.png',
-			id: '3',
-			distanceUnit: 'km',
-			distance: 42,
-			date: new Date(),
-		},
-	},
-	{
-		user: {
-			lastName: 'Doe',
+			lastName: getRandomLastName(),
 			id: '4',
-			firstName: 'John',
+			firstName: getRandomFirstName(),
 		},
 		status: 'available',
-		price: 900,
-		originalPrice: 600,
+		...generatePricing(120),
 		id: '4',
 		event: {
 			type: 'running',
-			participantCount: 9000,
-			name: 'Ultra Trail du Mont Blanc',
-			location: 'Chamonix',
-			image: '/bib-orange.png',
+			participantCount: getRandomParticipantCount('running', 42),
+			name: 'Marathon de Paris',
+			location: 'Paris',
+			image: bibColors[3], // Fourth distributed color
 			id: '4',
 			distanceUnit: 'km',
+			distance: 42,
+			date: getRandomFutureDate(),
+		},
+	},
+	{
+		user: {
+			lastName: getRandomLastName(),
+			id: '5',
+			firstName: getRandomFirstName(),
+		},
+		status: 'available',
+		...generatePricing(180),
+		id: '5',
+		event: {
+			type: 'trail',
+			participantCount: getRandomParticipantCount('trail', 170),
+			name: 'Ultra Trail du Mont Blanc',
+			location: 'Chamonix',
+			image: bibColors[4], // Fifth distributed color
+			id: '5',
+			distanceUnit: 'km',
 			distance: 170,
-			date: new Date(),
+			date: getRandomFutureDate(),
 		},
 	},
 ]
+
+// --- Alternative: Fully random data generation
+// Uncomment the lines below and comment out the runsExample above to use fully random data:
+// const runsExample: BibSale[] = generateFakeBibSales(5)
 
 export default function MarketplaceGrid({ locale }: { locale: Locale }) {
 	const t = getTranslations(locale, marketplaceTranslations)

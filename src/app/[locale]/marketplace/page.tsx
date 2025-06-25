@@ -7,6 +7,7 @@ import type { BibSale } from '@/components/marketplace/CardMarket'
 import { generateLocaleParams, type LocaleParams } from '@/lib/generateStaticParams'
 import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
 import { getTranslations } from '@/lib/getDictionary'
+import { generateFakeBibSales } from '@/lib/utils'
 
 import marketplaceTranslations from './locales.json'
 
@@ -16,40 +17,8 @@ export const metadata: Metadata = {
 	description: 'Browse and buy race bibs from our marketplace.',
 }
 
-// Génère un BibSale aléatoire
-function generateRandomBibSale(): BibSale {
-	const sports = ['running', 'trail', 'triathlon', 'cycling', 'swimming', 'other'] as const
-	const type = faker.helpers.arrayElement(sports)
-	const distance = faker.helpers.arrayElement([5, 10, 21, 42, 80, 51.5, 180])
-	const distanceUnit = 'km'
-	const price = faker.number.int({ min: 20, max: 300 })
-	const originalPrice = price + faker.number.int({ min: 10, max: 100 })
-	return {
-		user: {
-			lastName: faker.person.lastName(),
-			id: faker.string.uuid(),
-			firstName: faker.person.firstName(),
-		},
-		status: faker.helpers.arrayElement(['available', 'sold']),
-		price,
-		originalPrice,
-		id: faker.string.uuid(),
-		event: {
-			type,
-			participantCount: faker.number.int({ min: 100, max: 50000 }),
-			name: faker.company.name() + ' ' + faker.word.noun(),
-			location: faker.location.city(),
-			image: faker.image.url(),
-			id: faker.string.uuid(),
-			distanceUnit,
-			distance,
-			date: faker.date.soon({ days: 365 }),
-		},
-	}
-}
-
-// Génère un lot de 10 à 15 dossards
-const mockBibs: BibSale[] = Array.from({ length: faker.number.int({ min: 10, max: 15 }) }, generateRandomBibSale)
+// Generate a variable number of fake bibs between 12 and 20 with distributed colors
+const mockBibs: BibSale[] = generateFakeBibSales(faker.number.int({ min: 12, max: 20 }))
 
 // Generate static params for all locales
 export function generateStaticParams() {
