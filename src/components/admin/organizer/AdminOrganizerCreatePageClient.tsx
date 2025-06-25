@@ -4,65 +4,24 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+import organizerCreateTranslations from '@/app/[locale]/admin/organizer/create/locales.json'
+import { getTranslations } from '@/lib/getDictionary'
 import { Organizer } from '@/models/organizer.model'
 import { User } from '@/models/user.model'
+import { Locale } from '@/lib/i18n-config'
 
 import OrganizerCreationForm from './OrganizerCreationForm'
-
 interface AdminOrganizerCreatePageClientProps {
 	currentUser: null | User
-	translations: {
-		organizers: {
-			create: {
-				errors: {
-					createFailed: string
-					emailInvalid: string
-					nameRequired: string
-					websiteInvalid: string
-				}
-				form: {
-					cancelButton: string
-					emailLabel: string
-					emailPlaceholder: string
-					logoUpload: {
-						description: string
-						dropText: string
-						fileModified: string
-						fileSizeUnit: string
-						label: string
-						uploadSubtext: string
-						uploadText: string
-					}
-					nameLabel: string
-					namePlaceholder: string
-					partnerDescription: string
-					partnerLabel: string
-					submitButton: string
-					websiteLabel: string
-					websitePlaceholder: string
-				}
-				sections: {
-					basicInformation: {
-						description: string
-						title: string
-					}
-				}
-				subtitle: string
-				success: {
-					backButton: string
-					message: string
-					title: string
-				}
-				title: string
-			}
-		}
-	}
+	locale: Locale
 }
 
 export default function AdminOrganizerCreatePageClient({
-	translations,
+	locale,
 	currentUser,
-}: AdminOrganizerCreatePageClientProps) {
+}: Readonly<AdminOrganizerCreatePageClientProps>) {
+	const translations = getTranslations(locale, organizerCreateTranslations)
+
 	const router = useRouter()
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [createdOrganizer, setCreatedOrganizer] = useState<null | Organizer>(null)

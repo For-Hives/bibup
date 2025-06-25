@@ -4,6 +4,7 @@ import * as v from 'valibot'
 
 import adminTranslations from '@/app/[locale]/event/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
 // Validation Schema using Valibot
 export const EventCreationSchema = v.pipe(
@@ -63,7 +64,7 @@ export type EventFormData = v.InferOutput<typeof EventCreationSchema>
 export interface EventSectionProps {
 	errors: FieldErrors<EventFormData>
 	formData: EventFormData
-	locale: string
+	locale: Locale
 	register: UseFormRegister<EventFormData>
 	setValue: UseFormSetValue<EventFormData>
 }

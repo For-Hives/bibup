@@ -1,13 +1,15 @@
 import { Plus, Trash2 } from 'lucide-react'
 
 import { EventOption } from '@/models/eventOption.model'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
 import { Input } from '../../ui/inputAlt'
 import { Button } from '../../ui/button'
 import { Label } from '../../ui/label'
-import { Translations } from './types'
 
 interface EventOptionCardProps {
+	locale: Locale
 	onAddValue: (optionIndex: number) => void
 	onRemove: (index: number) => void
 	onRemoveValue: (optionIndex: number, valueIndex: number) => void
@@ -15,11 +17,11 @@ interface EventOptionCardProps {
 	onUpdateValue: (optionIndex: number, valueIndex: number, value: string) => void
 	option: EventOption
 	optionIndex: number
-	translations: Translations
 }
 
+import Translations from '@/app/[locale]/event/locales.json'
+
 export default function EventOptionCard({
-	translations,
 	optionIndex,
 	option,
 	onUpdateValue,
@@ -27,7 +29,10 @@ export default function EventOptionCard({
 	onRemoveValue,
 	onRemove,
 	onAddValue,
-}: EventOptionCardProps) {
+	locale,
+}: Readonly<EventOptionCardProps>) {
+	const translations = getTranslations(locale, Translations)
+
 	return (
 		<div className="border-border/50 bg-card/50 rounded-2xl border p-6 shadow-md backdrop-blur-sm">
 			<div className="mb-6 flex items-center justify-between">
