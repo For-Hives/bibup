@@ -10,6 +10,7 @@ import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
 import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
 import { handleToggleListingStatus, handleUpdateBibDetails, handleWithdrawBib } from './actions'
 import editBibTranslations from './locales.json'
@@ -18,13 +19,13 @@ interface EditBibClientProps {
 	bibId: string
 	initialBibWithEvent: (Bib & { expand?: { eventId?: Event } }) | null
 	initialError?: null | string
-	translations: Translations
+	locale: Locale
 }
-
-type Translations = ReturnType<typeof getTranslations<(typeof editBibTranslations)['en'], 'en'>>
 
 // TODO: create loading.tsx skeleton for this page
 export default function EditBibClient({ locale, initialError, initialBibWithEvent, bibId }: EditBibClientProps) {
+	const t = getTranslations(locale, editBibTranslations)
+
 	const router = useRouter()
 	const [bib, setBib] = useState<(Bib & { expand?: { eventId?: Event } }) | null>(initialBibWithEvent)
 	const [isLoading, setIsLoading] = useState(false)
