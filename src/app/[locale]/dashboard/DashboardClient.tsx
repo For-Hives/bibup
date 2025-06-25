@@ -19,29 +19,13 @@ import Link from 'next/link'
 import type { User } from '@/models/user.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 
 interface DashboardClientProps {
 	clerkUser: SerializedClerkUser
-	translations: DashboardTranslations
+	locale: Locale
 	user: null | User
-}
-
-interface DashboardTranslations {
-	auth: {
-		signInToAccessDashboard: string
-	}
-	dashboard: {
-		buyer: {
-			description: string
-			title: string
-		}
-		seller: {
-			description: string
-			title: string
-		}
-		title: string
-	}
 }
 
 interface SerializedClerkUser {
@@ -52,8 +36,13 @@ interface SerializedClerkUser {
 	lastName: null | string
 	username: null | string
 }
+import { Locale } from '@/lib/i18n-config'
 
-export default function DashboardClient({ translations: t, clerkUser }: DashboardClientProps) {
+import dashboardTranslations from './locales.json'
+
+export default function DashboardClient({ locale, clerkUser }: DashboardClientProps) {
+	const t = getTranslations(locale, dashboardTranslations)
+
 	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'User'
 
 	return (
