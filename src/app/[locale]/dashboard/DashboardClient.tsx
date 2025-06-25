@@ -36,6 +36,8 @@ interface SerializedClerkUser {
 	lastName: null | string
 	username: null | string
 }
+
+import UserHeader from '@/components/dashboard/user-header'
 import { Locale } from '@/lib/i18n-config'
 
 import dashboardTranslations from './locales.json'
@@ -43,27 +45,10 @@ import dashboardTranslations from './locales.json'
 export default function DashboardClient({ locale, clerkUser }: DashboardClientProps) {
 	const t = getTranslations(locale, dashboardTranslations)
 
-	const userName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? 'User'
-
 	return (
 		<div className="from-background via-primary/5 to-background relative min-h-screen bg-gradient-to-br">
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-
-			{/* User header */}
-			<div className="bg-card/25 border-border/30 absolute top-0 right-0 left-0 z-20 mx-4 mt-12 mb-6 rounded-2xl border p-4 backdrop-blur-sm">
-				<div className="flex items-center justify-between">
-					<div>
-						<p className="text-muted-foreground text-sm">Welcome back</p>
-						<p className="text-foreground font-medium">
-							{userName}
-							{clerkUser.emailAddresses[0] !== undefined && (
-								<span className="text-muted-foreground ml-2 text-sm">({clerkUser.emailAddresses[0].emailAddress})</span>
-							)}
-						</p>
-					</div>
-					<div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">MEMBER</div>
-				</div>
-			</div>
+			<UserHeader clerkUser={clerkUser} />
 
 			<div className="relative pt-32 pb-12">
 				<div className="container mx-auto max-w-6xl p-6">

@@ -75,7 +75,6 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 									<SignedIn>
 										{/* Dashboard Dropdown Menu */}
 										<DashboardDropdown locale={locale} />
-										<UserButton />
 									</SignedIn>
 									<SignedOut>
 										<SignInButton>
