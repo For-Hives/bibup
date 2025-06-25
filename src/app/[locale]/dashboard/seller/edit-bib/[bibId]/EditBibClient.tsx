@@ -265,7 +265,7 @@ export default function EditBibClient({ locale, initialError, initialBibWithEven
 						className="btn btn-danger"
 						disabled={isLoading}
 						onClick={() => {
-							void handleWithdrawAction()
+							handleWithdrawAction()
 						}}
 					>
 						{t.confirmWithdraw}
