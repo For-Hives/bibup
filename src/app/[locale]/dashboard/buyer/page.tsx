@@ -6,10 +6,8 @@ import { redirect } from 'next/navigation'
 import { fetchUserWaitlists } from '@/services/waitlist.services'
 import { fetchBibsByBuyer } from '@/services/bib.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
 
 import BuyerDashboardClient from './BuyerDashboardClient'
-import buyerTranslations from './locales.json'
 
 // Force dynamic rendering for dashboard routes
 export const dynamic = 'force-dynamic'
@@ -27,7 +25,6 @@ export default async function BuyerDashboardPage({
 }) {
 	const { locale } = await params
 	const { purchase_success } = await searchParams
-	const t = getTranslations(locale, buyerTranslations)
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
@@ -61,10 +58,10 @@ export default async function BuyerDashboardPage({
 	return (
 		<BuyerDashboardClient
 			clerkUser={serializedClerkUser}
+			locale={locale}
 			purchasedBibs={purchasedBibs}
 			purchaseSuccess={purchaseSuccess}
 			successEventName={successEventName}
-			translations={t}
 			userWaitlists={userWaitlists}
 		/>
 	)

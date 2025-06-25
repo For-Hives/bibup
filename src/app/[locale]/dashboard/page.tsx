@@ -5,13 +5,8 @@ import { redirect } from 'next/navigation'
 
 import { fetchUserByClerkId } from '@/services/user.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
 
-import dashboardTranslations from './locales.json'
 import DashboardClient from './DashboardClient'
-
-// Define proper types for translations
-type DashboardTranslations = typeof dashboardTranslations.en
 
 // Force dynamic rendering for dashboard routes
 export const dynamic = 'force-dynamic'
@@ -22,7 +17,6 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, dashboardTranslations) as DashboardTranslations
 
 	const { userId } = await auth()
 	const clerkUser = await currentUser()
@@ -47,5 +41,5 @@ export default async function DashboardPage({ params }: { params: Promise<Locale
 		})),
 	}
 
-	return <DashboardClient clerkUser={serializedClerkUser} translations={t} user={beswibUser} />
+	return <DashboardClient clerkUser={serializedClerkUser} locale={locale} user={beswibUser} />
 }

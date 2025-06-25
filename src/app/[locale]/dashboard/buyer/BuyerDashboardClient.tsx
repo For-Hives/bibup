@@ -9,46 +9,16 @@ import type { Event } from '@/models/event.model'
 import type { Bib } from '@/models/bib.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getTranslations } from '@/lib/getDictionary'
 import { Button } from '@/components/ui/button'
 
 interface BuyerDashboardClientProps {
 	clerkUser: SerializedClerkUser
+	locale: Locale
 	purchasedBibs: (Bib & { expand?: { eventId: Event } })[]
 	purchaseSuccess: boolean
 	successEventName: string
-	translations: BuyerTranslations
 	userWaitlists: (Waitlist & { expand?: { eventId: Event } })[]
-}
-
-// Simplified type for translations to avoid complex type conflicts
-interface BuyerTranslations {
-	[key: string]: any
-	bibForLabel?: string
-	browseEventsWaitlist?: string
-	dateAddedToWaitlist?: string
-	dateOfEvent?: string
-	// Global translations object
-	GLOBAL?: {
-		appName?: string
-		errors?: {
-			unexpected?: string
-		}
-		logoAltText?: string
-		welcomeMessage?: string
-	}
-	keepRecords?: string
-	myPurchases?: string
-	noPurchases?: string
-	noWaitlistEntries?: string
-	pricePaid?: string
-	// Page-specific translations
-	purchaseSuccess?: string
-	purchaseSuccessDetails?: string
-	registrationNumber?: string
-	status?: string
-	waitingForNotification?: string
-	waitlistEntries?: string
-	waitlistJoinText?: string
 }
 
 interface SerializedClerkUser {
@@ -60,14 +30,20 @@ interface SerializedClerkUser {
 	username: null | string
 }
 
+import { Locale } from '@/lib/i18n-config'
+
+import buyerTranslations from './locales.json'
+
 export default function BuyerDashboardClient({
 	userWaitlists = [],
-	translations: t,
 	successEventName,
 	purchaseSuccess,
 	purchasedBibs = [],
+	locale,
 	clerkUser,
 }: BuyerDashboardClientProps) {
+	const t = getTranslations(locale, buyerTranslations)
+
 	const userName = clerkUser?.firstName ?? clerkUser?.emailAddresses?.[0]?.emailAddress ?? 'Buyer'
 
 	// Calculate statistics with safety checks
