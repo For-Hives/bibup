@@ -24,9 +24,9 @@ const DropdownMenuAnimated = ({ options, children }: DropdownMenuProps) => {
 	}
 
 	return (
-		<div className="relative">
+		<div className="relative z-50">
 			<Button
-				className="text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex items-center gap-x-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+				className="text-muted-foreground hover:bg-accent hover:text-accent-foreground z-50 inline-flex items-center gap-x-1 rounded-md px-3 py-2 text-sm font-medium transition-colors"
 				onClick={toggleDropdown}
 				variant="ghost"
 			>
@@ -44,7 +44,7 @@ const DropdownMenuAnimated = ({ options, children }: DropdownMenuProps) => {
 				{isOpen && (
 					<motion.div
 						animate={{ y: 0, scale: 1, filter: 'blur(0px)' }}
-						className="bg-background border-border ring-opacity-5 absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md border p-1 shadow-lg ring-1 ring-black backdrop-blur-sm"
+						className="bg-background border-border ring-opacity-5 absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md border p-1 shadow-lg ring-1 ring-black backdrop-blur-sm"
 						exit={{ y: -5, scale: 0.95, opacity: 0, filter: 'blur(10px)' }}
 						initial={{ y: -5, scale: 0.95, filter: 'blur(10px)' }}
 						transition={{ type: 'spring', ease: 'circInOut', duration: 0.6 }}
@@ -53,7 +53,7 @@ const DropdownMenuAnimated = ({ options, children }: DropdownMenuProps) => {
 							options.map((option, index) => (
 								<motion.button
 									animate={{ x: 0, scale: 1, opacity: 1, filter: 'blur(0px)' }}
-									className="text-foreground hover:bg-accent data-[focus]:bg-accent flex w-full items-center gap-x-2 rounded-lg px-4 py-2 text-left text-sm transition-colors"
+									className="text-foreground hover:bg-accent data-[focus]:bg-accent z-50 flex w-full items-center gap-x-2 rounded-lg px-4 py-2 text-left text-sm transition-colors"
 									exit={{
 										x: 10,
 										scale: 0.95,
