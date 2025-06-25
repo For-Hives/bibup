@@ -1,12 +1,17 @@
 import { CheckCircle } from 'lucide-react'
 
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
 interface ProgressStepsProps {
 	currentStepIndex: number
+	locale: Locale
 	steps: readonly string[]
-	translations: Record<string, { description: string; title: string }>
 }
+import sellBibTranslations from '@/app/[locale]/dashboard/seller/sell-bib/locales.json'
+export default function ProgressSteps({ steps, locale, currentStepIndex }: Readonly<ProgressStepsProps>) {
+	const t = getTranslations(locale, sellBibTranslations).steps
 
-export default function ProgressSteps({ translations: t, steps, currentStepIndex }: ProgressStepsProps) {
 	return (
 		<div className="mb-16">
 			<div className="mx-auto flex max-w-4xl items-center justify-between">

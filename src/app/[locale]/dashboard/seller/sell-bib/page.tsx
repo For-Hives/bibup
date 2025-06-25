@@ -6,9 +6,7 @@ import { redirect } from 'next/navigation'
 import { fetchPartneredApprovedEvents } from '@/services/event.services'
 import { fetchUserByClerkId } from '@/services/user.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
 
-import sellBibTranslations from './locales.json'
 import SellBibClient from './SellBibClient'
 
 // Force dynamic rendering for dashboard routes
@@ -20,7 +18,6 @@ export const metadata: Metadata = {
 
 export default async function SellBibPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
-	const t = getTranslations(locale, sellBibTranslations)
 
 	const { userId: clerkUserId } = await auth()
 
@@ -36,5 +33,5 @@ export default async function SellBibPage({ params }: { params: Promise<LocalePa
 	// Fetch available events for the seller to choose from
 	const availableEvents = await fetchPartneredApprovedEvents(true)
 
-	return <SellBibClient availableEvents={availableEvents} translations={t} user={beswibUser} />
+	return <SellBibClient availableEvents={availableEvents} locale={locale} user={beswibUser} />
 }

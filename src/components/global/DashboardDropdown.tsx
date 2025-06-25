@@ -6,20 +6,20 @@ import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 
 import { DropdownMenuAnimated } from '@/components/ui/dropdown-menu-animated'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
 
 import { checkIsCurrentUserAdmin } from './adminActions'
 
 interface DashboardDropdownProps {
-	translations: {
-		navbar: {
-			buyBibLink: string
-			dashboardLink: string
-			sellBibLink: string
-		}
-	}
+	locale: Locale
 }
 
-export default function DashboardDropdown({ translations: t }: DashboardDropdownProps) {
+import pageTranslationsData from './locales.json'
+
+export default function DashboardDropdown({ locale }: Readonly<DashboardDropdownProps>) {
+	const t = getTranslations(locale, pageTranslationsData)
+
 	const { user: clerkUser, isLoaded } = useUser()
 	const [isAdmin, setIsAdmin] = useState(false)
 
