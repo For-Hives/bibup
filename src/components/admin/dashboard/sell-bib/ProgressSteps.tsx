@@ -18,7 +18,7 @@ export default function ProgressSteps({ steps, locale, currentStepIndex }: Reado
 				{steps.map((step, index) => {
 					const isActive = index === currentStepIndex
 					const isCompleted = index < currentStepIndex
-					const stepData = t[step]
+					const stepData = t[step as keyof typeof t]
 
 					return (
 						<div className="flex items-center" key={step}>
