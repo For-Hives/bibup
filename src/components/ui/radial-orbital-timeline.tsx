@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface RadialOrbitalTimelineProps {
-	timelineData: TimelineItem[]
+	readonly timelineData: TimelineItem[]
 }
 
 interface TimelineItem {
@@ -33,7 +33,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 	const orbitRef = useRef<HTMLDivElement>(null)
 	const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
-	const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+	const handleContainerClick = (e: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
 		if (e.target === containerRef.current || e.target === orbitRef.current) {
 			setExpandedItems({})
 			setActiveNodeId(null)
@@ -145,11 +145,30 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 		return relatedItems.includes(itemId)
 	}
 
+	const getNodeStyling = (isExpanded: boolean, isRelated: boolean): string => {
+		if (isExpanded) {
+			return 'border-primary bg-primary/70 text-primary-foreground shadow-primary/50 scale-115 shadow-lg'
+		}
+		if (isRelated) {
+			return 'border-primary bg-primary/70 text-primary-foreground animate-pulse'
+		}
+		return 'border-muted bg-card/90 text-muted-foreground'
+	}
+
 	return (
 		<div
+			aria-label="Close expanded timeline items"
 			className="bg-background z-40 flex min-h-128 w-full -translate-x-2 flex-col items-center justify-center md:translate-x-0"
 			onClick={handleContainerClick}
+			onKeyDown={e => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault()
+					handleContainerClick(e)
+				}
+			}}
 			ref={containerRef}
+			role="button"
+			tabIndex={0}
 		>
 			<div className="relative flex h-full w-full max-w-6xl items-center justify-center md:scale-100">
 				<div
@@ -187,16 +206,27 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 
 						return (
 							<div
+								aria-expanded={isExpanded}
+								aria-label={`Timeline item: ${item.title}. ${item.content}`}
 								className="absolute cursor-pointer transition-all duration-700"
 								key={item.id}
 								onClick={e => {
 									e.stopPropagation()
 									toggleItem(item.id)
 								}}
+								onKeyDown={e => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault()
+										e.stopPropagation()
+										toggleItem(item.id)
+									}
+								}}
 								ref={el => {
 									nodeRefs.current[item.id] = el
 								}}
+								role="button"
 								style={nodeStyle}
+								tabIndex={0}
 							>
 								{/* Pulse Effect */}
 								<div
@@ -212,13 +242,10 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 
 								{/* Main Node */}
 								<div
-									className={`flex h-12 w-12 transform items-center justify-center rounded-full border-2 transition-all duration-300 ${
-										isExpanded
-											? 'border-primary bg-primary/70 text-primary-foreground shadow-primary/50 scale-115 shadow-lg'
-											: isRelated
-												? 'border-primary bg-primary/70 text-primary-foreground animate-pulse'
-												: 'border-muted bg-card/90 text-muted-foreground'
-									}`}
+									className={`flex h-12 w-12 transform items-center justify-center rounded-full border-2 transition-all duration-300 ${getNodeStyling(
+										isExpanded,
+										isRelated
+									)}`}
 								>
 									<Icon size={20} />
 								</div>
