@@ -9,7 +9,9 @@ import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
 import { Separator } from '@/components/ui/separator'
+import { getTranslations } from '@/lib/getDictionary'
 import { createBib } from '@/services/bib.services'
+import { Locale } from '@/lib/i18n-config'
 
 import {
 	BibDetailsStep,
@@ -32,97 +34,18 @@ interface FormData {
 
 interface SellBibClientProps {
 	availableEvents: (Event & { expand?: { organizer?: Organizer } })[]
-	translations: SellBibTranslations
+	locale: Locale
 	user: User
-}
-
-interface SellBibTranslations {
-	actions: {
-		cancel: string
-		finish: string
-		next: string
-		previous: string
-	}
-	form: {
-		bibDetails: {
-			bibOptions: string
-			originalPrice: string
-			originalPriceHelp: string
-			originalPricePlaceholder: string
-			registrationNumber: string
-			registrationNumberHelp: string
-			registrationNumberPlaceholder: string
-		}
-		confirmation: {
-			bibNumber: string
-			copyLink: string
-			event: string
-			listingType: string
-			marketplacePreview: string
-			originalPrice: string
-			private: string
-			privateLink: string
-			privateLinkHelp: string
-			public: string
-			reviewTitle: string
-			sellingPrice: string
-			terms: string
-			termsRequired: string
-		}
-		eventSelection: {
-			date: string
-			distance: string
-			elevation: string
-			eventInfo: string
-			eventSelected: string
-			location: string
-			noEventsFound: string
-			participants: string
-			requestNewEvent: string
-			requestNewEventButton: string
-			requestNewEventDescription: string
-			searchPlaceholder: string
-			selectEvent: string
-		}
-		pricing: {
-			currency: string
-			listingType: string
-			privateListing: string
-			privateListingHelp: string
-			publicListing: string
-			publicListingHelp: string
-			sellingPrice: string
-			sellingPriceHelp: string
-			sellingPricePlaceholder: string
-		}
-	}
-	messages: {
-		error: string
-		linkCopied: string
-		loading: string
-		success: string
-	}
-	steps: {
-		bibDetails: { description: string; title: string }
-		confirmation: { description: string; title: string }
-		eventSelection: { description: string; title: string }
-		pricing: { description: string; title: string }
-	}
-	subtitle: string
-	title: string
-	validation: {
-		eventRequired: string
-		priceFormat: string
-		priceMinimum: string
-		priceRequired: string
-		registrationNumberRequired: string
-	}
 }
 
 const STEPS = ['eventSelection', 'bibDetails', 'pricing', 'confirmation'] as const
 type Step = (typeof STEPS)[number]
 
-export default function SellBibClient({ user, translations: t, availableEvents }: SellBibClientProps) {
+import sellBibTranslations from '@/app/[locale]/dashboard/seller/sell-bib/locales.json'
+
+export default function SellBibClient({ user, locale, availableEvents }: SellBibClientProps) {
+	const t = getTranslations(locale, sellBibTranslations)
+
 	const [currentStep, setCurrentStep] = useState<Step>('eventSelection')
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [errors, setErrors] = useState<Record<string, string>>({})
@@ -376,7 +299,7 @@ export default function SellBibClient({ user, translations: t, availableEvents }
 						</div>
 
 						{/* Progress Steps */}
-						<ProgressSteps currentStepIndex={currentStepIndex} steps={STEPS} translations={t.steps} />
+						<ProgressSteps currentStepIndex={currentStepIndex} locale={locale} steps={STEPS} />
 
 						{/* Step Content */}
 						<div className="mb-16">{renderStepContent()}</div>

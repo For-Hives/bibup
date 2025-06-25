@@ -9,30 +9,21 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } 
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
 import { checkIsCurrentUserAdmin } from './adminActions'
 import DashboardDropdown from './DashboardDropdown'
 
 interface HeaderClientProps {
-	translations: TranslationProps
+	locale: Locale
 }
 
-interface TranslationProps {
-	navbar: {
-		buyBibLink: string
-		calendarLink: string
-		contactLink: string
-		dashboardLink: string
-		faqLink: string
-		homeLink: string
-		marketplaceLink: string
-		racesLink: string
-		sellBibLink: string
-		signIn: string
-		signUp: string
-	}
-}
+import pageTranslationsData from './locales.json'
 
-export default function HeaderClient({ translations: t }: HeaderClientProps) {
+export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
+	const t = getTranslations(locale, pageTranslationsData)
+
 	// Navigation links data
 	const navigationLinks = [
 		{ label: t.navbar.homeLink, href: '/', current: false },
@@ -83,7 +74,7 @@ export default function HeaderClient({ translations: t }: HeaderClientProps) {
 								<div className="flex items-center gap-4">
 									<SignedIn>
 										{/* Dashboard Dropdown Menu */}
-										<DashboardDropdown translations={t} />
+										<DashboardDropdown locale={locale} />
 										<UserButton />
 									</SignedIn>
 									<SignedOut>
