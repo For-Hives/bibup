@@ -20,10 +20,9 @@ import Link from 'next/link'
 import type { User } from '@/models/user.model'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getDashboardStatsAction } from '@/app/[locale]/admin/actions'
 import { type DashboardStats } from '@/services/dashboard.services'
 import { Button } from '@/components/ui/button'
-
-import { getDashboardStatsAction } from '../../../app/[locale]/admin/actions'
 
 interface AdminDashboardClientProps {
 	currentUser: null | User

@@ -8,11 +8,6 @@ import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
-import { Separator } from '@/components/ui/separator'
-import { getTranslations } from '@/lib/getDictionary'
-import { createBib } from '@/services/bib.services'
-import { Locale } from '@/lib/i18n-config'
-
 import {
 	BibDetailsStep,
 	ConfirmationStep,
@@ -20,7 +15,11 @@ import {
 	PricingStep,
 	ProgressSteps,
 	StepNavigation,
-} from '../../../../../components/admin/dashboard/sell-bib'
+} from '@/components/admin/dashboard/sell-bib'
+import { Separator } from '@/components/ui/separator'
+import { getTranslations } from '@/lib/getDictionary'
+import { createBib } from '@/services/bib.services'
+import { Locale } from '@/lib/i18n-config'
 
 interface FormData {
 	acceptedTerms: boolean
