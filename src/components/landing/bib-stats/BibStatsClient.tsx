@@ -3,24 +3,22 @@
 import { useEffect, useRef, useState } from 'react'
 import NumberFlow from '@number-flow/react'
 
-interface BibStatsClientProps {
-	translations: {
-		stats: {
-			bibsSold: string
-			partnerRaces: string
-			satisfactionRate: string
-		}
-	}
-}
+import { Locale } from '@/lib/i18n-config'
 
+interface BibStatsClientProps {
+	locale: Locale
+}
+import { getTranslations } from '@/lib/getDictionary'
+
+import translations from './locales.json'
 interface StatItem {
 	label: string
 	suffix: string
 	value: string
 }
 
-export default function BibStatsClient({ translations }: BibStatsClientProps) {
-	const t = translations
+export default function BibStatsClient({ locale }: Readonly<BibStatsClientProps>) {
+	const t = getTranslations(locale, translations)
 
 	const stats: StatItem[] = [
 		{

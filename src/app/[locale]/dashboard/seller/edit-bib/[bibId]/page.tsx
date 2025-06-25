@@ -53,7 +53,7 @@ export default async function EditBibPage({ params }: EditBibPageProps) {
 			bibId={bibId}
 			initialBibWithEvent={initialBibWithEvent}
 			initialError={errorMessage}
-			translations={t}
+			locale={locale}
 		/>
 	)
 }
