@@ -182,7 +182,7 @@ export default function ConfirmationStep({
 							onCheckedChange={checked => onChange({ acceptedTerms: checked === true })}
 						/>
 						<Label className="text-foreground text-sm leading-relaxed" htmlFor="terms">
-							{t.terms}
+							{t.form.confirmation.terms}
 						</Label>
 					</div>
 					{errors.acceptedTerms && <p className="text-sm text-red-600 dark:text-red-400">{errors.acceptedTerms}</p>}
