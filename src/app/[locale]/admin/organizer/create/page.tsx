@@ -2,7 +2,6 @@ import { requireAdminAccess } from '@/guard/adminGuard'
 
 import AdminOrganizerCreatePageClient from '@/components/admin/organizer/AdminOrganizerCreatePageClient'
 import { generateLocaleParams, LocaleParams } from '@/lib/generateStaticParams'
-import { getTranslations } from '@/lib/getDictionary'
 
 // Generate static params for all locales
 export function generateStaticParams() {
