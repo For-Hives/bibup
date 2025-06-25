@@ -1,10 +1,10 @@
 import { Plus } from 'lucide-react'
 
 import { EventOption } from '@/models/eventOption.model'
+import { Button } from '@/components/ui/button'
 
 import EventOptionCard from './EventOptionCard'
 import { EventSectionProps } from './types'
-import { Button } from '../../ui/button'
 
 interface EventOptionsSectionProps extends EventSectionProps {
 	eventOptions: EventOption[]

@@ -11,6 +11,8 @@ import { createEventAction } from '@/app/[locale]/admin/actions'
 import Translations from '@/app/[locale]/event/locales.json'
 import { EventOption } from '@/models/eventOption.model'
 import { getTranslations } from '@/lib/getDictionary'
+import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
 import { Event } from '@/models/event.model'
 import { Locale } from '@/lib/i18n-config'
 
@@ -20,8 +22,6 @@ import EventDetailsSection from './EventDetailsSection'
 import EventOptionsSection from './EventOptionsSection'
 import BibPickupSection from './BibPickupSection'
 import OrganizerSection from './OrganizerSection'
-import { Separator } from '../../ui/separator'
-import { Button } from '../../ui/button'
 import FakerButton from './FakerButton'
 
 export interface EventCreationFormProps {

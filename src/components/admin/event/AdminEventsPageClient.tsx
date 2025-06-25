@@ -43,9 +43,6 @@ import type { Organizer } from '@/models/organizer.model'
 import type { Event } from '@/models/event.model'
 import type { User } from '@/models/user.model'
 
-import { getTranslations } from '@/lib/getDictionary'
-import { cn } from '@/lib/utils'
-
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -56,7 +53,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '../../ui/alert-dialog'
+} from '@/components/ui/alert-dialog'
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -66,17 +63,19 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '../../ui/dropdown-menu'
-import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card'
-import { Pagination, PaginationContent, PaginationItem } from '../../ui/pagination'
-import { getAllEventsAction } from '../../../app/[locale]/admin/actions'
-import { Checkbox } from '../../ui/checkbox'
-import { Button } from '../../ui/button'
-import { Badge } from '../../ui/badge'
-import { Input } from '../../ui/input'
-import { Label } from '../../ui/label'
+} from '@/components/ui/dropdown-menu'
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '@/components/ui/selectAlt'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
+import { getAllEventsAction } from '@/app/[locale]/admin/actions'
+import { getTranslations } from '@/lib/getDictionary'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 
 interface AdminEventsPageClientProps {
 	currentUser: null | User

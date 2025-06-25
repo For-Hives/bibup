@@ -1,12 +1,12 @@
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '@/components/ui/selectAlt'
 import Translations from '@/app/[locale]/event/locales.json'
+import { Textarea } from '@/components/ui/textareaAlt'
+import { DateInput } from '@/components/ui/date-input'
 import { getTranslations } from '@/lib/getDictionary'
+import { Input } from '@/components/ui/inputAlt'
+import { Label } from '@/components/ui/label'
 
-import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
-import { Textarea } from '../../ui/textareaAlt'
-import { DateInput } from '../../ui/date-input'
 import { EventSectionProps } from './types'
-import { Input } from '../../ui/inputAlt'
-import { Label } from '../../ui/label'
 
 export default function EventInformationSection({
 	setValue,

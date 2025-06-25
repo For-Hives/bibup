@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
+import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '@/components/ui/selectAlt'
 import { getAllOrganizersAction } from '@/app/[locale]/admin/actions'
 import Translations from '@/app/[locale]/event/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Organizer } from '@/models/organizer.model'
+import { Label } from '@/components/ui/label'
 
-import { SelectAlt, SelectContentAlt, SelectItemAlt, SelectTriggerAlt, SelectValueAlt } from '../../ui/selectAlt'
 import { EventSectionProps } from './types'
-import { Label } from '../../ui/label'
 
 export default function OrganizerSection({ setValue, locale, formData, errors }: Readonly<EventSectionProps>) {
 	const translations = getTranslations(locale, Translations)

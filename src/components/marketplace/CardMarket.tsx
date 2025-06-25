@@ -36,12 +36,11 @@ interface CardMarketProps {
 	bibSale: BibSale
 	locale: Locale
 }
+import marketplaceTranslations from '@/components/marketplace/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Locale } from '@/lib/i18n-config'
 
-import marketplaceTranslations from '../marketplace/locales.json'
-
-export default function CardMarket({ locale, bibSale }: CardMarketProps) {
+export default function CardMarket({ locale, bibSale }: Readonly<CardMarketProps>) {
 	const translations = getTranslations(locale, marketplaceTranslations)
 
 	return (
