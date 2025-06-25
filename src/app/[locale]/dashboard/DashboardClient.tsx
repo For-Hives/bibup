@@ -181,12 +181,12 @@ export default function DashboardClient({ translations: t, clerkUser }: Dashboar
 
 							{/* My Listings */}
 							<Card className="border-border/50 bg-card/80 hover:bg-card/90 cursor-pointer backdrop-blur-sm transition-all duration-200 hover:shadow-md">
-								<Link href="/dashboard/seller/list-bib">
+								<Link href="/dashboard/seller/request-event">
 									<CardContent className="flex flex-col items-center p-4 text-center">
 										<div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full">
 											<List className="h-6 w-6" />
 										</div>
-										<p className="text-sm font-medium">My Listings</p>
+										<p className="text-sm font-medium">I don't find my event</p>
 									</CardContent>
 								</Link>
 							</Card>
