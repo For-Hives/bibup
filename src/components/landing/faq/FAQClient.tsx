@@ -16,7 +16,7 @@ interface FAQClientProps {
 import { getTranslations } from '@/lib/getDictionary'
 
 import Translations from './locales.json'
-export default function FAQClient({ locale }: FAQClientProps) {
+export default function FAQClient({ locale }: Readonly<FAQClientProps>) {
 	const t = getTranslations(locale, Translations)
 
 	return (

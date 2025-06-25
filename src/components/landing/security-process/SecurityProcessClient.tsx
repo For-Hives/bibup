@@ -3,26 +3,17 @@
 import { CheckCircle, FileCheck, Handshake, RefreshCcw, Shield } from 'lucide-react'
 
 import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
+import { getTranslations } from '@/lib/getDictionary'
+import { Locale } from '@/lib/i18n-config'
+
+import translations from './locales.json'
 
 interface SecurityProcessClientProps {
-	translations: {
-		security: {
-			certification: { content: string; title: string }
-			confirmation: { content: string; title: string }
-			partnership: { content: string; title: string }
-			subtitle: string
-			title: string
-			transfer: { content: string; title: string }
-			update: { content: string; title: string }
-		}
-		steps: {
-			step: string
-		}
-	}
+	locale: Locale
 }
 
-export default function SecurityProcessClient({ translations }: SecurityProcessClientProps) {
-	const t = translations
+export default function SecurityProcessClient({ locale }: Readonly<SecurityProcessClientProps>) {
+	const t = getTranslations(locale, translations)
 
 	const securityProcessData = [
 		{
