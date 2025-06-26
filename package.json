@@ -16,7 +16,7 @@
 		"tsc:watch": "tsc --noEmit --watch"
 	},
 	"dependencies": {
-		"@clerk/nextjs": "6.23.0",
+		"@clerk/nextjs": "6.23.1",
 		"@faker-js/faker": "9.8.0",
 		"@formatjs/intl-localematcher": "0.6.1",
 		"@headlessui/react": "2.2.4",
