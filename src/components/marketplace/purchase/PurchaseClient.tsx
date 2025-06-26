@@ -37,7 +37,8 @@ export default function PurchaseClient({ locale, clientSecret, bib }: Readonly<P
 						setErrorMessage('Your payment is processing.')
 						break
 					case 'requires_payment_method':
-						setErrorMessage('Your payment was not successful, please try again.')
+						// Don't show error for initial state - this is expected for new payment intents
+						setErrorMessage(null)
 						break
 					case 'succeeded':
 						setErrorMessage(null)
