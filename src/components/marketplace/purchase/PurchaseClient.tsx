@@ -19,7 +19,7 @@ interface PurchaseClientProps {
 	locale: Locale
 }
 
-export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseClientProps) {
+export default function PurchaseClient({ locale, clientSecret, bib }: Readonly<PurchaseClientProps>) {
 	const stripe = useStripe()
 	const elements = useElements()
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -63,14 +63,12 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 			elements,
 			confirmParams: {
 				return_url: `${window.location.origin}/${locale}/purchase/success`,
-				redirect: 'if_required',
 			},
-			clientSecret,
 		})
 
-		if (error) {
+		if (error !== null) {
 			if (error.type === 'card_error' || error.type === 'validation_error') {
-				setErrorMessage(error.message)
+				setErrorMessage(error.message ?? 'An error occurred')
 			} else {
 				setErrorMessage('An unexpected error occurred.')
 			}
@@ -103,112 +101,123 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 		})
 	}
 
-	const bentoItemClasses =
-		'relative rounded-xl border p-4 shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 overflow-hidden'
-
 	return (
-		<div className="flex min-h-[50vh] items-center justify-center p-4">
-			<div className="bg-card/80 border-border relative grid w-full max-w-5xl grid-cols-1 gap-4 overflow-hidden rounded-2xl border p-6 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:auto-rows-min md:grid-cols-3">
-				<div
-					className={cn(
-						'absolute inset-0 -z-20 opacity-50',
-						'[background-size:20px_20px]',
-						'[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]',
-						'dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]'
-					)}
-				/>
-				<div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-25 dark:bg-black"></div>
+		<div className="from-background via-primary/5 to-background relative bg-gradient-to-br">
+			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
-				{/* Image Section - Spans 2 columns and 2 rows */}
-				<div className={cn(bentoItemClasses, 'h-64 md:col-span-2 md:row-span-2 md:h-auto')}>
-					<Image
-						alt="Event Image"
-						className="object-cover p-3"
-						fill
-						sizes="(max-width: 768px) 100vw, 66vw"
-						src={bib.event.image}
-					/>
-					<div className="absolute inset-0 z-10 opacity-10">
-						<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
+			<div className="relative pt-20 pb-12">
+				<div className="container mx-auto max-w-4xl p-6">
+					{/* Header */}
+					<div className="mb-8 space-y-2 text-center">
+						<h1 className="text-foreground text-3xl font-bold tracking-tight">Purchase Bib</h1>
+						<p className="text-muted-foreground text-lg">Complete your purchase to secure your race bib</p>
 					</div>
-					<div className="absolute top-0 left-0 z-20 m-2">
-						<span
-							className={cn(
-								'inline-block rounded-full border px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-md',
-								bgFromType(bib.event.type)
-							)}
-						>
-							{bib.event.type.charAt(0).toUpperCase() + bib.event.type.slice(1)}
-						</span>
-					</div>
-					{!!bib.originalPrice && ((bib.originalPrice - bib.price) / bib.originalPrice) * 100 > 10 && (
-						<div className="absolute top-0 right-0 z-20 m-2">
-							<span
-								className={cn('text-xs', {
-									'rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md':
-										true,
-								})}
-							>
-								{(-((bib.originalPrice - bib.price) / bib.originalPrice) * 100).toFixed(0)}%
-							</span>
+
+					{/* Main Content Grid */}
+					<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+						{/* Event Image Card */}
+						<div className="border-border/50 bg-card/80 relative overflow-hidden rounded-lg border backdrop-blur-sm transition-all duration-200 hover:shadow-lg lg:col-span-2">
+							<div className="relative h-64 lg:h-80">
+								<Image
+									alt="Event Image"
+									className="object-cover"
+									fill
+									sizes="(max-width: 1024px) 100vw, 66vw"
+									src={bib.event.image}
+								/>
+								{/* Event Type Badge */}
+								<div className="absolute top-4 left-4 z-10">
+									<span
+										className={cn(
+											'inline-block rounded-full border px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-md',
+											bgFromType(bib.event.type)
+										)}
+									>
+										{bib.event.type.charAt(0).toUpperCase() + bib.event.type.slice(1)}
+									</span>
+								</div>
+								{/* Discount Badge */}
+								{!!bib.originalPrice && ((bib.originalPrice - bib.price) / bib.originalPrice) * 100 > 10 && (
+									<div className="absolute top-4 right-4 z-10">
+										<span className="rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 text-xs font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md">
+											{(-((bib.originalPrice - bib.price) / bib.originalPrice) * 100).toFixed(0)}%
+										</span>
+									</div>
+								)}
+							</div>
+							{/* Event Title */}
+							<div className="p-6">
+								<h2 className="text-foreground text-2xl font-bold">{bib.event.name}</h2>
+								<p className="text-muted-foreground mt-1 text-sm italic">
+									Sold by {bib.user.firstName} {bib.user.lastName}
+								</p>
+							</div>
 						</div>
-					)}
-				</div>
 
-				{/* Title and Seller Info */}
-				<div className={bentoItemClasses}>
-					<h1 className="text-foreground text-2xl font-bold">{bib.event.name}</h1>
-					<p className="text-muted-foreground text-sm italic">
-						Sold by {bib.user.firstName} {bib.user.lastName}
-					</p>
-				</div>
-
-				{/* Price and Buy Button */}
-				<div className={cn(bentoItemClasses, 'flex flex-col justify-between')}>
-					<div className="flex flex-col">
-						<p className="text-4xl font-bold text-white">{bib.price}€</p>
-						{bib.originalPrice && bib.originalPrice > bib.price && (
-							<p className="text-muted-foreground text-lg line-through">{bib.originalPrice}€</p>
-						)}
+						{/* Price and Purchase Card */}
+						<div className="border-border/50 bg-card/80 flex flex-col justify-between rounded-lg border p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							<div>
+								<h3 className="mb-4 text-lg font-semibold">Price</h3>
+								<div className="mb-6">
+									<p className="text-foreground text-4xl font-bold">{bib.price}€</p>
+									{Boolean(bib.originalPrice && bib.originalPrice > bib.price) && (
+										<p className="text-muted-foreground text-lg line-through">{bib.originalPrice}€</p>
+									)}
+								</div>
+							</div>
+							<Button
+								className="flex items-center justify-center gap-2 text-lg font-medium"
+								onClick={() => setIsPanelOpen(true)}
+								size="lg"
+							>
+								<ShoppingCart className="h-5 w-5" />
+								Buy Now
+							</Button>
+						</div>
 					</div>
-					<Button
-						className="flex items-center gap-2 rounded-lg px-6 py-3 text-lg font-medium transition"
-						onClick={() => setIsPanelOpen(true)}
-					>
-						<ShoppingCart className="h-6 w-6" />
-						Buy Now
-					</Button>
-				</div>
 
-				{/* Date */}
-				<div className={bentoItemClasses}>
-					<h2 className="text-lg font-semibold">Date</h2>
-					<div className="mt-2 flex items-center gap-3">
-						<Calendar className="text-primary h-5 w-5" />
-						<p className="text-muted-foreground text-sm">{formatDateWithLocale(bib.event.date, locale)}</p>
-					</div>
-				</div>
+					{/* Event Details Grid */}
+					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+						{/* Date Card */}
+						<div className="border-border/50 bg-card/80 rounded-lg border p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							<h3 className="mb-3 text-lg font-semibold">Date</h3>
+							<div className="flex items-center gap-3">
+								<div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
+									<Calendar className="h-5 w-5" />
+								</div>
+								<p className="text-muted-foreground">{formatDateWithLocale(bib.event.date, locale)}</p>
+							</div>
+						</div>
 
-				{/* Location and Distance */}
-				<div className={bentoItemClasses}>
-					<h2 className="text-lg font-semibold">Location & Distance</h2>
-					<div className="mt-2 flex items-center gap-3">
-						<MapPinned className="text-primary h-5 w-5" />
-						<p className="text-muted-foreground text-sm">
-							{bib.event.location} • {bib.event.distance}
-							{bib.event.distanceUnit}
-						</p>
-					</div>
-				</div>
+						{/* Location Card */}
+						<div className="border-border/50 bg-card/80 rounded-lg border p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							<h3 className="mb-3 text-lg font-semibold">Location & Distance</h3>
+							<div className="flex items-center gap-3">
+								<div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
+									<MapPinned className="h-5 w-5" />
+								</div>
+								<div>
+									<p className="text-muted-foreground text-sm">{bib.event.location}</p>
+									<p className="text-muted-foreground text-sm font-medium">
+										{bib.event.distance}
+										{bib.event.distanceUnit}
+									</p>
+								</div>
+							</div>
+						</div>
 
-				{/* Participants */}
-				<div className={bentoItemClasses}>
-					<h2 className="text-lg font-semibold">Participants</h2>
-					<div className="mt-2 flex items-center gap-3">
-						<User className="text-primary h-5 w-5" />
-						<p className="text-muted-foreground text-sm">
-							{formatParticipantCount(bib.event.participantCount)} participants
-						</p>
+						{/* Participants Card */}
+						<div className="border-border/50 bg-card/80 rounded-lg border p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-lg">
+							<h3 className="mb-3 text-lg font-semibold">Participants</h3>
+							<div className="flex items-center gap-3">
+								<div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
+									<User className="h-5 w-5" />
+								</div>
+								<p className="text-muted-foreground">
+									{formatParticipantCount(bib.event.participantCount)} participants
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -219,13 +228,18 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 				onClose={() => setIsPanelOpen(false)}
 				title="Complete your purchase"
 			>
-				<form className="space-y-4" onSubmit={handleSubmit}>
+				<form
+					className="space-y-4"
+					onSubmit={event => {
+						void handleSubmit(event)
+					}}
+				>
 					<h2 className="text-xl font-bold">Payment Details</h2>
 					<PaymentElement id="payment-element" />
 					<Button className="w-full" disabled={!stripe} type="submit">
 						Pay {bib.price}€
 					</Button>
-					{errorMessage && <div className="text-sm text-red-500">{errorMessage}</div>}
+					{Boolean(errorMessage) && <div className="text-sm text-red-500">{errorMessage}</div>}
 				</form>
 			</SlidingPanel>
 		</div>
