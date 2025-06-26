@@ -14,7 +14,7 @@ interface SlidingPanelProps {
 	title?: string
 }
 
-export function SlidingPanel({ title, onClose, isOpen, className, children }: SlidingPanelProps) {
+export function SlidingPanel({ title, onClose, isOpen, className, children }: Readonly<SlidingPanelProps>) {
 	const panelRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -40,7 +40,7 @@ export function SlidingPanel({ title, onClose, isOpen, className, children }: Sl
 			{isOpen && (
 				<motion.div
 					animate={{ opacity: 1 }}
-					className="fixed inset-0 z-[99] bg-black/50 backdrop-blur-sm"
+					className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm"
 					exit={{ opacity: 0 }}
 					initial={{ opacity: 0 }}
 					onClick={onClose}
@@ -58,7 +58,7 @@ export function SlidingPanel({ title, onClose, isOpen, className, children }: Sl
 						transition={{ type: 'spring', stiffness: 300, damping: 30 }}
 					>
 						<div className="mb-4 flex items-center justify-between">
-							{title && <h2 className="text-2xl font-bold">{title}</h2>}
+							{Boolean(title) && <h2 className="text-2xl font-bold">{title}</h2>}
 							<button className="text-muted-foreground hover:text-foreground" onClick={onClose}>
 								<svg
 									className="h-6 w-6"

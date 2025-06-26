@@ -4,13 +4,14 @@ import Stripe from 'stripe'
 import { fetchBibById } from '@/services/bib.services'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-	apiVersion: '2024-06-20',
+	apiVersion: '2025-05-28.basil',
 })
 
 export async function POST(request: Request) {
-	const { bibId } = await request.json()
+	const body = (await request.json()) as { bibId: string }
+	const { bibId } = body
 
-	if (!bibId) {
+	if (bibId == null || bibId === '') {
 		return NextResponse.json({ error: 'Missing bibId' }, { status: 400 })
 	}
 
