@@ -9,6 +9,7 @@ import type { Bib } from '@/models/bib.model'
 
 import CardMarket, { type BibSale } from '@/components/marketplace/CardMarket'
 import { getOrganizerLogoUrl } from '@/services/organizer.services'
+import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/inputAlt'
@@ -90,7 +91,7 @@ export default function ConfirmationStep({
 				: parseFloat(formData.sellingPrice) + 10,
 			id: createdBib?.id ?? 'preview',
 			event: {
-				type: (formData.selectedEvent.typeCourse?.toLowerCase() ?? 'running') as BibSale['event']['type'],
+				type: mapEventTypeToBibSaleType(formData.selectedEvent.typeCourse),
 				participantCount: formData.selectedEvent.participants ?? 0,
 				name: formData.selectedEvent.name,
 				location: formData.selectedEvent.location,

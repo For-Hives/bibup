@@ -4,6 +4,24 @@ import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
 /**
+ * Maps database event type to BibSale event type
+ */
+export function mapEventTypeToBibSaleType(
+	eventType: 'route' | 'trail' | 'triathlon' | 'ultra' | undefined
+): 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon' {
+	if (!eventType) return 'other'
+
+	const typeMap: Record<string, 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon'> = {
+		ultra: 'running',
+		triathlon: 'triathlon',
+		trail: 'trail',
+		route: 'running',
+	}
+
+	return typeMap[eventType] ?? 'other'
+}
+
+/**
  * Transforms an array of bibs to BibSale format, filtering out any that can't be transformed
  */
 export function transformBibsToBibSales(
@@ -71,22 +89,4 @@ function generateEventImageUrl(eventType: 'route' | 'trail' | 'triathlon' | 'ult
 	}
 
 	return imageMap[eventType] ?? '/bib-pink.png'
-}
-
-/**
- * Maps database event type to BibSale event type
- */
-function mapEventTypeToBibSaleType(
-	eventType: 'route' | 'trail' | 'triathlon' | 'ultra' | undefined
-): 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon' {
-	if (!eventType) return 'other'
-
-	const typeMap: Record<string, 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon'> = {
-		ultra: 'running',
-		triathlon: 'triathlon',
-		trail: 'trail',
-		route: 'running',
-	}
-
-	return typeMap[eventType] ?? 'other'
 }

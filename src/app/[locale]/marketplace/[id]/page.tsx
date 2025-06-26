@@ -7,6 +7,7 @@ import { BibSale } from '@/components/marketplace/CardMarket'
 import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
 import { StripeProvider } from '@/components/marketplace/purchase/StripeProvider'
 import { Locale } from '@/lib/i18n-config'
+import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
 import { fetchBibById, fetchPrivateBibByToken } from '@/services/bib.services'
 
 export const metadata: Metadata = {
@@ -40,22 +41,6 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 		return <div>Bib not found or event data missing</div>
 	}
 
-	// Function to map event types
-	const mapEventType = (typeCourse: string): 'cycling' | 'other' | 'running' | 'swimming' | 'trail' | 'triathlon' => {
-		switch (typeCourse) {
-			case 'route':
-				return 'running'
-			case 'trail':
-				return 'trail'
-			case 'triathlon':
-				return 'triathlon'
-			case 'ultra':
-				return 'trail'
-			default:
-				return 'other'
-		}
-	}
-
 	// Function to map status
 	const mapStatus = (status: string): 'available' | 'sold' => {
 		switch (status) {
@@ -78,7 +63,7 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 			location: bib.expand.eventId.location,
 			name: bib.expand.eventId.name,
 			participantCount: bib.expand.eventId.participants ?? 0,
-			type: mapEventType(bib.expand.eventId.typeCourse),
+			type: mapEventTypeToBibSaleType(bib.expand.eventId.typeCourse),
 		},
 		id: bib.id,
 		originalPrice: bib.originalPrice ?? 0,
