@@ -30,7 +30,7 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 			return
 		}
 
-		stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+		void stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
 			if (paymentIntent) {
 				switch (paymentIntent.status) {
 					case 'processing':
@@ -107,7 +107,7 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 		'relative rounded-xl border p-4 shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 overflow-hidden'
 
 	return (
-		<div className="flex min-h-[80vh] items-center justify-center p-4">
+		<div className="flex min-h-[50vh] items-center justify-center p-4">
 			<div className="bg-card/80 border-border relative grid w-full max-w-5xl grid-cols-1 gap-4 overflow-hidden rounded-2xl border p-6 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:auto-rows-min md:grid-cols-3">
 				<div
 					className={cn(
@@ -141,7 +141,7 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 							{bib.event.type.charAt(0).toUpperCase() + bib.event.type.slice(1)}
 						</span>
 					</div>
-					{bib.originalPrice && ((bib.originalPrice - bib.price) / bib.originalPrice) * 100 > 10 && (
+					{!!bib.originalPrice && ((bib.originalPrice - bib.price) / bib.originalPrice) * 100 > 10 && (
 						<div className="absolute top-0 right-0 z-20 m-2">
 							<span
 								className={cn('text-xs', {
