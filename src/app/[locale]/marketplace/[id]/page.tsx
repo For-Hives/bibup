@@ -26,7 +26,7 @@ export default async function MarketplaceItemPage({ searchParams, params: { loca
 	const { tkn } = searchParams
 	let bib
 
-	if (tkn) {
+	if (tkn != null) {
 		bib = await fetchPrivateBibByToken(id, tkn)
 	} else {
 		bib = await fetchBibById(id)
