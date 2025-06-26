@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 
-import { faker } from '@faker-js/faker'
-
 import type { BibSale } from '@/components/marketplace/CardMarket'
 
 import { generateLocaleParams, type LocaleParams } from '@/lib/generateStaticParams'
 import MarketplaceClient from '@/components/marketplace/MarketplaceClient'
+import { fetchAvailableBibsForMarketplace } from '@/services/bib.services'
+import { transformBibsToBibSales } from '@/lib/bibTransformers'
 import { getTranslations } from '@/lib/getDictionary'
-import { generateFakeBibSales } from '@/lib/utils'
 
 import marketplaceTranslations from './locales.json'
 
@@ -16,9 +15,6 @@ export const metadata: Metadata = {
 	title: 'Marketplace | Beswib',
 	description: 'Browse and buy race bibs from our marketplace.',
 }
-
-// Generate a variable number of fake bibs between 12 and 20 with distributed colors
-const mockBibs: BibSale[] = generateFakeBibSales(faker.number.int({ min: 12, max: 20 }))
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -32,6 +28,10 @@ export default async function MarketplacePage({ params }: { params: Promise<Loca
 	// Get translation function for the current locale
 	const t = getTranslations(locale, marketplaceTranslations)
 
+	// Fetch real bibs from the database
+	const availableBibs = await fetchAvailableBibsForMarketplace()
+	const bibs: BibSale[] = transformBibsToBibSales(availableBibs)
+
 	return (
 		<div className="mx-auto max-w-7xl p-5 font-sans">
 			{/* Page header with title and description */}
@@ -41,7 +41,7 @@ export default async function MarketplacePage({ params }: { params: Promise<Loca
 			</header>
 
 			{/* Client component that handles filtering, sorting, and displaying bibs */}
-			<MarketplaceClient bibs={mockBibs} locale={locale} />
+			<MarketplaceClient bibs={bibs} locale={locale} />
 		</div>
 	)
 }
