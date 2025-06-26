@@ -2,6 +2,7 @@
 
 import type { Transaction } from '@/models/transaction.model'
 import type { Event } from '@/models/event.model'
+import type { User } from '@/models/user.model'
 import type { Bib } from '@/models/bib.model'
 
 import { pb } from '@/lib/pocketbaseClient'
@@ -52,6 +53,27 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 		return record
 	} catch (error: unknown) {
 		throw new Error('Error creating bib listing: ' + (error instanceof Error ? error.message : String(error)))
+	}
+}
+
+/**
+ * Fetches all publicly available bibs for the marketplace.
+ * Returns bibs with expanded event and user (seller) details.
+ */
+export async function fetchAvailableBibsForMarketplace(): Promise<
+	(Bib & { expand?: { eventId: Event; sellerUserId: User } })[]
+> {
+	try {
+		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event; sellerUserId: User } }>({
+			sort: '-created',
+			filter: `status = 'available' && listed = 'public'`,
+			expand: 'eventId,sellerUserId',
+		})
+		return records
+	} catch (error: unknown) {
+		throw new Error(
+			`Error fetching available bibs for marketplace: ` + (error instanceof Error ? error.message : String(error))
+		)
 	}
 }
 

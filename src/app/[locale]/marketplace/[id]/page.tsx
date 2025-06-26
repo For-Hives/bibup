@@ -15,17 +15,19 @@ export const metadata: Metadata = {
 }
 
 interface MarketplaceItemPageProps {
-	params: {
+	params: Promise<{
 		id: string
 		locale: Locale
-	}
-	searchParams: {
+	}>
+	searchParams: Promise<{
 		tkn?: string
-	}
+	}>
 }
 
-export default async function MarketplaceItemPage({ searchParams, params: { locale, id } }: MarketplaceItemPageProps) {
-	const { tkn } = searchParams
+export default async function MarketplaceItemPage({ searchParams, params }: MarketplaceItemPageProps) {
+	const { locale, id } = await params
+	const { tkn } = await searchParams
+
 	let bib
 
 	if (tkn != null) {
