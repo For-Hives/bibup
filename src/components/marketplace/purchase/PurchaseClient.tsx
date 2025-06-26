@@ -1,16 +1,17 @@
 'use client'
 
-import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
+
 import { BibSale } from '@/components/marketplace/CardMarket'
-import { Button } from '@/components/ui/button'
 import { SlidingPanel } from '@/components/ui/SlidingPanel'
+import { formatDateWithLocale } from '@/lib/dateUtils'
+import { Button } from '@/components/ui/button'
 import { Locale } from '@/lib/i18n-config'
 import { cn } from '@/lib/utils'
-import { formatDateWithLocale } from '@/lib/dateUtils'
 
 interface PurchaseClientProps {
 	bib: BibSale
@@ -102,11 +103,12 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 		})
 	}
 
-	const bentoItemClasses = "relative rounded-xl border p-4 shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 overflow-hidden";
+	const bentoItemClasses =
+		'relative rounded-xl border p-4 shadow-[inset_0_0_20px_hsl(var(--primary)/0.3),inset_0_0_40px_hsl(var(--accent)/0.2),0_0_30px_hsl(var(--primary)/0.4)] bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 overflow-hidden'
 
 	return (
 		<div className="flex min-h-[80vh] items-center justify-center p-4">
-			<div className="bg-card/80 border-border relative grid w-full max-w-5xl grid-cols-1 gap-4 overflow-hidden rounded-2xl border p-6 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:grid-cols-3 md:grid-rows-3">
+			<div className="bg-card/80 border-border relative grid w-full max-w-5xl grid-cols-1 gap-4 overflow-hidden rounded-2xl border p-6 shadow-[0_0_0_1px_hsl(var(--border)),inset_0_0_30px_hsl(var(--primary)/0.1),inset_0_0_60px_hsl(var(--accent)/0.05),0_0_50px_hsl(var(--primary)/0.2)] backdrop-blur-md md:auto-rows-min md:grid-cols-3">
 				<div
 					className={cn(
 						'absolute inset-0 -z-20 opacity-50',
@@ -117,9 +119,15 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 				/>
 				<div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-25 dark:bg-black"></div>
 
-				{/* Image Section - Spans 2 columns */}
-				<div className={cn(bentoItemClasses, "md:col-span-2 h-64")}>
-					<Image alt="Event Image" className="object-cover p-3" fill sizes="(max-width: 768px) 100vw, 66vw" src={bib.event.image} />
+				{/* Image Section - Spans 2 columns and 2 rows */}
+				<div className={cn(bentoItemClasses, 'h-64 md:col-span-2 md:row-span-2 md:h-auto')}>
+					<Image
+						alt="Event Image"
+						className="object-cover p-3"
+						fill
+						sizes="(max-width: 768px) 100vw, 66vw"
+						src={bib.event.image}
+					/>
 					<div className="absolute inset-0 z-10 opacity-10">
 						<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
 					</div>
@@ -137,7 +145,8 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 						<div className="absolute top-0 right-0 z-20 m-2">
 							<span
 								className={cn('text-xs', {
-									'rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md': true,
+									'rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md':
+										true,
 								})}
 							>
 								{(-((bib.originalPrice - bib.price) / bib.originalPrice) * 100).toFixed(0)}%
@@ -148,14 +157,14 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 
 				{/* Title and Seller Info */}
 				<div className={bentoItemClasses}>
-					<h1 className="text-2xl font-bold text-foreground">{bib.event.name}</h1>
+					<h1 className="text-foreground text-2xl font-bold">{bib.event.name}</h1>
 					<p className="text-muted-foreground text-sm italic">
 						Sold by {bib.user.firstName} {bib.user.lastName}
 					</p>
 				</div>
 
 				{/* Price and Buy Button */}
-				<div className={cn(bentoItemClasses, "flex flex-col justify-between")}>
+				<div className={cn(bentoItemClasses, 'flex flex-col justify-between')}>
 					<div className="flex flex-col">
 						<p className="text-4xl font-bold text-white">{bib.price}€</p>
 						{bib.originalPrice && bib.originalPrice > bib.price && (
@@ -174,8 +183,8 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 				{/* Date */}
 				<div className={bentoItemClasses}>
 					<h2 className="text-lg font-semibold">Date</h2>
-					<div className="flex items-center gap-3 mt-2">
-						<Calendar className="h-5 w-5 text-primary" />
+					<div className="mt-2 flex items-center gap-3">
+						<Calendar className="text-primary h-5 w-5" />
 						<p className="text-muted-foreground text-sm">{formatDateWithLocale(bib.event.date, locale)}</p>
 					</div>
 				</div>
@@ -183,8 +192,8 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 				{/* Location and Distance */}
 				<div className={bentoItemClasses}>
 					<h2 className="text-lg font-semibold">Location & Distance</h2>
-					<div className="flex items-center gap-3 mt-2">
-						<MapPinned className="h-5 w-5 text-primary" />
+					<div className="mt-2 flex items-center gap-3">
+						<MapPinned className="text-primary h-5 w-5" />
 						<p className="text-muted-foreground text-sm">
 							{bib.event.location} • {bib.event.distance}
 							{bib.event.distanceUnit}
@@ -195,24 +204,28 @@ export default function PurchaseClient({ locale, clientSecret, bib }: PurchaseCl
 				{/* Participants */}
 				<div className={bentoItemClasses}>
 					<h2 className="text-lg font-semibold">Participants</h2>
-					<div className="flex items-center gap-3 mt-2">
-						<User className="h-5 w-5 text-primary" />
+					<div className="mt-2 flex items-center gap-3">
+						<User className="text-primary h-5 w-5" />
 						<p className="text-muted-foreground text-sm">
 							{formatParticipantCount(bib.event.participantCount)} participants
 						</p>
 					</div>
 				</div>
-
 			</div>
 
-			<SlidingPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} title="Complete your purchase" className="z-[100]">
-				<form onSubmit={handleSubmit} className="space-y-4">
+			<SlidingPanel
+				className="z-[100]"
+				isOpen={isPanelOpen}
+				onClose={() => setIsPanelOpen(false)}
+				title="Complete your purchase"
+			>
+				<form className="space-y-4" onSubmit={handleSubmit}>
 					<h2 className="text-xl font-bold">Payment Details</h2>
 					<PaymentElement id="payment-element" />
-					<Button type="submit" disabled={!stripe} className="w-full">
+					<Button className="w-full" disabled={!stripe} type="submit">
 						Pay {bib.price}€
 					</Button>
-					{errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
+					{errorMessage && <div className="text-sm text-red-500">{errorMessage}</div>}
 				</form>
 			</SlidingPanel>
 		</div>

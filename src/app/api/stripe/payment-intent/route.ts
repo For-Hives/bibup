@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+
 import { fetchBibById } from '@/services/bib.services'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -20,9 +21,9 @@ export async function POST(request: Request) {
 	}
 
 	const paymentIntent = await stripe.paymentIntents.create({
-		amount: bib.price * 100, // amount in cents
-		currency: 'eur',
 		metadata: { bibId: bib.id },
+		currency: 'eur',
+		amount: bib.price * 100, // amount in cents
 	})
 
 	return NextResponse.json({ clientSecret: paymentIntent.client_secret })
