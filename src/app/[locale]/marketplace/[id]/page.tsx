@@ -8,7 +8,10 @@ import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
 import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
 import { createPaymentIntent } from '@/services/stripe.services'
 import { BibSale } from '@/components/marketplace/CardMarket'
+import { Event as EventModel } from '@/models/event.model'
 import { Locale } from '@/lib/i18n-config'
+import { User } from '@/models/user.model'
+import { Bib } from '@/models/bib.model'
 
 export const metadata: Metadata = {
 	title: 'Purchase Bib',
@@ -28,8 +31,7 @@ interface MarketplaceItemPageProps {
 export default async function MarketplaceItemPage({ searchParams, params }: MarketplaceItemPageProps) {
 	const { locale, id } = await params
 	const { tkn } = await searchParams
-
-	let bib
+	let bib: (Bib & { expand?: { eventId: EventModel; sellerId: User } }) | null
 
 	if (tkn != null) {
 		bib = await fetchPrivateBibByToken(id, tkn)
@@ -55,9 +57,9 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 
 	const bibSale: BibSale = {
 		user: {
-			lastName: '',
+			lastName: bib.expand.sellerId.lastName ?? 'Unknown',
 			id: bib.sellerUserId,
-			firstName: 'Seller',
+			firstName: bib.expand.sellerId.firstName ?? 'Unknown',
 		},
 		status: mapStatus(bib.status),
 		price: bib.price,
@@ -76,12 +78,12 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 		},
 	} satisfies BibSale
 
-	const clientSecret = await createPaymentIntent(id)
+	const paymentIntent = await createPaymentIntent(id)
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<StripeProvider clientSecret={clientSecret}>
-				<PurchaseClient bib={bibSale} clientSecret={clientSecret} locale={locale} />
+			<StripeProvider clientSecret={paymentIntent}>
+				<PurchaseClient bib={bibSale} locale={locale} paymentIntent={paymentIntent} />
 			</StripeProvider>
 		</div>
 	)
