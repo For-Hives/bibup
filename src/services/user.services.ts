@@ -26,11 +26,12 @@ export async function createUser(userData: Omit<User, 'id'>): Promise<null | Use
  * Fetches a user from PocketBase by their Clerk ID.
  * @param clerkId The Clerk User ID.
  */
-export async function fetchUserByClerkId(clerkId: string): Promise<null | User> {
-	if (clerkId === '') {
+export async function fetchUserByClerkId(clerkId: string | undefined): Promise<null | User> {
+	if (clerkId == null || clerkId === undefined || clerkId === '') {
 		console.error('Clerk ID is required to fetch user data.')
 		return null
 	}
+
 	try {
 		const record = await pb.collection('users').getFirstListItem<User>(`clerkId = "${clerkId}"`)
 		return record

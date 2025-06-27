@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 
+import { handleSuccessfulPurchase } from '@/app/[locale]/purchase/actions'
 import CardMarket, { BibSale } from '@/components/marketplace/CardMarket'
 import { SlidingPanel } from '@/components/ui/SlidingPanel'
 import { formatDateWithLocale } from '@/lib/dateUtils'
@@ -74,19 +75,23 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 			return
 		}
 
-		const { error } = await stripe.confirmPayment({
+		const { paymentIntent, error } = await stripe.confirmPayment({
+			redirect: 'if_required',
 			elements,
 			confirmParams: {
 				return_url: `${window.location.origin}/${locale}/purchase/success`,
 			},
 		})
 
-		if (error !== null) {
+		if (error) {
 			if (error.type === 'card_error' || error.type === 'validation_error') {
 				setErrorMessage(error.message ?? 'An error occurred')
 			} else {
 				setErrorMessage('An unexpected error occurred.')
 			}
+		} else if (paymentIntent && paymentIntent.status === 'succeeded') {
+			await handleSuccessfulPurchase(paymentIntent.id, bib.id)
+			router.push(`/${locale}/purchase/success`)
 		} else {
 			// Payment successful, Stripe will redirect to return_url
 		}
@@ -285,7 +290,6 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 									</div>
 								</div>
 							</div>
-
 							{/* Order Summary */}
 							<div className="bg-muted/30 border-border/20 rounded-lg border p-4">
 								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Order Summary</h3>
@@ -308,6 +312,9 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 									</div>
 								</div>
 							</div>
+							<p> test card: 4242424242424242</p>
+							<p> test card expiry: 04/26</p>
+							<p> test card CVC: 123</p>
 						</div>
 
 						{/* Payment Methods Tabs */}

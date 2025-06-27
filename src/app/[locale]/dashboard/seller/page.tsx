@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
+import { fetchUserByClerkId } from '@/services/user.services'
 import { fetchBibsBySeller } from '@/services/bib.services'
 import { LocaleParams } from '@/lib/generateStaticParams'
 
@@ -18,17 +19,17 @@ export const metadata: Metadata = {
 export default async function SellerDashboardPage({ params }: { params: Promise<LocaleParams> }) {
 	const { locale } = await params
 
-	const { userId } = await auth()
 	const clerkUser = await currentUser()
+	const pbUser = await fetchUserByClerkId(clerkUser?.id)
 
-	if (userId === null || userId === undefined || clerkUser === null) {
+	if (clerkUser?.id === null || clerkUser?.id === undefined || pbUser === null) {
 		redirect('/sign-in')
 	}
 
 	// Fetch seller bibs
-	const sellerBibs = await fetchBibsBySeller(userId)
+	const sellerBibs = await fetchBibsBySeller(pbUser.id)
 
-	// Extract only serializable properties from clerkUser
+	// Extract only serializable properties from currentUser
 
 	const serializedClerkUser = {
 		username: clerkUser.username,
