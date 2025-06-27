@@ -15,22 +15,22 @@ import { cn } from '@/lib/utils'
 
 interface PurchaseClientProps {
 	bib: BibSale
-	clientSecret: string
+	paymentIntent: string
 	locale: Locale
 }
 
-export default function PurchaseClient({ locale, clientSecret, bib }: Readonly<PurchaseClientProps>) {
+export default function PurchaseClient({ locale, paymentIntent, bib }: Readonly<PurchaseClientProps>) {
 	const stripe = useStripe()
 	const elements = useElements()
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
 	const [isPanelOpen, setIsPanelOpen] = useState(false)
 
 	useEffect(() => {
-		if (!stripe || !clientSecret || !isPanelOpen) {
+		if (!stripe || !paymentIntent || !isPanelOpen) {
 			return
 		}
 
-		void stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+		void stripe.retrievePaymentIntent(paymentIntent).then(({ paymentIntent }) => {
 			if (paymentIntent) {
 				switch (paymentIntent.status) {
 					case 'processing':
