@@ -183,13 +183,13 @@ export function EventView(props: Readonly<EventViewProps>) {
 						</div>
 
 						{/* Registration Options */}
-						{event.options.length > 0 && (
+						{event?.options && event.options.length > 0 && (
 							<>
 								<Separator />
 								<div>
 									<h3 className="mb-3 font-semibold">Registration Options</h3>
 									<div className="space-y-2">
-										{event.options.map(option => (
+										{event?.options.map(option => (
 											<div className="flex items-center justify-between rounded-lg border p-3" key={option.key}>
 												<div>
 													<div className="font-medium">{option.label}</div>
