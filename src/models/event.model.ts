@@ -1,5 +1,5 @@
-import { EventOption } from './eventOption.model'
-import { Organizer } from './organizer.model'
+import { type EventOption } from './eventOption.model'
+import { type Organizer } from './organizer.model'
 
 export interface Event {
 	bibPickupLocation?: string
@@ -34,3 +34,5 @@ export interface Event {
 
 	typeCourse: 'route' | 'trail' | 'triathlon' | 'ultra'
 }
+
+export type { EventOption } from './eventOption.model'

@@ -1,0 +1,20 @@
+{
+	"en": {
+		"GLOBAL": {
+			"appName": "Test App EN",
+			"welcome": "Welcome EN"
+		}
+	},
+	"fr": {
+		"GLOBAL": {
+			"appName": "Test App FR",
+			"welcome": "Bienvenue FR"
+		}
+	},
+	"es": {
+		"GLOBAL": {
+			"appName": "Test App ES",
+			"welcome": "Bienvenido ES"
+		}
+	}
+}

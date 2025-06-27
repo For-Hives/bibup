@@ -91,7 +91,7 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 	const defaultGlobalContent: GlobalTranslationFileContent =
 		Object.keys(typedGlobalLocales).length > 0
 			? { ...typedGlobalLocales[Object.keys(typedGlobalLocales)[0] as keyof typeof globalLocalesData] }
-			: ({} as GlobalTranslationFileContent)
+			: ({ GLOBAL: {} } as GlobalTranslationFileContent) // Ensure GLOBAL key for empty source
 
 	const finalGlobalContent: GlobalTranslationFileContent = getFallbackTranslation(
 		locale,
@@ -104,7 +104,7 @@ export function getTranslations<P extends PageTranslationContent, LocaleKey exte
 	// =====================================
 	// The "..." (spread) operator combines the two objects into one
 	// If a key exists in both, the right one (finalGlobalContent) takes precedence
-	return { ...finalPageContent, ...finalGlobalContent }
+	return { ...finalPageContent, ...finalGlobalContent } as GlobalTranslationFileContent & P
 }
 
 /**
