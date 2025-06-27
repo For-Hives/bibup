@@ -1,0 +1,20 @@
+{
+	"en": {
+		"GLOBAL": {
+			"appName": "Test App EN Mocked",
+			"welcome": "Welcome EN Mocked"
+		}
+	},
+	"fr": {
+		"GLOBAL": {
+			"appName": "Test App FR Mocked",
+			"welcome": "Bienvenue FR Mocked"
+		}
+	},
+	"es": {
+		"GLOBAL": {
+			"appName": "Test App ES Mocked",
+			"welcome": "Bienvenido ES Mocked"
+		}
+	}
+}

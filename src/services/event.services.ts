@@ -10,7 +10,13 @@ import { pb } from '@/lib/pocketbaseClient'
  * @param eventData Partial data for the new event. Fields like name, date, location, description are expected.
  */
 export async function createEvent(eventData: Omit<Event, 'id'>): Promise<Event | null> {
-	if (!eventData.name || isNaN(eventData.eventDate.getTime()) || !eventData.location || !eventData.organizer) {
+	if (
+		!eventData.name ||
+		!eventData.eventDate ||
+		isNaN(eventData.eventDate.getTime()) ||
+		!eventData.location ||
+		!eventData.organizer
+	) {
 		console.error('Event name, date, location, and organizer are required.')
 		return null
 	}

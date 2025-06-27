@@ -33,7 +33,7 @@ jobs:
             - args: [--global, gulp, prettier, vitest]
       - name: 'Lint Code'
         run: pnpm lint
-      #   - name: "Run Tests"
-      #     run: pnpm test
+      - name: 'Run Tests'
+        run: pnpm test
       - name: 'Build Project'
         run: pnpm build
