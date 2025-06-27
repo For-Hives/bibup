@@ -24,7 +24,7 @@ export interface Event {
 	location: string
 	name: string
 	officialStandardPrice?: number
-	options: EventOption[]
+	options: EventOption[] | null
 	organizer: Organizer['id']
 	parcoursUrl?: string
 	participants?: number
