@@ -43,11 +43,12 @@ const nextConfig: NextConfig = {
 					},
 					{
 						value: (req, res) => {
-							const nonce = crypto.randomBytes(16).toString('base64');
-							res.setHeader('Content-Security-Policy', 
+							const nonce = crypto.randomBytes(16).toString('base64')
+							res.setHeader(
+								'Content-Security-Policy',
 								`script-src 'self' 'nonce-${nonce}' https://js.stripe.com; object-src 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.stripe.com;`
-							);
-							return `script-src 'self' 'nonce-${nonce}' https://js.stripe.com; object-src 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.stripe.com;`;
+							)
+							return `script-src 'self' 'nonce-${nonce}' https://js.stripe.com; object-src 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.stripe.com;`
 						},
 						key: 'Content-Security-Policy',
 					},
