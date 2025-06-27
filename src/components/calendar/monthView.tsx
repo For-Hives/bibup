@@ -92,8 +92,8 @@ export function MonthView(props: Readonly<MonthViewProps>) {
 
 							<div className="space-y-1">
 								{dayEvents.slice(0, 3).map(event => (
-									<div
-										className={`${getEventColor(event.typeCourse)} cursor-pointer rounded p-1 text-xs text-white transition-opacity hover:opacity-80`}
+									<button
+										className={`${getEventColor(event.typeCourse)} w-full cursor-pointer rounded p-1 text-left text-xs text-white transition-opacity hover:opacity-80`}
 										key={event.id}
 										onClick={e => {
 											e.stopPropagation()
@@ -105,7 +105,7 @@ export function MonthView(props: Readonly<MonthViewProps>) {
 										<div className="truncate opacity-90">
 											{event.distanceKm}km {event.typeCourse}
 										</div>
-									</div>
+									</button>
 								))}
 								{dayEvents.length > 3 && (
 									<div className="text-muted-foreground text-xs">+{dayEvents.length - 3} more</div>
