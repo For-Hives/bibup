@@ -29,7 +29,7 @@ export async function createPaymentIntent(bibId: string): Promise<string> {
 		amount: bib.price * 100, // amount in cents
 	})
 
-	if (!paymentIntent.client_secret) {
+	if (paymentIntent.client_secret == null) {
 		throw new Error('Failed to create payment intent')
 	}
 
