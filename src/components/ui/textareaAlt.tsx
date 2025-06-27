@@ -6,11 +6,11 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * This is a textarea component that has a hover effect. ( used in the contact page form )
+ * This is a textarea component that has a hover effect. ( used in the contact page form ) ✨
  */
 const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
 	({ className, ...props }, ref) => {
-		const radius = 100 // change this to increase the radius of the hover effect
+		const radius = 100 // change this to increase the radius of the hover effect 💫
 		const [visible, setVisible] = React.useState(false)
 
 		let mouseX = useMotionValue(0)

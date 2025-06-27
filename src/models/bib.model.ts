@@ -6,7 +6,7 @@ export interface Bib {
 	eventId: Event['id']
 	id: string
 	listed: 'private' | 'public' | null
-	// values for options defined on the Event
+	// values for options defined on the Event 🏷️
 	optionValues: Record<string, string>
 	originalPrice?: number
 	price: number

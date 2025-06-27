@@ -39,39 +39,39 @@ export interface DashboardStats {
  */
 export async function getDashboardStats(): Promise<DashboardStats> {
 	try {
-		// Run all queries in parallel for better performance
+		// Run all queries in parallel for better performance 🚀
 		const [events, bibs, users, transactions, eventCreationRequests] = await Promise.all([
-			// Events
+			// Events 🎉
 			pb.collection('events').getFullList<Event>({
 				fields: 'id,isPartnered',
 			}),
 
-			// Bibs
+			// Bibs 🏷️
 			pb.collection('bibs').getFullList<Bib>({
 				fields: 'id,status,validated',
 			}),
 
-			// Users
+			// Users 👤
 			pb.collection('users').getFullList<User>({
 				fields: 'id',
 			}),
 
-			// Transactions
+			// Transactions 💰
 			pb.collection('transactions').getFullList<Transaction>({
 				fields: 'id,amount,transactionDate,status',
 			}),
 
-			// Event Creation Requests
+			// Event Creation Requests 📝
 			pb.collection('eventCreationRequests').getFullList<EventCreationRequest>({
 				fields: 'id,status',
 			}),
 		])
 
-		// Calculate today's date for filtering
+		// Calculate today's date for filtering 📅
 		const today = new Date()
 		const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
-		// Process bibs statistics
+		// Process bibs statistics 📊
 		const bibStats = {
 			totalBibs: bibs.length,
 			soldBibs: bibs.filter(bib => bib.status === 'sold').length,
@@ -79,7 +79,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			availableBibs: bibs.filter(bib => bib.status === 'available').length,
 		}
 
-		// Process transactions statistics
+		// Process transactions statistics 📊
 		const todaysTransactionsList = transactions.filter(transaction => {
 			const transactionDate = new Date(transaction.transactionDate)
 			return transactionDate >= todayStart
@@ -91,7 +91,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			todaysRevenue: todaysTransactionsList.filter(t => t.status === 'succeeded').reduce((sum, t) => sum + t.amount, 0),
 		}
 
-		// Process event creation requests statistics
+		// Process event creation requests statistics 📊
 		const eventCreationStats = {
 			waiting: eventCreationRequests.filter(req => req.status === 'waiting').length,
 			total: eventCreationRequests.length,
@@ -99,22 +99,22 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			accepted: eventCreationRequests.filter(req => req.status === 'accepted').length,
 		}
 
-		// Assemble final stats
+		// Assemble final stats 📈
 		const stats: DashboardStats = {
-			// Events
+			// Events 🎉
 			totalEvents: events.length,
-			pendingEvents: eventCreationStats.waiting, // Events waiting for approval
+			pendingEvents: eventCreationStats.waiting, // Events waiting for approval 🙏
 
-			// Bibs
+			// Bibs 🏷️
 			...bibStats,
 
-			// Users
+			// Users 👤
 			totalUsers: users.length,
 
-			// Transactions
+			// Transactions 💰
 			...transactionStats,
 
-			// Event Creation Requests
+			// Event Creation Requests 📝
 			eventCreationRequests: eventCreationStats,
 		}
 
@@ -139,25 +139,25 @@ export async function getRecentActivity(): Promise<
 > {
 	try {
 		const [recentBibs, recentEventRequests, recentUsers, recentTransactions] = await Promise.all([
-			// Recent bibs needing validation
+			// Recent bibs needing validation ✅
 			pb.collection('bibs').getList<Bib & { expand?: { eventId: Event } }>(1, 5, {
 				sort: '-created',
 				filter: 'validated = false',
 				expand: 'eventId',
 			}),
 
-			// Recent event creation requests
+			// Recent event creation requests 🙏
 			pb.collection('eventCreationRequests').getList<EventCreationRequest>(1, 5, {
 				sort: '-created',
 				filter: 'status = "waiting"',
 			}),
 
-			// Recent user registrations (last 24h)
+			// Recent user registrations (last 24h) 🆕
 			pb.collection('users').getList<User>(1, 5, {
 				sort: '-created',
 			}),
 
-			// Recent transactions
+			// Recent transactions 💰
 			pb.collection('transactions').getList<Transaction>(1, 5, {
 				sort: '-created',
 			}),
@@ -171,7 +171,7 @@ export async function getRecentActivity(): Promise<
 			type: 'bib_validation' | 'event_creation' | 'transaction' | 'user_registration'
 		}> = []
 
-		// Add bib validation activities
+		// Add bib validation activities ✅
 		recentBibs.items.forEach(bib => {
 			const eventName = bib.expand?.eventId?.name ?? 'Unknown Event'
 			activities.push({
@@ -183,7 +183,7 @@ export async function getRecentActivity(): Promise<
 			})
 		})
 
-		// Add event creation activities
+		// Add event creation activities 🎉
 		recentEventRequests.items.forEach(request => {
 			activities.push({
 				type: 'event_creation',
@@ -194,7 +194,7 @@ export async function getRecentActivity(): Promise<
 			})
 		})
 
-		// Add user registration activities
+		// Add user registration activities 👤
 		recentUsers.items.forEach(user => {
 			activities.push({
 				type: 'user_registration',
@@ -205,7 +205,7 @@ export async function getRecentActivity(): Promise<
 			})
 		})
 
-		// Add transaction activities
+		// Add transaction activities 💰
 		recentTransactions.items.forEach(transaction => {
 			const status =
 				transaction.status === 'succeeded' ? 'completed' : transaction.status === 'failed' ? 'failed' : 'pending'
@@ -218,10 +218,10 @@ export async function getRecentActivity(): Promise<
 			})
 		})
 
-		// Sort by timestamp (most recent first)
+		// Sort by timestamp (most recent first) 🕒
 		activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
 
-		// Return top 10 activities
+		// Return top 10 activities 🏆
 		return activities.slice(0, 10)
 	} catch (error: unknown) {
 		console.error('Error fetching recent activity:', error)

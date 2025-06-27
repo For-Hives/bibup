@@ -124,8 +124,8 @@ export async function fetchPartneredApprovedEvents(
 	expandOrganizer = false
 ): Promise<(Event & { expand?: { organizer?: Organizer } })[]> {
 	try {
-		// For now, fetch all events since isPartnered field doesn't exist in the model
-		// TODO: Add isPartnered field to Event model and database schema when partnership feature is implemented
+		// For now, fetch all events since isPartnered field doesn't exist in the model 🤔
+		// TODO: Add isPartnered field to Event model and database schema when partnership feature is implemented 🚧
 		const records = await pb.collection('events').getFullList<Event & { expand?: { organizer?: Organizer } }>({
 			sort: 'eventDate',
 			expand: expandOrganizer ? 'organizer' : undefined,
@@ -133,7 +133,7 @@ export async function fetchPartneredApprovedEvents(
 		return records
 	} catch (error: unknown) {
 		console.error('Error fetching partnered and approved events:', error)
-		// Return empty array instead of throwing to prevent page crashes
+		// Return empty array instead of throwing to prevent page crashes 😅
 		return []
 	}
 }

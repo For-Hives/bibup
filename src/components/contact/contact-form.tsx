@@ -22,9 +22,9 @@ export default function ContactForm({ t }: ContactFormProps) {
 		e.preventDefault()
 		setIsSubmitting(true)
 
-		// Simulate form submission
+		// Simulate form submission 🚀
 		setTimeout(() => {
-			setIsSubmitting(false) // TODO: implement actual form submission logic here
+			setIsSubmitting(false) // TODO: implement actual form submission logic here 🚧
 			setIsSubmitted(true)
 		}, 1500)
 	}

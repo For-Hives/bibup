@@ -75,16 +75,16 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 		})
 	}
 
-	// Hook to detect screen size
+	// Hook to detect screen size 📱
 	useEffect(() => {
 		const checkIsMobile = () => {
 			setIsMobile(window.innerWidth < 768)
 		}
 
-		// Check on mount
+		// Check on mount 🚀
 		checkIsMobile()
 
-		// Listen to resize events
+		// Listen to resize events 👂
 		window.addEventListener('resize', checkIsMobile)
 
 		return () => {
@@ -178,19 +178,19 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 						perspective: '1000px',
 					}}
 				>
-					{/* Orbital Center */}
+					{/* Orbital Center 🎯 */}
 					<div className="z-10 flex h-20 w-20 items-center justify-center rounded-full">
 						<Image alt="logo" height={100} src="/beswib.svg" width={100} />
 						<div className="border-primary-foreground/20 absolute h-24 w-24 animate-[ping_2s_ease-in-out_infinite] rounded-full border opacity-70"></div>
 						<div className="border-primary-foreground/10 absolute h-28 w-28 animate-[ping_2s_ease-in-out_infinite] rounded-full border opacity-50"></div>
 					</div>
 
-					{/* Orbit Ring */}
+					{/* Orbit Ring 💫 */}
 					<div
 						className={`border-border/30 absolute rounded-full border ${isMobile ? 'h-72 w-72' : 'h-96 w-96'}`}
 					></div>
 
-					{/* Timeline Nodes */}
+					{/* Timeline Nodes 📍 */}
 					{timelineData.map((item, index) => {
 						const position = calculateNodePosition(index, timelineData.length)
 						const isExpanded = expandedItems[item.id]
@@ -228,7 +228,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 								style={nodeStyle}
 								tabIndex={0}
 							>
-								{/* Pulse Effect */}
+								{/* Pulse Effect ✨ */}
 								<div
 									className={`absolute -inset-1 rounded-full ${isPulsing ? 'animate-pulse duration-1000' : ''}`}
 									style={{
@@ -240,7 +240,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 									}}
 								></div>
 
-								{/* Main Node */}
+								{/* Main Node 🔘 */}
 								<div
 									className={`flex h-12 w-12 transform items-center justify-center rounded-full border-2 transition-all duration-300 ${getNodeStyling(
 										isExpanded,
@@ -250,14 +250,14 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
 									<Icon size={20} />
 								</div>
 
-								{/* Node Title */}
+								{/* Node Title 📜 */}
 								<div
 									className={`absolute top-14 text-center text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 ${isExpanded ? 'text-foreground scale-125' : 'text-muted-foreground'}`}
 								>
 									{item.title}
 								</div>
 
-								{/* Expanded Card */}
+								{/* Expanded Card 🃏 */}
 								{isExpanded && (
 									<Card className="border-primary/30 bg-card/95 shadow-primary/20 absolute top-20 left-1/2 w-72 -translate-x-1/2 overflow-visible shadow-xl backdrop-blur-lg">
 										<div className="bg-primary/50 absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2"></div>

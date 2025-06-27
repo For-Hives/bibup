@@ -35,8 +35,8 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 		const record = await pb.collection('users').getFirstListItem<User>(`clerkId = "${clerkId}"`)
 		return record
 	} catch (error: unknown) {
-		// PocketBase getFirstListItem throws an error if no item is found (which is a 404).
-		// This is an expected "not found" case, so we return null.
+		// PocketBase getFirstListItem throws an error if no item is found (which is a 404). 🤷
+		// This is an expected "not found" case, so we return null. 👍
 		if (
 			error != null &&
 			typeof error === 'object' &&
@@ -46,7 +46,7 @@ export async function fetchUserByClerkId(clerkId: string): Promise<null | User> 
 			console.warn(`User with Clerk ID ${clerkId} not found in PocketBase.`)
 			return null
 		}
-		// For other types of errors, re-throw.
+		// For other types of errors, re-throw. 💥
 		throw new Error(
 			`Error fetching user by Clerk ID "${clerkId}": ` + (error instanceof Error ? error.message : String(error))
 		)
@@ -73,7 +73,7 @@ export async function fetchUserById(userId: string): Promise<null | User> {
 			'status' in error &&
 			(error as { status: unknown }).status === 404
 		) {
-			// Expected "not found" case.
+			// Expected "not found" case. 👍
 			console.warn(`User with PocketBase ID ${userId} not found.`)
 			return null
 		}

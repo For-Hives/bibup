@@ -21,16 +21,16 @@ export interface Event {
 
 	options: EventOption[] | null
 
-	// Organizer relation
-	organizer: Organizer['id'] // RELATION_RECORD_ID
+	// Organizer relation 🤝
+	organizer: Organizer['id'] // RELATION_RECORD_ID 🔗
 
-	parcoursUrl?: string // GPX files, map links
+	parcoursUrl?: string // GPX files, map links 🗺️
 
 	participants?: number
 
-	registrationUrl?: string // link to registration
+	registrationUrl?: string // link to registration 🔗
 
-	transferDeadline?: Date // last date for resale
+	transferDeadline?: Date // last date for resale 📅
 
 	typeCourse: 'route' | 'trail' | 'triathlon' | 'ultra'
 }

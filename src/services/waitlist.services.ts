@@ -28,16 +28,16 @@ export async function addToWaitlist(eventId: string, clerkId: string): Promise<n
 	}
 
 	try {
-		// Check for existing waitlist entry
+		// Check for existing waitlist entry 🤔
 		try {
 			const existingEntry = await pb
 				.collection('waitlists')
 				.getFirstListItem<Waitlist>(`userId = "${user.id}" && eventId = "${eventId}"`)
 			return { ...existingEntry, error: 'already_on_waitlist' }
 		} catch (error: unknown) {
-			// PocketBase's getFirstListItem throws a 404 error if no record is found,
-			// which is the expected behavior if the user is not already on the waitlist.
-			// We only re-throw if it's an unexpected error (not a 404).
+			// PocketBase's getFirstListItem throws a 404 error if no record is found, 🤷
+			// which is the expected behavior if the user is not already on the waitlist. 👍
+			// We only re-throw if it's an unexpected error (not a 404). 💥
 			if (
 				error != null &&
 				typeof error === 'object' &&
