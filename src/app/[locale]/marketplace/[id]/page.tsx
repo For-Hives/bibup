@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import React from 'react'
 
+import { fetchAvailableBibsForEvent, fetchBibById, fetchPrivateBibByToken } from '@/services/bib.services'
 import { StripeProvider } from '@/components/marketplace/purchase/StripeProvider'
-import { fetchBibById, fetchPrivateBibByToken } from '@/services/bib.services'
 import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
 import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
 import { createPaymentIntent } from '@/services/stripe.services'
@@ -78,12 +78,43 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 		},
 	} satisfies BibSale
 
+	// Fetch other available bibs for the same event
+	const otherBibsData = await fetchAvailableBibsForEvent(bib.expand.eventId.id, bib.id)
+
+	console.log('Other bibs data:', otherBibsData, ' eventId:', bib.expand.eventId.id)
+
+	// Transform other bibs to BibSale format
+	const otherBibs: BibSale[] = otherBibsData
+		.filter(otherBib => otherBib.expand?.eventId && otherBib.expand?.sellerUserId)
+		.map(otherBib => ({
+			user: {
+				lastName: otherBib.expand!.sellerUserId.lastName ?? 'Unknown',
+				id: otherBib.sellerUserId,
+				firstName: otherBib.expand!.sellerUserId.firstName ?? 'Unknown',
+			},
+			status: mapStatus(otherBib.status),
+			price: otherBib.price,
+			originalPrice: otherBib.originalPrice ?? 0,
+			id: otherBib.id,
+			event: {
+				type: mapEventTypeToBibSaleType(otherBib.expand!.eventId.typeCourse),
+				participantCount: otherBib.expand!.eventId.participants ?? 0,
+				name: otherBib.expand!.eventId.name,
+				location: otherBib.expand!.eventId.location,
+				image: '/beswib.svg',
+				id: otherBib.expand!.eventId.id,
+				distanceUnit: 'km' as const,
+				distance: otherBib.expand!.eventId.distanceKm ?? 0,
+				date: new Date(otherBib.expand!.eventId.eventDate),
+			},
+		}))
+
 	const paymentIntent = await createPaymentIntent(id)
 
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<StripeProvider clientSecret={paymentIntent}>
-				<PurchaseClient bib={bibSale} locale={locale} paymentIntent={paymentIntent} />
+				<PurchaseClient bib={bibSale} locale={locale} otherBibs={otherBibs} paymentIntent={paymentIntent} />
 			</StripeProvider>
 		</div>
 	)

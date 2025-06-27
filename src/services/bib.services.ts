@@ -57,6 +57,33 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 }
 
 /**
+ * Fetches all available bibs for a specific event (excluding the current bib).
+ * Returns bibs with expanded event and user (seller) details.
+ * @param eventId The ID of the event.
+ * @param excludeBibId Optional ID of a bib to exclude from results.
+ */
+export async function fetchAvailableBibsForEvent(
+	eventId: string
+): Promise<(Bib & { expand?: { eventId: Event; sellerUserId: User } })[]> {
+	if (eventId === '') {
+		console.error('Event ID is required to fetch available bibs for event.')
+		return []
+	}
+	try {
+		const records = await pb.collection('bibs').getFullList<Bib & { expand?: { eventId: Event; sellerUserId: User } }>({
+			sort: 'price',
+			filter: `eventId = "${eventId}" && status = 'available' && listed = 'public'`,
+			expand: 'eventId,sellerUserId',
+		})
+		return records
+	} catch (error: unknown) {
+		throw new Error(
+			`Error fetching available bibs for event ${eventId}: ` + (error instanceof Error ? error.message : String(error))
+		)
+	}
+}
+
+/**
  * Fetches all publicly available bibs for the marketplace.
  * Returns bibs with expanded event and user (seller) details.
  */

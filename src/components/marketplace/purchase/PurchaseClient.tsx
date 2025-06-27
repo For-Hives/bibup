@@ -5,6 +5,7 @@ import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { BibSale } from '@/components/marketplace/CardMarket'
 import { SlidingPanel } from '@/components/ui/SlidingPanel'
@@ -16,10 +17,11 @@ import { cn } from '@/lib/utils'
 interface PurchaseClientProps {
 	bib: BibSale
 	locale: Locale
+	otherBibs?: BibSale[]
 	paymentIntent: string
 }
 
-export default function PurchaseClient({ paymentIntent, locale, bib }: Readonly<PurchaseClientProps>) {
+export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, bib }: Readonly<PurchaseClientProps>) {
 	const stripe = useStripe()
 	const elements = useElements()
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -101,6 +103,9 @@ export default function PurchaseClient({ paymentIntent, locale, bib }: Readonly<
 			maximumFractionDigits: 0,
 		})
 	}
+
+	// Filter other bibs for the same event (excluding current bib)
+	const samEventBibs = otherBibs.filter(otherBib => otherBib.event.id === bib.event.id && otherBib.id !== bib.id)
 
 	return (
 		<div className="from-background via-primary/5 to-background relative bg-gradient-to-br">
@@ -220,6 +225,57 @@ export default function PurchaseClient({ paymentIntent, locale, bib }: Readonly<
 							</div>
 						</div>
 					</div>
+
+					{/* Other Bibs Section */}
+					{samEventBibs.length > 0 && (
+						<div className="mt-12">
+							<div className="mb-6 text-center">
+								<h2 className="text-foreground text-2xl font-bold tracking-tight">See other bibs for this event</h2>
+								<p className="text-muted-foreground mt-1">More bibs available for {bib.event.name}</p>
+							</div>
+
+							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+								{samEventBibs.map(otherBib => (
+									<Link className="group" href={`/${locale}/marketplace/${otherBib.id}`} key={otherBib.id}>
+										<div className="border-border/50 bg-card/80 relative overflow-hidden rounded-lg border backdrop-blur-sm transition-all duration-200 group-hover:scale-[1.02] hover:shadow-lg">
+											<div className="relative h-32">
+												<Image
+													alt="Event Image"
+													className="object-cover"
+													fill
+													sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+													src={otherBib.event.image}
+												/>
+												{/* Discount Badge */}
+												{!!otherBib.originalPrice &&
+													((otherBib.originalPrice - otherBib.price) / otherBib.originalPrice) * 100 > 10 && (
+														<div className="absolute top-2 right-2 z-10">
+															<span className="rounded-full border border-red-500/50 bg-red-500/15 px-2 py-1 text-xs font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md">
+																{(-((otherBib.originalPrice - otherBib.price) / otherBib.originalPrice) * 100).toFixed(
+																	0
+																)}
+																%
+															</span>
+														</div>
+													)}
+											</div>
+											<div className="p-4">
+												<div className="mb-2 flex items-center justify-between">
+													<p className="text-foreground text-lg font-bold">{otherBib.price}€</p>
+													{Boolean(otherBib.originalPrice && otherBib.originalPrice > otherBib.price) && (
+														<p className="text-muted-foreground text-sm line-through">{otherBib.originalPrice}€</p>
+													)}
+												</div>
+												<p className="text-muted-foreground text-sm">
+													Sold by {otherBib.user.firstName} {otherBib.user.lastName}
+												</p>
+											</div>
+										</div>
+									</Link>
+								))}
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 
