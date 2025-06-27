@@ -95,8 +95,6 @@ export async function fetchBibById(
 				expand: 'eventId,sellerUserId',
 			})
 
-		console.log(`Fetched bib with ID ${bibId}:`, record)
-
 		return record
 	} catch (error: unknown) {
 		throw new Error(
