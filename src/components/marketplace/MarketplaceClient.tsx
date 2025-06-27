@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
+import { parseAsArrayOf, parseAsFloat, parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
 import Fuse from 'fuse.js'
 
 import type { BibSale } from '@/components/marketplace/CardMarket'
@@ -69,18 +70,73 @@ const sortBibs = (bibs: BibSale[], sort: string) => {
 
 export default function MarketplaceClient({ locale, bibs }: Readonly<MarketplaceClientProps>) {
 	// TODO: translations -> locale 🌐
-	// --- State for sorting, search term, selected sport, selected distance, and advanced filters 🎛️
-	const [sort, setSort] = useState('date') // Current sort option 🔢
-	const [searchTerm, setSearchTerm] = useState('') // Search term for fuzzy search 🔍
-	const [selectedSport, setSelectedSport] = useState<null | string>(null) // Selected sport filter 🏅
-	const [selectedDistance, setSelectedDistance] = useState<null | string>(null) // Selected distance filter 📏
-	const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({ price: [0, 200], geography: [] }) // Advanced filters state ⚙️
+	// --- Query state management with URL sync using nuqs 🔗
+	const [{ sport, sort, search, priceMin, priceMax, geography, distance, dateStart, dateEnd }, setFilters] =
+		useQueryStates(
+			{
+				sport: parseAsString, // null when not set, string when set
+				sort: parseAsStringLiteral(['date', 'distance', 'price-asc', 'price-desc'] as const).withDefault('date'),
+				search: parseAsString.withDefault(''),
+				priceMin: parseAsFloat.withDefault(0),
+				priceMax: parseAsFloat.withDefault(200),
+				geography: parseAsArrayOf(parseAsString, ',').withDefault([]),
+				distance: parseAsString, // null when not set, string when set
+				dateStart: parseAsString, // ISO date string or null
+				dateEnd: parseAsString, // ISO date string or null
+			},
+			{
+				history: 'push', // Use push for better UX
+			}
+		)
 
 	// --- Extract unique locations from bibs for the region filter 🗺️
 	const uniqueLocations = Array.from(new Set(bibs.map(bib => bib.event.location))).sort((a, b) => a.localeCompare(b)) // Unique, sorted list of locations 📍
 
 	// --- Extract the maximum price from bibs for the price slider 💰
 	const maxPrice = Math.max(...bibs.map(bib => bib.price), 0) // Maximum price for slider 💸
+
+	// --- Handler functions to bridge the component interface with nuqs 🔗
+	const handleSearch = React.useCallback(
+		(searchTerm: string) => {
+			void setFilters({ search: searchTerm })
+		},
+		[setFilters]
+	)
+
+	const handleSportChange = React.useCallback(
+		(sportType: null | string) => {
+			void setFilters({ sport: sportType })
+		},
+		[setFilters]
+	)
+
+	const handleDistanceChange = React.useCallback(
+		(distanceFilter: null | string) => {
+			void setFilters({ distance: distanceFilter })
+		},
+		[setFilters]
+	)
+
+	const handleSortChange = React.useCallback(
+		(sortOption: string) => {
+			void setFilters({ sort: sortOption as 'date' | 'distance' | 'price-asc' | 'price-desc' })
+		},
+		[setFilters]
+	)
+
+	const handleAdvancedFiltersChange = React.useCallback(
+		(filters: AdvancedFilters) => {
+			// Use a single update to prevent multiple re-renders
+			void setFilters({
+				priceMin: filters.price[0] ?? 0,
+				priceMax: filters.price[1] ?? 200,
+				geography: filters.geography,
+				dateStart: filters.dateStart ?? null,
+				dateEnd: filters.dateEnd ?? null,
+			})
+		},
+		[setFilters]
+	)
 
 	// --- Fuse.js instance for fuzzy search on bibs (name, location, type) ✨
 	const fuse = useMemo(
@@ -96,56 +152,49 @@ export default function MarketplaceClient({ locale, bibs }: Readonly<Marketplace
 	const filteredAndSortedBibs = useMemo(() => {
 		let filtered = bibs
 
-		// --- Fuzzy search with Fuse.js on search term  Fuzzy search with Fuse.js on search term 🔍
-		if (searchTerm !== null && searchTerm !== undefined && searchTerm !== '') {
-			const fuseResults = fuse.search(searchTerm)
+		// --- Fuzzy search with Fuse.js on search term 🔍
+		if (search !== '') {
+			const fuseResults = fuse.search(search)
 			filtered = fuseResults.map(result => result.item)
 		}
 
 		// --- Filter by selected sport 🏅
-		if (selectedSport !== null && selectedSport !== undefined && selectedSport !== 'all') {
-			filtered = filtered.filter(bib => bib.event.type === selectedSport)
+		if (sport !== null && sport !== undefined && sport !== 'all') {
+			filtered = filtered.filter(bib => bib.event.type === sport)
 		}
 
 		// --- Filter by selected distance 📏
-		if (selectedDistance !== null && selectedDistance !== undefined && selectedDistance !== 'all') {
-			const [minDistance, maxDistance] = getDistanceRange(selectedDistance)
+		if (distance !== null && distance !== undefined && distance !== 'all') {
+			const [minDistance, maxDistance] = getDistanceRange(distance)
 			filtered = filtered.filter(bib => {
-				const distance = bib.event.distance
-				return distance >= minDistance && distance <= maxDistance
+				const eventDistance = bib.event.distance
+				return eventDistance >= minDistance && eventDistance <= maxDistance
 			})
 		}
 
 		// --- Filter by price range 💰
-		if (Array.isArray(advancedFilters.price) && advancedFilters.price.length === 2) {
-			const [minPrice, maxPrice] = advancedFilters.price
-			filtered = filtered.filter(bib => bib.price >= minPrice && bib.price <= maxPrice)
-		}
+		filtered = filtered.filter(bib => bib.price >= priceMin && bib.price <= priceMax)
 
 		// --- Filter by region (geography) 🗺️
-		if (Array.isArray(advancedFilters.geography) && advancedFilters.geography.length > 0) {
-			filtered = filtered.filter(bib => advancedFilters.geography.includes(bib.event.location.toLowerCase()))
+		if (geography.length > 0) {
+			filtered = filtered.filter(bib => geography.includes(bib.event.location.toLowerCase()))
 		}
 
 		// --- Filter by start date 📅
-		if (
-			advancedFilters.dateStart !== null &&
-			advancedFilters.dateStart !== undefined &&
-			advancedFilters.dateStart !== ''
-		) {
-			const start = new Date(advancedFilters.dateStart)
+		if (dateStart !== null && dateStart !== undefined && dateStart !== '') {
+			const start = new Date(dateStart)
 			filtered = filtered.filter(bib => new Date(bib.event.date) >= start)
 		}
 
 		// --- Filter by end date 📅
-		if (advancedFilters.dateEnd !== null && advancedFilters.dateEnd !== undefined && advancedFilters.dateEnd !== '') {
-			const end = new Date(advancedFilters.dateEnd)
+		if (dateEnd !== null && dateEnd !== undefined && dateEnd !== '') {
+			const end = new Date(dateEnd)
 			filtered = filtered.filter(bib => new Date(bib.event.date) <= end)
 		}
 
 		// --- Sort the filtered bibs 🔄
 		return sortBibs(filtered, sort)
-	}, [bibs, searchTerm, selectedSport, selectedDistance, sort, advancedFilters, fuse])
+	}, [bibs, search, sport, distance, sort, priceMin, priceMax, geography, dateStart, dateEnd, fuse])
 
 	// --- Main render: searchbar, offer counter, and grid of bib cards 🖼️
 	return (
@@ -154,15 +203,15 @@ export default function MarketplaceClient({ locale, bibs }: Readonly<Marketplace
 			<div className="relative z-[60]">
 				<Searchbar
 					maxPrice={maxPrice}
-					onAdvancedFiltersChange={setAdvancedFilters}
-					onDistanceChange={setSelectedDistance}
-					onSearch={setSearchTerm}
-					onSportChange={setSelectedSport}
+					onAdvancedFiltersChange={handleAdvancedFiltersChange}
+					onDistanceChange={handleDistanceChange}
+					onSearch={handleSearch}
+					onSportChange={handleSportChange}
 					regions={uniqueLocations}
 				/>
 			</div>
 			{/* OfferCounter displays the number of results and the sort selector 🔢 */}
-			<OfferCounter count={filteredAndSortedBibs.length} onSortChange={setSort} sortValue={sort} />
+			<OfferCounter count={filteredAndSortedBibs.length} onSortChange={handleSortChange} sortValue={sort} />
 			{/* Grid of bib cards, responsive layout 🖼️ */}
 			<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{filteredAndSortedBibs.map(bib => (

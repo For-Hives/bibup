@@ -40,7 +40,7 @@ export default function Searchbar({
 	onSearch,
 	onDistanceChange,
 	onAdvancedFiltersChange,
-	maxPrice = 200,
+	maxPrice = 2000,
 	locale,
 }: SearchbarProps) {
 	// --- State for the search input value ⌨️
