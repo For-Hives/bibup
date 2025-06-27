@@ -31,7 +31,7 @@ interface MarketplaceItemPageProps {
 export default async function MarketplaceItemPage({ searchParams, params }: MarketplaceItemPageProps) {
 	const { locale, id } = await params
 	const { tkn } = await searchParams
-	let bib: (Bib & { expand?: { eventId: EventModel; sellerId: User } }) | null
+	let bib: (Bib & { expand?: { eventId: EventModel; sellerUserId: User } }) | null
 
 	if (tkn != null) {
 		bib = await fetchPrivateBibByToken(id, tkn)
@@ -57,9 +57,9 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 
 	const bibSale: BibSale = {
 		user: {
-			lastName: bib.expand.sellerId.lastName ?? 'Unknown',
+			lastName: bib.expand.sellerUserId.lastName ?? 'Unknown',
 			id: bib.sellerUserId,
-			firstName: bib.expand.sellerId.firstName ?? 'Unknown',
+			firstName: bib.expand.sellerUserId.firstName ?? 'Unknown',
 		},
 		status: mapStatus(bib.status),
 		price: bib.price,
