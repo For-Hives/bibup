@@ -2,14 +2,14 @@
 import { i18n, type Locale } from './i18n-config'
 
 /**
- * @deprecated Use getLocaleFromParams in your pages/layouts instead
- * This function is kept for backward compatibility only
+ * @deprecated Use getLocaleFromParams in your pages/layouts instead ⚠️
+ * This function is kept for backward compatibility only 🕰️
  *
- * For SSG with [locale] routes, the locale should be extracted from route params:
+ * For SSG with [locale] routes, the locale should be extracted from route params: 📄
  *
  * @example
  * ```tsx
- * import { getLocaleFromParams } from '@/lib/getLocaleUtils'
+ * import { getLocaleFromParams } from '@/lib/getLocaleUtils' 📥
  *
  * export default async function MyPage({ params }: { params: Promise<{ locale: string }> }) {
  *   const locale = getLocaleFromParams(await params)
@@ -19,8 +19,8 @@ import { i18n, type Locale } from './i18n-config'
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getLocale(): Promise<Locale> {
-	// For SSG, we should not rely on headers/cookies
-	// The locale should come from the route parameters
+	// For SSG, we should not rely on headers/cookies 🍪
+	// The locale should come from the route parameters 📄
 	console.warn('getLocale() is deprecated. Use getLocaleFromParams() with route params instead.')
 	return i18n.defaultLocale
 }

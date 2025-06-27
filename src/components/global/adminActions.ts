@@ -5,8 +5,8 @@ import { auth } from '@clerk/nextjs/server'
 import { fetchUserByClerkId } from '@/services/user.services'
 
 /**
- * Server action to check if the current user has admin privileges
- * Can be called from client components
+ * Server action to check if the current user has admin privileges 👑
+ * Can be called from client components 📞
  */
 export async function checkIsCurrentUserAdmin(): Promise<boolean> {
 	try {

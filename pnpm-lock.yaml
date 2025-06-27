@@ -134,9 +134,6 @@ importers:
       fuse.js:
         specifier: 7.1.0
         version: 7.1.0
-      husky:
-        specifier: 9.1.7
-        version: 9.1.7
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.1.0)
@@ -5036,8 +5033,6 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
-
-  husky@9.1.7: {}
 
   ignore@5.3.2: {}
 

@@ -24,7 +24,7 @@ import pageTranslationsData from './locales.json'
 export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 	const t = getTranslations(locale, pageTranslationsData)
 
-	// Navigation links data
+	// Navigation links data 🧭
 	const navigationLinks = [
 		{ label: t.navbar.homeLink, href: '/', current: false },
 		{ label: t.navbar.racesLink, href: '/events', current: false },
@@ -36,7 +36,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 
 	return (
 		<>
-			{/* Spacer div to prevent content from going under fixed header */}
+			{/* Spacer div to prevent content from going under fixed header 📏 */}
 			<div className="h-16" />
 
 			<Disclosure
@@ -73,7 +73,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 							<div className="text-foreground flex items-center">
 								<div className="flex items-center gap-4">
 									<SignedIn>
-										{/* Dashboard Dropdown Menu */}
+										{/* Dashboard Dropdown Menu 📊 */}
 										<DashboardDropdown locale={locale} />
 									</SignedIn>
 									<SignedOut>
@@ -92,7 +92,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 							</div>
 						</div>
 						<div className="-mr-2 flex sm:hidden">
-							{/* Mobile menu button */}
+							{/* Mobile menu button 📱 */}
 							<DisclosureButton className="group text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-ring relative inline-flex items-center justify-center rounded-md p-2 transition-colors focus:ring-2 focus:outline-none focus:ring-inset">
 								<span className="absolute -inset-0.5" />
 								<span className="sr-only">Open main menu</span>
@@ -105,7 +105,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 
 				<DisclosurePanel className="border-border bg-background absolute z-[101] w-full border-b shadow-lg sm:hidden">
 					<div className="space-y-1 px-2 pt-2 pb-3">
-						{/* Main Navigation Links */}
+						{/* Main Navigation Links 🔗 */}
 						{navigationLinks.map(link => (
 							<DisclosureButton
 								as={Link}
@@ -121,7 +121,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 							</DisclosureButton>
 						))}
 
-						{/* Auth Section */}
+						{/* Auth Section 🔒 */}
 						<div className="border-border border-t pt-4 pb-3">
 							<div className="flex flex-col space-y-2 px-2">
 								<SignedIn>
@@ -148,7 +148,7 @@ export default function HeaderClient({ locale }: Readonly<HeaderClientProps>) {
 	)
 }
 
-// Mobile Dashboard Component
+// Mobile Dashboard Component 📱
 function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 	const t = getTranslations(locale, pageTranslationsData)
 
@@ -176,10 +176,10 @@ function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 
 	return (
 		<>
-			{/* Dashboard Section Header */}
+			{/* Dashboard Section Header 📜 */}
 			<div className="text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wide uppercase">Dashboard</div>
 
-			{/* Dashboard Main Link */}
+			{/* Dashboard Main Link 🏠 */}
 			<DisclosureButton
 				as={Link}
 				className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium transition-colors"
@@ -189,7 +189,7 @@ function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 				{t.navbar.dashboardLink}
 			</DisclosureButton>
 
-			{/* Buy Bib Link */}
+			{/* Buy Bib Link 🛍️ */}
 			<DisclosureButton
 				as={Link}
 				className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium transition-colors"
@@ -199,7 +199,7 @@ function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 				{t.navbar.buyBibLink}
 			</DisclosureButton>
 
-			{/* Sell Bib Link */}
+			{/* Sell Bib Link 🏷️ */}
 			<DisclosureButton
 				as={Link}
 				className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium transition-colors"
@@ -209,7 +209,7 @@ function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 				{t.navbar.sellBibLink}
 			</DisclosureButton>
 
-			{/* Admin Link - Only show if user is admin */}
+			{/* Admin Link - Only show if user is admin 👑 */}
 			{isAdmin && (
 				<DisclosureButton
 					as={Link}
@@ -221,7 +221,7 @@ function MobileDashboardLinks({ locale }: Readonly<{ locale: Locale }>) {
 				</DisclosureButton>
 			)}
 
-			{/* User Button */}
+			{/* User Button 👤 */}
 			<div className="px-3 py-3">
 				<UserButton />
 			</div>

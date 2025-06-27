@@ -9,25 +9,25 @@ export async function createOrganizer(
 	organizerData: Omit<Organizer, 'created' | 'id' | 'updated'> & { logoFile?: File }
 ): Promise<null | Organizer> {
 	try {
-		// Prepare form data for PocketBase (multipart/form-data)
+		// Prepare form data for PocketBase (multipart/form-data) 📄
 		const formData = new FormData()
 
-		// Add required text fields
+		// Add required text fields ✅
 		formData.append('name', organizerData.name)
 		formData.append('email', organizerData.email)
 		formData.append('isPartnered', String(organizerData.isPartnered))
 
-		// Add optional fields only if they exist
+		// Add optional fields only if they exist 🤔
 		if (organizerData.website !== null && organizerData.website !== undefined && organizerData.website.trim() !== '') {
 			formData.append('website', organizerData.website.trim())
 		}
 
-		// Handle logo file upload - PocketBase expects File instance for new uploads
+		// Handle logo file upload - PocketBase expects File instance for new uploads 🖼️
 		if (organizerData.logoFile instanceof File) {
 			formData.append('logo', organizerData.logoFile)
 		}
 
-		// Create record using multipart/form-data
+		// Create record using multipart/form-data 💾
 		const record = await pb.collection('organizer').create(formData)
 
 		return {
@@ -66,7 +66,7 @@ export async function deleteOrganizer(id: string): Promise<boolean> {
  */
 export async function deleteOrganizerLogo(id: string): Promise<boolean> {
 	try {
-		// Set logo field to empty array to delete the file
+		// Set logo field to empty array to delete the file 🗑️
 		await pb.collection('organizer').update(id, {
 			logo: [],
 		})
@@ -194,12 +194,12 @@ export function getOrganizerLogoUrl(organizer: Organizer, thumbSize?: string): n
 		return null
 	}
 
-	// Generate file URL using PocketBase pattern:
-	// http://127.0.0.1:8090/api/files/COLLECTION_ID_OR_NAME/RECORD_ID/FILENAME
+	// Generate file URL using PocketBase pattern: 🔗
+	// http://127.0.0.1:8090/api/files/COLLECTION_ID_OR_NAME/RECORD_ID/FILENAME 🌐
 	const baseUrl = pb.baseUrl
 	let url = `${baseUrl}/api/files/organizer/${organizer.id}/${organizer.logo}`
 
-	// Add thumbnail parameter if specified
+	// Add thumbnail parameter if specified 👍
 	if (thumbSize !== null && thumbSize !== undefined && thumbSize !== '') {
 		url += `?thumb=${thumbSize}`
 	}
@@ -215,11 +215,11 @@ export async function updateOrganizer(
 	organizerData: Partial<Omit<Organizer, 'created' | 'id' | 'updated'>> & { logoFile?: File }
 ): Promise<null | Organizer> {
 	try {
-		// For updates with file uploads, use FormData
+		// For updates with file uploads, use FormData 📄
 		if (organizerData.logoFile instanceof File) {
 			const formData = new FormData()
 
-			// Add text fields if provided
+			// Add text fields if provided ✅
 			if (organizerData.name !== null && organizerData.name !== undefined) {
 				formData.append('name', organizerData.name)
 			}
@@ -237,7 +237,7 @@ export async function updateOrganizer(
 				formData.append('website', organizerData.website.trim())
 			}
 
-			// Add logo file
+			// Add logo file 🖼️
 			formData.append('logo', organizerData.logoFile)
 
 			const record = await pb.collection('organizer').update(id, formData)
@@ -253,7 +253,7 @@ export async function updateOrganizer(
 				created: new Date(record.created as string),
 			}
 		} else {
-			// For updates without files, use regular JSON
+			// For updates without files, use regular JSON 📄
 			const dataForUpdate = { ...organizerData }
 			delete dataForUpdate.logoFile
 			const record = await pb.collection('organizer').update(id, dataForUpdate)

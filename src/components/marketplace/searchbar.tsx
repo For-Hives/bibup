@@ -24,7 +24,7 @@ interface SearchbarProps {
 	readonly regions?: string[]
 }
 
-// Type for the filters that can be applied
+// Type for the filters that can be applied 🧐
 type SelectedFilters = {
 	dateEnd?: string
 	dateStart?: string
@@ -32,8 +32,8 @@ type SelectedFilters = {
 	price: number[]
 }
 
-// Main searchbar component that handles filtering and searching functionality
-// Switches from a stacked layout on mobile to a horizontal layout on desktop (>1280px)
+// Main searchbar component that handles filtering and searching functionality 🔍
+// Switches from a stacked layout on mobile to a horizontal layout on desktop (>1280px) 📱💻
 export default function Searchbar({
 	regions = [],
 	onSportChange,
@@ -43,44 +43,44 @@ export default function Searchbar({
 	maxPrice = 200,
 	locale,
 }: SearchbarProps) {
-	// --- State for the search input value
-	const [searchTerm, setSearchTerm] = useState('') // Stores the current search input value
-	// --- State for advanced filters dropdown visibility
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false) // Controls the visibility of the filter dropdown
-	// --- State for the price range filter (not directly used in UI, but for sync)
+	// --- State for the search input value ⌨️
+	const [searchTerm, setSearchTerm] = useState('') // Stores the current search input value 💾
+	// --- State for advanced filters dropdown visibility 👀
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false) // Controls the visibility of the filter dropdown 👁️‍🗨️
+	// --- State for the price range filter (not directly used in UI, but for sync) 💰
 	const [, setPriceRange] = useState([0, 200])
-	// --- Main state for all currently applied filters (used for badges and filtering)
+	// --- Main state for all currently applied filters (used for badges and filtering) 🏷️
 	const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
 		price: [0, maxPrice],
 		geography: [],
 		dateStart: undefined,
 		dateEnd: undefined,
 	})
-	// --- Temporary states for the filter dropdown (applied only on 'Apply')
+	// --- Temporary states for the filter dropdown (applied only on 'Apply') ⏳
 	const [tempPrice, setTempPrice] = useState<[number, number]>([0, maxPrice])
 	const [tempRegion, setTempRegion] = useState<string[]>([])
 	const [tempDateStart, setTempDateStart] = useState<string | undefined>(undefined)
 	const [tempDateEnd, setTempDateEnd] = useState<string | undefined>(undefined)
-	// --- States for hover effects on select triggers
+	// --- States for hover effects on select triggers ✨
 	const [isHover, setIsHover] = useState(false)
 	const [isHover2, setIsHover2] = useState(false)
-	// --- State for the region search input in the advanced filters
-	const [regionSearch, setRegionSearch] = useState('') // Stores the current value of the region search input
-	// State pour la région sélectionnée
+	// --- State for the region search input in the advanced filters 🗺️
+	const [regionSearch, setRegionSearch] = useState('') // Stores the current value of the region search input 💾
+	// State for the selected region 📍 (Translated from French)
 	const [selectedRegion, setSelectedRegion] = useState(tempRegion[0] || '')
-	// State pour le popover de la région
+	// State for the region popover 💬 (Translated from French)
 	const [isRegionOpen, setIsRegionOpen] = useState(false)
 
-	// Toggle function for the filter dropdown
+	// Toggle function for the filter dropdown 🔄
 	const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
 
-	// --- Handler for search input changes
+	// --- Handler for search input changes ⌨️
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value)
 		onSearch(e.target.value)
 	}
 
-	// --- Handler to remove a selected region filter
+	// --- Handler to remove a selected region filter 🗺️❌
 	const handleRemoveGeography = (location: string) => {
 		setSelectedFilters(prev => ({
 			...prev,
@@ -88,7 +88,7 @@ export default function Searchbar({
 		}))
 	}
 
-	// --- Handler to reset the price filter
+	// --- Handler to reset the price filter 💰❌
 	const handleResetPrice = () => {
 		setSelectedFilters(prev => {
 			const updated = { ...prev, price: [0, maxPrice] }
@@ -98,33 +98,33 @@ export default function Searchbar({
 		})
 	}
 
-	// --- Handler to remove the start date filter
+	// --- Handler to remove the start date filter 📅❌
 	const handleRemoveDateStart = () => {
 		setSelectedFilters(prev => ({ ...prev, dateStart: undefined }))
 	}
 
-	// --- Handler to remove the end date filter
+	// --- Handler to remove the end date filter 📅❌
 	const handleRemoveDateEnd = () => {
 		setSelectedFilters(prev => ({ ...prev, dateEnd: undefined }))
 	}
 
-	// --- Sync price filters with maxPrice when it changes
+	// --- Sync price filters with maxPrice when it changes 💰🔄
 	useEffect(() => {
 		setSelectedFilters(prev => ({ ...prev, price: [0, maxPrice] }))
 		setTempPrice([0, maxPrice])
 		setPriceRange([0, maxPrice])
 	}, [maxPrice])
 
-	// --- Notify parent when selectedFilters changes
+	// --- Notify parent when selectedFilters changes 📢
 	useEffect(() => {
 		if (onAdvancedFiltersChange) onAdvancedFiltersChange(selectedFilters)
 	}, [selectedFilters, onAdvancedFiltersChange])
 
-	// --- Fuzzy search for regions using Fuse.js
-	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions]) // Fuse instance for fuzzy search
-	const filteredRegions: string[] = regionSearch ? fuse.search(regionSearch).map(result => result.item) : regions // Filtered regions based on fuzzy search
+	// --- Fuzzy search for regions using Fuse.js ✨
+	const fuse = useMemo(() => new Fuse(regions, { threshold: 0.4 }), [regions]) // Fuse instance for fuzzy search 🔍
+	const filteredRegions: string[] = regionSearch ? fuse.search(regionSearch).map(result => result.item) : regions // Filtered regions based on fuzzy search 🗺️
 
-	// Utilise filteredRegions pour la recherche floue (Fuse.js)
+	// Use filteredRegions for fuzzy search (Fuse.js) ✨ (Translated from French)
 	const regionOptions = filteredRegions.map(region => ({
 		value: region.toLowerCase(),
 		label: region,
@@ -134,11 +134,11 @@ export default function Searchbar({
 	const t = locales[lang] ?? locales['en']
 
 	return (
-		// Main container with responsive padding and shadow
+		// Main container with responsive padding and shadow 容器
 		<div className="bg-card/80 border-border relative flex flex-col rounded-2xl border p-2 shadow-md backdrop-blur-md xl:p-4">
-			{/* Main content wrapper - switches from column to row layout on desktop */}
+			{/* Main content wrapper - switches from column to row layout on desktop 📱💻 */}
 			<div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:gap-4">
-				{/* Search input section - takes 3/4 of the width on desktop */}
+				{/* Search input section - takes 3/4 of the width on desktop ⌨️ */}
 				<div className="relative flex w-full items-center rounded-lg px-2 py-2 xl:w-3/4 xl:px-4">
 					<input
 						className="border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-accent focus:ring-accent block w-full rounded-lg border p-2.5 pr-10 text-sm"
@@ -151,9 +151,9 @@ export default function Searchbar({
 					/>
 				</div>
 
-				{/* Filters section - takes 1/4 of the width on desktop */}
+				{/* Filters section - takes 1/4 of the width on desktop 🎛️ */}
 				<div className="flex w-full items-center gap-2 xl:w-1/4 xl:gap-4">
-					{/* Sport dropdown - takes 1/3 of the filters section */}
+					{/* Sport dropdown - takes 1/3 of the filters section 🏅 */}
 					<div className="w-1/3">
 						<Select onValueChange={value => onSportChange(value || null)}>
 							<SelectTrigger
@@ -187,7 +187,7 @@ export default function Searchbar({
 						</Select>
 					</div>
 
-					{/* Distance dropdown - takes 1/3 of the filters section */}
+					{/* Distance dropdown - takes 1/3 of the filters section 📏 */}
 					<div className="w-1/3">
 						<Select onValueChange={value => onDistanceChange(value ?? null)}>
 							<SelectTrigger
@@ -230,7 +230,7 @@ export default function Searchbar({
 						</Select>
 					</div>
 
-					{/* Filter button with dropdown - takes 1/3 of the filters section */}
+					{/* Filter button with dropdown - takes 1/3 of the filters section ⚙️ */}
 					<div className="relative w-1/3 overflow-visible">
 						<Button
 							className="border-border bg-card text-foreground hover:bg-card/80 h-9 w-full border px-3 py-0"
@@ -238,10 +238,10 @@ export default function Searchbar({
 						>
 							{t.filters}
 						</Button>
-						{/* Advanced filters dropdown - appears when clicking the Filters button */}
+						{/* Advanced filters dropdown - appears when clicking the Filters button 👀 */}
 						{isDropdownOpen && (
 							<div className="border-border bg-card text-foreground absolute right-0 z-30 mt-2 w-full min-w-[220px] rounded-lg border p-4 shadow-lg xl:w-64">
-								{/* Price range slider */}
+								{/* Price range slider 💰 */}
 								<div className="mb-4">
 									<label className="mb-2 font-semibold" htmlFor="price-range-slider">
 										{t.priceRange}
@@ -264,7 +264,7 @@ export default function Searchbar({
 									</div>
 								</div>
 
-								{/* Date range inputs */}
+								{/* Date range inputs 📅 */}
 								<div className="flex flex-col justify-between text-sm">
 									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="date-start">
 										{t.date}
@@ -290,7 +290,7 @@ export default function Searchbar({
 									</div>
 								</div>
 
-								{/* Region selector */}
+								{/* Region selector 🗺️ */}
 								<div>
 									<label className="text-muted-foreground mb-2 block text-lg font-medium" htmlFor="region-select">
 										{t.region}
@@ -345,7 +345,7 @@ export default function Searchbar({
 									</Popover>
 								</div>
 
-								{/* Apply button - updates the main filters state with temporary values */}
+								{/* Apply button - updates the main filters state with temporary values ✅ */}
 								<div className="mt-4">
 									<Button
 										className="border-border bg-accent/20 text-accent-foreground hover:bg-accent/30 w-full border"
@@ -373,12 +373,12 @@ export default function Searchbar({
 				</div>
 			</div>
 
-			{/* Divider between search/filters and filter badges */}
+			{/* Divider between search/filters and filter badges ↔️ */}
 			<hr className="my-2 border-gray-400" />
 
-			{/* Filter badges section - shows currently applied filters */}
+			{/* Filter badges section - shows currently applied filters 🏷️ */}
 			<div className="mt-4 flex flex-wrap gap-2 xl:mt-0 xl:gap-4">
-				{/* Region filter badges */}
+				{/* Region filter badges 🗺️ */}
 				{selectedFilters.geography.map(location => (
 					<Badge
 						className="max-w-[100px] overflow-hidden bg-blue-400 text-ellipsis whitespace-nowrap text-white"
@@ -396,7 +396,7 @@ export default function Searchbar({
 						</button>
 					</Badge>
 				))}
-				{/* Price filter badge */}
+				{/* Price filter badge 💰 */}
 				<Badge className="bg-yellow-400 text-white" key="price" variant="secondary">
 					{selectedFilters.price[0] === 0 && selectedFilters.price[1] === maxPrice
 						? t.allPrices
@@ -410,7 +410,7 @@ export default function Searchbar({
 						<X />
 					</button>
 				</Badge>
-				{/* Start date filter badge */}
+				{/* Start date filter badge 📅 */}
 				{selectedFilters.dateStart != null && selectedFilters.dateStart !== '' && (
 					<Badge className="bg-gray-400 text-white" key="dateStart" variant="secondary">
 						{`${t.start}: ${selectedFilters.dateStart}`}
@@ -424,7 +424,7 @@ export default function Searchbar({
 						</button>
 					</Badge>
 				)}
-				{/* End date filter badge */}
+				{/* End date filter badge 📅 */}
 				{selectedFilters.dateEnd != null && selectedFilters.dateEnd !== '' && (
 					<Badge className="bg-gray-400 text-white" key="dateEnd" variant="secondary">
 						{`${t.end}: ${selectedFilters.dateEnd}`}

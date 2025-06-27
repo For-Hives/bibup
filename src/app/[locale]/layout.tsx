@@ -8,7 +8,7 @@ import { generateLocaleParams, type LocaleParams } from '@/lib/generateStaticPar
 import Footer from '@/components/global/footer'
 import Header from '@/components/global/Header'
 
-// import '/globals.css'
+// import '/globals.css' 💅
 import '@/app/[locale]/globals.css'
 
 const geistSans = Geist({
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
 	},
 }
 
-// Generate static params for all locales
+// Generate static params for all locales 🌐
 export function generateStaticParams() {
 	return generateLocaleParams()
 }

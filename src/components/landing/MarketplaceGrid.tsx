@@ -10,10 +10,10 @@ import {
 import CardMarket, { BibSale } from '@/components/marketplace/CardMarket'
 import { Locale } from '@/lib/i18n-config'
 
-// Get distributed colors for our 5 examples to ensure each bib has a different color
+// Get distributed colors for our 5 examples to ensure each bib has a different color 🎨
 const bibColors = getBibColorsDistributed(5)
 
-// --- Predefined examples with controlled content for consistent demo
+// --- Predefined examples with controlled content for consistent demo 👍
 const runsExample: BibSale[] = [
 	{
 		user: {
@@ -29,7 +29,7 @@ const runsExample: BibSale[] = [
 			participantCount: getRandomParticipantCount('running', 42),
 			name: 'Marathon de Nantes',
 			location: 'Nantes',
-			image: bibColors[0], // First distributed color
+			image: bibColors[0], // First distributed color 1️⃣
 			id: '1',
 			distanceUnit: 'km',
 			distance: 42,
@@ -50,7 +50,7 @@ const runsExample: BibSale[] = [
 			participantCount: getRandomParticipantCount('triathlon', 226),
 			name: 'Ironman Nice',
 			location: 'Nice',
-			image: bibColors[1], // Second distributed color
+			image: bibColors[1], // Second distributed color 2️⃣
 			id: '2',
 			distanceUnit: 'km',
 			distance: 226,
@@ -71,7 +71,7 @@ const runsExample: BibSale[] = [
 			participantCount: getRandomParticipantCount('running', 21),
 			name: 'Semi-marathon de Thonon',
 			location: 'Thonon-les-bains',
-			image: bibColors[2], // Third distributed color
+			image: bibColors[2], // Third distributed color 3️⃣
 			id: '3',
 			distanceUnit: 'km',
 			distance: 21,
@@ -92,7 +92,7 @@ const runsExample: BibSale[] = [
 			participantCount: getRandomParticipantCount('running', 42),
 			name: 'Marathon de Paris',
 			location: 'Paris',
-			image: bibColors[3], // Fourth distributed color
+			image: bibColors[3], // Fourth distributed color 4️⃣
 			id: '4',
 			distanceUnit: 'km',
 			distance: 42,
@@ -113,7 +113,7 @@ const runsExample: BibSale[] = [
 			participantCount: getRandomParticipantCount('trail', 170),
 			name: 'Ultra Trail du Mont Blanc',
 			location: 'Chamonix',
-			image: bibColors[4], // Fifth distributed color
+			image: bibColors[4], // Fifth distributed color 5️⃣
 			id: '5',
 			distanceUnit: 'km',
 			distance: 170,
@@ -122,8 +122,8 @@ const runsExample: BibSale[] = [
 	},
 ]
 
-// --- Alternative: Fully random data generation
-// Uncomment the lines below and comment out the runsExample above to use fully random data:
+// --- Alternative: Fully random data generation 🎲
+// Uncomment the lines below and comment out the runsExample above to use fully random data: 👇
 // const runsExample: BibSale[] = generateFakeBibSales(5)
 
 export default function MarketplaceGrid({ locale }: Readonly<{ locale: Locale }>) {

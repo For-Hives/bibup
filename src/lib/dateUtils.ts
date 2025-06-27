@@ -1,5 +1,5 @@
 /**
- * Utility functions for date handling and localization
+ * Utility functions for date handling and localization 📅🌐
  */
 
 import { DateTime } from 'luxon'
@@ -7,9 +7,9 @@ import { DateTime } from 'luxon'
 import { Locale } from './i18n-config'
 
 /**
- * Converts a datetime-local string to a date string (YYYY-MM-DD)
- * @param datetimeString - The datetime string (YYYY-MM-DDTHH:mm format)
- * @returns Date string in YYYY-MM-DD format
+ * Converts a datetime-local string to a date string (YYYY-MM-DD) 🗓️
+ * @param datetimeString - The datetime string (YYYY-MM-DDTHH:mm format) 🕰️
+ * @returns Date string in YYYY-MM-DD format 📄
  */
 export function datetimeToDate(datetimeString: string): string {
 	if (!datetimeString) return ''
@@ -17,10 +17,10 @@ export function datetimeToDate(datetimeString: string): string {
 }
 
 /**
- * Formats a date string to be displayed according to the locale
- * @param dateString - The date string (YYYY-MM-DD format)
- * @param locale - The locale ('en', 'fr', 'ko')
- * @returns Formatted date string
+ * Formats a date string to be displayed according to the locale 🌍
+ * @param dateString - The date string (YYYY-MM-DD format) 🗓️
+ * @param locale - The locale ('en', 'fr', 'ko') 🌐
+ * @returns Formatted date string 📄
  */
 export function formatDateForDisplay(dateString: string, locale: string = 'en'): string {
 	if (!dateString) return ''
@@ -28,7 +28,7 @@ export function formatDateForDisplay(dateString: string, locale: string = 'en'):
 	try {
 		const date = new Date(dateString)
 
-		// Handle different locales
+		// Handle different locales 🗺️
 		switch (locale) {
 			case 'en':
 				return date.toLocaleDateString('en-US', {
@@ -62,9 +62,9 @@ export function formatDateForDisplay(dateString: string, locale: string = 'en'):
 }
 
 /**
- * Converts a date string to the format expected by HTML date inputs (YYYY-MM-DD)
- * @param dateString - The date string
- * @returns Date string in YYYY-MM-DD format
+ * Converts a date string to the format expected by HTML date inputs (YYYY-MM-DD) 📅
+ * @param dateString - The date string 📄
+ * @returns Date string in YYYY-MM-DD format 🗓️
  */
 export function formatDateForInput(dateString: string): string {
 	if (!dateString) return ''
@@ -78,7 +78,7 @@ export function formatDateForInput(dateString: string): string {
 	}
 }
 
-// Helper function to format date with Luxon safely
+// Helper function to format date with Luxon safely ✨
 export function formatDateWithLocale(date: Date, locale: Locale): string {
 	try {
 		const dt = DateTime.fromJSDate(date)
@@ -86,27 +86,27 @@ export function formatDateWithLocale(date: Date, locale: Locale): string {
 			return new Date(date).toLocaleDateString()
 		}
 
-		// Use provided locale, or automatically detect browser locale
+		// Use provided locale, or automatically detect browser locale 🌐
 		const targetLocaleFromPath = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en-US')
 		const dateTime = dt.setLocale(targetLocaleFromPath)
 
-		// Check if locale is valid after configuration
+		// Check if locale is valid after configuration ✅
 		if (!dateTime.isValid) {
-			// If locale is not supported, use default locale
+			// If locale is not supported, use default locale 🤷
 			return dt.toLocaleString(DateTime.DATE_MED)
 		}
 
 		return dateTime.toLocaleString(DateTime.DATE_MED)
 	} catch {
-		// Fallback to native JavaScript Date formatting
+		// Fallback to native JavaScript Date formatting  fallback to native JavaScript Date formatting 📅
 		return new Date(date).toLocaleDateString()
 	}
 }
 
 /**
- * Gets the locale-specific date format pattern
- * @param locale - The locale ('en', 'fr', 'ko')
- * @returns Date format pattern
+ * Gets the locale-specific date format pattern 🗺️
+ * @param locale - The locale ('en', 'fr', 'ko') 🌐
+ * @returns Date format pattern 📄
  */
 export function getDateFormatPattern(locale: string = 'en'): string {
 	switch (locale) {
@@ -122,9 +122,9 @@ export function getDateFormatPattern(locale: string = 'en'): string {
 }
 
 /**
- * Gets the locale-specific placeholder for date inputs
- * @param locale - The locale ('en', 'fr', 'ko')
- * @returns Placeholder text
+ * Gets the locale-specific placeholder for date inputs 🗺️
+ * @param locale - The locale ('en', 'fr', 'ko') 🌐
+ * @returns Placeholder text 📄
  */
 export function getDatePlaceholder(locale: string = 'en'): string {
 	switch (locale) {

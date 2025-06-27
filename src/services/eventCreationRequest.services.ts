@@ -55,7 +55,7 @@ export async function getEventCreationRequestsCount(): Promise<{
 	waiting: number
 }> {
 	try {
-		// Get all requests
+		// Get all requests 📥
 		const allRequests = await pb.collection('eventCreationRequests').getFullList<EventCreationRequest>({
 			fields: 'status',
 		})
@@ -67,7 +67,7 @@ export async function getEventCreationRequestsCount(): Promise<{
 			accepted: 0,
 		}
 
-		// Count by status
+		// Count by status 📊
 		allRequests.forEach(request => {
 			counts[request.status]++
 		})

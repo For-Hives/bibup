@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * This is the classic input component.
+ * This is the classic input component. ⌨️
  */
 function Input({ type, className, ...props }: React.ComponentProps<'input'>) {
 	return (

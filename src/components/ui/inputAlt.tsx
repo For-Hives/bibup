@@ -6,11 +6,11 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * This is a input component that has a hover effect. ( used in the contact page form )
+ * This is a input component that has a hover effect. ( used in the contact page form ) ✨
  */
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
 	({ type, className, ...props }, ref) => {
-		const radius = 100 // change this to increase the radius of the hover effect
+		const radius = 100 // change this to increase the radius of the hover effect 💫
 		const [visible, setVisible] = React.useState(false)
 
 		let mouseX = useMotionValue(0)

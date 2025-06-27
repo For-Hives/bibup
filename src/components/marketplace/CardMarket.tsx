@@ -67,7 +67,7 @@ export default function CardMarket({ locale, bibSale }: Readonly<CardMarketProps
 						<div className="absolute inset-0 z-10 opacity-10">
 							<div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,hsl(var(--foreground)/0.3)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.3)_1px,transparent_1px)] bg-[length:15px_15px]" />
 						</div>
-						{/* type of event */}
+						{/* type of event 🎉 */}
 						<div className="absolute inset-0 top-0 left-0 z-20 m-2">
 							<span
 								className={clsx(
@@ -78,7 +78,7 @@ export default function CardMarket({ locale, bibSale }: Readonly<CardMarketProps
 								{bibSale.event.type.charAt(0).toUpperCase() + bibSale.event.type.slice(1)}
 							</span>
 						</div>
-						{/* Calc of the discount - red if more than 10% off */}
+						{/* Calc of the discount - red if more than 10% off 💰 */}
 						{((bibSale.originalPrice - bibSale.price) / bibSale.originalPrice) * 100 > 10 && (
 							<div className="absolute top-0 right-0 z-20 m-2 flex justify-center">
 								<span
@@ -167,7 +167,7 @@ function bgFromType(type: BibSale['event']['type']) {
 }
 
 function formatParticipantCount(participantCount: number) {
-	// format the number, to display it with ',' and ' '
+	// format the number, to display it with ',' and ' ' 🔢
 	return participantCount.toLocaleString('en-US', {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
