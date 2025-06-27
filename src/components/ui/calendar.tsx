@@ -155,7 +155,7 @@ function CalendarDayButton({
 			{...props}
 		>
 			{day.date.getDate()}
-			{hasEvents && (
+			{(hasEvents ?? false) && (
 				<div className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 transform rounded-full bg-blue-500" />
 			)}
 		</Button>
