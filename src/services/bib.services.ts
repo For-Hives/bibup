@@ -194,7 +194,7 @@ export async function fetchPrivateBibByToken(
 		return null
 	}
 	try {
-		const record = await pb.collection('bibs').getOne<Bib & { expand?: { event: Event; seller: User } }>(bibId, {
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event; sellerId: User } }>(bibId, {
 			expand: 'eventId,sellerId',
 		})
 
