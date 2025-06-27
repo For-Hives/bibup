@@ -1,14 +1,13 @@
-/* eslint-disable perfectionist/sort-imports, perfectionist/sort-objects */
 import type { Metadata } from 'next'
 
 import React from 'react'
 
-import { BibSale } from '@/components/marketplace/CardMarket'
-import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
 import { StripeProvider } from '@/components/marketplace/purchase/StripeProvider'
-import { Locale } from '@/lib/i18n-config'
-import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
 import { fetchBibById, fetchPrivateBibByToken } from '@/services/bib.services'
+import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
+import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
+import { BibSale } from '@/components/marketplace/CardMarket'
+import { Locale } from '@/lib/i18n-config'
 
 export const metadata: Metadata = {
 	title: 'Purchase Bib',
@@ -54,25 +53,25 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 	}
 
 	const bibSale: BibSale = {
-		event: {
-			date: bib.expand.eventId.eventDate,
-			distance: bib.expand.eventId.distanceKm ?? 0,
-			distanceUnit: 'km' as const,
-			id: bib.expand.eventId.id,
-			image: '/beswib.svg',
-			location: bib.expand.eventId.location,
-			name: bib.expand.eventId.name,
-			participantCount: bib.expand.eventId.participants ?? 0,
-			type: mapEventTypeToBibSaleType(bib.expand.eventId.typeCourse),
-		},
-		id: bib.id,
-		originalPrice: bib.originalPrice ?? 0,
-		price: bib.price,
-		status: mapStatus(bib.status),
 		user: {
-			firstName: 'Seller',
-			id: bib.sellerUserId,
 			lastName: '',
+			id: bib.sellerUserId,
+			firstName: 'Seller',
+		},
+		status: mapStatus(bib.status),
+		price: bib.price,
+		originalPrice: bib.originalPrice ?? 0,
+		id: bib.id,
+		event: {
+			type: mapEventTypeToBibSaleType(bib.expand.eventId.typeCourse),
+			participantCount: bib.expand.eventId.participants ?? 0,
+			name: bib.expand.eventId.name,
+			location: bib.expand.eventId.location,
+			image: '/beswib.svg',
+			id: bib.expand.eventId.id,
+			distanceUnit: 'km' as const,
+			distance: bib.expand.eventId.distanceKm ?? 0,
+			date: bib.expand.eventId.eventDate,
 		},
 	} satisfies BibSale
 
@@ -101,5 +100,7 @@ async function getClientSecret(bibId: string): Promise<string> {
 	}
 
 	const data = (await response.json()) as { clientSecret: string }
+
+	console.info('Payment intent created successfully:', data.clientSecret)
 	return data.clientSecret
 }
