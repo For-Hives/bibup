@@ -59,7 +59,11 @@ export function SlidingPanel({ title, onClose, isOpen, className, children }: Re
 					>
 						<div className="mb-4 flex items-center justify-between">
 							{Boolean(title) && <h2 className="text-2xl font-bold">{title}</h2>}
-							<button className="text-muted-foreground hover:text-foreground" onClick={onClose} aria-label="Close panel">
+							<button
+								aria-label="Close panel"
+								className="text-muted-foreground hover:text-foreground"
+								onClick={onClose}
+							>
 								<svg
 									className="h-6 w-6"
 									fill="none"

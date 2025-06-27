@@ -15,11 +15,11 @@ import { cn } from '@/lib/utils'
 
 interface PurchaseClientProps {
 	bib: BibSale
-	paymentIntent: string
 	locale: Locale
+	paymentIntent: string
 }
 
-export default function PurchaseClient({ locale, paymentIntent, bib }: Readonly<PurchaseClientProps>) {
+export default function PurchaseClient({ paymentIntent, locale, bib }: Readonly<PurchaseClientProps>) {
 	const stripe = useStripe()
 	const elements = useElements()
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
