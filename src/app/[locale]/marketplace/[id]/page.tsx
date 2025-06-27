@@ -79,9 +79,7 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 	} satisfies BibSale
 
 	// Fetch other available bibs for the same event
-	const otherBibsData = await fetchAvailableBibsForEvent(bib.expand.eventId.id, bib.id)
-
-	console.log('Other bibs data:', otherBibsData, ' eventId:', bib.expand.eventId.id)
+	const otherBibsData = await fetchAvailableBibsForEvent(bib.expand.eventId.id)
 
 	// Transform other bibs to BibSale format
 	const otherBibs: BibSale[] = otherBibsData
