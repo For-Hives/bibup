@@ -16,11 +16,6 @@ import { fetchUserByClerkId } from './user.services'
  *          Returns an object with `error: 'already_on_waitlist'` for duplicates.
  */
 export async function addToWaitlist(eventId: string, clerkId: string): Promise<null | (Waitlist & { error?: string })> {
-	if (eventId === '' || clerkId === '') {
-		console.error('Event ID and User ID are required to join a waitlist.')
-		return null
-	}
-
 	const user = await fetchUserByClerkId(clerkId)
 	if (user == null) {
 		console.error(`User with ID ${clerkId} not found. Cannot add to waitlist.`)

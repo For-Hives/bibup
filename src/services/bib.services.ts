@@ -342,6 +342,25 @@ export async function processBibSale(
 }
 
 /**
+ * Updates a bib record.
+ * @param bibId The ID of the bib to update.
+ * @param data The data to update.
+ */
+export async function updateBib(bibId: string, data: Partial<Omit<Bib, 'id'>>): Promise<Bib | null> {
+	if (bibId === '') {
+		console.error('Bib ID is required to update a bib.')
+		return null
+	}
+
+	try {
+		const record = await pb.collection('bibs').update<Bib>(bibId, data)
+		return record
+	} catch (error: unknown) {
+		throw new Error('Error updating bib: ' + (error instanceof Error ? error.message : String(error)))
+	}
+}
+
+/**
  * Updates a bib listing by its seller.
  * @param bibId The ID of the bib to update.
  * @param dataToUpdate Data to update for the bib.

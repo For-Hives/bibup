@@ -48,3 +48,25 @@ export async function createTransaction(
 		throw new Error('Error creating transaction: ' + (error instanceof Error ? error.message : String(error)))
 	}
 }
+
+/**
+ * Updates an existing transaction record.
+ * @param transactionId The ID of the transaction to update.
+ * @param transactionData The data to update.
+ */
+export async function updateTransaction(
+	transactionId: string,
+	transactionData: Partial<Omit<Transaction, 'id' | 'transactionDate'>>
+): Promise<null | Transaction> {
+	if (transactionId === '') {
+		console.error('Transaction ID is required to update a transaction.')
+		return null
+	}
+
+	try {
+		const record = await pb.collection('transactions').update<Transaction>(transactionId, transactionData)
+		return record
+	} catch (error: unknown) {
+		throw new Error('Error updating transaction: ' + (error instanceof Error ? error.message : String(error)))
+	}
+}
