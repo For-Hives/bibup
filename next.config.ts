@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
 					},
 					{
 						value:
-							"script-src 'self' 'unsafe-inline' https://js.stripe.com; object-src 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.stripe.com;",
+							"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.clerk.accounts.dev https://clerk.com; object-src 'none'; frame-src https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev; connect-src 'self' https://api.stripe.com https://*.clerk.accounts.dev https://clerk.com;",
 						key: 'Content-Security-Policy',
 					},
 				],
