@@ -74,7 +74,7 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 			id: bib.expand.eventId.id,
 			distanceUnit: 'km' as const,
 			distance: bib.expand.eventId.distanceKm ?? 0,
-			date: bib.expand.eventId.eventDate,
+			date: new Date(bib.expand.eventId.eventDate),
 		},
 	} satisfies BibSale
 
