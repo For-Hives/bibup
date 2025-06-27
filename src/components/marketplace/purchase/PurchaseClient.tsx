@@ -5,9 +5,8 @@ import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
-import Link from 'next/link'
 
-import { BibSale } from '@/components/marketplace/CardMarket'
+import CardMarket, { BibSale } from '@/components/marketplace/CardMarket'
 import { SlidingPanel } from '@/components/ui/SlidingPanel'
 import { formatDateWithLocale } from '@/lib/dateUtils'
 import { Button } from '@/components/ui/button'
@@ -236,42 +235,7 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 
 							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 								{samEventBibs.map(otherBib => (
-									<Link className="group" href={`/${locale}/marketplace/${otherBib.id}`} key={otherBib.id}>
-										<div className="border-border/50 bg-card/80 relative overflow-hidden rounded-lg border backdrop-blur-sm transition-all duration-200 group-hover:scale-[1.02] hover:shadow-lg">
-											<div className="relative h-32">
-												<Image
-													alt="Event Image"
-													className="object-cover"
-													fill
-													sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-													src={otherBib.event.image}
-												/>
-												{/* Discount Badge */}
-												{!!otherBib.originalPrice &&
-													((otherBib.originalPrice - otherBib.price) / otherBib.originalPrice) * 100 > 10 && (
-														<div className="absolute top-2 right-2 z-10">
-															<span className="rounded-full border border-red-500/50 bg-red-500/15 px-2 py-1 text-xs font-medium text-white/90 shadow-md shadow-red-500/20 backdrop-blur-md">
-																{(-((otherBib.originalPrice - otherBib.price) / otherBib.originalPrice) * 100).toFixed(
-																	0
-																)}
-																%
-															</span>
-														</div>
-													)}
-											</div>
-											<div className="p-4">
-												<div className="mb-2 flex items-center justify-between">
-													<p className="text-foreground text-lg font-bold">{otherBib.price}€</p>
-													{Boolean(otherBib.originalPrice && otherBib.originalPrice > otherBib.price) && (
-														<p className="text-muted-foreground text-sm line-through">{otherBib.originalPrice}€</p>
-													)}
-												</div>
-												<p className="text-muted-foreground text-sm">
-													Sold by {otherBib.user.firstName} {otherBib.user.lastName}
-												</p>
-											</div>
-										</div>
-									</Link>
+									<CardMarket bibSale={otherBib} key={otherBib.id} locale={locale} />
 								))}
 							</div>
 						</div>
