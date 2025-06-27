@@ -397,7 +397,7 @@ export default function Searchbar({
 					</Badge>
 				))}
 				{/* Price filter badge 💰 */}
-				<Badge className="bg-yellow-400 text-white" key="price" variant="secondary">
+				<Badge className="bg-background text-white" key="price" variant="secondary">
 					{selectedFilters.price[0] === 0 && selectedFilters.price[1] === maxPrice
 						? t.allPrices
 						: `${t.priceRange}: ${selectedFilters.price[0]}€ - ${selectedFilters.price[1]}€`}
@@ -412,7 +412,7 @@ export default function Searchbar({
 				</Badge>
 				{/* Start date filter badge 📅 */}
 				{selectedFilters.dateStart != null && selectedFilters.dateStart !== '' && (
-					<Badge className="bg-gray-400 text-white" key="dateStart" variant="secondary">
+					<Badge className="bg-background text-white" key="dateStart" variant="secondary">
 						{`${t.start}: ${selectedFilters.dateStart}`}
 						<button
 							aria-label="Remove start date filter"
@@ -426,7 +426,7 @@ export default function Searchbar({
 				)}
 				{/* End date filter badge 📅 */}
 				{selectedFilters.dateEnd != null && selectedFilters.dateEnd !== '' && (
-					<Badge className="bg-gray-400 text-white" key="dateEnd" variant="secondary">
+					<Badge className="bg-background text-white" key="dateEnd" variant="secondary">
 						{`${t.end}: ${selectedFilters.dateEnd}`}
 						<button
 							aria-label="Remove end date filter"
