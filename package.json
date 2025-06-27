@@ -11,7 +11,6 @@
 		"lint:fix": "next lint --fix",
 		"format": "prettier --write .",
 		"prettier": "prettier --write .",
-		"prepare": "husky",
 		"tsc": "tsc --noEmit",
 		"tsc:watch": "tsc --noEmit --watch"
 	},
@@ -56,7 +55,6 @@
 		"framer-motion": "12.19.1",
 		"motion": "12.19.1",
 		"fuse.js": "7.1.0",
-		"husky": "9.1.7",
 		"lucide-react": "0.523.0",
 		"luxon": "3.6.1",
 		"negotiator": "1.0.0",

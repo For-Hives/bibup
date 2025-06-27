@@ -5,7 +5,7 @@ import { i18n } from '@/lib/i18n-config'
 
 function getLocaleFromRequest(request: NextRequest): string {
 	try {
-		// 1. Check for language preference in cookies first
+		// 1. Check for language preference in cookies first 🍪
 		const cookieHeader = request.headers.get('cookie')
 		if (cookieHeader !== null && cookieHeader.length > 0) {
 			const cookies = cookieHeader.split(';').reduce((acc: Record<string, string>, cookie) => {
@@ -22,10 +22,10 @@ function getLocaleFromRequest(request: NextRequest): string {
 			}
 		}
 
-		// 2. Fallback to Accept-Language header
+		// 2. Fallback to Accept-Language header 🌐
 		const acceptLanguage = request.headers.get('accept-language') ?? ''
 
-		// Parse the accept-language header to find the preferred language
+		// Parse the accept-language header to find the preferred language 🗣️
 		const languages =
 			acceptLanguage.length > 0
 				? acceptLanguage
@@ -40,7 +40,7 @@ function getLocaleFromRequest(request: NextRequest): string {
 						.sort((a, b) => b.quality - a.quality)
 				: []
 
-		// Find the first supported language
+		// Find the first supported language 🥇
 		if (languages.length > 0) {
 			for (const lang of languages) {
 				if ((i18n.locales as readonly string[]).includes(lang.code)) {
@@ -49,11 +49,11 @@ function getLocaleFromRequest(request: NextRequest): string {
 			}
 		}
 
-		// 3. Return default locale as fallback
+		// 3. Return default locale as fallback 🤷
 		return i18n.defaultLocale
 	} catch {
-		// During static generation or if any error occurs
-		// Return default locale
+		// During static generation or if any error occurs 🏗️
+		// Return default locale 🤷‍♂️
 		return i18n.defaultLocale
 	}
 }
@@ -61,14 +61,14 @@ function getLocaleFromRequest(request: NextRequest): string {
 export default clerkMiddleware((auth, request: NextRequest) => {
 	const { pathname } = request.nextUrl
 
-	// Check if there is any supported locale in the pathname
+	// Check if there is any supported locale in the pathname 🗺️
 	const pathnameHasLocale = i18n.locales.some(locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
 
 	if (pathnameHasLocale) {
 		return NextResponse.next()
 	}
 
-	// Redirect if there is no locale - use smart locale detection
+	// Redirect if there is no locale - use smart locale detection 🧠
 	const locale = getLocaleFromRequest(request)
 	request.nextUrl.pathname = `/${locale}${pathname}`
 	return NextResponse.redirect(request.nextUrl)
@@ -76,7 +76,7 @@ export default clerkMiddleware((auth, request: NextRequest) => {
 
 export const config = {
 	matcher: [
-		// Skip all internal paths (_next/static, _next/image, api) and files with extensions
+		// Skip all internal paths (_next/static, _next/image, api) and files with extensions ⏭️
 		'/((?!api|_next/static|_next/image|.*\\..*).*)',
 	],
 }

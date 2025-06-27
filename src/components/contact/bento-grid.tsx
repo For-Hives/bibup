@@ -45,7 +45,7 @@ export default function BentoGrid({ t }: Props) {
 
 	return (
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-6">
-			{/* Information card - spans full width */}
+			{/* Information card - spans full width ℹ️ */}
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
 				className="bg-foreground/5 hover:border-primary/50 relative col-span-1 overflow-hidden rounded-3xl border p-8 shadow-xl transition-colors md:col-span-6"
@@ -78,13 +78,13 @@ export default function BentoGrid({ t }: Props) {
 					</div>
 				</div>
 
-				{/* Background decoration */}
+				{/* Background decoration 🎨 */}
 				<div className="via-primary/30 absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent to-transparent"></div>
 				<div className="from-primary/25 absolute top-0 right-0 h-40 w-40 rounded-bl-full bg-gradient-to-bl to-transparent"></div>
 				<div className="from-primary/10 absolute bottom-0 left-0 h-32 w-32 rounded-tr-full bg-gradient-to-tr to-transparent"></div>
 			</motion.div>
 
-			{/* Main contact form - spans 2 rows */}
+			{/* Main contact form - spans 2 rows 📝 */}
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
 				className="bg-card border-border hover:border-primary/50 relative col-span-1 row-span-2 overflow-hidden rounded-3xl border shadow-xl transition-colors md:col-span-4"
@@ -99,7 +99,7 @@ export default function BentoGrid({ t }: Props) {
 				<div className="from-primary/25 via-primary/5 pointer-events-none absolute right-0 bottom-0 h-45 w-45 rounded-tl-full bg-gradient-to-tl to-transparent"></div>
 			</motion.div>
 
-			{/* Email card with hover effect */}
+			{/* Email card with hover effect 📧 */}
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 col-span-1 border transition-colors md:col-span-2"
 				content="contact@beswib.com"
@@ -112,7 +112,7 @@ export default function BentoGrid({ t }: Props) {
 				title={t.email}
 			/>
 
-			{/* Support card with hover effect */}
+			{/* Support card with hover effect 🤝 */}
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 col-span-1 border transition-colors md:col-span-2"
 				content="support@beswib.com"
@@ -125,7 +125,7 @@ export default function BentoGrid({ t }: Props) {
 				title={t.support}
 			/>
 
-			{/* Interactive element */}
+			{/* Interactive element 🖱️ */}
 			<motion.div
 				animate={{ y: 0, opacity: 1 }}
 				className="border-border bg-card hover:border-primary/50 relative col-span-1 flex cursor-pointer flex-col items-start justify-start overflow-hidden rounded-3xl border px-6 py-6 text-center shadow-xl transition-colors"
@@ -202,7 +202,7 @@ export default function BentoGrid({ t }: Props) {
 				</Link>
 			</motion.div>
 
-			{/* Partnerships card with hover effect */}
+			{/* Partnerships card with hover effect 💼 */}
 			<BentoCard
 				className="bg-card border-border hover:border-primary/50 col-span-1 border transition-colors md:col-span-2"
 				content="partners@beswib.com"
@@ -250,7 +250,7 @@ function BentoCard({
 				Contact <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
 			</Button>
 
-			{/* Dynamic background effects based on hover state */}
+			{/* Dynamic background effects based on hover state ✨ */}
 			{hoverEffect === 'glow' && isActive && (
 				<div className="bg-primary/5 absolute inset-0 transition-opacity duration-300"></div>
 			)}

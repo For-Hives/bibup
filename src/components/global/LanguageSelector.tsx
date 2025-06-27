@@ -27,16 +27,16 @@ export default function LanguageSelector({ currentLocale = 'en' }: LanguageSelec
 
 	const handleLanguageChange = (newLocale: string) => {
 		try {
-			// Set cookie to persist language preference
+			// Set cookie to persist language preference 🍪
 			document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=lax`
 
 			setSelectedLocale(newLocale)
 			setIsOpen(false)
 
-			// replace the current URL with the new locale (  /en/path/to/page -> /fr/path/to/page )
+			// replace the current URL with the new locale (  /en/path/to/page -> /fr/path/to/page ) 🔄
 			const url = new URL(window.location.href)
 			const pathSegments = url.pathname.split('/').filter(Boolean)
-			// Replace the first segment (current locale) with the new locale
+			// Replace the first segment (current locale) with the new locale ➡️
 			if (pathSegments.length > 0 && languages.some(lang => lang.code === pathSegments[0])) {
 				pathSegments[0] = newLocale
 			} else {
@@ -44,14 +44,14 @@ export default function LanguageSelector({ currentLocale = 'en' }: LanguageSelec
 			}
 			url.pathname = '/' + pathSegments.join('/')
 			window.history.replaceState({}, '', url.toString())
-			// Reload the page to apply the new locale
+			// Reload the page to apply the new locale 🔁
 			window.location.reload()
 		} catch (error) {
 			console.error('Error changing language:', error)
 		}
 	}
 
-	// Close dropdown when clicking outside
+	// Close dropdown when clicking outside 🖱️
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as HTMLElement

@@ -13,7 +13,7 @@ export interface TransactionDetail {
 	ffaNumber?: string
 	id: string
 	medicalCertificateUrl?: string
-	// replicate event options if needed
+	// replicate event options if needed 🏷️
 	optionValues: Record<string, string>
 	transactionId: Transaction['id']
 }

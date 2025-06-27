@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * This is a the classic textarea component.
+ * This is a the classic textarea component. 📝
  */
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
 	return (

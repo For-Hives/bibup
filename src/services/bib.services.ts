@@ -28,7 +28,7 @@ export async function createBib(bibData: Omit<Bib, 'id'>): Promise<Bib | null> {
 	let finalEventId: string = bibData.eventId
 
 	try {
-		// Generate private listing token if this is a private listing
+		// Generate private listing token if this is a private listing 🤫
 		const privateListingToken = bibData.listed === 'private' ? generatePrivateListingToken() : undefined
 
 		const dataToCreate: Omit<Bib, 'id'> = {
@@ -174,7 +174,7 @@ export async function fetchPrivateBibByToken(
 			expand: 'eventId',
 		})
 
-		// Verify the token matches and this is a private listing
+		// Verify the token matches and this is a private listing ✅
 		if (record.listed !== 'private' || record.privateListingToken !== token) {
 			console.warn(`Invalid token access attempt for bib ${bibId}`)
 			return null
@@ -231,7 +231,7 @@ export async function processBibSale(
 			return { success: false, error: `Bib with ID ${bibId} not found.` }
 		}
 		if (bib.status !== 'available') {
-			//TODO: fix this to check for 'listed_public' or 'listed_private' if needed
+			//TODO: fix this to check for 'listed_public' or 'listed_private' if needed 🚧
 			return {
 				success: false,
 				error: `Bib is not available for sale. Current status: ${bib.status}.`,
@@ -241,7 +241,7 @@ export async function processBibSale(
 			return { success: false, error: 'Seller cannot buy their own bib.' }
 		}
 
-		// 2. Fetch the Seller User to get their information for transaction creation.
+		// 2. Fetch the Seller User to get their information for transaction creation. 👤
 		const sellerUser = await fetchUserById(bib.sellerUserId)
 		if (sellerUser == null) {
 			return { success: false, error: `Seller user with PocketBase ID ${bib.sellerUserId} not found.` }
@@ -250,10 +250,10 @@ export async function processBibSale(
 			return { success: false, error: `Clerk ID not found for seller user ${bib.sellerUserId}.` }
 		}
 
-		// 3. Calculate platform fee.
-		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic
+		// 3. Calculate platform fee. 💰
+		const platformFeeAmount = bib.price * 0.1 // TODO: Replace with actual platform fee logic 🚧
 
-		// 4. Create the transaction record.
+		// 4. Create the transaction record. 📝
 		const transaction = await createTransaction({
 			status: 'succeeded',
 			sellerUserId: bib.sellerUserId,
@@ -268,15 +268,15 @@ export async function processBibSale(
 			return { success: false, error: 'Failed to create transaction record.' }
 		}
 
-		// 6. Update the Bib status to 'sold' and set buyerUserId.
+		// 6. Update the Bib status to 'sold' and set buyerUserId. ✅
 		await pb.collection('bibs').update<Bib>(bibId, {
 			status: 'sold',
 			buyerUserId: buyerUserId,
 		})
 
-		// 7. Initiate Organizer Notification (Conceptual placeholder)
-		// Example: if (updatedBibRecordFromPreviousLine != null) { ... }
-		// Since updatedBib is not used, this conceptual part would need adjustment if re-enabled.
+		// 7. Initiate Organizer Notification (Conceptual placeholder) 📢
+		// Example: if (updatedBibRecordFromPreviousLine != null) { ... } 🤔
+		// Since updatedBib is not used, this conceptual part would need adjustment if re-enabled. 🤷
 
 		return { transaction, success: true }
 	} catch (error: unknown) {
@@ -294,7 +294,7 @@ export async function processBibSale(
  */
 export async function updateBibBySeller(
 	bibId: string,
-	dataToUpdate: Bib, // Allow specific status updates or general data updates
+	dataToUpdate: Bib, // Allow specific status updates or general data updates ✅
 	sellerUserId: string
 ): Promise<Bib | null> {
 	if (bibId === '' || sellerUserId === '') {
@@ -309,20 +309,20 @@ export async function updateBibBySeller(
 			return null
 		}
 
-		// Prevent changing eventId or sellerUserId directly with this function.
-		// Certain status transitions might also be restricted (e.g., can't change sold bib).
+		// Prevent changing eventId or sellerUserId directly with this function. 🚫
+		// Certain status transitions might also be restricted (e.g., can't change sold bib). ⚠️
 		if (currentBib.status === 'sold' || currentBib.status === 'expired') {
 			console.warn(`Attempt to update a bib that is already ${currentBib.status} (Bib ID: ${bibId})`)
-			// Consider throwing an error or returning specific result if update is not allowed.
+			// Consider throwing an error or returning specific result if update is not allowed. 🤔
 		}
 
-		// If 'status' is part of dataToUpdate, ensure it's a valid transition
+		// If 'status' is part of dataToUpdate, ensure it's a valid transition ✅
 		if ('status' in dataToUpdate) {
 			const newStatus = dataToUpdate.status
 			const allowedStatusChanges: Record<Bib['status'], Bib['status'][]> = {
 				withdrawn: ['available'],
 				validation_failed: ['withdrawn'],
-				sold: [], // Cannot be changed by seller
+				sold: [], // Cannot be changed by seller 🚫
 				expired: ['withdrawn'],
 				available: ['sold', 'withdrawn', 'expired'],
 			}
@@ -330,7 +330,7 @@ export async function updateBibBySeller(
 			const allowedChanges = allowedStatusChanges[currentBib.status]
 			if (!allowedChanges?.includes(newStatus)) {
 				console.warn(`Invalid status transition from ${currentBib.status} to ${newStatus} for bib ${bibId}.`)
-				// Consider throwing an error for invalid transitions.
+				// Consider throwing an error for invalid transitions. 🤔
 			}
 		}
 
@@ -379,8 +379,8 @@ export async function updateBibStatusByAdmin(bibId: string, newStatus: Bib['stat
 }
 
 /**
- * Generates a cryptographically secure random token for private listings
- * @returns A 32-character random string
+ * Generates a cryptographically secure random token for private listings 🤫
+ * @returns A 32-character random string 🎲
  */
 function generatePrivateListingToken(): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
