@@ -6,6 +6,7 @@ import { StripeProvider } from '@/components/marketplace/purchase/StripeProvider
 import { fetchBibById, fetchPrivateBibByToken } from '@/services/bib.services'
 import PurchaseClient from '@/components/marketplace/purchase/PurchaseClient'
 import { mapEventTypeToBibSaleType } from '@/lib/bibTransformers'
+import { createPaymentIntent } from '@/services/stripe.services'
 import { BibSale } from '@/components/marketplace/CardMarket'
 import { Locale } from '@/lib/i18n-config'
 
@@ -75,7 +76,7 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 		},
 	} satisfies BibSale
 
-	const clientSecret = await getClientSecret(id)
+	const clientSecret = await createPaymentIntent(id)
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -84,23 +85,4 @@ export default async function MarketplaceItemPage({ searchParams, params }: Mark
 			</StripeProvider>
 		</div>
 	)
-}
-
-async function getClientSecret(bibId: string): Promise<string> {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/payment-intent`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ bibId }),
-	})
-
-	if (!response.ok) {
-		throw new Error('Failed to create payment intent')
-	}
-
-	const data = (await response.json()) as { clientSecret: string }
-
-	console.info('Payment intent created successfully:', data.clientSecret)
-	return data.clientSecret
 }
