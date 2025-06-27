@@ -12,9 +12,17 @@ interface SlidingPanelProps {
 	isOpen: boolean
 	onClose: () => void
 	title?: string
+	variant?: 'modal' | 'slide'
 }
 
-export function SlidingPanel({ title, onClose, isOpen, className, children }: Readonly<SlidingPanelProps>) {
+export function SlidingPanel({
+	variant = 'slide',
+	title,
+	onClose,
+	isOpen,
+	className,
+	children,
+}: Readonly<SlidingPanelProps>) {
 	const panelRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -24,16 +32,53 @@ export function SlidingPanel({ title, onClose, isOpen, className, children }: Re
 			}
 		}
 
+		const handlePreventScroll = (event: Event) => {
+			event.preventDefault()
+		}
+
 		if (isOpen) {
 			document.addEventListener('keydown', handleEscape)
+
+			// Calculate scrollbar width to prevent layout shift
+			const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
+
+			// Prevent body scrolling when modal is open
+			document.body.style.overflow = 'hidden'
+			document.body.style.paddingRight = `${scrollBarWidth}px`
+
+			// Additional scroll prevention for wheel, touch, and keyboard events
+			document.addEventListener('wheel', handlePreventScroll, { passive: false })
+			document.addEventListener('touchmove', handlePreventScroll, { passive: false })
+			document.addEventListener(
+				'keydown',
+				e => {
+					// Prevent arrow keys, page up/down, home/end from scrolling
+					if (['ArrowDown', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp', 'Space'].includes(e.code)) {
+						if (e.target === document.body || panelRef.current?.contains(e.target as Node) !== true) {
+							e.preventDefault()
+						}
+					}
+				},
+				{ passive: false }
+			)
 		} else {
 			document.removeEventListener('keydown', handleEscape)
+			document.body.style.overflow = ''
+			document.body.style.paddingRight = ''
+			document.removeEventListener('wheel', handlePreventScroll)
+			document.removeEventListener('touchmove', handlePreventScroll)
 		}
 
 		return () => {
 			document.removeEventListener('keydown', handleEscape)
+			document.body.style.overflow = ''
+			document.body.style.paddingRight = ''
+			document.removeEventListener('wheel', handlePreventScroll)
+			document.removeEventListener('touchmove', handlePreventScroll)
 		}
 	}, [isOpen, onClose])
+
+	const isModal = variant === 'modal'
 
 	return (
 		<AnimatePresence>
@@ -46,26 +91,28 @@ export function SlidingPanel({ title, onClose, isOpen, className, children }: Re
 					onClick={onClose}
 				>
 					<motion.div
-						animate={{ x: 0 }}
+						animate={isModal ? { scale: 1, opacity: 1 } : { x: 0 }}
 						className={cn(
-							'bg-card fixed top-0 right-0 h-full w-full max-w-md overflow-y-auto p-6 shadow-lg',
+							isModal
+								? 'bg-card border-border/20 fixed top-1/2 left-1/2 max-h-[90vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border p-6 shadow-2xl'
+								: 'bg-card fixed top-0 right-0 h-full w-[80vw] overflow-y-auto p-6 shadow-lg',
 							className
 						)}
-						exit={{ x: '100%' }}
-						initial={{ x: '100%' }}
+						exit={isModal ? { scale: 0.95, opacity: 0 } : { x: '100%' }}
+						initial={isModal ? { scale: 0.95, opacity: 0 } : { x: '100%' }}
 						onClick={e => e.stopPropagation()} // Prevent closing when clicking inside panel
 						ref={panelRef}
 						transition={{ type: 'spring', stiffness: 300, damping: 30 }}
 					>
-						<div className="mb-4 flex items-center justify-between">
-							{Boolean(title) && <h2 className="text-2xl font-bold">{title}</h2>}
+						<div className="mb-6 flex items-center justify-between">
+							{Boolean(title) && <h2 className="text-foreground text-xl font-semibold">{title}</h2>}
 							<button
 								aria-label="Close panel"
-								className="text-muted-foreground hover:text-foreground"
+								className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full p-1 transition-colors"
 								onClick={onClose}
 							>
 								<svg
-									className="h-6 w-6"
+									className="h-5 w-5"
 									fill="none"
 									stroke="currentColor"
 									viewBox="0 0 24 24"

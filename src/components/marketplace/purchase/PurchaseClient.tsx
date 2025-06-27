@@ -4,6 +4,8 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 
 import CardMarket, { BibSale } from '@/components/marketplace/CardMarket'
@@ -25,6 +27,17 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 	const elements = useElements()
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
 	const [isPanelOpen, setIsPanelOpen] = useState(false)
+	const { isSignedIn } = useUser()
+	const router = useRouter()
+
+	// Check if user is authenticated when trying to open payment modal
+	const handleBuyNowClick = () => {
+		if (isSignedIn === false || isSignedIn === undefined) {
+			router.push(`/${locale}/sign-in?redirect_url=${encodeURIComponent(window.location.pathname)}`)
+			return
+		}
+		setIsPanelOpen(true)
+	}
 
 	useEffect(() => {
 		if (!stripe || !paymentIntent || !isPanelOpen) {
@@ -172,7 +185,7 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 							</div>
 							<Button
 								className="flex items-center justify-center gap-2 text-lg font-medium"
-								onClick={() => setIsPanelOpen(true)}
+								onClick={handleBuyNowClick}
 								size="lg"
 							>
 								<ShoppingCart className="h-5 w-5" />
@@ -247,21 +260,183 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 				className="z-[100]"
 				isOpen={isPanelOpen}
 				onClose={() => setIsPanelOpen(false)}
-				title="Complete your purchase"
+				title="Secure Payment"
+				variant="slide"
 			>
-				<form
-					className="space-y-4"
-					onSubmit={event => {
-						void handleSubmit(event)
-					}}
-				>
-					<h2 className="text-xl font-bold">Payment Details</h2>
-					<PaymentElement id="payment-element" />
-					<Button className="w-full" disabled={!stripe} type="submit">
-						Pay {bib.price}€
-					</Button>
-					{Boolean(errorMessage) && <div className="text-sm text-red-500">{errorMessage}</div>}
-				</form>
+				<div className="container mx-auto p-6">
+					<div className="flex gap-6">
+						<div className="flex flex-col gap-6 lg:w-2/3">
+							{/* Event Summary Card */}
+							<div className="bg-muted/30 border-border/20 rounded-lg border p-6">
+								<div className="flex items-start gap-4">
+									<div className="relative h-16 w-16 overflow-hidden rounded-lg">
+										<Image alt="Event Image" className="object-cover" fill sizes="64px" src={bib.event.image} />
+									</div>
+									<div className="flex-1">
+										<h3 className="font-semibold">{bib.event.name}</h3>
+										<p className="text-muted-foreground text-sm">{formatDateWithLocale(bib.event.date, locale)}</p>
+										<p className="text-muted-foreground text-sm">{bib.event.location}</p>
+									</div>
+									<div className="text-right">
+										<p className="text-lg font-bold">{bib.price}€</p>
+										{Boolean(bib.originalPrice && bib.originalPrice > bib.price) && (
+											<p className="text-muted-foreground text-sm line-through">{bib.originalPrice}€</p>
+										)}
+									</div>
+								</div>
+							</div>
+
+							{/* Order Summary */}
+							<div className="bg-muted/30 border-border/20 rounded-lg border p-4">
+								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Order Summary</h3>
+								<div className="space-y-2">
+									<div className="flex items-center justify-between">
+										<span className="text-sm">Race bib</span>
+										<span className="text-sm">{bib.price}€</span>
+									</div>
+									{Boolean(bib.originalPrice && bib.originalPrice > bib.price) && (
+										<div className="flex items-center justify-between text-green-600">
+											<span className="text-sm">Discount</span>
+											<span className="text-sm">-{(bib.originalPrice - bib.price).toFixed(2)}€</span>
+										</div>
+									)}
+									<div className="border-border/20 border-t pt-2">
+										<div className="flex items-center justify-between font-semibold">
+											<span>Total</span>
+											<span>{bib.price}€</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Payment Methods Tabs */}
+						<form
+							className="space-y-6"
+							onSubmit={event => {
+								void handleSubmit(event)
+							}}
+						>
+							<div>
+								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Payment Information</h3>
+								<div className="bg-background border-border/20 rounded-lg border p-4">
+									<PaymentElement
+										id="payment-element"
+										options={{
+											wallets: {
+												googlePay: 'auto',
+												applePay: 'auto',
+											},
+											paymentMethodOrder: ['card'],
+											layout: 'tabs',
+										}}
+									/>
+								</div>
+							</div>
+
+							<Button
+								className="w-full"
+								disabled={!stripe || isSignedIn === false || isSignedIn === undefined}
+								size="lg"
+								type="submit"
+							>
+								<svg
+									className="mr-2 h-4 w-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+									/>
+								</svg>
+								Complete Secure Payment - {bib.price}€
+							</Button>
+
+							{Boolean(errorMessage) && (
+								<div className="bg-destructive/10 text-destructive border-destructive/20 rounded-lg border p-3 text-sm">
+									{errorMessage}
+								</div>
+							)}
+
+							{/* Enhanced Trust indicators */}
+							<div className="space-y-4">
+								<div className="border-border/20 border-t pt-4">
+									<div className="text-muted-foreground flex items-center justify-center gap-6 text-xs">
+										<div className="flex items-center gap-1">
+											<svg className="h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+												<path
+													clipRule="evenodd"
+													d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+													fillRule="evenodd"
+												/>
+											</svg>
+											256-bit SSL
+										</div>
+										<div className="flex items-center gap-1">
+											<svg className="h-3 w-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+												<path
+													clipRule="evenodd"
+													d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+													fillRule="evenodd"
+												/>
+											</svg>
+											Stripe Secured
+										</div>
+										<div className="flex items-center gap-1">
+											<svg className="h-3 w-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+												<path
+													clipRule="evenodd"
+													d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+													fillRule="evenodd"
+												/>
+											</svg>
+											PCI Compliant
+										</div>
+									</div>
+								</div>
+
+								{/* Additional Trust Elements */}
+								<div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+									<div className="flex items-start gap-3">
+										<svg
+											className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600"
+											fill="currentColor"
+											viewBox="0 0 20 20"
+										>
+											<path
+												clipRule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												fillRule="evenodd"
+											/>
+										</svg>
+										<div className="text-sm">
+											<p className="font-medium text-green-800 dark:text-green-300">100% Secure Transaction</p>
+											<p className="mt-1 text-green-700 dark:text-green-400">
+												Your payment information is encrypted and protected by industry-leading security measures. We
+												never store your card details.
+											</p>
+										</div>
+									</div>
+								</div>
+
+								<div className="space-y-2 text-center">
+									<p className="text-muted-foreground text-xs">Trusted by thousands of athletes worldwide</p>
+									<div className="text-muted-foreground flex items-center justify-center gap-4 text-xs">
+										<span>🔒 Bank-level encryption</span>
+										<span>⚡ Instant confirmation</span>
+										<span>🛡️ Fraud protection</span>
+									</div>
+									<p className="text-muted-foreground text-xs">Questions? Contact our support team at any time</p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 			</SlidingPanel>
 		</div>
 	)
