@@ -51,7 +51,7 @@ export default function PurchaseClient({ paymentIntent, locale, bib }: Readonly<
 				setErrorMessage('Failed to retrieve payment intent.')
 			}
 		})
-	}, [stripe, clientSecret, isPanelOpen])
+	}, [stripe, paymentIntent, isPanelOpen])
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
