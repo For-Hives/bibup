@@ -81,14 +81,16 @@ export async function fetchAvailableBibsForMarketplace(): Promise<
  * Fetches a single bib by its ID for public display or pre-purchase.
  * @param bibId The ID of the bib to fetch.
  */
-export async function fetchBibById(bibId: string): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
+export async function fetchBibById(
+	bibId: string
+): Promise<(Bib & { expand?: { eventId: Event; sellerId: User } }) | null> {
 	if (bibId === '') {
 		console.error('Bib ID is required.')
 		return null
 	}
 	try {
-		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
-			expand: 'eventId',
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event; sellerId: User } }>(bibId, {
+			expand: 'eventId,sellerId',
 		})
 
 		return record
@@ -186,14 +188,14 @@ export async function fetchBibsBySeller(sellerUserId: string): Promise<Bib[]> {
 export async function fetchPrivateBibByToken(
 	bibId: string,
 	token: string
-): Promise<(Bib & { expand?: { eventId: Event } }) | null> {
+): Promise<(Bib & { expand?: { eventId: Event; sellerId: User } }) | null> {
 	if (bibId === '' || token === '') {
 		console.error('Bib ID and token are required.')
 		return null
 	}
 	try {
-		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event } }>(bibId, {
-			expand: 'eventId',
+		const record = await pb.collection('bibs').getOne<Bib & { expand?: { eventId: Event; sellerId: User } }>(bibId, {
+			expand: 'eventId,sellerId',
 		})
 
 		// Verify the token matches and this is a private listing
