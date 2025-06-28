@@ -13,7 +13,8 @@
 		"prettier": "prettier --write .",
 		"prepare": "husky",
 		"tsc": "tsc --noEmit",
-		"tsc:watch": "tsc --noEmit --watch"
+		"tsc:watch": "tsc --noEmit --watch",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "6.23.1",
@@ -57,11 +58,11 @@
 		"eslint-plugin-react-hooks": "5.2.0",
 		"espree": "10.4.0",
 		"framer-motion": "12.19.2",
-		"motion": "12.19.2",
 		"fuse.js": "7.1.0",
 		"husky": "9.1.7",
 		"lucide-react": "0.525.0",
 		"luxon": "3.6.1",
+		"motion": "12.19.2",
 		"negotiator": "1.0.0",
 		"next": "15.3.4",
 		"nuqs": "^2.4.3",
@@ -87,10 +88,14 @@
 		"@types/react-dom": "19.1.6",
 		"@typescript-eslint/eslint-plugin": "8.35.0",
 		"@typescript-eslint/parser": "8.35.0",
+		"@vitejs/plugin-react": "^4.6.0",
+		"@vitest/ui": "^3.2.4",
 		"eslint": "9.30.0",
 		"eslint-config-next": "15.3.4",
+		"jsdom": "^26.1.0",
 		"tailwindcss": "4.1.11",
 		"tw-animate-css": "1.3.4",
-		"typescript": "5.8.3"
+		"typescript": "5.8.3",
+		"vitest": "^3.2.4"
 	}
 }
