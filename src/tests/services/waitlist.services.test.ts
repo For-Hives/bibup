@@ -8,13 +8,13 @@ vi.mock('@/lib/pocketbaseClient', () => ({
 }))
 
 const mockUser: User = {
-	clerkId: 'clerk_user1',
-	createdAt: new Date('2024-01-01'),
-	email: 'test@test.com',
-	firstName: 'Test',
-	id: 'user1',
-	lastName: 'User',
 	role: 'user',
+	lastName: 'User',
+	id: 'user1',
+	firstName: 'Test',
+	email: 'test@test.com',
+	createdAt: new Date('2024-01-01'),
+	clerkId: 'clerk_user1',
 }
 
 import { addToWaitlist, fetchUserWaitlists } from '@/services/waitlist.services'
