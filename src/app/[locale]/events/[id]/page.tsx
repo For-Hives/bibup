@@ -13,6 +13,7 @@ import { fetchPubliclyListedBibsForEvent } from '@/services/bib.services'
 import { generateLocaleParams } from '@/lib/generateStaticParams'
 import { addToWaitlist } from '@/services/waitlist.services'
 import { fetchEventById } from '@/services/event.services'
+import { fetchUserByClerkId } from '@/services/user.services'
 import { Locale } from '@/lib/i18n-config'
 
 type EventDetailPageProps = {
@@ -42,7 +43,8 @@ export default async function EventDetailPage({ searchParams, params }: EventDet
 		'use server'
 		if (clerkId != null) {
 			const eventIdFromForm = formData.get('eventId') as string
-			const result = await addToWaitlist(eventIdFromForm, clerkId)
+			const user = await fetchUserByClerkId(clerkId)
+			const result = await addToWaitlist(eventIdFromForm, user)
 
 			if (result && result.error === 'already_on_waitlist') {
 				redirect(`/events/${eventIdFromForm}?waitlist_error=already_added`)

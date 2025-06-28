@@ -40,7 +40,7 @@ describe('stripe.services', () => {
 	})
 
 	it('should create a payment intent successfully', async () => {
-		;(fetchBibById as vi.Mock).mockResolvedValue(mockBib)
+		;(fetchBibById as ReturnType<typeof vi.fn>).mockResolvedValue(mockBib)
 		stripeMock.paymentIntents.create.mockResolvedValue({
 			client_secret: 'client_secret_123',
 		})
@@ -62,14 +62,14 @@ describe('stripe.services', () => {
 	})
 
 	it('should throw an error if bib is not found', async () => {
-		;(fetchBibById as vi.Mock).mockResolvedValue(null)
+		;(fetchBibById as ReturnType<typeof vi.fn>).mockResolvedValue(null)
 		await expect(createPaymentIntent(mockBib.id)).rejects.toThrow('Bib not found')
 		expect(fetchBibById).toHaveBeenCalledWith(mockBib.id)
 		expect(stripeMock.paymentIntents.create).not.toHaveBeenCalled()
 	})
 
 	it('should throw an error if client_secret is null', async () => {
-		;(fetchBibById as vi.Mock).mockResolvedValue(mockBib)
+		;(fetchBibById as ReturnType<typeof vi.fn>).mockResolvedValue(mockBib)
 		stripeMock.paymentIntents.create.mockResolvedValue({
 			client_secret: null,
 		})
