@@ -14,7 +14,9 @@
 		"prepare": "husky",
 		"tsc": "tsc --noEmit",
 		"tsc:watch": "tsc --noEmit --watch",
-		"test": "vitest"
+		"test": "vitest",
+		"test:run": "vitest run",
+		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "6.23.1",

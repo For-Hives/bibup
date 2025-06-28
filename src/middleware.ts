@@ -3,7 +3,7 @@ import { clerkMiddleware } from '@clerk/nextjs/server'
 
 import { i18n } from '@/lib/i18n-config'
 
-function getLocaleFromRequest(request: NextRequest): string {
+export function getLocaleFromRequest(request: NextRequest): string {
 	try {
 		// 1. Check for language preference in cookies first 🍪
 		const cookieHeader = request.headers.get('cookie')
