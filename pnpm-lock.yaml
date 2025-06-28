@@ -181,7 +181,7 @@ importers:
         version: 2.0.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       stripe:
         specifier: 18.2.1
-        version: 18.2.1(@types/node@24.0.6)
+        version: 18.2.1(@types/node@24.0.7)
       svix:
         specifier: 1.68.0
         version: 1.68.0
@@ -199,8 +199,8 @@ importers:
         specifier: 4.1.11
         version: 4.1.11
       '@types/node':
-        specifier: 24.0.6
-        version: 24.0.6
+        specifier: 24.0.7
+        version: 24.0.7
       '@types/react':
         specifier: 19.1.8
         version: 19.1.8
@@ -1291,8 +1291,8 @@ packages:
   '@types/node@22.15.33':
     resolution: {integrity: sha512-wzoocdnnpSxZ+6CjW4ADCK1jVmd1S/J3ArNWfn8FDDQtRm8dkDg7TA+mvek2wNrfCgwuZxqEOiB9B1XCJ6+dbw==}
 
-  '@types/node@24.0.6':
-    resolution: {integrity: sha512-ZOyn+gOs749xU7ovp+Ibj0g1o3dFRqsfPnT22C2t5JzcRvgsEDpGawPbCISGKLudJk9Y0wiu9sYd6kUh0pc9TA==}
+  '@types/node@24.0.7':
+    resolution: {integrity: sha512-YIEUUr4yf8q8oQoXPpSlnvKNVKDQlPMWrmOcgzoduo7kvA2UF0/BwJ/eMKFTiTtkNL17I0M6Xe2tvwFU7be6iw==}
 
   '@types/react-dom@19.1.6':
     resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
@@ -4102,7 +4102,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.0.6':
+  '@types/node@24.0.7':
     dependencies:
       undici-types: 7.8.0
 
@@ -5810,11 +5810,11 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@18.2.1(@types/node@24.0.6):
+  stripe@18.2.1(@types/node@24.0.7):
     dependencies:
       qs: 6.14.0
     optionalDependencies:
-      '@types/node': 24.0.6
+      '@types/node': 24.0.7
 
   styled-jsx@5.1.6(react@19.1.0):
     dependencies:
