@@ -11,9 +11,9 @@ import type { Bib } from '@/models/bib.model'
 
 import { fetchPubliclyListedBibsForEvent } from '@/services/bib.services'
 import { generateLocaleParams } from '@/lib/generateStaticParams'
+import { fetchUserByClerkId } from '@/services/user.services'
 import { addToWaitlist } from '@/services/waitlist.services'
 import { fetchEventById } from '@/services/event.services'
-import { fetchUserByClerkId } from '@/services/user.services'
 import { Locale } from '@/lib/i18n-config'
 
 type EventDetailPageProps = {
