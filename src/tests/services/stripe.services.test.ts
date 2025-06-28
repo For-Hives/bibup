@@ -35,8 +35,10 @@ describe('stripe.services', () => {
 		process.env.STRIPE_SECRET_KEY = 'sk_test_123'
 
 		// Dynamically import the mocked stripe module to get the stripeMock instance
-		const stripeModule = await import('stripe')
-		stripeMock = (stripeModule as any).stripeMock // Access the exported mock
+		const stripeModule = (await import('stripe')) as typeof import('stripe') & {
+			stripeMock: Stripe & { paymentIntents: { create: ReturnType<typeof vi.fn> } }
+		}
+		stripeMock = stripeModule.stripeMock // Access the exported mock
 	})
 
 	it('should create a payment intent successfully', async () => {
