@@ -2,10 +2,9 @@
 
 import type { Waitlist } from '@/models/waitlist.model'
 import type { Event } from '@/models/event.model'
+import type { User } from '@/models/user.model'
 
 import { pb } from '@/lib/pocketbaseClient'
-
-import { fetchUserByClerkId } from './user.services'
 
 /**
  * Adds a user to the waitlist for a specific event.
@@ -15,10 +14,12 @@ import { fetchUserByClerkId } from './user.services'
  * @returns The created waitlist entry, the existing entry if already added, or null on error.
  *          Returns an object with `error: 'already_on_waitlist'` for duplicates.
  */
-export async function addToWaitlist(eventId: string, clerkId: string): Promise<null | (Waitlist & { error?: string })> {
-	const user = await fetchUserByClerkId(clerkId)
+export async function addToWaitlist(
+	eventId: string,
+	user: null | User
+): Promise<null | (Waitlist & { error?: string })> {
 	if (user == null) {
-		console.error(`User with ID ${clerkId} not found. Cannot add to waitlist.`)
+		console.error(`User not found. Cannot add to waitlist.`)
 		return null
 	}
 
