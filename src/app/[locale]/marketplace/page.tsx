@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { Suspense } from 'react'
+
 import type { BibSale } from '@/components/marketplace/CardMarket'
 
 import { generateLocaleParams, type LocaleParams } from '@/lib/generateStaticParams'
@@ -41,7 +43,9 @@ export default async function MarketplacePage({ params }: { params: Promise<Loca
 			</header>
 
 			{/* Client component that handles filtering, sorting, and displaying bibs */}
-			<MarketplaceClient bibs={bibs} locale={locale} />
+			<Suspense fallback={<div className="text-center text-gray-500">Loading marketplace...</div>}>
+				<MarketplaceClient bibs={bibs} locale={locale} />
+			</Suspense>
 		</div>
 	)
 }
