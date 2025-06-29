@@ -89,7 +89,7 @@ export default function PurchaseClient({ paymentIntent, otherBibs = [], locale, 
 			} else {
 				setErrorMessage('An unexpected error occurred.')
 			}
-		} else if (paymentIntent && paymentIntent.status === 'succeeded') {
+		} else if (paymentIntent.status === 'succeeded') {
 			await handleSuccessfulPurchase(paymentIntent.id, bib.id)
 			router.push(`/${locale}/purchase/success`)
 		} else {

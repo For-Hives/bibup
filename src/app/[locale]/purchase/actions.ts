@@ -9,7 +9,7 @@ import { fetchBibById, updateBib } from '@/services/bib.services'
 export async function handleSuccessfulPurchase(paymentIntentId: string, bibId: string) {
 	const { userId } = await auth()
 
-	if (!userId) {
+	if (userId == null) {
 		throw new Error('User is not authenticated.')
 	}
 
