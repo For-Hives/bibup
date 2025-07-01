@@ -1,8 +1,8 @@
 'use client'
 
 import { AlertTriangle, Calendar, MapPinned, ShoppingCart, User } from 'lucide-react'
-import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { PayPalButtons } from '@paypal/react-paypal-js'
 
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
@@ -14,31 +14,30 @@ import type { User as AppUser } from '@/models/user.model'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { handleSuccessfulPurchase } from '@/app/[locale]/purchase/actions'
 import CardMarket, { BibSale } from '@/components/marketplace/CardMarket'
+import { capturePayment, createOrder } from '@/services/paypal.services'
 import { SlidingPanel } from '@/components/ui/SlidingPanel'
 import { formatDateWithLocale } from '@/lib/dateUtils'
 import { Button } from '@/components/ui/button'
 import { Locale } from '@/lib/i18n-config'
 import { cn } from '@/lib/utils'
 
-interface PurchaseClientProps {
+interface PayPalPurchaseClientProps {
 	bib: BibSale
 	locale: Locale
 	otherBibs?: BibSale[]
-	paymentIntent: string
 	user: AppUser | null
 }
 
-export default function PurchaseClient({
+export default function PayPalPurchaseClient({
 	user,
-	paymentIntent,
 	otherBibs = [],
 	locale,
 	bib,
-}: Readonly<PurchaseClientProps>) {
-	const stripe = useStripe()
-	const elements = useElements()
+}: Readonly<PayPalPurchaseClientProps>) {
 	const [errorMessage, setErrorMessage] = useState<null | string>(null)
+	const [successMessage, setSuccessMessage] = useState<null | string>(null)
 	const [isPanelOpen, setIsPanelOpen] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const { isSignedIn } = useUser()
 	const router = useRouter()
 	const [isProfileComplete, setIsProfileComplete] = useState(false)
@@ -84,62 +83,72 @@ export default function PurchaseClient({
 		}
 	}
 
-	useEffect(() => {
-		if (!stripe || !paymentIntent || !isPanelOpen) {
-			return
-		}
+	const handleCreateOrder = useCallback(async () => {
+		// Note: In a real implementation, we would need to get the seller's PayPal merchant ID
+		// For now, we'll use a placeholder or get it from the bib's seller user data
+		const sellerId = 'YOUR_SELLER_MERCHANT_ID' // This should be fetched from the seller's profile
 
-		void stripe.retrievePaymentIntent(paymentIntent).then(({ paymentIntent }) => {
-			if (paymentIntent) {
-				switch (paymentIntent.status) {
-					case 'processing':
-						setErrorMessage('Your payment is processing.')
-						break
-					case 'requires_payment_method':
-						// Don't show error for initial state - this is expected for new payment intents
-						setErrorMessage(null)
-						break
-					case 'succeeded':
-						setErrorMessage(null)
-						break
-					default:
-						setErrorMessage('Something went wrong.')
-						break
+		try {
+			setLoading(true)
+			setErrorMessage(null)
+
+			const data = await createOrder(sellerId, bib.price.toString())
+			if (data.error !== null && data.error !== undefined && data.error !== '') {
+				throw new Error(data.error)
+			}
+
+			console.info('Order created:', data)
+			return data.id ?? ''
+		} catch (error: unknown) {
+			const errorMsg = 'Error creating order: ' + (error instanceof Error ? error.message : 'Unknown error')
+			console.error('Order creation error:', error instanceof Error ? error.message : 'Unknown error')
+			setErrorMessage(errorMsg)
+			throw new Error(errorMsg)
+		} finally {
+			setLoading(false)
+		}
+	}, [bib.price])
+
+	const onApprove = useCallback(
+		async (data: { orderID: string }) => {
+			try {
+				setLoading(true)
+				setErrorMessage(null)
+
+				const res = await capturePayment(data.orderID)
+				if (res.error !== null && res.error !== undefined && res.error !== '') {
+					throw new Error(res.error)
 				}
-			} else {
-				setErrorMessage('Failed to retrieve payment intent.')
+
+				setSuccessMessage('Payment captured successfully!')
+				console.info('Payment captured:', res)
+
+				// Handle successful purchase
+				await handleSuccessfulPurchase(data.orderID, bib.id)
+				router.push(`/${locale}/purchase/success`)
+			} catch (error: unknown) {
+				const errorMsg = 'Error capturing payment: ' + (error instanceof Error ? error.message : 'Unknown error')
+				console.error('Capture error:', error instanceof Error ? error.message : 'Unknown error')
+				setErrorMessage(errorMsg)
+			} finally {
+				setLoading(false)
 			}
-		})
-	}, [stripe, paymentIntent, isPanelOpen])
+		},
+		[bib.id, locale, router]
+	)
 
-	const handleSubmit = async (event: React.FormEvent) => {
-		event.preventDefault()
+	const onError = useCallback((err: Record<string, unknown>) => {
+		console.error('PayPal Error:', err)
+		const message = typeof err.message === 'string' ? err.message : 'An unknown error occurred'
+		setErrorMessage('PayPal Error: ' + message)
+		setLoading(false)
+	}, [])
 
-		if (!stripe || !elements) {
-			return
-		}
-
-		const { paymentIntent, error } = await stripe.confirmPayment({
-			redirect: 'if_required',
-			elements,
-			confirmParams: {
-				return_url: `${window.location.origin}/${locale}/purchase/success`,
-			},
-		})
-
-		if (error) {
-			if (error.type === 'card_error' || error.type === 'validation_error') {
-				setErrorMessage(error.message ?? 'An error occurred')
-			} else {
-				setErrorMessage('An unexpected error occurred.')
-			}
-		} else if (paymentIntent.status === 'succeeded') {
-			await handleSuccessfulPurchase(paymentIntent.id, bib.id)
-			router.push(`/${locale}/purchase/success`)
-		} else {
-			// Payment successful, Stripe will redirect to return_url
-		}
-	}
+	const onCancel = useCallback(() => {
+		console.info('PayPal payment cancelled')
+		setErrorMessage('Payment cancelled by user')
+		setLoading(false)
+	}, [])
 
 	function bgFromType(type: BibSale['event']['type']) {
 		switch (type) {
@@ -322,7 +331,7 @@ export default function PurchaseClient({
 				className="z-[100]"
 				isOpen={isPanelOpen}
 				onClose={() => setIsPanelOpen(false)}
-				title="Secure Payment"
+				title="Secure Payment with PayPal"
 				variant="slide"
 			>
 				<div className="container mx-auto p-6">
@@ -347,6 +356,7 @@ export default function PurchaseClient({
 									</div>
 								</div>
 							</div>
+
 							{/* Order Summary */}
 							<div className="bg-muted/30 border-border/20 rounded-lg border p-4">
 								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Order Summary</h3>
@@ -369,63 +379,43 @@ export default function PurchaseClient({
 									</div>
 								</div>
 							</div>
-							<p> test card: 4242424242424242</p>
-							<p> test card expiry: 04/26</p>
-							<p> test card CVC: 123</p>
 						</div>
 
-						{/* Payment Methods Tabs */}
-						<form
-							className="space-y-6"
-							onSubmit={event => {
-								void handleSubmit(event)
-							}}
-						>
+						{/* PayPal Payment Section */}
+						<div className="space-y-6 lg:w-1/3">
 							<div>
-								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Payment Information</h3>
+								<h3 className="text-muted-foreground mb-3 text-sm font-medium">Payment Method</h3>
 								<div className="bg-background border-border/20 rounded-lg border p-4">
-									<PaymentElement
-										id="payment-element"
-										options={{
-											wallets: {
-												googlePay: 'auto',
-												applePay: 'auto',
-											},
-											paymentMethodOrder: ['card'],
-											layout: 'tabs',
+									{/* Error Messages */}
+									{Boolean(errorMessage) && (
+										<div className="bg-destructive/10 text-destructive border-destructive/20 mb-4 rounded-lg border p-3 text-sm">
+											{errorMessage}
+										</div>
+									)}
+
+									{/* Success Messages */}
+									{Boolean(successMessage) && (
+										<div className="mb-4 rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-sm text-green-600">
+											{successMessage}
+										</div>
+									)}
+
+									<PayPalButtons
+										createOrder={handleCreateOrder}
+										disabled={loading || !isProfileComplete}
+										onApprove={onApprove}
+										onCancel={onCancel}
+										onError={onError}
+										style={{
+											shape: 'rect' as const,
+											layout: 'vertical' as const,
+											label: 'paypal' as const,
+											height: 50,
+											color: 'blue' as const,
 										}}
 									/>
 								</div>
 							</div>
-
-							<Button
-								className="w-full"
-								disabled={!stripe || isSignedIn === false || isSignedIn === undefined}
-								size="lg"
-								type="submit"
-							>
-								<svg
-									className="mr-2 h-4 w-4"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-									/>
-								</svg>
-								Complete Secure Payment - {bib.price}€
-							</Button>
-
-							{Boolean(errorMessage) && (
-								<div className="bg-destructive/10 text-destructive border-destructive/20 rounded-lg border p-3 text-sm">
-									{errorMessage}
-								</div>
-							)}
 
 							{/* Enhanced Trust indicators */}
 							<div className="space-y-4">
@@ -449,7 +439,7 @@ export default function PurchaseClient({
 													fillRule="evenodd"
 												/>
 											</svg>
-											Stripe Secured
+											PayPal Secured
 										</div>
 										<div className="flex items-center gap-1">
 											<svg className="h-3 w-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
@@ -481,8 +471,8 @@ export default function PurchaseClient({
 										<div className="text-sm">
 											<p className="font-medium text-green-800 dark:text-green-300">100% Secure Transaction</p>
 											<p className="mt-1 text-green-700 dark:text-green-400">
-												Your payment information is encrypted and protected by industry-leading security measures. We
-												never store your card details.
+												Your payment is processed securely through PayPal's trusted platform. We never store your
+												payment details.
 											</p>
 										</div>
 									</div>
@@ -498,7 +488,7 @@ export default function PurchaseClient({
 									<p className="text-muted-foreground text-xs">Questions? Contact our support team at any time</p>
 								</div>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
 			</SlidingPanel>

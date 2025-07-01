@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import EventCreationForm from '@/components/admin/event/event-creation-form'
-import Translations from '@/app/[locale]/event/locales.json'
+import Translations from '@/app/[locale]/admin/locales.json'
 import { getTranslations } from '@/lib/getDictionary'
 import { Event } from '@/models/event.model'
 import { User } from '@/models/user.model'
@@ -80,7 +80,7 @@ export default function AdminEventPageClient({ locale, currentUser }: AdminEvent
 					<div>
 						<p className="text-muted-foreground text-sm">Connected as</p>
 						<p className="text-foreground font-medium">
-							{currentUser.firstName} {currentUser.lastName} ({currentUser.email})
+							{currentUser.firstName ?? 'Anonymous'} {currentUser.lastName ?? ''} ({currentUser.email})
 						</p>
 					</div>
 					<div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">
