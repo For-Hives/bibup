@@ -10,12 +10,12 @@ import { Button } from '@/components/ui/button'
 
 export function ThemeToggle() {
 	const [mounted, setMounted] = useState(false)
-	const { setTheme } = useTheme()
 
 	useEffect(() => {
 		setMounted(true)
 	}, [])
 
+	// Don't access theme context until component is mounted
 	if (!mounted) {
 		return (
 			<Button size="icon" variant="ghost">
@@ -24,6 +24,13 @@ export function ThemeToggle() {
 			</Button>
 		)
 	}
+
+	// Only access the theme context after mounting
+	return <ThemeToggleContent />
+}
+
+function ThemeToggleContent() {
+	const { setTheme } = useTheme()
 
 	return (
 		<DropdownMenu>
