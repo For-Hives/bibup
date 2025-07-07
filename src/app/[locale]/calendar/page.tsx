@@ -39,7 +39,7 @@ export type ViewMode = 'day' | 'month' | 'week' | 'year'
 const sampleEvents: Event[] = [
 	{
 		typeCourse: 'trail',
-		transferDeadline: new Date(2048, 6, 20),
+		transferDeadline: new Date(2025, 6, 20),
 		registrationUrl: 'https://example.com/register/trail-marathon',
 		participants: 150,
 		parcoursUrl: 'https://example.com/gpx/trail-marathon.gpx',
@@ -52,18 +52,18 @@ const sampleEvents: Event[] = [
 		name: 'Mountain Trail Marathon',
 		location: 'Rocky Mountain National Park, Colorado',
 		id: '1',
-		eventDate: new Date(2048, 7, 4, 7, 0),
+		eventDate: new Date(2025, 7, 4, 7, 0),
 		elevationGainM: 1200,
 		distanceKm: 42.2,
 		description:
 			'A challenging mountain trail marathon through scenic wilderness paths with significant elevation gain. This event takes runners through some of the most beautiful and demanding terrain in the Rocky Mountains, featuring technical single-track trails, river crossings, and breathtaking alpine views.',
-		bibPickupWindowEndDate: new Date(2048, 7, 3, 18, 0),
-		bibPickupWindowBeginDate: new Date(2048, 7, 2, 10, 0),
+		bibPickupWindowEndDate: new Date(2025, 7, 3, 18, 0),
+		bibPickupWindowBeginDate: new Date(2025, 7, 2, 10, 0),
 		bibPickupLocation: 'Park Visitor Center',
 	},
 	{
 		typeCourse: 'route',
-		transferDeadline: new Date(2048, 6, 25),
+		transferDeadline: new Date(2025, 6, 25),
 		registrationUrl: 'https://example.com/register/city-10k',
 		participants: 500,
 		organizer: 'org_002',
@@ -75,18 +75,18 @@ const sampleEvents: Event[] = [
 		name: 'City Road Race 10K',
 		location: 'Downtown Metro Area',
 		id: '2',
-		eventDate: new Date(2048, 7, 4, 8, 30),
+		eventDate: new Date(2025, 7, 4, 8, 30),
 		elevationGainM: 50,
 		distanceKm: 10,
 		description:
 			'Fast and flat 10K road race through downtown streets, perfect for personal records. The course is USATF certified and features excellent crowd support throughout.',
-		bibPickupWindowEndDate: new Date(2048, 7, 4, 7, 30),
-		bibPickupWindowBeginDate: new Date(2048, 7, 3, 12, 0),
+		bibPickupWindowEndDate: new Date(2025, 7, 4, 7, 30),
+		bibPickupWindowBeginDate: new Date(2025, 7, 3, 12, 0),
 		bibPickupLocation: 'City Sports Center',
 	},
 	{
 		typeCourse: 'triathlon',
-		transferDeadline: new Date(2048, 6, 15),
+		transferDeadline: new Date(2025, 6, 15),
 		registrationUrl: 'https://example.com/register/olympic-tri',
 		participants: 200,
 		parcoursUrl: 'https://example.com/course/olympic-tri-map',
@@ -99,13 +99,13 @@ const sampleEvents: Event[] = [
 		name: 'Olympic Distance Triathlon',
 		location: 'Lake Paradise Resort',
 		id: '3',
-		eventDate: new Date(2048, 7, 5, 6, 30),
+		eventDate: new Date(2025, 7, 5, 6, 30),
 		elevationGainM: 300,
 		distanceKm: 51.5,
 		description:
 			'Standard Olympic distance triathlon: 1.5km swim, 40km bike, 10km run. Open water swim in pristine lake conditions with a challenging but fair bike course and fast run finish.',
-		bibPickupWindowEndDate: new Date(2048, 7, 5, 5, 30),
-		bibPickupWindowBeginDate: new Date(2048, 7, 4, 14, 0),
+		bibPickupWindowEndDate: new Date(2025, 7, 5, 5, 30),
+		bibPickupWindowBeginDate: new Date(2025, 7, 4, 14, 0),
 		bibPickupLocation: 'Resort Registration Tent',
 	},
 	{
@@ -173,7 +173,7 @@ const sampleOrganizers: Organizer[] = [
 
 export default function CalendarPage() {
 	const [viewMode, setViewMode] = useState<ViewMode>('month')
-	const [selectedDate, setSelectedDate] = useState(new Date(2048, 7, 4)) // August 4, 2048
+	const [selectedDate, setSelectedDate] = useState(() => new Date())
 	const [events] = useState<Event[]>(sampleEvents)
 	const [organizers] = useState<Organizer[]>(sampleOrganizers)
 	const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)

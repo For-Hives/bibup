@@ -59,61 +59,63 @@ export function MonthView(props: Readonly<MonthViewProps>) {
 
 	return (
 		<div className="p-4">
-			<div className="grid grid-cols-7 gap-0 rounded-lg border">
-				{/* Header */}
-				{weekDays.map(day => (
-					<div className="border-b p-3 text-center text-sm font-medium" key={day}>
-						{day}
-					</div>
-				))}
-
-				{/* Days */}
-				{monthDays.map(day => {
-					const dayEvents = getEventsForDate(day)
-					const isCurrentMonth = day.getMonth() === selectedDate.getMonth()
-					const isToday = day.toDateString() === new Date().toDateString()
-					const isSelected = day.toDateString() === selectedDate.toDateString()
-
-					return (
-						<div
-							className={`min-h-[120px] border-r border-b p-2 ${
-								!isCurrentMonth ? 'bg-muted/20 text-muted-foreground' : ''
-							}`}
-							key={day.toISOString()}
-						>
-							<Button
-								className={`mb-1 h-6 w-6 p-0 ${getDayClass(isToday, isSelected)}`}
-								onClick={() => props.onDateSelect(day)}
-								size="sm"
-								variant="ghost"
-							>
-								{day.getDate()}
-							</Button>
-
-							<div className="space-y-1">
-								{dayEvents.slice(0, 3).map(event => (
-									<button
-										className={`${getEventColor(event.typeCourse)} w-full cursor-pointer rounded p-1 text-left text-xs text-white transition-opacity hover:opacity-80`}
-										key={event.id}
-										onClick={e => {
-											e.stopPropagation()
-											onEventSelect(event)
-										}}
-										title={`${event.name} - ${event.distanceKm}km ${event.typeCourse}`}
-									>
-										<div className="truncate font-medium">{event.name}</div>
-										<div className="truncate opacity-90">
-											{event.distanceKm}km {event.typeCourse}
-										</div>
-									</button>
-								))}
-								{dayEvents.length > 3 && (
-									<div className="text-muted-foreground text-xs">+{dayEvents.length - 3} more</div>
-								)}
-							</div>
+			<div className="rounded-4xl overflow-hidden border">
+				<div className="grid grid-cols-7 gap-0 max-h-[80vh] overflow-y-auto">
+					{/* Header */}
+					{weekDays.map(day => (
+						<div className="border-b p-3 text-center text-sm font-medium" key={day}>
+							{day}
 						</div>
-					)
-				})}
+					))}
+
+					{/* Days */}
+					{monthDays.map(day => {
+						const dayEvents = getEventsForDate(day)
+						const isCurrentMonth = day.getMonth() === selectedDate.getMonth()
+						const isToday = day.toDateString() === new Date().toDateString()
+						const isSelected = day.toDateString() === selectedDate.toDateString()
+
+						return (
+							<div
+								className={`min-h-[120px] border-r border-b p-2 ${
+									!isCurrentMonth ? 'bg-muted/20 text-muted-foreground' : ''
+								}`}
+								key={day.toISOString()}
+							>
+								<Button
+									className={`mb-1 h-6 w-6 p-0 ${getDayClass(isToday, isSelected)}`}
+									onClick={() => props.onDateSelect(day)}
+									size="sm"
+									variant="ghost"
+								>
+									{day.getDate()}
+								</Button>
+
+								<div className="space-y-1">
+									{dayEvents.slice(0, 3).map(event => (
+										<button
+											className={`${getEventColor(event.typeCourse)} w-full cursor-pointer rounded p-1 text-left text-xs text-white transition-opacity hover:opacity-80`}
+											key={event.id}
+											onClick={e => {
+												e.stopPropagation()
+												onEventSelect(event)
+											}}
+											title={`${event.name} - ${event.distanceKm}km ${event.typeCourse}`}
+										>
+											<div className="truncate font-medium">{event.name}</div>
+											<div className="truncate opacity-90">
+												{event.distanceKm}km {event.typeCourse}
+											</div>
+										</button>
+									))}
+									{dayEvents.length > 3 && (
+										<div className="text-muted-foreground text-xs">+{dayEvents.length - 3} more</div>
+									)}
+								</div>
+							</div>
+						)
+					})}
+				</div>
 			</div>
 		</div>
 	)

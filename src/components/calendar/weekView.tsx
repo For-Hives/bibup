@@ -28,29 +28,33 @@ export function WeekView(props: Readonly<WeekViewProps>) {
 
 	return (
 		<div className="p-4">
-			<div className="grid grid-cols-[60px_repeat(7,1fr)] gap-0 rounded-lg border">
-				{/* Header */}
-				<div className="border-r border-b p-2"></div>
-				{weekDays.map(day => (
-					<div className="border-b p-2 text-center" key={day.toISOString()}>
-						<div className="text-muted-foreground text-xs">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-						<div className="font-medium">{day.getDate()}</div>
-					</div>
-				))}
-
-				{/* Time slots */}
-				{hours.map(hour => (
-					<div className="contents" key={hour}>
-						<div className="text-muted-foreground border-r border-b p-2 text-right text-xs">{formatHour(hour)}</div>
-						{weekDays.map(day => (
-							<div className="relative min-h-[40px] border-r border-b p-1" key={`${day.toISOString()}-${hour}`}>
-								{getEventsForDate(day)
-									.filter(event => getEventHour(event) === hour)
-									.map(event => renderEvent(event, onEventSelect))}
+			<div className="overflow-hidden rounded-4xl border">
+				<div className="calendar-scroll grid max-h-[80vh] grid-cols-[60px_repeat(7,1fr)] gap-0 overflow-y-auto">
+					{/* Header */}
+					<div className="border-r border-b p-2"></div>
+					{weekDays.map(day => (
+						<div className="border-b p-2 text-center" key={day.toISOString()}>
+							<div className="text-muted-foreground text-xs">
+								{day.toLocaleDateString('en-US', { weekday: 'short' })}
 							</div>
-						))}
-					</div>
-				))}
+							<div className="font-medium">{day.getDate()}</div>
+						</div>
+					))}
+
+					{/* Time slots */}
+					{hours.map(hour => (
+						<div className="contents" key={hour}>
+							<div className="text-muted-foreground border-r border-b p-2 text-right text-xs">{formatHour(hour)}</div>
+							{weekDays.map(day => (
+								<div className="relative min-h-[40px] border-r border-b p-1" key={`${day.toISOString()}-${hour}`}>
+									{getEventsForDate(day)
+										.filter(event => getEventHour(event) === hour)
+										.map(event => renderEvent(event, onEventSelect))}
+								</div>
+							))}
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	)

@@ -36,7 +36,7 @@ export function CalendarMain(props: Readonly<CalendarMainProps>) {
 	}
 
 	return (
-		<div className="flex-1 overflow-auto">
+		<div className="flex-1">
 			{viewMode === 'day' && <DayView {...commonProps} />}
 			{viewMode === 'week' && <WeekView {...commonProps} />}
 			{viewMode === 'month' && <MonthView {...commonProps} />}

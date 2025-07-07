@@ -2,6 +2,7 @@
 
 import type { Event } from '@/models/event.model'
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 
 interface CalendarSidebarProps {
@@ -31,41 +32,56 @@ export function CalendarSidebar(props: Readonly<CalendarSidebarProps>) {
 	}
 
 	return (
-		<div className="bg-muted/10 flex w-80 flex-col border-r p-4">
+		<div className="bg-muted/10 flex w-80 flex-col items-center border-r p-4">
 			<div className="relative mb-4 flex gap-2">
-				<select
-					className="rounded border p-1 text-sm"
-					onChange={e => handleChange(Number(e.target.value), month, day)}
-					value={year}
-				>
-					{years.map(y => (
-						<option key={y} value={y}>
-							{y}
-						</option>
-					))}
-				</select>
-				<select
-					className="rounded border p-1 text-sm"
-					onChange={e => handleChange(year, Number(e.target.value), day)}
-					value={month}
-				>
-					{months.map(m => (
-						<option key={m} value={m}>
-							{new Date(0, m).toLocaleString('default', { month: 'short' })}
-						</option>
-					))}
-				</select>
-				<select
-					className="rounded border p-1 text-sm"
-					onChange={e => handleChange(year, month, Number(e.target.value))}
-					value={day}
-				>
-					{days.map(d => (
-						<option key={d} value={d}>
-							{d}
-						</option>
-					))}
-				</select>
+				<Select onValueChange={val => handleChange(Number(val), month, day)} value={String(year)}>
+					<SelectTrigger className="w-[80px]">
+						<SelectValue placeholder="Année" />
+					</SelectTrigger>
+					<SelectContent>
+						{years.map(y => (
+							<SelectItem
+								className="hover:bg-foreground hover:text-background focus:bg-foreground focus:text-background"
+								key={y}
+								value={String(y)}
+							>
+								{y}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+				<Select onValueChange={val => handleChange(year, Number(val), day)} value={String(month)}>
+					<SelectTrigger className="w-[90px]">
+						<SelectValue placeholder="Mois" />
+					</SelectTrigger>
+					<SelectContent>
+						{months.map(m => (
+							<SelectItem
+								className="hover:bg-foreground hover:text-background focus:bg-foreground focus:text-background"
+								key={m}
+								value={String(m)}
+							>
+								{new Date(0, m).toLocaleString('default', { month: 'short' })}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+				<Select onValueChange={val => handleChange(year, month, Number(val))} value={String(day)}>
+					<SelectTrigger className="w-[60px]">
+						<SelectValue placeholder="Jour" />
+					</SelectTrigger>
+					<SelectContent>
+						{days.map(d => (
+							<SelectItem
+								className="hover:bg-foreground hover:text-background focus:bg-foreground focus:text-background"
+								key={d}
+								value={String(d)}
+							>
+								{d}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
 			</div>
 
 			<Calendar
