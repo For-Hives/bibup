@@ -254,7 +254,8 @@ export function EventView(props: Readonly<EventViewProps>) {
 										{event.bibPickupWindowBeginDate !== undefined && event.bibPickupWindowEndDate !== undefined ? (
 											<div>
 												<span className="font-medium">Créneau : </span>
-												{formatDateTime(event.bibPickupWindowBeginDate as string)}{' - '}
+												{formatDateTime(event.bibPickupWindowBeginDate as string)}
+												{' - '}
 												{formatDateTime(event.bibPickupWindowEndDate as string)}
 											</div>
 										) : null}

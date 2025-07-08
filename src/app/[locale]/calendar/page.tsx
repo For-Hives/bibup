@@ -132,8 +132,6 @@ export type ViewMode = 'day' | 'month' | 'week' | 'year'
 // 	},
 // ]
 
-
-
 // Sample organizers data
 const sampleOrganizers: Organizer[] = [
 	{
