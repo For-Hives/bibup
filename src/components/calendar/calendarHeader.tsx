@@ -77,7 +77,7 @@ export function CalendarHeader(props: Readonly<CalendarHeaderProps>) {
 				<h1 className="text-xl font-semibold">{formatHeaderDate()}</h1>
 			</div>
 			<div className="flex items-center space-x-1">
-				{(['day', 'month', 'week', 'year'] as ViewMode[]).map(mode => (
+				{(['day', 'week', 'month', 'year'] as ViewMode[]).map(mode => (
 					<Button
 						className="capitalize"
 						key={mode}

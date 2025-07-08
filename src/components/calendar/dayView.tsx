@@ -26,8 +26,8 @@ export function DayView(props: Readonly<DayViewProps>) {
 
 	return (
 		<div className="p-4">
-			<div className="rounded-4xl overflow-hidden border">
-				<div className="max-h-[80vh] overflow-y-auto grid grid-cols-[60px_1fr] gap-0 calendar-scroll">
+			<div className="overflow-hidden rounded-4xl border">
+				<div className="calendar-scroll grid max-h-[80vh] grid-cols-[60px_1fr] gap-0 overflow-y-auto">
 					{hours.map(hour => (
 						<div className="contents" key={hour}>
 							<div className="text-muted-foreground border-r border-b p-2 text-right text-xs">{formatHour(hour)}</div>

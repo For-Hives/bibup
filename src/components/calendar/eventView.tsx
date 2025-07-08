@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 
 import type { Organizer } from '@/models/organizer.model'
-import type { Event } from '@/models/event.model'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -24,7 +23,30 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 interface EventViewProps {
-	event: Event
+	event: {
+		bibPickupLocation?: string
+		bibPickupWindowBeginDate?: Date | string
+		bibPickupWindowEndDate?: Date | string
+		description: string
+		distanceKm?: number
+		elevationGainM?: number
+		eventDate: Date | string
+		location: string
+		name: string
+		officialStandardPrice?: number
+		options?: Array<{
+			key: string
+			label: string
+			required: boolean
+			values: string[]
+		}>
+		organizer: string
+		parcoursUrl?: string
+		participants?: number
+		registrationUrl?: string
+		transferDeadline?: Date | string
+		typeCourse: 'route' | 'trail' | 'triathlon' | 'ultra'
+	}
 	onClose: () => void
 	organizer?: Organizer
 }
@@ -32,8 +54,10 @@ interface EventViewProps {
 export function EventView(props: Readonly<EventViewProps>) {
 	const { organizer, onClose, event } = props
 
-	const formatDate = (date: Date) => {
-		return date.toLocaleDateString('en-US', {
+	const formatDate = (date: Date | string | undefined) => {
+		if (!date) return ''
+		const d = typeof date === 'string' ? new Date(date) : date
+		return d.toLocaleDateString('fr-FR', {
 			year: 'numeric',
 			weekday: 'long',
 			month: 'long',
@@ -41,19 +65,22 @@ export function EventView(props: Readonly<EventViewProps>) {
 		})
 	}
 
-	const formatTime = (date: Date) => {
-		return date.toLocaleTimeString('en-US', {
+	const formatTime = (date: Date | string | undefined) => {
+		if (!date) return ''
+		const d = typeof date === 'string' ? new Date(date) : date
+		return d.toLocaleTimeString('fr-FR', {
 			minute: '2-digit',
-			hour12: true,
-			hour: 'numeric',
+			hour12: false,
+			hour: '2-digit',
 		})
 	}
 
-	const formatDateTime = (date: Date) => {
-		return `${formatDate(date)} at ${formatTime(date)}`
+	const formatDateTime = (date: Date | string | undefined) => {
+		if (!date) return ''
+		return `${formatDate(date)} à ${formatTime(date)}`
 	}
 
-	const getEventTypeColor = (typeCourse: Event['typeCourse']) => {
+	const getEventTypeColor = (typeCourse: string) => {
 		switch (typeCourse) {
 			case 'route':
 				return 'bg-blue-500'
@@ -68,7 +95,7 @@ export function EventView(props: Readonly<EventViewProps>) {
 		}
 	}
 
-	const getEventTypeIcon = (typeCourse: Event['typeCourse']) => {
+	const getEventTypeIcon = (typeCourse: string) => {
 		switch (typeCourse) {
 			case 'route':
 				return <Route className="h-4 w-4" />
@@ -94,7 +121,14 @@ export function EventView(props: Readonly<EventViewProps>) {
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+			onClick={e => {
+				if (e.target === e.currentTarget) {
+					onClose()
+				}
+			}}
+		>
 			<Card className="flex max-h-[90vh] w-full max-w-2xl flex-col">
 				<CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
 					<div className="flex-1">
@@ -103,14 +137,16 @@ export function EventView(props: Readonly<EventViewProps>) {
 								{getEventTypeIcon(event.typeCourse)}
 								<span className="ml-1 capitalize">{event.typeCourse}</span>
 							</Badge>
-							{!isRegistrationOpen() && <Badge variant="destructive">Registration Closed</Badge>}
-							{isBibPickupActive() && (
+							{!isRegistrationOpen() ? <Badge variant="destructive">Registration Closed</Badge> : null}
+							{isBibPickupActive() ? (
 								<Badge className="bg-orange-500" variant="default">
 									Bib Pickup Open
 								</Badge>
-							)}
+							) : null}
 						</div>
-						<CardTitle className="text-2xl">{event.name}</CardTitle>
+						<CardTitle className="text-2xl">
+							{typeof event.name === 'string' && event.name.length > 0 ? event.name : ''}
+						</CardTitle>
 					</div>
 					<Button onClick={onClose} size="icon" variant="ghost">
 						<X className="h-4 w-4" />
@@ -140,7 +176,7 @@ export function EventView(props: Readonly<EventViewProps>) {
 										<div>
 											<span className="font-medium">{event.distanceKm} km</span>
 											{typeof event.elevationGainM === 'number' && !isNaN(event.elevationGainM) && (
-												<span className="text-muted-foreground ml-2">(+{event.elevationGainM}m elevation)</span>
+												<span className="text-muted-foreground ml-2">(+{event.elevationGainM}m dénivelé)</span>
 											)}
 										</div>
 									</div>
@@ -158,7 +194,7 @@ export function EventView(props: Readonly<EventViewProps>) {
 								{typeof event.officialStandardPrice === 'number' && !isNaN(event.officialStandardPrice) && (
 									<div className="flex items-center gap-2">
 										<DollarSign className="text-muted-foreground h-4 w-4" />
-										<div className="font-medium">${event.officialStandardPrice}</div>
+										<div className="font-medium">{event.officialStandardPrice} €</div>
 									</div>
 								)}
 
@@ -166,7 +202,7 @@ export function EventView(props: Readonly<EventViewProps>) {
 									<div className="flex items-center gap-2">
 										<Clock className="text-muted-foreground h-4 w-4" />
 										<div>
-											<div className="text-muted-foreground text-sm">Transfer Deadline</div>
+											<div className="text-muted-foreground text-sm">Date limite de transfert</div>
 											<div className="font-medium">{formatDate(event.transferDeadline)}</div>
 										</div>
 									</div>
@@ -183,51 +219,56 @@ export function EventView(props: Readonly<EventViewProps>) {
 						</div>
 
 						{/* Registration Options */}
-						{event?.options && event.options.length > 0 && (
+						{Array.isArray(event.options) && event.options.length > 0 ? (
 							<>
 								<Separator />
 								<div>
-									<h3 className="mb-3 font-semibold">Registration Options</h3>
+									<h3 className="mb-3 font-semibold">Options d'inscription</h3>
 									<div className="space-y-2">
-										{event?.options.map(option => (
+										{event.options.map(option => (
 											<div className="flex items-center justify-between rounded-lg border p-3" key={option.key}>
 												<div>
 													<div className="font-medium">{option.label}</div>
 												</div>
-												{option.values.length > 0 && <div className="font-semibold">{option.values.join(', ')} €</div>}
+												{Array.isArray(option.values) && option.values.length > 0 ? (
+													<div className="font-semibold">{option.values.join(', ')}</div>
+												) : null}
 											</div>
 										))}
 									</div>
 								</div>
 							</>
-						)}
+						) : null}
 
 						{/* Bib Pickup */}
-						{typeof event.bibPickupLocation === 'string' && event.bibPickupLocation.length > 0 && (
+						{typeof event.bibPickupLocation === 'string' && event.bibPickupLocation.length > 0 ? (
 							<>
 								<Separator />
 								<div>
-									<h3 className="mb-3 font-semibold">Bib Pickup</h3>
+									<h3 className="mb-3 font-semibold">Retrait des dossards</h3>
 									<div className="space-y-2">
 										<div>
-											<span className="font-medium">Location: </span>
+											<span className="font-medium">Lieu : </span>
 											{event.bibPickupLocation}
 										</div>
-										<div>
-											<span className="font-medium">Window: </span>
-											{formatDateTime(event.bibPickupWindowBeginDate)} - {formatDateTime(event.bibPickupWindowEndDate)}
-										</div>
+										{event.bibPickupWindowBeginDate !== undefined && event.bibPickupWindowEndDate !== undefined ? (
+											<div>
+												<span className="font-medium">Créneau : </span>
+												{formatDateTime(event.bibPickupWindowBeginDate as string)}{' - '}
+												{formatDateTime(event.bibPickupWindowEndDate as string)}
+											</div>
+										) : null}
 									</div>
 								</div>
 							</>
-						)}
+						) : null}
 
 						{/* Organizer */}
 						{organizer && (
 							<>
 								<Separator />
 								<div>
-									<h3 className="mb-3 font-semibold">Organizer</h3>
+									<h3 className="mb-3 font-semibold">Organisateur</h3>
 									<div className="space-y-2">
 										<div className="font-medium">{organizer.name}</div>
 										<div className="flex flex-wrap gap-4 text-sm">
@@ -248,7 +289,7 @@ export function EventView(props: Readonly<EventViewProps>) {
 														rel="noopener noreferrer"
 														target="_blank"
 													>
-														Website
+														Site web
 													</a>
 												</div>
 											)}
@@ -261,21 +302,19 @@ export function EventView(props: Readonly<EventViewProps>) {
 						{/* Action Buttons */}
 						<Separator />
 						<div className="flex flex-wrap gap-3">
-							{typeof event.registrationUrl === 'string' &&
-								event.registrationUrl.length > 0 &&
-								isRegistrationOpen() && (
-									<Button asChild>
-										<a href={event.registrationUrl} rel="noopener noreferrer" target="_blank">
-											<ExternalLink className="mr-2 h-4 w-4" />
-											Register Now
-										</a>
-									</Button>
-								)}
+							{typeof event.registrationUrl === 'string' && event.registrationUrl.length > 0 && isRegistrationOpen() ? (
+								<Button asChild>
+									<a href={event.registrationUrl} rel="noopener noreferrer" target="_blank">
+										<ExternalLink className="mr-2 h-4 w-4" />
+										S'inscrire
+									</a>
+								</Button>
+							) : null}
 							{typeof event.parcoursUrl === 'string' && event.parcoursUrl.length > 0 && (
 								<Button asChild variant="outline">
 									<a href={event.parcoursUrl} rel="noopener noreferrer" target="_blank">
 										<Route className="mr-2 h-4 w-4" />
-										View Course
+										Voir le parcours
 									</a>
 								</Button>
 							)}

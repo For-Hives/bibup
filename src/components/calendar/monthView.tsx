@@ -59,8 +59,8 @@ export function MonthView(props: Readonly<MonthViewProps>) {
 
 	return (
 		<div className="p-4">
-			<div className="rounded-4xl overflow-hidden border">
-				<div className="grid grid-cols-7 gap-0 max-h-[80vh] overflow-y-auto">
+			<div className="overflow-hidden rounded-4xl border">
+				<div className="grid max-h-[80vh] grid-cols-7 gap-0 overflow-y-auto">
 					{/* Header */}
 					{weekDays.map(day => (
 						<div className="border-b p-3 text-center text-sm font-medium" key={day}>

@@ -33,8 +33,8 @@ export function YearView(props: Readonly<YearViewProps>) {
 
 	return (
 		<div className="p-4">
-			<div className="rounded-4xl overflow-hidden">
-				<div className="grid grid-cols-3 gap-6 max-h-[80vh] overflow-y-auto calendar-scroll">
+			<div className="overflow-hidden rounded-4xl">
+				<div className="calendar-scroll grid max-h-[80vh] grid-cols-3 gap-6 overflow-y-auto">
 					{months.map(month => {
 						const monthDays = getMonthDays(month)
 						const monthName = new Date(year, month, 1).toLocaleDateString('en-US', { month: 'long' })
